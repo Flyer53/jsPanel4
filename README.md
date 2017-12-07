@@ -9,8 +9,8 @@
 
 ---
 
-### jsPanel 4 beta homepage: [http://beta.jspanel.de](http://beta.jspanel.de/)
-### API and examples: [http://beta.jspanel.de/docs/](http://beta.jspanel.de/docs/)
+### jsPanel 4 beta homepage: [http://jspanel.de](http://jspanel.de/)
+### API and examples: [http://jspanel.de/docs/](http://jspanel.de/docs/)
 
 ### [Dependencies]()
 Just a modern mobile or desktop browser like FF, Chrome, EDGE, Brave, Opera, Vivaldi.
