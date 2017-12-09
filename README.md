@@ -58,14 +58,8 @@ var myPanel = jsPanel.create( options );
 
 ```javascript
 jsPanel.create({
-	position: {
-    	my: "left-top",
-        at: "left-top"
-    },
-    contentSize: {
-    	width:  600,
-        height: 350
-    },
+	position:    "left-top",
+    contentSize: "600 350",
     contentAjax: {
     	url:  // some url,
         done: function (panel) {
