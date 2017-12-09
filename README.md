@@ -36,6 +36,9 @@ The following example shows a complete html file with the minimium setup:
 
         <!-- loading jsPanel javascript -->
         <script src="dist/jspanel.js"></script>
+        <!-- optionally load jsPanel extensions -->
+        <script src="dist/extensions/modal/jspanel.modal.js"></script>
+        // and the other extension you need
     </body>
 </html>
 ```
