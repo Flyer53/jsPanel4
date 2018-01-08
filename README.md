@@ -1,6 +1,6 @@
 ![license MIT](https://img.shields.io/badge/license-MIT-blue.svg) [![npm version](https://badge.fury.io/js/jspanel4.svg)](https://badge.fury.io/js/jspanel4) [![npm](https://img.shields.io/npm/dt/express.svg)](https://www.npmjs.com/package/jspanel4) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/jsPanel/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
-## [jsPanel 4.0.0-beta.1 released 2017-12-07](#)
+## [jsPanel 4.0.0-beta.2 released 2018-01-08](#)
 
 
 **A dependency free javascript tool to create highly configurable multifunctional floating panels.**

@@ -1,4 +1,4 @@
-/* jspanel.js - License MIT, copyright 2013 - 2017 Stefan Straesser <info@jspanel.de> (http://jspanel.de) */
+/* jspanel.js - License MIT, copyright 2013 - 2018 Stefan Straesser <info@jspanel.de> (http://jspanel.de) */
 /* global jsPanel, $ */
 'use strict';
 // .append() polyfill needed for EDGE - https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/append
@@ -24,12 +24,12 @@ if (window.Element && !Element.prototype.closest) {
                 el = this;
             do {
                 i = matches.length;
-                while (--i >= 0 && matches.item(i) !== el) {/* empty */}
+                while (--i >= 0 && matches.item(i) !== el) {};
             } while ((i < 0) && (el = el.parentElement));
             return el;
         };
 }
-// NodeList.prototype.forEach() polyfill - https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach
+// NodeList.prototype.forEach() polyfill needed for IE11 and Android mobile - https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach
 if (window.NodeList && !NodeList.prototype.forEach) {
     NodeList.prototype.forEach = function (callback, thisArg) {
         thisArg = thisArg || window;
@@ -69,6 +69,39 @@ if (!Object.assign) {
     });
 }
 
+// Polyfills for IE11 only
+// CustomEvent - https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+(function () {
+    if ( typeof window.CustomEvent === "function" ) return false;
+    function CustomEvent ( event, params ) {
+        params = params || { bubbles: false, cancelable: false, detail: undefined };
+        var evt = document.createEvent( 'CustomEvent' );
+        evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+        return evt;
+    }
+    CustomEvent.prototype = window.Event.prototype;
+    window.CustomEvent = CustomEvent;
+})();
+// String.prototype.endsWith() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
+if (!String.prototype.endsWith) {
+    String.prototype.endsWith = function (searchStr, Position) {
+        // This works much better than >= because
+        // it compensates for NaN:
+        if (!(Position < this.length))
+            Position = this.length;
+        else
+            Position |= 0; // round position
+        return this.substr(Position - searchStr.length,
+            searchStr.length) === searchStr;
+    };
+}
+// String.prototype.startsWith() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
+if (!String.prototype.startsWith) {
+    String.prototype.startsWith = function(searchString, position){
+        return this.substr(position || 0, searchString.length) === searchString;
+    };
+}
+
 // Create a new object, that prototypically inherits from the Error constructor
 function jsPanelError(message) {
     this.name = 'jsPanelError';
@@ -80,8 +113,8 @@ jsPanelError.prototype.constructor = jsPanelError;
 
 let jsPanel = {
 
-    version: '4.0.0-beta.1',
-    date:    '2017-12-07 09:52',
+    version: '4.0.0-beta.2',
+    date:    '2018-01-08 09:56',
     idCounter: 0,
     ziBase: 100,
     themes: ['default', 'primary', 'info', 'success', 'warning', 'danger'],
@@ -91,7 +124,7 @@ let jsPanel = {
     defaults: {
         boxShadow: 3,
         container: document.body,
-        contentSize: {width: '400px', height: '200px'},
+        contentSize: {width: '400px', height: '200px'}, // must be object
         dragit: {
             cursor:  'move',
             handles: '.jsPanel-headerlogo, .jsPanel-titlebar, .jsPanel-ftr', // do not use .jsPanel-headerbar
@@ -111,6 +144,10 @@ let jsPanel = {
             minHeight:   40,
         },
         theme: 'default'
+    },
+    defaultSnapConfig: {
+        sensitivity: 70,
+        trigger: 'panel'
     },
     ajaxAlwaysCallbacks: [],
     extensions: {},
@@ -566,7 +603,7 @@ let jsPanel = {
         let dragstarted,
             opts = Object.assign({}, this.defaults.dragit, options),
             dragElmt,
-            containment = opts.containment,
+            containment,
             frames = [];
         const dragstart = new CustomEvent('dragstart', {detail: elmt.id}),
             drag        = new CustomEvent('drag',      {detail: elmt.id}),
@@ -580,20 +617,7 @@ let jsPanel = {
         }
 
         // normalize containment config
-        if (typeof containment === 'number') {
-            // containment: 20 => containment: [20, 20, 20, 20]
-            containment = [containment, containment, containment, containment];
-        } else if (Array.isArray(containment)) {
-            if (containment.length === 1) {
-                // containment: [20] => containment: [20, 20, 20, 20]
-                containment = [containment[0],containment[0],containment[0],containment[0]];
-            } else if (containment.length === 2) {
-                // containment: [20, 40] => containment: [20, 40, 20, 40]
-                containment = containment.concat(containment);
-            } else if (containment.length === 3) {
-                containment[3] = containment[1];
-            }
-        }
+        containment = this.pOcontainment(opts.containment);
 
         // attach handler to each drag handle
         elmt.querySelectorAll(opts.handles).forEach((handle) => {
@@ -620,62 +644,93 @@ let jsPanel = {
                     }
 
                     const startStyles  = window.getComputedStyle(elmt),
-                        startLeft    = parseFloat(startStyles.left),	    // css left on mousedown
+                        startLeft    = parseFloat(startStyles.left),
                         startTop     = parseFloat(startStyles.top),
                         psx          = e.touches ? e.touches[0].clientX : e.clientX,	// pointer x on mousedown (don't use pageX, doesn't work on FF for Android)
                         psy          = e.touches ? e.touches[0].clientY : e.clientY,	// pointer y on mousedown (don't use pageY, doesn't work on FF for Android)
                         parent       = elmt.parentNode,
                         parentRect   = parent.getBoundingClientRect(),
                         parentStyles = window.getComputedStyle(parent);
+                    let startLeftCorrection = 0;
 
                     // function actually draging the elmt
                     dragElmt = (e) => {
                         e.preventDefault();
 
-                        if (opts.disableOnMaximized && elmt.status === 'maximized') {
-                            return false;
-                        }
-
-                        const pmx = e.touches ? e.touches[0].clientX : e.clientX,	// current pointer x while pointer moves (don't use pageY, doesn't work on FF for Android)
-                            pmy = e.touches ? e.touches[0].clientY : e.clientY,	    // current pointer y while pointer moves (don't use pageY, doesn't work on FF for Android)
-                            dragStyles = window.getComputedStyle(elmt),             // get current styles while draging
-                            elmtL = parseFloat(dragStyles.left),
-                            elmtL2 = elmtL ** 2,
-                            elmtT = parseFloat(dragStyles.top),
-                            elmtT2 =  elmtT ** 2,
-                            elmtR = parseFloat(dragStyles.right),
-                            elmtR2 = elmtR ** 2,
-                            elmtB = parseFloat(dragStyles.bottom),
-                            elmtB2 = elmtB ** 2,
-                            lefttopVectorDrag     = Math.sqrt(elmtL2 + elmtT2),
-                            leftbottomVectorDrag  = Math.sqrt(elmtL2 + elmtB2),
-                            righttopVectorDrag    = Math.sqrt(elmtR2 + elmtT2),
-                            rightbottomVectorDrag = Math.sqrt(elmtR2 + elmtB2),
-                            horizontalDeltaDrag = Math.abs(elmtL - elmtR)/2,
-                            verticalDeltaDrag   = Math.abs(elmtT - elmtB)/2,
-                            leftVectorDrag   = Math.sqrt(elmtL2 + verticalDeltaDrag ** 2),
-                            topVectorDrag    = Math.sqrt(elmtT2 + horizontalDeltaDrag ** 2),
-                            rightVectorDrag  = Math.sqrt(elmtR2 + verticalDeltaDrag ** 2),
-                            bottomVectorDrag = Math.sqrt(elmtB2 + horizontalDeltaDrag ** 2);
-
-                        // prevent selctions while draging
-                        window.getSelection().removeAllRanges();
-
                         if (!dragstarted) {
                             document.dispatchEvent(dragstart);
                             elmt.style.opacity = opts.opacity;
+                            // if configured restore panel size to values before snap and reposition reasonable before drag actually starts
+                            if (elmt.snapped && opts.snap.resizeToPreSnap && elmt.currentData.beforeSnap) {
+                                elmt.resize(elmt.currentData.beforeSnap.width + ' ' + elmt.currentData.beforeSnap.height);
+
+                                let intermediateStyles = elmt.getBoundingClientRect(),
+                                    delta = psx - (intermediateStyles.left + intermediateStyles.width),
+                                    wHalf = intermediateStyles.width/2;
+                                if (delta > -wHalf) {
+                                    startLeftCorrection = delta + wHalf;
+                                }
+                            }
+                            // dragstart callback
                             if (typeof opts.start === 'function') {
                                 opts.start.call(elmt, elmt, {left: startLeft, top: startTop});
                             }
                             jsPanel.front(elmt);
+                            elmt.snapped = false;
                         }
                         dragstarted = 1;
+
+                        if (opts.disableOnMaximized && elmt.status === 'maximized') {
+                            return false;
+                        }
+
+                        let elmtL, elmtL2, elmtT, elmtT2, elmtR, elmtR2, elmtB, elmtB2;
+                        const pmx = e.touches ? e.touches[0].clientX : e.clientX,	// current pointer x while pointer moves (don't use pageX, doesn't work on FF for Android)
+                            pmy   = e.touches ? e.touches[0].clientY : e.clientY,	// current pointer y while pointer moves (don't use pageY, doesn't work on FF for Android)
+                            dragStyles = window.getComputedStyle(elmt);             // get current styles while draging
+
+                        if (opts.snap) {
+                            if (opts.snap.trigger === 'panel') {
+                                elmtL = parseFloat(dragStyles.left);
+                                elmtL2 = elmtL ** 2;
+                                elmtT = parseFloat(dragStyles.top);
+                                elmtT2 = elmtT ** 2;
+                                elmtR = parseFloat(dragStyles.right);
+                                elmtR2 = elmtR ** 2;
+                                elmtB = parseFloat(dragStyles.bottom);
+                                elmtB2 = elmtB ** 2;
+                            } else if (opts.snap.trigger === 'pointer') {
+                                elmtL = pmx;
+                                elmtL2 = pmx ** 2;
+                                elmtT = pmy;
+                                elmtT2 = elmtT ** 2;
+                                elmtR = window.innerWidth - pmx;
+                                elmtR2 = elmtR ** 2;
+                                elmtB = window.innerHeight - pmy;
+                                elmtB2 = elmtB ** 2;
+                            }
+                        }
+
+                        const lefttopVectorDrag   = Math.sqrt(elmtL2 + elmtT2),
+                            leftbottomVectorDrag  = Math.sqrt(elmtL2 + elmtB2),
+                            righttopVectorDrag    = Math.sqrt(elmtR2 + elmtT2),
+                            rightbottomVectorDrag = Math.sqrt(elmtR2 + elmtB2),
+                            horizontalDeltaDrag   = Math.abs(elmtL - elmtR)/2,
+                            verticalDeltaDrag     = Math.abs(elmtT - elmtB)/2,
+                            leftVectorDrag        = Math.sqrt(elmtL2 + verticalDeltaDrag ** 2),
+                            topVectorDrag         = Math.sqrt(elmtT2 + horizontalDeltaDrag ** 2),
+                            rightVectorDrag       = Math.sqrt(elmtR2 + verticalDeltaDrag ** 2),
+                            bottomVectorDrag      = Math.sqrt(elmtB2 + horizontalDeltaDrag ** 2);
+
+                        // prevent selctions while draging
+                        window.getSelection().removeAllRanges();
+
                         // trigger drag permanently while draging
                         document.dispatchEvent(drag);
 
                         // move elmt
                         if (!opts.axis || opts.axis === 'x') {
-                            elmt.style.left = startLeft + (pmx - psx) + 'px';    // set new css left of elmt depending on opts.axis
+                            elmt.style.left = startLeft + (pmx - psx) + startLeftCorrection + 'px';    // set new css left of elmt depending on opts.axis
                         }
                         if (!opts.axis || opts.axis === 'y') {
                             elmt.style.top = startTop + (pmy - psy) + 'px';      // set new css top of elmt depending on opts.axis
@@ -735,7 +790,7 @@ let jsPanel = {
 
                         // apply snap options
                         if (opts.snap) {
-                            const snapSens = opts.snap.sensitivity || 70,
+                            const snapSens = opts.snap.sensitivity,
                                 topSensAreaLength = parent === document.body ? window.innerWidth/8 : parentRect.width/8,
                                 sideSensAreaLength = parent === document.body ? window.innerHeight/8 : parentRect.height/8;
                             elmt.snappableTo = false;
@@ -828,8 +883,12 @@ let jsPanel = {
                                 jsPanel.snapPanel(elmt, opts.snap.snapLeftCenter);
                             }
 
-                            if (opts.snap.callback && typeof opts.snap.callback === 'function') {
+                            if (opts.snap.callback && elmt.snappableTo && typeof opts.snap.callback === 'function') {
                                 opts.snap.callback.call(elmt, elmt);
+                            }
+
+                            if (elmt.snappableTo && opts.snap.repositionOnSnap) {
+                                elmt.repositionOnSnap(elmt.snappableTo);
                             }
                         }
                         
@@ -1053,79 +1112,81 @@ let jsPanel = {
         return error;
     },
 
-    pOmaximizedMargin(margins) {
-        if (margins || margins === 0) {
-            if (typeof margins === 'number') {
-                // margins: 20 => margins: [20, 20, 20, 20]
-                return [].concat(margins, margins, margins, margins);
-            } else if (Array.isArray(margins)) {
-                if (margins.length === 2) {
-                    // margins: [20, 40] => margins: [20, 40, 20, 40]
-                    return margins.concat(margins);
-                } else if (margins.length === 3) {
-                    // margins: [20, 40, 50] => margins: [20, 40, 50, 40]
-                    margins[3] = margins[1];
-                    return margins;
-                } else if (margins.length === 4) {
-                    return margins;
-                }
-            } else {
-                const defaults = this.defaults.maximizedMargin,
-                    top = typeof margins.top === 'number' ? margins.top : defaults[0],
-                    right = typeof margins.right === 'number' ? margins.right : defaults[1],
-                    bottom = typeof margins.bottom === 'number' ? margins.bottom : defaults[2],
-                    left = typeof margins.left === 'number' ? margins.left : defaults[3];
-                return margins = [top, right, bottom, left];
+    // normalizes values for option.maximizedMargin and containment of dragit/resizeit
+    pOcontainment(arg) {
+        if (typeof arg === 'number') {
+            // arg: 20 => arg: [20, 20, 20, 20]
+            return [arg,arg,arg,arg];
+        } else if (Array.isArray(arg)) {
+            if (arg.length === 1) {
+                // arg: [20] => arg: [20, 20, 20, 20]
+                return [arg[0],arg[0],arg[0],arg[0]];
+            } else if (arg.length === 2) {
+                // arg: [20, 40] => arg: [20, 40, 20, 40]
+                return arg.concat(arg);
+            } else if (arg.length === 3) {
+                arg[3] = arg[1];
             }
         }
+        return arg; // assumed to be array with 4 values
     },
 
-    pOsize(size) {
-        const values = {};
-        if (size) {
-            if (typeof size === 'string') {
-                const nums = size.trim().split(' ');
-                if (nums[0].match(/^[0-9]+$/gi)) {
-                    // if number only
-                    values.width = nums[0] + 'px';
-                } else if (nums[0].substr(-1) === '%') {
-                    values.width = parseFloat(nums[0]) + 'px';
-                } else {
-                    values.width = nums[0];
-                }
-                if (!nums[1]) {
-                    values.height = jsPanel.defaults.contentSize.height;
-                } else if (nums[1].match(/^[0-9]+$/gi)) {
-                    // if number only
-                    values.height = nums[1] + 'px';
-                } else if (nums[1].substr(-1) === '%') {
-                    values.height = parseFloat(nums[1]) + 'px';
-                } else {
-                    values.height = nums[1];
-                }
-            } else {
-                if (!size.width) {
-                    values.width = jsPanel.defaults.contentSize.width;
-                } else if (typeof size.width === 'number') {
-                    values.width = size.width + 'px';
-                } else if (typeof size.width === 'function') {
-                    const w = size.width();
-                    values.width = typeof w === 'number' ? w + 'px' : w;
-                } else {
-                    values.width = size.width;
-                }
-                if (!size.height) {
-                    values.height = jsPanel.defaults.contentSize.height;
-                } else if (typeof size.height === 'number') {
-                    values.height = size.height + 'px';
-                } else if (typeof size.height === 'function') {
-                    const h = size.height();
-                    values.height = typeof h === 'number' ? h + 'px' : h;
-                } else {
-                    values.height = size.height;
-                }
+    pOsize(panel, size) {
+        let values = size || this.defaults.contentSize,
+            parent = panel.parentNode;
+        if (typeof values === 'string') {
+            let nums = values.trim().split(' ');
+            values = {};
+            values.width = nums[0];
+            nums.length === 2 ? values.height = nums[1] : values.height = nums[0];
+        } else {
+            if (values.width && !values.height) {
+                values.height = values.width;
+            } else if (values.height && !values.width) {
+                values.width = values.height;
             }
         }
+
+        if (String(values.width).match(/^[0-9]+$/gi)) {
+            // if number only
+            values.width += 'px';
+        } else if (typeof values.width === 'string' && values.width.endsWith('%')) {
+            if (parent === document.body) {
+                values.width = window.innerWidth * (parseFloat(values.width)/100) + 'px';
+            } else {
+                const prtStyles = window.getComputedStyle(parent),
+                      border = parseFloat(prtStyles.borderLeftWidth) + parseFloat(prtStyles.borderRightWidth);
+                values.width = (parseFloat(prtStyles.width) - border) * (parseFloat(values.width)/100) + 'px';
+            }
+        } else if (typeof values.width === 'function') {
+            values.width = values.width();
+            if (typeof values.width === 'number') {
+                values.width += 'px';
+            } else if (typeof values.width === 'string' && values.width.match(/^[0-9]+$/gi)) {
+                values.width += 'px';
+            }
+        }
+
+        if (String(values.height).match(/^[0-9]+$/gi)) {
+            // if number only
+            values.height += 'px';
+        } else if (typeof values.height === 'string' && values.height.endsWith('%')) {
+            if (parent === document.body) {
+                values.height = window.innerHeight * (parseFloat(values.height)/100) + 'px';
+            } else {
+                const prtStyles = window.getComputedStyle(parent),
+                      border = parseFloat(prtStyles.borderTopWidth) + parseFloat(prtStyles.borderBottomWidth);
+                values.height = (parseFloat(prtStyles.height) - border) * (parseFloat(values.height)/100) + 'px';
+            }
+        } else if (typeof values.height === 'function') {
+            values.height = values.height();
+            if (typeof values.height === 'number') {
+                values.height += 'px';
+            } else if (typeof values.height === 'string' && values.height.match(/^[0-9]+$/gi)) {
+                values.height += 'px';
+            }
+        }
+
         return values; // return value must be object {width: xxx, height: xxx}
     },
 
@@ -1165,7 +1226,7 @@ let jsPanel = {
 
         // translate shorthand string to object - "top-left 50 50 down"
         if (typeof position === 'string') {
-            const posValue     = position.match(/\b[a-z]{4,6}-{1}[a-z]{3,6}\b/i),
+            const posValue   = position.match(/\b[a-z]{4,6}-{1}[a-z]{3,6}\b/i),
                 autoposValue = position.match(/down|up|right([^-]|$)|left([^-]|$)/i),
                 offsetValue  = position.match(/[+-]?\d?\.?\d+([a-z%]{2,4}\b|%?)/gi);
             let settings;
@@ -1181,7 +1242,7 @@ let jsPanel = {
             }
 
             if (offsetValue) {
-                // convert strings with only numbers to a numbe value
+                // convert strings with only numbers to a number value
                 offsetValue.forEach((item, index) => {
                     if (item.match(/^[+-]?[0-9]*$/)) {
                         offsetValue[index] += 'px';
@@ -1204,7 +1265,7 @@ let jsPanel = {
             posSettings = Object.assign({}, defaults, position);
         }
 
-        const parentContainer  = elmtToPosition.parentElement;
+        const parentContainer        = elmtToPosition.parentElement;
         const parentContainerStyles  = window.getComputedStyle(parentContainer);
         const parentContainerRect    = parentContainer.getBoundingClientRect();
         const parentContainerTagName = parentContainer.tagName.toLowerCase();
@@ -1248,7 +1309,7 @@ let jsPanel = {
             }
 
             calculatedPosition.left = (atXcorrection - myXcorrection) - parseFloat(parentContainerStyles.borderLeftWidth);
-            calculatedPosition.top = (atYcorrection - myYcorrection) - parseFloat(parentContainerStyles.borderTopWidth);
+            calculatedPosition.top  = (atYcorrection - myYcorrection) - parseFloat(parentContainerStyles.borderTopWidth);
 
             // panel appended to body and positioned relative to window is always fixed
             elmtToPosition.style.position = 'fixed';
@@ -1276,7 +1337,7 @@ let jsPanel = {
             }
 
             calculatedPosition.left = (atXcorrection - myXcorrection) - parseFloat(parentContainerStyles.borderLeftWidth);
-            calculatedPosition.top = (atYcorrection - myYcorrection) - parseFloat(parentContainerStyles.borderTopWidth);
+            calculatedPosition.top  = (atYcorrection - myYcorrection) - parseFloat(parentContainerStyles.borderTopWidth);
         }
 
         // SCENARIO 3 - // panel appended to other element than body and positioned relative to its container
@@ -1299,7 +1360,7 @@ let jsPanel = {
             }
 
             calculatedPosition.left = (atXcorrection - myXcorrection);
-            calculatedPosition.top = (atYcorrection - myYcorrection);
+            calculatedPosition.top  = (atYcorrection - myYcorrection);
         }
 
         // SCENARIO 4 - panel appended to other element than body and positioned relative to an element within its container
@@ -1324,7 +1385,7 @@ let jsPanel = {
             }
 
             calculatedPosition.left = (atXcorrection - myXcorrection) - parseFloat(parentContainerStyles.borderLeftWidth);
-            calculatedPosition.top = (atYcorrection - myYcorrection) - parseFloat(parentContainerStyles.borderTopWidth);
+            calculatedPosition.top  = (atYcorrection - myYcorrection) - parseFloat(parentContainerStyles.borderTopWidth);
         }
 
         // autoposition panels only if ...
@@ -1393,7 +1454,7 @@ let jsPanel = {
         if (typeof posSettings.offsetX === 'number') {posSettings.offsetX += 'px';}
         if (typeof posSettings.offsetY === 'number') {posSettings.offsetY += 'px';}
         elmtToPosition.style.left = `calc(${calculatedPosition.left}px + ${posSettings.offsetX})`;
-        elmtToPosition.style.top = `calc(${calculatedPosition.top}px + ${posSettings.offsetY})`;
+        elmtToPosition.style.top  = `calc(${calculatedPosition.top}px + ${posSettings.offsetY})`;
         elmtToPosition.style.opacity = 1;
 
         // convert css calc values to pixel values - this is required by dragit and resizeit
@@ -1479,27 +1540,14 @@ let jsPanel = {
             resizestart       = new CustomEvent('resizestart', {detail: elmt.id}),
             resize            = new CustomEvent('resize', {detail: elmt.id}),
             resizestop        = new CustomEvent('resizestop', {detail: elmt.id});
-        let containment       = opts.containment,
+        let containment,
             resizePanel,
             resizestarted,
             w, h,
             frames = [];
 
         // normalize containment config
-        if (typeof containment === 'number') {
-            // containment: 20 => containment: [20, 20, 20, 20]
-            containment = [containment, containment, containment, containment];
-        } else if (Array.isArray(containment)) {
-            if (containment.length === 1) {
-                // containment: [20] => containment: [20, 20, 20, 20]
-                containment = [containment[0],containment[0],containment[0],containment[0]];
-            } else if (containment.length === 2) {
-                // containment: [20, 40] => containment: [20, 40, 20, 40]
-                containment = containment.concat(containment);
-            } else if (containment.length === 3) {
-                containment[3] = containment[1];
-            }
-        }
+        containment = this.pOcontainment(opts.containment);
 
         opts.handles.split(',').forEach((item) => {
             const node = document.createElement('DIV');
@@ -1795,10 +1843,34 @@ let jsPanel = {
     },
 
     snapPanel(panel, pos) {
+        // store panel size before it snaps
+        panel.currentData.beforeSnap = {
+            width: panel.currentData.width,
+            height: panel.currentData.height
+        };
+        // snap panel
         if (pos && typeof pos === 'function') {
             pos.call(panel, panel, panel.snappableTo);
         } else if (pos !== false) {
-            panel.reposition(panel.snappableTo);
+            let offsets = [0, 0];
+            if (panel.options.dragit.snap.containment) {
+                if (panel.options.dragit.containment) {
+                    const containment = this.pOcontainment(panel.options.dragit.containment),
+                          position    = panel.snappableTo;
+                    if (position.startsWith('left')) {
+                        offsets[0] = containment[3];
+                    } else if (position.startsWith('right')) {
+                        offsets[0] = -containment[1];
+                    }
+                    if (position.endsWith('top')) {
+                        offsets[1] = containment[0];
+                    } else if (position.endsWith('bottom')) {
+                        offsets[1] = -containment[2];
+                    }
+                }
+            }
+            panel.reposition(`${panel.snappableTo} ${offsets[0]} ${offsets[1]}`);
+            panel.snapped = panel.snappableTo;
         }
     },
 
@@ -1836,7 +1908,18 @@ let jsPanel = {
             return console.error(panelContainer.name+':', panelContainer.message);
         }
 
-        opts.maximizedMargin = this.pOmaximizedMargin(opts.maximizedMargin);
+        // normalize maximizedMargin
+        opts.maximizedMargin = this.pOcontainment(opts.maximizedMargin);
+
+        // normalize snap config
+        if (opts.dragit && opts.dragit.snap) {
+            if (typeof opts.dragit.snap === 'object') {
+                opts.dragit.snap = Object.assign({}, this.defaultSnapConfig, opts.dragit.snap);
+            } else {
+                opts.dragit.snap = this.defaultSnapConfig;
+            }
+        }
+
         opts.template = opts.template || false;
 
         let self = opts.template ? opts.template : this.createPanelTemplate();
@@ -1854,7 +1937,8 @@ let jsPanel = {
         self.headertoolbar = self.header.querySelector('.jsPanel-hdr-toolbar');
         self.content       = self.querySelector('.jsPanel-content');
         self.footer        = self.querySelector('.jsPanel-ftr');
-        self.snappableTo   = undefined;
+        self.snappableTo   = false;
+        self.snapped       = false;
 
         // Events
         const jspanelloaded         = new CustomEvent('jspanelloaded', {'detail': opts.id}),
@@ -2248,7 +2332,7 @@ let jsPanel = {
             if (self.dataset.btnclose === 'enabled') {
                 jsPanel.pointerup.forEach(function (evt) {
                     tpl.querySelector('.jsPanel-btn-close').addEventListener(evt, () => {
-                        self.close().removeMinimizedReplacement();
+                        self.removeMinimizedReplacement().close();
                     });
                 });
             } else {
@@ -2477,6 +2561,48 @@ let jsPanel = {
             return self;
         };
 
+        self.repositionOnSnap = (pos) => {
+            let offsetX = '0', offsetY = '0';
+            const margins = jsPanel.pOcontainment(opts.dragit.containment);
+            // calculate offsets
+            if (opts.dragit.snap.containment) {
+                if (pos === 'left-top') {
+                    offsetX = margins[3];
+                    offsetY = margins[0];
+                } else if (pos === 'right-top') {
+                    offsetX = -margins[1];
+                    offsetY = margins[0];
+                } else if (pos === 'right-bottom') {
+                    offsetX = -margins[1];
+                    offsetY = -margins[2];
+                } else if (pos === 'left-bottom') {
+                    offsetX = margins[3];
+                    offsetY = -margins[2];
+                } else if (pos === 'center-top') {
+                    offsetX = margins[3]/2 - margins[1]/2;
+                    offsetY = margins[0];
+                } else if (pos === 'center-bottom') {
+                    offsetX = margins[3]/2 - margins[1]/2;
+                    offsetY = -margins[2];
+                } else if (pos === 'left-center') {
+                    offsetX = margins[3];
+                    offsetY = margins[0]/2 - margins[2]/2;
+                } else if (pos === 'right-center') {
+                    offsetX = -margins[1];
+                    offsetY = margins[0]/2 - margins[2]/2;
+                }
+            }
+            /* jsPanel.position(self, `${pos} ${offsetX} ${offsetY}`);
+               For some reason I could not find the line above does not work (pos and offsets in one string), but only when
+               center-bottom is used with different settings for left/right margin.
+            */
+            jsPanel.position(self, pos);
+            jsPanel.setStyle(self, {
+                left: `calc(${self.style.left} + ${offsetX}px)`,
+                top:  `calc(${self.style.top} + ${offsetY}px)`
+            });
+        };
+
         self.resize = (...params) => {
             const dimensions = window.getComputedStyle(self);
             let size = {width: dimensions.width, height: dimensions.height},
@@ -2494,7 +2620,7 @@ let jsPanel = {
                 }
             });
 
-            const values = jsPanel.pOsize(size);
+            const values = jsPanel.pOsize(self, size);
             self.style.width = values.width;
             self.style.height = values.height;
             self.contentResize();
@@ -2633,7 +2759,7 @@ let jsPanel = {
                 let classArray, textArray;
                 if (font === 'bootstrap' || font === 'glyphicon') {
                     classArray = ['glyphicon glyphicon-remove', 'glyphicon glyphicon-fullscreen', 'glyphicon glyphicon-resize-full', 'glyphicon glyphicon-minus', 'glyphicon glyphicon-chevron-down', 'glyphicon glyphicon-chevron-up'];
-                } else if (font === 'fa' || font === 'far' || font === 'fal') {
+                } else if (font === 'fa' || font === 'far' || font === 'fal' || font === 'fas') {
                     classArray = [`${font} fa-window-close`, `${font} fa-window-maximize`, `${font} fa-window-restore`, `${font} fa-window-minimize`, `${font} fa-chevron-down`, `${font} fa-chevron-up`];
                 } else if (font === 'material-icons') {
                     classArray = [font, font, font, font, font, font];
@@ -2666,12 +2792,12 @@ let jsPanel = {
 
         self.setSize = () => {
             if (opts.panelSize) {
-                const values = jsPanel.pOsize(opts.panelSize);
+                const values = jsPanel.pOsize(self, opts.panelSize);
                 self.style.width = values.width;
                 self.style.height = values.height;
                 self.contentResize();
             } else if (opts.contentSize) {
-                const values = jsPanel.pOsize(opts.contentSize);
+                const values = jsPanel.pOsize(self, opts.contentSize);
                 self.content.style.width = values.width;
                 self.content.style.height = values.height;
                 // explicitly assign current width/height to panel
@@ -2925,9 +3051,12 @@ let jsPanel = {
 
         // option.dragit AND option.resizeit AND option.syncMargins
         if (opts.syncMargins) {
-            const containment = opts.maximizedMargin;
+            const containment = this.pOcontainment(opts.maximizedMargin);
             if (opts.dragit) {
                 opts.dragit.containment = containment;
+                if (opts.dragit.snap) {
+                    opts.dragit.snap.containment = true;
+                }
             }
             if (opts.resizeit) {
                 opts.resizeit.containment = containment;

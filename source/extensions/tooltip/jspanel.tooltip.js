@@ -7,7 +7,7 @@ if (!jsPanel.tooltip) {
     jsPanel.tooltip = {
 
         version: '1.0.0',
-        date: '2017-11-25 15:00',
+        date: '2017-12-11 21:06',
 
         defaults: {
             //position: is set in jsPanel.tooltip.create()
@@ -16,7 +16,8 @@ if (!jsPanel.tooltip) {
             dragit: false,
             resizeit: false,
             headerControls: 'none',
-            delay: 400
+            delay: 400,
+            ttipEvent: 'mouseover'
         },
 
         create(options = {}, callback) {
@@ -53,7 +54,7 @@ if (!jsPanel.tooltip) {
             opts.position = Object.assign({}, options.position);
             opts.position.of = options.position.of || target;
 
-            target.addEventListener('mouseover', () => {
+            target.addEventListener(opts.ttipEvent, () => {
 
                 timer = window.setTimeout(function () {
 

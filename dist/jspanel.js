@@ -1,4 +1,4 @@
-/* jspanel.js - License MIT, copyright 2013 - 2017 Stefan Straesser <info@jspanel.de> (http://jspanel.de) */
+/* jspanel.js - License MIT, copyright 2013 - 2018 Stefan Straesser <info@jspanel.de> (http://jspanel.de) */
 /* global jsPanel, $ */
 'use strict';
 // .append() polyfill needed for EDGE - https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/append
@@ -28,12 +28,12 @@ if (window.Element && !Element.prototype.closest) {
             el = this;
         do {
             i = matches.length;
-            while (--i >= 0 && matches.item(i) !== el) {/* empty */}
+            while (--i >= 0 && matches.item(i) !== el) {};
         } while (i < 0 && (el = el.parentElement));
         return el;
     };
 }
-// NodeList.prototype.forEach() polyfill - https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach
+// NodeList.prototype.forEach() polyfill needed for IE11 and Android mobile - https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach
 if (window.NodeList && !NodeList.prototype.forEach) {
     NodeList.prototype.forEach = function (callback, thisArg) {
         thisArg = thisArg || window;
@@ -73,6 +73,35 @@ if (!Object.assign) {
     });
 }
 
+// Polyfills for IE11 only
+// CustomEvent - https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+(function () {
+    if (typeof window.CustomEvent === "function") return false;
+    function CustomEvent(event, params) {
+        params = params || { bubbles: false, cancelable: false, detail: undefined };
+        var evt = document.createEvent('CustomEvent');
+        evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+        return evt;
+    }
+    CustomEvent.prototype = window.Event.prototype;
+    window.CustomEvent = CustomEvent;
+})();
+// String.prototype.endsWith() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
+if (!String.prototype.endsWith) {
+    String.prototype.endsWith = function (searchStr, Position) {
+        // This works much better than >= because
+        // it compensates for NaN:
+        if (!(Position < this.length)) Position = this.length;else Position |= 0; // round position
+        return this.substr(Position - searchStr.length, searchStr.length) === searchStr;
+    };
+}
+// String.prototype.startsWith() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
+if (!String.prototype.startsWith) {
+    String.prototype.startsWith = function (searchString, position) {
+        return this.substr(position || 0, searchString.length) === searchString;
+    };
+}
+
 // Create a new object, that prototypically inherits from the Error constructor
 function jsPanelError(message) {
     this.name = 'jsPanelError';
@@ -84,8 +113,8 @@ jsPanelError.prototype.constructor = jsPanelError;
 
 var jsPanel = {
 
-    version: '4.0.0-beta.1',
-    date: '2017-12-07 09:52',
+    version: '4.0.0-beta.2',
+    date: '2018-01-08 09:56',
     idCounter: 0,
     ziBase: 100,
     themes: ['default', 'primary', 'info', 'success', 'warning', 'danger'],
@@ -97,7 +126,7 @@ var jsPanel = {
     defaults: {
         boxShadow: 3,
         container: document.body,
-        contentSize: { width: '400px', height: '200px' },
+        contentSize: { width: '400px', height: '200px' }, // must be object
         dragit: {
             cursor: 'move',
             handles: '.jsPanel-headerlogo, .jsPanel-titlebar, .jsPanel-ftr', // do not use .jsPanel-headerbar
@@ -117,6 +146,10 @@ var jsPanel = {
             minHeight: 40
         },
         theme: 'default'
+    },
+    defaultSnapConfig: {
+        sensitivity: 70,
+        trigger: 'panel'
     },
     ajaxAlwaysCallbacks: [],
     extensions: {},
@@ -553,7 +586,7 @@ var jsPanel = {
         var dragstarted = void 0,
             opts = Object.assign({}, this.defaults.dragit, options),
             dragElmt = void 0,
-            containment = opts.containment,
+            containment = void 0,
             frames = [];
         var dragstart = new CustomEvent('dragstart', { detail: elmt.id }),
             drag = new CustomEvent('drag', { detail: elmt.id }),
@@ -567,20 +600,7 @@ var jsPanel = {
         }
 
         // normalize containment config
-        if (typeof containment === 'number') {
-            // containment: 20 => containment: [20, 20, 20, 20]
-            containment = [containment, containment, containment, containment];
-        } else if (Array.isArray(containment)) {
-            if (containment.length === 1) {
-                // containment: [20] => containment: [20, 20, 20, 20]
-                containment = [containment[0], containment[0], containment[0], containment[0]];
-            } else if (containment.length === 2) {
-                // containment: [20, 40] => containment: [20, 40, 20, 40]
-                containment = containment.concat(containment);
-            } else if (containment.length === 3) {
-                containment[3] = containment[1];
-            }
-        }
+        containment = this.pOcontainment(opts.containment);
 
         // attach handler to each drag handle
         elmt.querySelectorAll(opts.handles).forEach(function (handle) {
@@ -610,8 +630,7 @@ var jsPanel = {
 
                     var startStyles = window.getComputedStyle(elmt),
                         startLeft = parseFloat(startStyles.left),
-                        // css left on mousedown
-                    startTop = parseFloat(startStyles.top),
+                        startTop = parseFloat(startStyles.top),
                         psx = e.touches ? e.touches[0].clientX : e.clientX,
                         // pointer x on mousedown (don't use pageX, doesn't work on FF for Android)
                     psy = e.touches ? e.touches[0].clientY : e.clientY,
@@ -619,30 +638,76 @@ var jsPanel = {
                     parent = elmt.parentNode,
                         parentRect = parent.getBoundingClientRect(),
                         parentStyles = window.getComputedStyle(parent);
+                    var startLeftCorrection = 0;
 
                     // function actually draging the elmt
                     dragElmt = function dragElmt(e) {
                         e.preventDefault();
 
+                        if (!dragstarted) {
+                            document.dispatchEvent(dragstart);
+                            elmt.style.opacity = opts.opacity;
+                            // if configured restore panel size to values before snap and reposition reasonable before drag actually starts
+                            if (elmt.snapped && opts.snap.resizeToPreSnap && elmt.currentData.beforeSnap) {
+                                elmt.resize(elmt.currentData.beforeSnap.width + ' ' + elmt.currentData.beforeSnap.height);
+
+                                var intermediateStyles = elmt.getBoundingClientRect(),
+                                    delta = psx - (intermediateStyles.left + intermediateStyles.width),
+                                    wHalf = intermediateStyles.width / 2;
+                                if (delta > -wHalf) {
+                                    startLeftCorrection = delta + wHalf;
+                                }
+                            }
+                            // dragstart callback
+                            if (typeof opts.start === 'function') {
+                                opts.start.call(elmt, elmt, { left: startLeft, top: startTop });
+                            }
+                            jsPanel.front(elmt);
+                            elmt.snapped = false;
+                        }
+                        dragstarted = 1;
+
                         if (opts.disableOnMaximized && elmt.status === 'maximized') {
                             return false;
                         }
 
+                        var elmtL = void 0,
+                            elmtL2 = void 0,
+                            elmtT = void 0,
+                            elmtT2 = void 0,
+                            elmtR = void 0,
+                            elmtR2 = void 0,
+                            elmtB = void 0,
+                            elmtB2 = void 0;
                         var pmx = e.touches ? e.touches[0].clientX : e.clientX,
-                            // current pointer x while pointer moves (don't use pageY, doesn't work on FF for Android)
+                            // current pointer x while pointer moves (don't use pageX, doesn't work on FF for Android)
                         pmy = e.touches ? e.touches[0].clientY : e.clientY,
                             // current pointer y while pointer moves (don't use pageY, doesn't work on FF for Android)
-                        dragStyles = window.getComputedStyle(elmt),
-                            // get current styles while draging
-                        elmtL = parseFloat(dragStyles.left),
-                            elmtL2 = Math.pow(elmtL, 2),
-                            elmtT = parseFloat(dragStyles.top),
-                            elmtT2 = Math.pow(elmtT, 2),
-                            elmtR = parseFloat(dragStyles.right),
-                            elmtR2 = Math.pow(elmtR, 2),
-                            elmtB = parseFloat(dragStyles.bottom),
-                            elmtB2 = Math.pow(elmtB, 2),
-                            lefttopVectorDrag = Math.sqrt(elmtL2 + elmtT2),
+                        dragStyles = window.getComputedStyle(elmt); // get current styles while draging
+
+                        if (opts.snap) {
+                            if (opts.snap.trigger === 'panel') {
+                                elmtL = parseFloat(dragStyles.left);
+                                elmtL2 = Math.pow(elmtL, 2);
+                                elmtT = parseFloat(dragStyles.top);
+                                elmtT2 = Math.pow(elmtT, 2);
+                                elmtR = parseFloat(dragStyles.right);
+                                elmtR2 = Math.pow(elmtR, 2);
+                                elmtB = parseFloat(dragStyles.bottom);
+                                elmtB2 = Math.pow(elmtB, 2);
+                            } else if (opts.snap.trigger === 'pointer') {
+                                elmtL = pmx;
+                                elmtL2 = Math.pow(pmx, 2);
+                                elmtT = pmy;
+                                elmtT2 = Math.pow(elmtT, 2);
+                                elmtR = window.innerWidth - pmx;
+                                elmtR2 = Math.pow(elmtR, 2);
+                                elmtB = window.innerHeight - pmy;
+                                elmtB2 = Math.pow(elmtB, 2);
+                            }
+                        }
+
+                        var lefttopVectorDrag = Math.sqrt(elmtL2 + elmtT2),
                             leftbottomVectorDrag = Math.sqrt(elmtL2 + elmtB2),
                             righttopVectorDrag = Math.sqrt(elmtR2 + elmtT2),
                             rightbottomVectorDrag = Math.sqrt(elmtR2 + elmtB2),
@@ -656,21 +721,12 @@ var jsPanel = {
                         // prevent selctions while draging
                         window.getSelection().removeAllRanges();
 
-                        if (!dragstarted) {
-                            document.dispatchEvent(dragstart);
-                            elmt.style.opacity = opts.opacity;
-                            if (typeof opts.start === 'function') {
-                                opts.start.call(elmt, elmt, { left: startLeft, top: startTop });
-                            }
-                            jsPanel.front(elmt);
-                        }
-                        dragstarted = 1;
                         // trigger drag permanently while draging
                         document.dispatchEvent(drag);
 
                         // move elmt
                         if (!opts.axis || opts.axis === 'x') {
-                            elmt.style.left = startLeft + (pmx - psx) + 'px'; // set new css left of elmt depending on opts.axis
+                            elmt.style.left = startLeft + (pmx - psx) + startLeftCorrection + 'px'; // set new css left of elmt depending on opts.axis
                         }
                         if (!opts.axis || opts.axis === 'y') {
                             elmt.style.top = startTop + (pmy - psy) + 'px'; // set new css top of elmt depending on opts.axis
@@ -731,7 +787,7 @@ var jsPanel = {
 
                         // apply snap options
                         if (opts.snap) {
-                            var snapSens = opts.snap.sensitivity || 70,
+                            var snapSens = opts.snap.sensitivity,
                                 topSensAreaLength = parent === document.body ? window.innerWidth / 8 : parentRect.width / 8,
                                 sideSensAreaLength = parent === document.body ? window.innerHeight / 8 : parentRect.height / 8;
                             elmt.snappableTo = false;
@@ -822,8 +878,12 @@ var jsPanel = {
                                 jsPanel.snapPanel(elmt, opts.snap.snapLeftCenter);
                             }
 
-                            if (opts.snap.callback && typeof opts.snap.callback === 'function') {
+                            if (opts.snap.callback && elmt.snappableTo && typeof opts.snap.callback === 'function') {
                                 opts.snap.callback.call(elmt, elmt);
+                            }
+
+                            if (elmt.snappableTo && opts.snap.repositionOnSnap) {
+                                elmt.repositionOnSnap(elmt.snappableTo);
                             }
                         }
 
@@ -1052,78 +1112,82 @@ var jsPanel = {
         }
         return error;
     },
-    pOmaximizedMargin: function pOmaximizedMargin(margins) {
-        if (margins || margins === 0) {
-            if (typeof margins === 'number') {
-                // margins: 20 => margins: [20, 20, 20, 20]
-                return [].concat(margins, margins, margins, margins);
-            } else if (Array.isArray(margins)) {
-                if (margins.length === 2) {
-                    // margins: [20, 40] => margins: [20, 40, 20, 40]
-                    return margins.concat(margins);
-                } else if (margins.length === 3) {
-                    // margins: [20, 40, 50] => margins: [20, 40, 50, 40]
-                    margins[3] = margins[1];
-                    return margins;
-                } else if (margins.length === 4) {
-                    return margins;
-                }
-            } else {
-                var defaults = this.defaults.maximizedMargin,
-                    top = typeof margins.top === 'number' ? margins.top : defaults[0],
-                    right = typeof margins.right === 'number' ? margins.right : defaults[1],
-                    bottom = typeof margins.bottom === 'number' ? margins.bottom : defaults[2],
-                    left = typeof margins.left === 'number' ? margins.left : defaults[3];
-                return margins = [top, right, bottom, left];
+
+
+    // normalizes values for option.maximizedMargin and containment of dragit/resizeit
+    pOcontainment: function pOcontainment(arg) {
+        if (typeof arg === 'number') {
+            // arg: 20 => arg: [20, 20, 20, 20]
+            return [arg, arg, arg, arg];
+        } else if (Array.isArray(arg)) {
+            if (arg.length === 1) {
+                // arg: [20] => arg: [20, 20, 20, 20]
+                return [arg[0], arg[0], arg[0], arg[0]];
+            } else if (arg.length === 2) {
+                // arg: [20, 40] => arg: [20, 40, 20, 40]
+                return arg.concat(arg);
+            } else if (arg.length === 3) {
+                arg[3] = arg[1];
             }
         }
+        return arg; // assumed to be array with 4 values
     },
-    pOsize: function pOsize(size) {
-        var values = {};
-        if (size) {
-            if (typeof size === 'string') {
-                var nums = size.trim().split(' ');
-                if (nums[0].match(/^[0-9]+$/gi)) {
-                    // if number only
-                    values.width = nums[0] + 'px';
-                } else if (nums[0].substr(-1) === '%') {
-                    values.width = parseFloat(nums[0]) + 'px';
-                } else {
-                    values.width = nums[0];
-                }
-                if (!nums[1]) {
-                    values.height = jsPanel.defaults.contentSize.height;
-                } else if (nums[1].match(/^[0-9]+$/gi)) {
-                    // if number only
-                    values.height = nums[1] + 'px';
-                } else if (nums[1].substr(-1) === '%') {
-                    values.height = parseFloat(nums[1]) + 'px';
-                } else {
-                    values.height = nums[1];
-                }
-            } else {
-                if (!size.width) {
-                    values.width = jsPanel.defaults.contentSize.width;
-                } else if (typeof size.width === 'number') {
-                    values.width = size.width + 'px';
-                } else if (typeof size.width === 'function') {
-                    var w = size.width();
-                    values.width = typeof w === 'number' ? w + 'px' : w;
-                } else {
-                    values.width = size.width;
-                }
-                if (!size.height) {
-                    values.height = jsPanel.defaults.contentSize.height;
-                } else if (typeof size.height === 'number') {
-                    values.height = size.height + 'px';
-                } else if (typeof size.height === 'function') {
-                    var h = size.height();
-                    values.height = typeof h === 'number' ? h + 'px' : h;
-                } else {
-                    values.height = size.height;
-                }
+    pOsize: function pOsize(panel, size) {
+        var values = size || this.defaults.contentSize,
+            parent = panel.parentNode;
+        if (typeof values === 'string') {
+            var nums = values.trim().split(' ');
+            values = {};
+            values.width = nums[0];
+            nums.length === 2 ? values.height = nums[1] : values.height = nums[0];
+        } else {
+            if (values.width && !values.height) {
+                values.height = values.width;
+            } else if (values.height && !values.width) {
+                values.width = values.height;
             }
         }
+
+        if (String(values.width).match(/^[0-9]+$/gi)) {
+            // if number only
+            values.width += 'px';
+        } else if (typeof values.width === 'string' && values.width.endsWith('%')) {
+            if (parent === document.body) {
+                values.width = window.innerWidth * (parseFloat(values.width) / 100) + 'px';
+            } else {
+                var prtStyles = window.getComputedStyle(parent),
+                    border = parseFloat(prtStyles.borderLeftWidth) + parseFloat(prtStyles.borderRightWidth);
+                values.width = (parseFloat(prtStyles.width) - border) * (parseFloat(values.width) / 100) + 'px';
+            }
+        } else if (typeof values.width === 'function') {
+            values.width = values.width();
+            if (typeof values.width === 'number') {
+                values.width += 'px';
+            } else if (typeof values.width === 'string' && values.width.match(/^[0-9]+$/gi)) {
+                values.width += 'px';
+            }
+        }
+
+        if (String(values.height).match(/^[0-9]+$/gi)) {
+            // if number only
+            values.height += 'px';
+        } else if (typeof values.height === 'string' && values.height.endsWith('%')) {
+            if (parent === document.body) {
+                values.height = window.innerHeight * (parseFloat(values.height) / 100) + 'px';
+            } else {
+                var _prtStyles = window.getComputedStyle(parent),
+                    _border = parseFloat(_prtStyles.borderTopWidth) + parseFloat(_prtStyles.borderBottomWidth);
+                values.height = (parseFloat(_prtStyles.height) - _border) * (parseFloat(values.height) / 100) + 'px';
+            }
+        } else if (typeof values.height === 'function') {
+            values.height = values.height();
+            if (typeof values.height === 'number') {
+                values.height += 'px';
+            } else if (typeof values.height === 'string' && values.height.match(/^[0-9]+$/gi)) {
+                values.height += 'px';
+            }
+        }
+
         return values; // return value must be object {width: xxx, height: xxx}
     },
     position: function position(elmt, _position) {
@@ -1180,7 +1244,7 @@ var jsPanel = {
             }
 
             if (offsetValue) {
-                // convert strings with only numbers to a numbe value
+                // convert strings with only numbers to a number value
                 offsetValue.forEach(function (item, index) {
                     if (item.match(/^[+-]?[0-9]*$/)) {
                         offsetValue[index] += 'px';
@@ -1486,7 +1550,7 @@ var jsPanel = {
             resizestart = new CustomEvent('resizestart', { detail: elmt.id }),
             resize = new CustomEvent('resize', { detail: elmt.id }),
             resizestop = new CustomEvent('resizestop', { detail: elmt.id });
-        var containment = opts.containment,
+        var containment = void 0,
             resizePanel = void 0,
             resizestarted = void 0,
             w = void 0,
@@ -1494,20 +1558,7 @@ var jsPanel = {
             frames = [];
 
         // normalize containment config
-        if (typeof containment === 'number') {
-            // containment: 20 => containment: [20, 20, 20, 20]
-            containment = [containment, containment, containment, containment];
-        } else if (Array.isArray(containment)) {
-            if (containment.length === 1) {
-                // containment: [20] => containment: [20, 20, 20, 20]
-                containment = [containment[0], containment[0], containment[0], containment[0]];
-            } else if (containment.length === 2) {
-                // containment: [20, 40] => containment: [20, 40, 20, 40]
-                containment = containment.concat(containment);
-            } else if (containment.length === 3) {
-                containment[3] = containment[1];
-            }
-        }
+        containment = this.pOcontainment(opts.containment);
 
         opts.handles.split(',').forEach(function (item) {
             var node = document.createElement('DIV');
@@ -1829,10 +1880,34 @@ var jsPanel = {
         return elmt;
     },
     snapPanel: function snapPanel(panel, pos) {
+        // store panel size before it snaps
+        panel.currentData.beforeSnap = {
+            width: panel.currentData.width,
+            height: panel.currentData.height
+        };
+        // snap panel
         if (pos && typeof pos === 'function') {
             pos.call(panel, panel, panel.snappableTo);
         } else if (pos !== false) {
-            panel.reposition(panel.snappableTo);
+            var offsets = [0, 0];
+            if (panel.options.dragit.snap.containment) {
+                if (panel.options.dragit.containment) {
+                    var containment = this.pOcontainment(panel.options.dragit.containment),
+                        position = panel.snappableTo;
+                    if (position.startsWith('left')) {
+                        offsets[0] = containment[3];
+                    } else if (position.startsWith('right')) {
+                        offsets[0] = -containment[1];
+                    }
+                    if (position.endsWith('top')) {
+                        offsets[1] = containment[0];
+                    } else if (position.endsWith('bottom')) {
+                        offsets[1] = -containment[2];
+                    }
+                }
+            }
+            panel.reposition(panel.snappableTo + ' ' + offsets[0] + ' ' + offsets[1]);
+            panel.snapped = panel.snappableTo;
         }
     },
 
@@ -1881,7 +1956,18 @@ var jsPanel = {
             return console.error(panelContainer.name + ':', panelContainer.message);
         }
 
-        opts.maximizedMargin = this.pOmaximizedMargin(opts.maximizedMargin);
+        // normalize maximizedMargin
+        opts.maximizedMargin = this.pOcontainment(opts.maximizedMargin);
+
+        // normalize snap config
+        if (opts.dragit && opts.dragit.snap) {
+            if (_typeof(opts.dragit.snap) === 'object') {
+                opts.dragit.snap = Object.assign({}, this.defaultSnapConfig, opts.dragit.snap);
+            } else {
+                opts.dragit.snap = this.defaultSnapConfig;
+            }
+        }
+
         opts.template = opts.template || false;
 
         var self = opts.template ? opts.template : this.createPanelTemplate();
@@ -1899,7 +1985,8 @@ var jsPanel = {
         self.headertoolbar = self.header.querySelector('.jsPanel-hdr-toolbar');
         self.content = self.querySelector('.jsPanel-content');
         self.footer = self.querySelector('.jsPanel-ftr');
-        self.snappableTo = undefined;
+        self.snappableTo = false;
+        self.snapped = false;
 
         // Events
         var jspanelloaded = new CustomEvent('jspanelloaded', { 'detail': opts.id }),
@@ -2304,7 +2391,7 @@ var jsPanel = {
             if (self.dataset.btnclose === 'enabled') {
                 jsPanel.pointerup.forEach(function (evt) {
                     tpl.querySelector('.jsPanel-btn-close').addEventListener(evt, function () {
-                        self.close().removeMinimizedReplacement();
+                        self.removeMinimizedReplacement().close();
                     });
                 });
             } else {
@@ -2549,6 +2636,49 @@ var jsPanel = {
             return self;
         };
 
+        self.repositionOnSnap = function (pos) {
+            var offsetX = '0',
+                offsetY = '0';
+            var margins = jsPanel.pOcontainment(opts.dragit.containment);
+            // calculate offsets
+            if (opts.dragit.snap.containment) {
+                if (pos === 'left-top') {
+                    offsetX = margins[3];
+                    offsetY = margins[0];
+                } else if (pos === 'right-top') {
+                    offsetX = -margins[1];
+                    offsetY = margins[0];
+                } else if (pos === 'right-bottom') {
+                    offsetX = -margins[1];
+                    offsetY = -margins[2];
+                } else if (pos === 'left-bottom') {
+                    offsetX = margins[3];
+                    offsetY = -margins[2];
+                } else if (pos === 'center-top') {
+                    offsetX = margins[3] / 2 - margins[1] / 2;
+                    offsetY = margins[0];
+                } else if (pos === 'center-bottom') {
+                    offsetX = margins[3] / 2 - margins[1] / 2;
+                    offsetY = -margins[2];
+                } else if (pos === 'left-center') {
+                    offsetX = margins[3];
+                    offsetY = margins[0] / 2 - margins[2] / 2;
+                } else if (pos === 'right-center') {
+                    offsetX = -margins[1];
+                    offsetY = margins[0] / 2 - margins[2] / 2;
+                }
+            }
+            /* jsPanel.position(self, `${pos} ${offsetX} ${offsetY}`);
+               For some reason I could not find the line above does not work (pos and offsets in one string), but only when
+               center-bottom is used with different settings for left/right margin.
+            */
+            jsPanel.position(self, pos);
+            jsPanel.setStyle(self, {
+                left: 'calc(' + self.style.left + ' + ' + offsetX + 'px)',
+                top: 'calc(' + self.style.top + ' + ' + offsetY + 'px)'
+            });
+        };
+
         self.resize = function () {
             for (var _len2 = arguments.length, params = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
                 params[_key2] = arguments[_key2];
@@ -2570,7 +2700,7 @@ var jsPanel = {
                 }
             });
 
-            var values = jsPanel.pOsize(size);
+            var values = jsPanel.pOsize(self, size);
             self.style.width = values.width;
             self.style.height = values.height;
             self.contentResize();
@@ -2735,7 +2865,7 @@ var jsPanel = {
                     textArray = void 0;
                 if (font === 'bootstrap' || font === 'glyphicon') {
                     classArray = ['glyphicon glyphicon-remove', 'glyphicon glyphicon-fullscreen', 'glyphicon glyphicon-resize-full', 'glyphicon glyphicon-minus', 'glyphicon glyphicon-chevron-down', 'glyphicon glyphicon-chevron-up'];
-                } else if (font === 'fa' || font === 'far' || font === 'fal') {
+                } else if (font === 'fa' || font === 'far' || font === 'fal' || font === 'fas') {
                     classArray = [font + ' fa-window-close', font + ' fa-window-maximize', font + ' fa-window-restore', font + ' fa-window-minimize', font + ' fa-chevron-down', font + ' fa-chevron-up'];
                 } else if (font === 'material-icons') {
                     classArray = [font, font, font, font, font, font];
@@ -2772,12 +2902,12 @@ var jsPanel = {
 
         self.setSize = function () {
             if (opts.panelSize) {
-                var values = jsPanel.pOsize(opts.panelSize);
+                var values = jsPanel.pOsize(self, opts.panelSize);
                 self.style.width = values.width;
                 self.style.height = values.height;
                 self.contentResize();
             } else if (opts.contentSize) {
-                var _values = jsPanel.pOsize(opts.contentSize);
+                var _values = jsPanel.pOsize(self, opts.contentSize);
                 self.content.style.width = _values.width;
                 self.content.style.height = _values.height;
                 // explicitly assign current width/height to panel
@@ -3044,9 +3174,12 @@ var jsPanel = {
 
         // option.dragit AND option.resizeit AND option.syncMargins
         if (opts.syncMargins) {
-            var containment = opts.maximizedMargin;
+            var containment = this.pOcontainment(opts.maximizedMargin);
             if (opts.dragit) {
                 opts.dragit.containment = containment;
+                if (opts.dragit.snap) {
+                    opts.dragit.snap.containment = true;
+                }
             }
             if (opts.resizeit) {
                 opts.resizeit.containment = containment;
