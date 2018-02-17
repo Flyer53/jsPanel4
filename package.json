@@ -1,8 +1,9 @@
 {
   "name": "jspanel4",
-  "version": "4.0.0-beta.2",
+  "version": "4.0.0-beta.3",
   "description": "A javascript tool to create highly configurable multifunctional floating panels for use in backend solutions and other web applications. Also usable as modal, tooltip, hint or contextmenu. With built in support for bootstrap (3 & 4), right-to-left text direction and a lot more ...",
   "files": "dist/",
+  "main": "./es6module/jspanel.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Flyer53/jsPanel4.git"
@@ -31,5 +32,22 @@
   "bugs": {
     "url": "https://github.com/Flyer53/jsPanel4/issues",
     "email": "info@jspanel.de"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.18.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^6.0.0",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "gulp-babel-minify": "^0.3.0",
+    "gulp-clean-css": "^3.9.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "node-sass": "^4.7.2"
   }
 }

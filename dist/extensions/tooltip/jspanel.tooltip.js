@@ -9,7 +9,7 @@ if (!jsPanel.tooltip) {
     jsPanel.tooltip = {
 
         version: '1.0.0',
-        date: '2017-12-11 21:06',
+        date: '2018-02-15 10:06',
 
         defaults: {
             //position: is set in jsPanel.tooltip.create()
@@ -221,7 +221,7 @@ if (!jsPanel.tooltip) {
 
     // close tooltips on pointerdown in document
     document.addEventListener(jsPanel.pointerdown, function (e) {
-        Array.prototype.slice.call(document.querySelectorAll('.jsPanel-tooltip')).forEach(function (item) {
+        document.querySelectorAll('.jsPanel-tooltip').forEach(function (item) {
             if (!e.target.closest('.jsPanel-tooltip')) {
                 item.close();
             }

@@ -1,11 +1,10 @@
 @charset "UTF-8"
-/* jspanel.sass: 2017-12-13 15:34 */
+/* jspanel.sass: 2018-02-01 15:29 */
 /* http://stackoverflow.com/questions/30421570/sass-unicode-escape-is-not-preserved-in-css-file */
-@function unicode($str)
-  @return unquote("\"")+unquote(str-insert($str, "\\", 1))+unquote("\"")
+//@function unicode($str)
+//  @return unquote("\"")+unquote(str-insert($str, "\\", 1))+unquote("\"")
 
 @import 'themes_mdl_styles'
-@import 'jsglyph'
 // themes are imported at the bottom of the file
 
 =basic-mixin
@@ -16,33 +15,24 @@
   font-weight: normal
 
 =flex-mixin
-  display: -ms-flexbox
   display: flex
 
 =footer-mixin
-  -ms-flex-direction: row
   flex-direction: row
-  -ms-flex-pack: end
   justify-content: flex-end
-  -ms-flex-wrap: nowrap
   flex-wrap: nowrap
-  -ms-flex-align: center
   align-items: center
 
 =header-mixin
   box-sizing: border-box
   +flex-mixin
-  -ms-flex-direction: row
   flex-direction: row
-  -ms-flex-wrap: nowrap
   flex-wrap: nowrap
-  -ms-flex-align: center
   align-items: center
 
 
 .jsPanel
   +basic-mixin
-  //box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)
   opacity: 0
   overflow: visible
   position: absolute
@@ -75,7 +65,6 @@
     border-bottom-left-radius: 3px
     border-bottom-right-radius: 3px
     border-top: 1px solid #e0e0e0
-    cursor: move
     display: none
     box-sizing: border-box
     font-size: 12px
@@ -99,7 +88,6 @@
 
 .jsPanel-headerbar
   +header-mixin
-  min-height: 38px
 
   img
     vertical-align: middle
@@ -107,10 +95,11 @@
 
 
 .jsPanel-titlebar
-  -ms-flex: 1 1 auto
-  flex: 1 1 auto
+  display: flex
+  align-items: center
+  flex-grow: 1
   cursor: move
-  min-height: 32px
+  height: 100%
   overflow: hidden
 
   h3
@@ -122,7 +111,8 @@
     font-size: 16px
     font-variant: small-caps
     font-weight: normal
-    margin: 10px 5px 10px 8px
+    margin: 0 5px 0 8px
+    min-width: 0    // needed in order to make text-overflow: ellipsis work
 
     small
       font-size: 75%
@@ -142,26 +132,24 @@
       opacity: .6
 
   .jsPanel-btn
-    padding: 0 3px
     cursor: pointer
     touch-action: none
 
     span
       vertical-align: middle
+      padding: 0 4px 0 2px
 
     span.glyphicon
       padding: 0 2px
 
-    span.fa, span.far, span.fal
-      padding: 0 4px 0 3px
-
     svg
-      margin: 0 4px 0 2px
+      margin: 0 8px 0 3px
 
-  .jsPanel-btn-normalize
-    display: none
+    .jsPanel-icon
+      padding-top: 9px
+      margin: 0 4px 0 0
 
-  .jsPanel-btn-smallifyrev
+  .jsPanel-btn-normalize, .jsPanel-btn-smallifyrev
     display: none
 
 .jsPanel-hdr-toolbar
@@ -180,14 +168,12 @@
 
 /* styles for panels using option.rtl */
 .jsPanel-headerbar.jsPanel-rtl, .jsPanel-controlbar.jsPanel-rtl, .jsPanel-hdr-toolbar.jsPanel-rtl
-  -ms-flex-direction: row-reverse
   flex-direction: row-reverse
 
 .jsPanel-hdr-toolbar.active.jsPanel-rtl
   padding: 7px 0 10px 0
 
 .jsPanel-ftr.jsPanel-rtl
-  -ms-flex-direction: row
   flex-direction: row
 
 
@@ -195,7 +181,6 @@
 /* container that takes the minified jsPanels */
 #jsPanel-replacement-container, .jsPanel-minimized-box
   +flex-mixin
-  -ms-flex-flow: row wrap-reverse
   flex-flow: row wrap-reverse
   background: transparent none repeat scroll 0 0
   bottom: 0
@@ -206,12 +191,16 @@
   z-index: 9998
 
   .jsPanel-replacement
+    display: flex
+    align-items: center
     width: 200px
     height: 40px
     margin: 1px 1px 0 0
     z-index: 9999
 
     .jsPanel-hdr
+      flex-grow: 1
+      min-width: 0
       padding: 0
 
       .jsPanel-headerlogo
@@ -223,9 +212,8 @@
           max-height: 38px
 
     .jsPanel-titlebar
-      -ms-flex: 1 1 60%
-      flex: 1 1 0
       cursor: default
+      min-width: 0
 
     .jsPanel-btn.jsPanel-btn-normalize
       display: block
@@ -238,9 +226,7 @@
 
 /* helper classes to make .jsPanel-content a flex box */
 .flexOne
-  display: -ms-flexbox
   display: flex
-  -ms-flex-flow: row wrap
   flex-flow: row wrap
 
 
@@ -314,22 +300,22 @@
   position: absolute
   left: 0
   top: 0
-  
-  
+
+
 /* box-shadows --------------------------------------------------------------------- */
 .jsPanel-depth-1
   box-shadow: 0 3px 6px rgba(0,0,0,.16), 0 3px 6px rgba(0,0,0,.23)
 
-.jsPanel-depth-2 
+.jsPanel-depth-2
   box-shadow: 0 10px 20px rgba(0,0,0,.19), 0 6px 6px rgba(0,0,0,.23)
 
-.jsPanel-depth-3 
+.jsPanel-depth-3
   box-shadow: 0 14px 28px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.22)
 
-.jsPanel-depth-4 
+.jsPanel-depth-4
   box-shadow: 0 19px 38px rgba(0,0,0,.30), 0 15px 12px rgba(0,0,0,.22)
 
-.jsPanel-depth-5 
+.jsPanel-depth-5
   box-shadow: 0 24px 48px rgba(0,0,0,.30), 0 20px 14px rgba(0,0,0,.22)
 
 
@@ -379,6 +365,12 @@
   border-top-right-radius: 100%
 
 
+/* IE11 CSS styles go here */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active)
+  #jsPanel-replacement-container .jsPanel-replacement .jsPanel-titlebar
+    max-width: 105px
+/* XXXXXXXXXXXXXXXXXXXXXXX */
+
 
 /* bootstrap adjustments */
 .jsPanel.panel-default, .jsPanel.panel-primary, .jsPanel.panel-info, .jsPanel.panel-success, .jsPanel.panel-warning, .jsPanel.panel-danger, .jsPanel.card.card-inverse
@@ -390,14 +382,6 @@
 .jsPanel-hdr.panel-heading
   border-bottom: none
   padding: 0
-
-//.jsPanel-hdr.panel-heading
-//  .jsPanel-headerbar
-//    .jsPanel-controlbar
-//      div:hover
-//        /*does not work in IE/EDGE*/
-//        -webkit-filter: invert(100%)
-//        filter: invert(100%)
 
 .jsPanel-title.panel-title .small, .jsPanel-title.panel-title small
   font-size: 75%

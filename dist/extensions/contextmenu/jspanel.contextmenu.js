@@ -7,7 +7,7 @@ if (!jsPanel.contextmenu) {
     jsPanel.contextmenu = {
 
         version: '1.0.0',
-        date: '2017-11-25 15:03',
+        date: '2018-02-15 10:43',
 
         defaults: {
             //position: is set in jsPanel.contextmenu.create()
@@ -52,7 +52,7 @@ if (!jsPanel.contextmenu) {
             target.addEventListener(evt, function (e) {
                 e.preventDefault();
                 // close all contextmenus first
-                Array.prototype.slice.call(document.querySelectorAll('.jsPanel-contextmenu')).forEach(function (item) {
+                document.querySelectorAll('.jsPanel-contextmenu').forEach(function (item) {
                     item.close();
                 });
 
@@ -107,7 +107,7 @@ if (!jsPanel.contextmenu) {
 
     // close tooltips on pointerdown in document
     document.addEventListener(jsPanel.pointerdown, function (e) {
-        Array.prototype.slice.call(document.querySelectorAll('.jsPanel-contextmenu')).forEach(function (item) {
+        document.querySelectorAll('.jsPanel-contextmenu').forEach(function (item) {
             if (!e.target.closest('.jsPanel-contextmenu')) {
                 item.close();
             }
