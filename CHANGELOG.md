@@ -1,5 +1,17 @@
 ## CHANGELOG
 
+### Version 4.0.0-beta.4 *released 2018-03-30*
+
++ **fix** in method **resizeit()**
++ **fix** in method **jsPanel.ajax()**
++ **fix** in methods **smallify()** and **unsmallify()**
++ **fix** in CSS for minimized panel containers
++ **improved** option **minimizedTo**
++ **improved** option **position**
++ **added** option **contentOverflow**
++ **replaced** option **headerRemove** with option **header**
++ various tweaks in css and js
+
 ### Version 4.0.0-beta.3 *released 2018-02-17*
 
 + **added** property **globalCallbacks** to the global object **jsPanel** lets you add callback functions to all or a limited set of jsPanels at once

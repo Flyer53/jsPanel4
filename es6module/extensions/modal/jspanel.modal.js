@@ -2,6 +2,12 @@
 /* global jsPanel */
 'use strict';
 
+/*
+If option.dragit is enabled on a modal AND an already open panel has option.syncMargins set to true the modal somehow inherits
+the option.dragit.containment setting of the already open panel. Reason unknown!
+Workaround: Set option.dragit.containment to a suitable value on the modal.
+ */
+ 
 import { jsPanel } from '../../jspanel.js';
 
 if (!jsPanel.modal) {

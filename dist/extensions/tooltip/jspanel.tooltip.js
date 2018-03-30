@@ -2,6 +2,8 @@
 /* global jsPanel */
 'use strict';
 
+// TODO: autoreposition tooltip after creation if it intersects window boundaries
+
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 if (!jsPanel.tooltip) {
@@ -9,11 +11,10 @@ if (!jsPanel.tooltip) {
     jsPanel.tooltip = {
 
         version: '1.0.0',
-        date: '2018-02-15 10:06',
+        date: '2018-03-13 09:40',
 
         defaults: {
             //position: is set in jsPanel.tooltip.create()
-            //container: is set in jsPanel.tooltip.create()
             border: '1px solid',
             dragit: false,
             resizeit: false,
@@ -164,25 +165,14 @@ if (!jsPanel.tooltip) {
                 conn = document.createElement('div');
             conn.className = 'jsPanel-connector jsPanel-connector-' + relposition;
 
-            if (relposition === 'left-top') {
-                left = 'calc(100% - 6px)';top = 'calc(100% - 6px)';
-            } else if (relposition === 'right-top') {
-                left = '-6px';top = 'calc(100% - 6px)';
-            } else if (relposition === 'right-bottom') {
-                left = '-6px';top = '-6px';
-            } else if (relposition === 'left-bottom') {
-                left = 'calc(100% - 6px)';top = '-6px';
-            } else if (relposition === 'top') {
-                left = 'calc(50% - 12px)';top = '100%';
+            // rest of tooltip positioning is in jspanel.sass
+            if (relposition === 'top') {
                 tip.style.top = parseFloat(tip.style.top) - 12 + 'px';
             } else if (relposition === 'right') {
-                left = '-24px';top = 'calc(50% - 12px)';
                 tip.style.left = parseFloat(tip.style.left) + 12 + 'px';
             } else if (relposition === 'bottom') {
-                left = 'calc(50% - 12px)';top = '-24px';
                 tip.style.top = parseFloat(tip.style.top) + 12 + 'px';
             } else if (relposition === 'left') {
-                left = '100%';top = 'calc(50% - 12px)';
                 tip.style.left = parseFloat(tip.style.left) - 12 + 'px';
             }
 
@@ -194,20 +184,12 @@ if (!jsPanel.tooltip) {
 
             if (relposition.match(/-/)) {
                 connCSS = {
-                    width: '12px',
-                    height: '12px',
-                    position: 'absolute',
                     left: left,
                     top: top,
-                    borderRadius: '50%',
                     backgroundColor: connBg
                 };
             } else {
                 connCSS = _defineProperty({
-                    width: 0,
-                    height: 0,
-                    border: '12px solid transparent',
-                    position: 'absolute',
                     left: left,
                     top: top
                 }, 'border-' + relposition + '-color', connBg);
@@ -216,6 +198,10 @@ if (!jsPanel.tooltip) {
             jsPanel.setStyle(conn, connCSS);
 
             return conn;
+        },
+        removeConnector: function removeConnector(tip) {
+            var conn = tip.querySelector('.jsPanel-connector');
+            tip.removeChild(conn);
         }
     };
 

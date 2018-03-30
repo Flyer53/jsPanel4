@@ -1,10 +1,11 @@
 /* jspanel.js - License MIT, copyright 2013 - 2018 Stefan Straesser <info@jspanel.de> (http://jspanel.de) */
 /* global jsPanel, $ */
 'use strict';
+
 const jsPanel = {
 
-    version: '4.0.0-beta.3',
-    date:    '2018-02-17 19:22',
+    version: '4.0.0-beta.4',
+    date:    '2018-03-30 17:50',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -32,6 +33,7 @@ const jsPanel = {
             opacity: 0.8,
             disableOnMaximized: true
         },
+        header: true,
         headerTitle: 'jsPanel',
         headerControls: 'all',
         iconfont: false,
@@ -182,15 +184,28 @@ const jsPanel = {
     themes: ['default', 'primary', 'info', 'success', 'warning', 'danger'],
     ziBase: 100,
 
-    ajax(obj) {
-        const conf = obj.options.contentAjax,
+    ajax(obj, ajaxConfig) {
+        // check whether obj is a jsPanel or something else
+        let objIsPanel;
+        if (typeof obj === 'object' && obj.classList.contains('jsPanel')) {
+            objIsPanel = true;
+        } else {
+            objIsPanel = false;
+            if (typeof obj === 'string') {
+                obj = document.querySelector(obj);
+            }
+        }
+
+        const conf = ajaxConfig,
             configDefaults = {
                 method: 'GET',
                 async: true,
                 user: '',
                 pwd: '',
                 done: function () {
-                    obj.content.innerHTML = this.responseText;
+                    objIsPanel
+                        ? obj.content.innerHTML = this.responseText
+                        : obj.innerHTML = this.responseText;
                 },
                 autoresize: true,
                 autoreposition: true
@@ -241,26 +256,28 @@ const jsPanel = {
                 if (config.always) {config.always.call(xhr, obj);}
 
                 // resize and reposition panel if either width or height is set to 'auto'
-                const oContentSize = obj.options.contentSize;
-                if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
-                    const parts = oContentSize.split(' ');
-                    const sizes = Object.assign({}, {width: parts[0], height: parts[1]});
-                    if (config.autoresize) {
-                        obj.resize(sizes);
-                    }
-                    if (!obj.classList.contains('jsPanel-contextmenu')) {
-                        if (config.autoreposition) {
-                            obj.reposition();
+                if (objIsPanel) {
+                    const oContentSize = obj.options.contentSize;
+                    if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
+                        const parts = oContentSize.split(' ');
+                        const sizes = Object.assign({}, {width: parts[0], height: parts[1]});
+                        if (config.autoresize) {
+                            obj.resize(sizes);
                         }
-                    }
-                } else if (typeof oContentSize === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
-                    const sizes = Object.assign({}, oContentSize);
-                    if (config.autoresize) {
-                        obj.resize(sizes);
-                    }
-                    if (!obj.classList.contains('jsPanel-contextmenu')) {
-                        if (config.autoreposition) {
-                            obj.reposition();
+                        if (!obj.classList.contains('jsPanel-contextmenu')) {
+                            if (config.autoreposition) {
+                                obj.reposition();
+                            }
+                        }
+                    } else if (typeof oContentSize === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
+                        const sizes = Object.assign({}, oContentSize);
+                        if (config.autoresize) {
+                            obj.resize(sizes);
+                        }
+                        if (!obj.classList.contains('jsPanel-contextmenu')) {
+                            if (config.autoreposition) {
+                                obj.reposition();
+                            }
                         }
                     }
                 }
@@ -563,7 +580,7 @@ const jsPanel = {
                                 <div class="jsPanel-headerbar">
                                     <div class="jsPanel-headerlogo"></div>
                                     <div class="jsPanel-titlebar">
-                                        <h3 class="jsPanel-title"></h3>
+                                        <span class="jsPanel-title"></span>
                                     </div>
                                     <div class="jsPanel-controlbar">
                                         <div class="jsPanel-btn jsPanel-btn-smallify">${this.icons.smallify}</div>
@@ -589,7 +606,7 @@ const jsPanel = {
                                 <div class="jsPanel-headerbar">
                                     <div class="jsPanel-headerlogo"></div>
                                     <div class="jsPanel-titlebar">
-                                        <h3 class="jsPanel-title"></h3>
+                                        <span class="jsPanel-title"></span>
                                     </div>
                                     <div class="jsPanel-controlbar">
                                         <div class="jsPanel-btn jsPanel-btn-normalize">${this.icons.normalize}</div>
@@ -1073,13 +1090,6 @@ const jsPanel = {
                 if (item.content.querySelector('iframe') && !overlay) {
                     let overlay = document.createElement('div');
                     overlay.className = 'jsPanel-iframe-overlay';
-                    jsPanel.setStyle(overlay, {
-                        position: 'absolute',
-                        top: 0,
-                        width: '100%',
-                        height: '100%',
-                        background: 'transparent'
-                    });
                     item.content.appendChild(overlay);
                 }
             } else {
@@ -1489,33 +1499,76 @@ const jsPanel = {
             }
         }
 
-        // apply minLeft, minTop, maxLeft and maxTop values (need to be numbers)
-        if ((posSettings.minLeft || posSettings.minLeft === 0) && typeof posSettings.minLeft === 'number' && calculatedPosition.left < posSettings.minLeft) {
-            calculatedPosition.left = posSettings.minLeft;
+        // convert positioning numbers to pixel values and position panel
+        calculatedPosition.left += 'px';
+        calculatedPosition.top += 'px';
+        elmtToPosition.style.left = calculatedPosition.left;
+        elmtToPosition.style.top = calculatedPosition.top;
+
+        // apply offsets
+        if (posSettings.offsetX) {
+            typeof posSettings.offsetX === 'number'
+                ? elmtToPosition.style.left = `calc(${calculatedPosition.left} + ${posSettings.offsetX}px)`
+                : elmtToPosition.style.left = `calc(${calculatedPosition.left} + ${posSettings.offsetX})`;
+            calculatedPosition.left = window.getComputedStyle(elmtToPosition).left;
         }
-        if ((posSettings.maxLeft || posSettings.maxLeft === 0) && typeof posSettings.maxLeft === 'number' && calculatedPosition.left > posSettings.maxLeft) {
-            calculatedPosition.left = posSettings.maxLeft;
-        }
-        if ((posSettings.minTop || posSettings.minTop === 0) && typeof posSettings.minTop === 'number' && calculatedPosition.top < posSettings.minTop) {
-            calculatedPosition.top = posSettings.minTop;
-        }
-        if ((posSettings.maxTop || posSettings.maxTop === 0) && typeof posSettings.maxTop === 'number' && calculatedPosition.top > posSettings.maxTop) {
-            calculatedPosition.top = posSettings.maxTop;
+        if (posSettings.offsetY) {
+            typeof posSettings.offsetY === 'number'
+                ? elmtToPosition.style.top = `calc(${calculatedPosition.top} + ${posSettings.offsetY}px)`
+                : elmtToPosition.style.top = `calc(${calculatedPosition.top} + ${posSettings.offsetY})`;
+            calculatedPosition.top = window.getComputedStyle(elmtToPosition).top;
         }
 
+        // apply minLeft
+        if (posSettings.minLeft) {
+            // save current left of panel as pixel value
+            let initialLeft = parseFloat(calculatedPosition.left);
+            // convert minLeft number to pixel value
+            if (typeof posSettings.minLeft === 'number') {posSettings.minLeft += 'px';}
+            // now position panel with minLeft value
+            elmtToPosition.style.left = posSettings.minLeft;
+            // get changed left as pixel value
+            let minLeft = parseFloat(window.getComputedStyle(elmtToPosition).left);
+            // compare minLeft with initialLeft and reposition panel again if needed
+            if (initialLeft > minLeft) {elmtToPosition.style.left = initialLeft + 'px';}
+            calculatedPosition.left = window.getComputedStyle(elmtToPosition).left;
+        }
+        // apply maxLeft
+        if (posSettings.maxLeft) {
+            let initialLeft = parseFloat(calculatedPosition.left);
+            if (typeof posSettings.maxLeft === 'number') {posSettings.maxLeft += 'px';}
+            elmtToPosition.style.left = posSettings.maxLeft;
+            let maxLeft = parseFloat(window.getComputedStyle(elmtToPosition).left);
+            if (initialLeft < maxLeft) {elmtToPosition.style.left = initialLeft + 'px';}
+            calculatedPosition.left = window.getComputedStyle(elmtToPosition).left;
+        }
+        // apply maxTop
+        if (posSettings.maxTop) {
+            let initialTop = parseFloat(calculatedPosition.top);
+            if (typeof posSettings.maxTop === 'number') {posSettings.maxTop += 'px';}
+            elmtToPosition.style.top = posSettings.maxTop;
+            let maxTop = parseFloat(window.getComputedStyle(elmtToPosition).top);
+            if (initialTop < maxTop) {elmtToPosition.style.top = initialTop + 'px';}
+            calculatedPosition.top = window.getComputedStyle(elmtToPosition).top;
+        }
+        // apply minTop
+        if (posSettings.minTop) {
+            let initialTop = parseFloat(calculatedPosition.top);
+            if (typeof posSettings.minTop === 'number') {posSettings.minTop += 'px';}
+            elmtToPosition.style.top = posSettings.minTop;
+            let minTop = parseFloat(window.getComputedStyle(elmtToPosition).top);
+            if (initialTop > minTop) {elmtToPosition.style.top = initialTop + 'px';}
+            calculatedPosition.top = window.getComputedStyle(elmtToPosition).top;
+        }
+
+        // apply modify
         if (typeof posSettings.modify === 'function') {
-            calculatedPosition = posSettings.modify.call(calculatedPosition, calculatedPosition);
-            // inside the function 'this' refers to the object 'newCoords'
-            // option.modify is optional. If present has to be a function returning an object with the keys 'left' and 'top' and values have to be numbers
+            let modifiedPosition = posSettings.modify.call(calculatedPosition, calculatedPosition);
+            elmtToPosition.style.left = modifiedPosition.left;
+            elmtToPosition.style.top = modifiedPosition.top;
         }
 
-        // finally apply offsets and position panel
-        if (typeof posSettings.offsetX === 'number') {posSettings.offsetX += 'px';}
-        if (typeof posSettings.offsetY === 'number') {posSettings.offsetY += 'px';}
-        elmtToPosition.style.left = `calc(${calculatedPosition.left}px + ${posSettings.offsetX})`;
-        elmtToPosition.style.top  = `calc(${calculatedPosition.top}px + ${posSettings.offsetY})`;
         elmtToPosition.style.opacity = 1;
-
         // convert css calc values to pixel values - this is required by dragit and resizeit
         elmtToPosition.style.left = window.getComputedStyle(elmtToPosition).left;
         elmtToPosition.style.top = window.getComputedStyle(elmtToPosition).top;
@@ -1881,6 +1934,7 @@ const jsPanel = {
                     document.dispatchEvent(resizestop);
                     resizestarted = undefined;
                     elmt.saveCurrentDimensions();
+                    elmt.saveCurrentPosition();
                     if (opts.stop) {
                         jsPanel.processCallbacks(elmt, opts.stop, false, {width: parseFloat(elmt.style.width), height: parseFloat(elmt.style.height)});
                     }
@@ -2018,6 +2072,10 @@ const jsPanel = {
         }
 
         opts.template = opts.template || false;
+
+        /* Compat code ------------------------------------------ */
+        if (opts.headerRemove) {opts.header = false}
+        /* ------------------------------------------------------ */
 
         let self = opts.template ? opts.template : this.createPanelTemplate();
 
@@ -2382,7 +2440,7 @@ const jsPanel = {
             const panelStyles = window.getComputedStyle(self),
                 hdrStyles   = window.getComputedStyle(self.header),
                 ftrStyles   = window.getComputedStyle(self.footer),
-                hdrHeight   = !opts.headerRemove ? hdrStyles.height : 0,
+                hdrHeight   = opts.header ? hdrStyles.height : 0,
                 ftrHeight   = ftrStyles.display === 'none' ? 0 : ftrStyles.height;
             let contentHeight = parseFloat(panelStyles.height) -
                     parseFloat(hdrHeight) -
@@ -2568,22 +2626,26 @@ const jsPanel = {
 
             if (opts.minimizeTo) {
                 const replacement = self.createMinimizedReplacement();
+                let container, parent, list;
                 if (opts.minimizeTo === 'default') {
                     document.getElementById('jsPanel-replacement-container').append(replacement);
-                } else {
-                    let container;
-                    if (typeof opts.minimizeTo === 'string') {
-                        if (opts.minimizeTo === 'parentpanel') {
-                            const parent = self.closest('.jsPanel-content').parentElement,
-                                list   = parent.querySelectorAll('.jsPanel-minimized-box');
-                            container = list[list.length - 1];
-                        } else {
-                            container = document.querySelector(opts.minimizeTo);
-                        }
-                    } else {
-                        container = opts.minimizeTo;
+                } else if (opts.minimizeTo === 'parentpanel') {
+                    parent = self.closest('.jsPanel-content').parentElement;
+                    list = parent.querySelectorAll('.jsPanel-minimized-box');
+                    container = list[list.length - 1];
+                    container.append(replacement);
+                } else if (opts.minimizeTo === 'parent') {
+                    parent = self.parentElement;
+                    container = parent.querySelector('.jsPanel-minimized-container');
+                    if (!container) {
+                        container = document.createElement('div');
+                        container.className = 'jsPanel-minimized-container';
+                        parent.append(container);
                     }
                     container.append(replacement);
+                } else {
+                    // all other strings are assumed to be selector strings returning a single element to append the min replacement to
+                    document.querySelector(opts.minimizeTo).append(replacement);
                 }
             }
 
@@ -2976,6 +3038,9 @@ const jsPanel = {
                 }
             }
 
+            let minBoxes = self.querySelectorAll('.jsPanel-minimized-box');
+            minBoxes[minBoxes.length - 1].style.display = 'none';
+
             if (callback) {callback.call(self, self);}
 
 
@@ -2998,6 +3063,7 @@ const jsPanel = {
                 if (self.status === 'smallified') {
                     self.style.height = self.currentData.height;
                     self.setControls(['.jsPanel-btn-normalize', '.jsPanel-btn-smallifyrev']);
+                    self.contentResize();
                     self.status = 'normalized';
                     document.dispatchEvent(jspanelnormalized);
                     document.dispatchEvent(jspanelstatuschange);
@@ -3009,6 +3075,9 @@ const jsPanel = {
                 } else if (self.status === 'minimized') {
                     self.normalize();
                 }
+
+                let minBoxes = self.querySelectorAll('.jsPanel-minimized-box');
+                minBoxes[minBoxes.length - 1].style.display = 'flex';
 
                 if (callback) {callback.call(self, self);}
 
@@ -3072,17 +3141,61 @@ const jsPanel = {
             self.classList.add(`jsPanel-depth-${opts.boxShadow}`);
         }
 
-        /* option.headerRemove,
+        /* option.header,
          option.iconfont,
          option.headerControls,
          option.headerLogo,
          option.headerTitle
          */
-        if (!opts.headerRemove) {
+        if (opts.header) {
             if (opts.headerLogo) {self.setHeaderLogo(opts.headerLogo);}
             self.setIconfont(opts.iconfont);
             self.setHeaderTitle(opts.headerTitle);
             self.setHeaderControls();
+
+            if (opts.header === 'auto-show-hide') {
+                let bg = opts.theme.split('-'),
+                    boxShadow = 'jsPanel-depth-' + opts.boxShadow,
+                    bgClass = 'bg-',
+                    mdbColorClass;
+                if (bg[1]) {bgClass += bg[1];}
+                if (bg[2]) {mdbColorClass = bg[1] + '-' + 'color-' + bg[2];}
+
+                self.header.style.opacity = 0;
+
+                if (bg[0] === 'bootstrap' || bg[0] === 'mdb') {
+                    this.remClass(self, bgClass);
+                    if (bg[0] === 'mdb') {
+                        this.remClass(self, mdbColorClass);
+                    }
+                }
+                self.style.backgroundColor = 'transparent';
+                this.remClass(self, boxShadow);
+                this.setClass(self.content, boxShadow);
+
+                self.header.addEventListener('mouseenter', function () {
+                    self.header.style.opacity = 1;
+                    if (bg[0] === 'bootstrap' || bg[0] === 'mdb') {
+                        jsPanel.setClass(self, bgClass);
+                        if (bg[0] === 'mdb') {
+                            jsPanel.setClass(self, mdbColorClass);
+                        }
+                    }
+                    jsPanel.setClass(self, boxShadow);
+                    jsPanel.remClass(self.content, boxShadow);
+                });
+                self.header.addEventListener('mouseleave', function () {
+                    self.header.style.opacity = 0;
+                    if (bg[0] === 'bootstrap' || bg[0] === 'mdb') {
+                        jsPanel.remClass(self, bgClass);
+                        if (bg[0] === 'mdb') {
+                            jsPanel.remClass(self, mdbColorClass);
+                        }
+                    }
+                    jsPanel.remClass(self, boxShadow);
+                    jsPanel.setClass(self.content, boxShadow);
+                });
+            }
         } else {
             self.setHeaderRemove();
         }
@@ -3109,12 +3222,23 @@ const jsPanel = {
 
         // option.contentAjax
         if (opts.contentAjax) {
-            this.ajax(self);
+            this.ajax(self, opts.contentAjax);
         }
 
         // option.contentFetch
         if (opts.contentFetch) {
             this.fetch(self);
+        }
+
+        // option.contentOverflow
+        if (opts.contentOverflow) {
+            let value = opts.contentOverflow.split(' ');
+            if (value.length === 1) {
+                self.content.style.overflow = value[0];
+            } else if (value.length === 2) {
+                self.content.style.overflowX = value[0];
+                self.content.style.overflowY = value[1];
+            }
         }
 
         // option.rtl

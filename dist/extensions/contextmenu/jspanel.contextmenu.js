@@ -7,14 +7,14 @@ if (!jsPanel.contextmenu) {
     jsPanel.contextmenu = {
 
         version: '1.0.0',
-        date: '2018-02-15 10:43',
+        date: '2018-03-16 14:30',
 
         defaults: {
             //position: is set in jsPanel.contextmenu.create()
             //container: is set in jsPanel.contextmenu.create()
             dragit: false,
             resizeit: false,
-            headerRemove: true,
+            header: false,
             headerControls: 'none'
         },
 

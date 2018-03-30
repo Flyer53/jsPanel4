@@ -1,5 +1,5 @@
 @charset "UTF-8"
-/* jspanel.sass: 2018-02-01 15:29 */
+/* jspanel.sass: 2018-03-30 17:50 */
 /* http://stackoverflow.com/questions/30421570/sass-unicode-escape-is-not-preserved-in-css-file */
 //@function unicode($str)
 //  @return unquote("\"")+unquote(str-insert($str, "\\", 1))+unquote("\"")
@@ -33,6 +33,8 @@
 
 .jsPanel
   +basic-mixin
+  display: flex
+  flex-direction: column
   opacity: 0
   overflow: visible
   position: absolute
@@ -44,18 +46,18 @@
     +basic-mixin
     border-top-left-radius: 3px
     border-top-right-radius: 3px
-    font-size: 18px
+    font-size: 1rem
     display: flex
     flex-direction: column
-    overflow: hidden
 
   .jsPanel-content
     +basic-mixin
     background: #ffffff
     color: #000000
-    font-size: 12px
+    font-size: 1rem
     position: relative
-    overflow: hidden
+    overflow-x: hidden
+    overflow-y: auto
 
     pre
       color: inherit /* this is just to override the bootstrap setting */
@@ -67,7 +69,7 @@
     border-top: 1px solid #e0e0e0
     display: none
     box-sizing: border-box
-    font-size: 12px
+    font-size: 1rem
     height: auto
     background: #f5f5f5
     font-weight: normal
@@ -78,13 +80,13 @@
     +flex-mixin
 
     > *
-      margin: 8px
+      margin: 3px 8px
 
   .jsPanel-ftr.panel-footer
     padding: 0
 
 .jsPanel-headerbar, .jsPanel-hdr-toolbar
-  font-size: 18px
+  font-size: 1rem
 
 .jsPanel-headerbar
   +header-mixin
@@ -92,7 +94,6 @@
   img
     vertical-align: middle
     max-height: 38px
-
 
 .jsPanel-titlebar
   display: flex
@@ -102,13 +103,13 @@
   height: 100%
   overflow: hidden
 
-  h3
+  .jsPanel-title
     color: #000000
     font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif
     white-space: nowrap
     overflow: hidden
     text-overflow: ellipsis
-    font-size: 16px
+    font-size: 1rem
     font-variant: small-caps
     font-weight: normal
     margin: 0 5px 0 8px
@@ -119,12 +120,13 @@
       color: inherit
 
 .jsPanel-titlebar.jsPanel-rtl
-  h3
+  .jsPanel-title
     flex: 1 0 auto
 
 .jsPanel-controlbar
   +flex-mixin
   align-items: center
+  //overflow: hidden
   touch-action: none
 
   div
@@ -156,13 +158,13 @@
   display: none
   width: auto
   height: auto
-  font-size: 16px
+  font-size: 1rem
 
 .jsPanel-hdr-toolbar.active
   +header-mixin
 
   > *
-    margin: 6px 8px
+    margin: 3px 8px
 
 
 
@@ -179,7 +181,7 @@
 
 
 /* container that takes the minified jsPanels */
-#jsPanel-replacement-container, .jsPanel-minimized-box
+#jsPanel-replacement-container, .jsPanel-minimized-box, .jsPanel-minimized-container
   +flex-mixin
   flex-flow: row wrap-reverse
   background: transparent none repeat scroll 0 0
@@ -218,9 +220,10 @@
     .jsPanel-btn.jsPanel-btn-normalize
       display: block
 
-.jsPanel-minimized-box
+.jsPanel-minimized-box, .jsPanel-minimized-container
   position: absolute
-  width: auto
+  width: 100%
+  overflow: hidden
 
 
 
@@ -365,6 +368,52 @@
   border-top-right-radius: 100%
 
 
+/* tooltip and tooltip connectors */
+.jsPanel-connector-left-top, .jsPanel-connector-right-top, .jsPanel-connector-left-bottom, .jsPanel-connector-right-bottom
+  width: 12px
+  height: 12px
+  position: absolute
+  border-radius: 50%
+
+.jsPanel-connector-left, .jsPanel-connector-top, .jsPanel-connector-bottom, .jsPanel-connector-right
+  width: 0
+  height: 0
+  position: absolute
+  border: 12px solid transparent
+
+.jsPanel-connector-left-top
+  left: calc(100% - 6px)
+  top: calc(100% - 6px)
+
+.jsPanel-connector-right-top
+  left: -6px
+  top: calc(100% - 6px)
+
+.jsPanel-connector-right-bottom
+  left: -6px
+  top: -6px
+
+.jsPanel-connector-left-bottom
+  left: calc(100% - 6px)
+  top: -6px
+
+.jsPanel-connector-top
+  left: calc(50% - 12px)
+  top: 100%
+
+.jsPanel-connector-right
+  left: -24px
+  top: calc(50% - 12px)
+
+.jsPanel-connector-bottom
+  left: calc(50% - 12px)
+  top: -24px
+
+.jsPanel-connector-left
+  left: 100%
+  top: calc(50% - 12px)
+
+
 /* IE11 CSS styles go here */
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active)
   #jsPanel-replacement-container .jsPanel-replacement .jsPanel-titlebar
@@ -463,6 +512,13 @@
 
 .jsPanel-modal-backdrop-multi
   background: rgba(0,0,0,0.15)
+
+.jsPanel-content .jsPanel-iframe-overlay
+  position: absolute
+  top: 0
+  width: 100%
+  height: 100%
+  background: transparent
 
 @import "themes"
 
