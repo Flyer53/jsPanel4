@@ -1,5 +1,9 @@
 ## CHANGELOG
 
+### Version 4.0.0-beta.4.1 *released 2018-04-04*
++ **bugfix** in jspanel.css
+
+
 ### Version 4.0.0-beta.4 *released 2018-03-30*
 
 + **fix** in method **resizeit()**
