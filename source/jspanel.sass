@@ -1,5 +1,5 @@
 @charset "UTF-8"
-/* jspanel.sass: 2018-03-30 17:50 */
+/* jspanel.sass: 2018-04-04 23:08 */
 /* http://stackoverflow.com/questions/30421570/sass-unicode-escape-is-not-preserved-in-css-file */
 //@function unicode($str)
 //  @return unquote("\"")+unquote(str-insert($str, "\\", 1))+unquote("\"")
@@ -33,7 +33,7 @@
 
 .jsPanel
   +basic-mixin
-  display: flex
+  //display: flex // doesn't work well with smallify unless min-height is set for header
   flex-direction: column
   opacity: 0
   overflow: visible

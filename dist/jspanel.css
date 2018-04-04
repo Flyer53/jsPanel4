@@ -1,4 +1,4 @@
-/* jspanel.sass: 2018-03-30 17:50 */
+/* jspanel.sass: 2018-04-04 23:08 */
 /* http://stackoverflow.com/questions/30421570/sass-unicode-escape-is-not-preserved-in-css-file */
 .jsPanel {
   border: 0;
@@ -6,7 +6,6 @@
   vertical-align: baseline;
   font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
   font-weight: normal;
-  display: flex;
   flex-direction: column;
   opacity: 0;
   overflow: visible;
