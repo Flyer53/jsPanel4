@@ -7,7 +7,7 @@ if (!jsPanel.layout) {
     jsPanel.layout = {
 
         version: '1.0.0',
-        date: '2017-05-14 10:15',
+        date: '2018-04-04 09:05',
 
         save(saveConfig = {}) {
             let selector = saveConfig.selector ? saveConfig.selector : '.jsPanel-standard';
@@ -41,15 +41,19 @@ if (!jsPanel.layout) {
         },
 
         getId(id, storagename = 'jspanels') {
-            let panels = this.getAll(storagename),
-                panel;
-            panels.forEach(item => {
-                if (item.id === id) {
-                    panel = item;
+            if (localStorage[storagename]) {
+                let panels = this.getAll(storagename),
+                    panel;
+                panels.forEach(item => {
+                    if (item.id === id) {
+                        panel = item;
+                    }
+                });
+                if (panel) {
+                    return panel;
+                } else {
+                    return false;
                 }
-            });
-            if (panel) {
-                return panel;
             } else {
                 return false;
             }
@@ -92,21 +96,25 @@ if (!jsPanel.layout) {
                 storage = restoreConfig.storagename ? restoreConfig.storagename : 'jspanels';
             }
 
-            let storedPanels = this.getAll(storage);
-            // loop over all panels in storage
-            storedPanels.forEach(function (item) {
-                let pId = item.id;
-                // loop over predefined configs to find config with pId
-                // this makes it unnecessary that identifiers for a certain config is the same as id in config
-                for (let conf in predefinedConfigs) {
-                    if (predefinedConfigs.hasOwnProperty(conf)) {
-                        if (predefinedConfigs[conf].id === pId) {
-                            //jsPanel.layout.restoreId(pId, predefinedConfigs[conf], storage);
-                            jsPanel.layout.restoreId({id:pId, config:predefinedConfigs[conf], storagename:storage});
+            if (localStorage[storage]) {
+                let storedPanels = this.getAll(storage);
+                // loop over all panels in storage
+                storedPanels.forEach(function (item) {
+                    let pId = item.id;
+                    // loop over predefined configs to find config with pId
+                    // this makes it unnecessary that identifiers for a certain config is the same as id in config
+                    for (let conf in predefinedConfigs) {
+                        if (predefinedConfigs.hasOwnProperty(conf)) {
+                            if (predefinedConfigs[conf].id === pId) {
+                                //jsPanel.layout.restoreId(pId, predefinedConfigs[conf], storage);
+                                jsPanel.layout.restoreId({id: pId, config: predefinedConfigs[conf], storagename: storage});
+                            }
                         }
                     }
-                }
-            });
+                });
+            } else {
+                return false;
+            }
         }
 
     };

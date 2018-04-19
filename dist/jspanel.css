@@ -1,4 +1,4 @@
-/* jspanel.sass: 2018-04-04 23:08 */
+/* jspanel.sass: 2018-04-18 20:24 */
 /* http://stackoverflow.com/questions/30421570/sass-unicode-escape-is-not-preserved-in-css-file */
 .jsPanel {
   border: 0;
@@ -6,12 +6,12 @@
   vertical-align: baseline;
   font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
   font-weight: normal;
+  display: flex;
   flex-direction: column;
   opacity: 0;
   overflow: visible;
   position: absolute;
   top: 0;
-  border-radius: 3px;
   z-index: 100; }
   .jsPanel .jsPanel-hdr {
     border: 0;
@@ -19,11 +19,10 @@
     vertical-align: baseline;
     font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
     font-weight: normal;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
     font-size: 1rem;
     display: flex;
-    flex-direction: column; }
+    flex-direction: column;
+    flex-shrink: 0; }
   .jsPanel .jsPanel-content {
     border: 0;
     box-sizing: border-box;
@@ -43,8 +42,6 @@
     justify-content: flex-end;
     flex-wrap: nowrap;
     align-items: center;
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
     border-top: 1px solid #e0e0e0;
     display: none;
     box-sizing: border-box;
@@ -96,8 +93,8 @@
       font-size: 75%;
       color: inherit; }
 
-.jsPanel-titlebar.jsPanel-rtl .jsPanel-title {
-  flex: 1 0 auto; }
+.jsPanel-titlebar.jsPanel-rtl {
+  flex-direction: row-reverse; }
 
 .jsPanel-controlbar {
   display: flex;
@@ -596,13 +593,7 @@
   color: #000000; }
 
 .jsPanel-content.jsPanel-content-noheader {
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
   border: none !important; }
-
-.jsPanel-content.jsPanel-content-nofooter {
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px; }
 
 body {
   -ms-overflow-style: scrollbar; }

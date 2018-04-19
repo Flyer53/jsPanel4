@@ -1,5 +1,5 @@
 @charset "UTF-8"
-/* jspanel.sass: 2018-04-04 23:08 */
+/* jspanel.sass: 2018-04-18 20:24 */
 /* http://stackoverflow.com/questions/30421570/sass-unicode-escape-is-not-preserved-in-css-file */
 //@function unicode($str)
 //  @return unquote("\"")+unquote(str-insert($str, "\\", 1))+unquote("\"")
@@ -33,22 +33,20 @@
 
 .jsPanel
   +basic-mixin
-  //display: flex // doesn't work well with smallify unless min-height is set for header
+  display: flex
   flex-direction: column
   opacity: 0
   overflow: visible
   position: absolute
   top: 0  /* do not remove, otherwise panel is at the very bottom of the page -> results in vertical scrollbars -> positionings at right incorrect */
-  border-radius: 3px
   z-index: 100
 
   .jsPanel-hdr
     +basic-mixin
-    border-top-left-radius: 3px
-    border-top-right-radius: 3px
     font-size: 1rem
     display: flex
     flex-direction: column
+    flex-shrink: 0
 
   .jsPanel-content
     +basic-mixin
@@ -64,8 +62,6 @@
 
   .jsPanel-ftr
     +footer-mixin
-    border-bottom-left-radius: 3px
-    border-bottom-right-radius: 3px
     border-top: 1px solid #e0e0e0
     display: none
     box-sizing: border-box
@@ -120,8 +116,7 @@
       color: inherit
 
 .jsPanel-titlebar.jsPanel-rtl
-  .jsPanel-title
-    flex: 1 0 auto
+  flex-direction: row-reverse
 
 .jsPanel-controlbar
   +flex-mixin
@@ -525,13 +520,7 @@
 
 // these styles need to be after the themes
 .jsPanel-content.jsPanel-content-noheader
-  border-top-left-radius: 3px
-  border-top-right-radius: 3px
   border: none !important
-
-.jsPanel-content.jsPanel-content-nofooter
-  border-bottom-left-radius: 3px
-  border-bottom-right-radius: 3px
 
 
 // IE specific

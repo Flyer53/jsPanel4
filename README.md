@@ -1,6 +1,6 @@
 ![license MIT](https://img.shields.io/badge/license-MIT-blue.svg) [![npm version](https://badge.fury.io/js/jspanel4.svg)](https://badge.fury.io/js/jspanel4) [![npm](https://img.shields.io/npm/dt/express.svg)](https://www.npmjs.com/package/jspanel4) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/jsPanel/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
-## [jsPanel 4.0.0-beta.4.1 released 2018-04-04](#)
+## [jsPanel 4.0.0-beta.5 released 2018-04-19](#)
 
 
 **A dependency free javascript tool to create highly configurable multifunctional floating panels.**
@@ -9,8 +9,8 @@
 
 ---
 
-### jsPanel 4 beta homepage: [http://jspanel.de](http://jspanel.de/)
-### API and examples: [http://jspanel.de/docs/](http://jspanel.de/docs/)
+### jsPanel 4 beta homepage: [https://jspanel.de](https://jspanel.de/)
+### API and examples: [https://jspanel.de/api.html](https://jspanel.de/api.html)
 
 ### [Dependencies]()
 Just a modern mobile or desktop browser like FF, Chrome, EDGE, Brave, Opera, Vivaldi.

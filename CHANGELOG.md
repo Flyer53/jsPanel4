@@ -1,6 +1,17 @@
 ## CHANGELOG
 
+### Version 4.0.0-beta.5 *released 2018-04-19*
+
++ **new** events `jspaneldragstart`, `jspaneldrag`, `jspaneldragstop`, `jspanelresizestart`, `jspanelresize`, `jspanelresizestop`
++ **new** extension **`dock`** extending a jsPanel with the method `.dock()`. This method allows to _dock_ one or more _slave_ panels to a _master_ panel. Basically that means a _slave_ panel is dragged, maximized, normalized, minimized, closed and optionally resized together with the _master_ panel it's docked to.
++ **bugfix** in option `dragit`
++ **bugfix** in extension `layout`
++ **bugfix** in `jspanel.css`
++ **bugfix** in CSS for Right-To-Left panels
++ **removed** CSS `border-radius` settings from themes
+
 ### Version 4.0.0-beta.4.1 *released 2018-04-04*
+
 + **bugfix** in jspanel.css
 
 

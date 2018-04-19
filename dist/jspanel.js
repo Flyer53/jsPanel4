@@ -8,8 +8,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var jsPanel = {
 
-    version: '4.0.0-beta.4',
-    date: '2018-03-30 17:50',
+    version: '4.0.0-beta.5',
+    date: '2018-04-19 09:00',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: function () {
@@ -632,9 +632,9 @@ var jsPanel = {
             dragElmt = void 0,
             containment = void 0,
             frames = [];
-        var dragstart = new CustomEvent('dragstart', { detail: elmt.id }),
-            drag = new CustomEvent('drag', { detail: elmt.id }),
-            dragstop = new CustomEvent('dragstop', { detail: elmt.id });
+        var jspaneldragstart = new CustomEvent('jspaneldragstart', { detail: elmt.id }),
+            jspaneldrag = new CustomEvent('jspaneldrag', { detail: elmt.id }),
+            jspaneldragstop = new CustomEvent('jspaneldragstop', { detail: elmt.id });
 
         // normalize grid config
         if (opts.grid && Array.isArray(opts.grid)) {
@@ -688,7 +688,7 @@ var jsPanel = {
                         e.preventDefault();
 
                         if (!dragstarted) {
-                            document.dispatchEvent(dragstart);
+                            document.dispatchEvent(jspaneldragstart);
                             elmt.style.opacity = opts.opacity;
                             // if configured restore panel size to values before snap and reposition reasonable before drag actually starts
                             if (elmt.snapped && opts.snap.resizeToPreSnap && elmt.currentData.beforeSnap) {
@@ -740,13 +740,14 @@ var jsPanel = {
                         }
                         // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+                        elmtL = parseFloat(dragStyles.left);
+                        elmtT = parseFloat(dragStyles.top);
+                        elmtR = right; // instead of parseFloat(dragStyles.right);
+                        elmtB = bottom; // instead of parseFloat(dragStyles.bottom);
+
                         if (opts.snap) {
                             if (opts.snap.trigger === 'panel') {
-                                elmtL = parseFloat(dragStyles.left);
                                 elmtL2 = Math.pow(elmtL, 2);
-                                elmtT = parseFloat(dragStyles.top);
-                                elmtR = right; // instead of parseFloat(dragStyles.right);
-                                elmtB = bottom; // instead of parseFloat(dragStyles.bottom);
                             } else if (opts.snap.trigger === 'pointer') {
                                 elmtL = pmx;
                                 elmtL2 = Math.pow(pmx, 2);
@@ -774,7 +775,7 @@ var jsPanel = {
                         window.getSelection().removeAllRanges();
 
                         // trigger drag permanently while draging
-                        document.dispatchEvent(drag);
+                        document.dispatchEvent(jspaneldrag);
 
                         // move elmt
                         if (!opts.axis || opts.axis === 'x') {
@@ -906,7 +907,7 @@ var jsPanel = {
                     jsPanel.removeSnapAreas(elmt);
 
                     if (dragstarted) {
-                        document.dispatchEvent(dragstop);
+                        document.dispatchEvent(jspaneldragstop);
                         elmt.style.opacity = 1;
                         dragstarted = undefined;
                         elmt.saveCurrentPosition();
@@ -968,7 +969,7 @@ var jsPanel = {
         return node;
     },
     extend: function extend(obj) {
-        // obj needs to be a plain object
+        // obj needs to be a plain object (to extend the individual panel, not the global object)
         if (Object.prototype.toString.call(obj) === '[object Object]') {
             for (var ext in obj) {
                 if (obj.hasOwnProperty(ext)) {
@@ -1258,6 +1259,42 @@ var jsPanel = {
 
         return values; // return value must be object {width: xxx, height: xxx}
     },
+    pOposition: function pOposition(positionString) {
+        var posValue = positionString.match(/\b[a-z]{4,6}-{1}[a-z]{3,6}\b/i),
+            autoposValue = positionString.match(/down|up|right([^-]|$)|left([^-]|$)/i),
+            offsetValue = positionString.match(/[+-]?\d?\.?\d+([a-z%]{2,4}\b|%?)/gi);
+        var settings = void 0;
+
+        if (posValue) {
+            settings = { my: posValue[0].toLowerCase(), at: posValue[0].toLowerCase() };
+        } else {
+            settings = { my: 'center', at: 'center' };
+        }
+
+        if (autoposValue) {
+            settings.autoposition = autoposValue[0].toLowerCase();
+        }
+
+        if (offsetValue) {
+            // convert strings with only numbers to a number value
+            offsetValue.forEach(function (item, index) {
+                if (item.match(/^[+-]?[0-9]*$/)) {
+                    offsetValue[index] += 'px';
+                }
+                offsetValue[index] = offsetValue[index].toLowerCase();
+            });
+            // only one passed offset is used for both offsetX and offsetY
+            if (offsetValue.length === 1) {
+                settings.offsetX = offsetValue[0];
+                settings.offsetY = offsetValue[0];
+            } else {
+                settings.offsetX = offsetValue[0];
+                settings.offsetY = offsetValue[1];
+            }
+        }
+
+        return settings;
+    },
     position: function position(elmt, _position) {
         var elmtToPosition = void 0,
             posSettings = void 0,
@@ -1296,40 +1333,7 @@ var jsPanel = {
 
         // translate shorthand string to object - "top-left 50 50 down"
         if (typeof _position === 'string') {
-            var posValue = _position.match(/\b[a-z]{4,6}-{1}[a-z]{3,6}\b/i),
-                autoposValue = _position.match(/down|up|right([^-]|$)|left([^-]|$)/i),
-                offsetValue = _position.match(/[+-]?\d?\.?\d+([a-z%]{2,4}\b|%?)/gi);
-            var settings = void 0;
-
-            if (posValue) {
-                settings = { my: posValue[0].toLowerCase(), at: posValue[0].toLowerCase() };
-            } else {
-                settings = { my: 'center', at: 'center' };
-            }
-
-            if (autoposValue) {
-                settings.autoposition = autoposValue[0].toLowerCase();
-            }
-
-            if (offsetValue) {
-                // convert strings with only numbers to a number value
-                offsetValue.forEach(function (item, index) {
-                    if (item.match(/^[+-]?[0-9]*$/)) {
-                        offsetValue[index] += 'px';
-                    }
-                    offsetValue[index] = offsetValue[index].toLowerCase();
-                });
-                // only one passed offset is used for both offsetX and offsetY
-                if (offsetValue.length === 1) {
-                    settings.offsetX = offsetValue[0];
-                    settings.offsetY = offsetValue[0];
-                } else {
-                    settings.offsetX = offsetValue[0];
-                    settings.offsetY = offsetValue[1];
-                }
-            }
-
-            posSettings = Object.assign({}, defaults, settings);
+            posSettings = Object.assign({}, defaults, jsPanel.pOposition(_position));
         } else {
             posSettings = Object.assign({}, defaults, _position);
         }
@@ -1690,9 +1694,9 @@ var jsPanel = {
             maxHeight = typeof opts.maxHeight === 'function' ? opts.maxHeight() : opts.maxHeight || 10000,
             minWidth = typeof opts.minWidth === 'function' ? opts.minWidth() : opts.minWidth,
             minHeight = typeof opts.minHeight === 'function' ? opts.minHeight() : opts.minHeight,
-            resizestart = new CustomEvent('resizestart', { detail: elmt.id }),
-            resize = new CustomEvent('resize', { detail: elmt.id }),
-            resizestop = new CustomEvent('resizestop', { detail: elmt.id });
+            jspanelresizestart = new CustomEvent('jspanelresizestart', { detail: elmt.id }),
+            jspanelresize = new CustomEvent('jspanelresize', { detail: elmt.id }),
+            jspanelresizestop = new CustomEvent('jspanelresizestop', { detail: elmt.id });
         var containment = void 0,
             resizePanel = void 0,
             resizestarted = void 0,
@@ -1796,7 +1800,7 @@ var jsPanel = {
                     resizePanel = function resizePanel(evt) {
                         // trigger resizestarted only once per resize
                         if (!resizestarted) {
-                            document.dispatchEvent(resizestart);
+                            document.dispatchEvent(jspanelresizestart);
                             if (opts.start) {
                                 jsPanel.processCallbacks(elmt, opts.start, false, { width: startWidth, height: startHeight });
                             }
@@ -1804,7 +1808,7 @@ var jsPanel = {
                         }
                         resizestarted = 1;
                         // trigger resize permanently while resizing
-                        document.dispatchEvent(resize);
+                        document.dispatchEvent(jspanelresize);
 
                         if (resizeHandleClassList.contains('jsPanel-resizeit-e') || resizeHandleClassList.contains('jsPanel-resizeit-se') || resizeHandleClassList.contains('jsPanel-resizeit-ne')) {
 
@@ -1974,7 +1978,7 @@ var jsPanel = {
 
                 if (resizestarted) {
                     elmt.content.style.pointerEvents = 'inherit';
-                    document.dispatchEvent(resizestop);
+                    document.dispatchEvent(jspanelresizestop);
                     resizestarted = undefined;
                     elmt.saveCurrentDimensions();
                     elmt.saveCurrentPosition();
@@ -2078,26 +2082,25 @@ var jsPanel = {
             }();
         }
 
-        var opts = void 0,
-            closetimer = void 0;
+        var closetimer = void 0;
         if (options.config) {
-            opts = Object.assign({}, this.defaults, options.config, options);
-            delete opts.config;
+            options = Object.assign({}, this.defaults, options.config, options);
+            delete options.config;
         } else {
-            opts = Object.assign({}, this.defaults, options);
+            options = Object.assign({}, this.defaults, options);
         }
-        if (!opts.id) {
-            opts.id = 'jsPanel-' + (jsPanel.idCounter += 1);
-        } else if (typeof opts.id === 'function') {
-            opts.id = opts.id();
+        if (!options.id) {
+            options.id = 'jsPanel-' + (jsPanel.idCounter += 1);
+        } else if (typeof options.id === 'function') {
+            options.id = options.id();
         }
-        var p = document.getElementById(opts.id);
+        var p = document.getElementById(options.id);
         if (p !== null) {
             // if a panel with passed id already exists, front it and return error object
             if (p.classList.contains('jsPanel')) {
                 p.front();
             }
-            var error = new jsPanelError('NO NEW PANEL CREATED!\nAn element with the ID <' + opts.id + '> already exists in the document.');
+            var error = new jsPanelError('NO NEW PANEL CREATED!\nAn element with the ID <' + options.id + '> already exists in the document.');
             try {
                 throw error;
             } catch (e) {
@@ -2109,35 +2112,68 @@ var jsPanel = {
         }
 
         // check whether container is valid -> if not return and log error
-        var panelContainer = this.pOcontainer(opts.container, cb);
+        var panelContainer = this.pOcontainer(options.container, cb);
         if (panelContainer && panelContainer.message) {
             return console.error(panelContainer.name + ':', panelContainer.message);
         }
 
         // normalize maximizedMargin
-        opts.maximizedMargin = this.pOcontainment(opts.maximizedMargin);
+        options.maximizedMargin = this.pOcontainment(options.maximizedMargin);
 
-        // normalize snap config
-        if (opts.dragit && opts.dragit.snap) {
-            if (_typeof(opts.dragit.snap) === 'object') {
-                opts.dragit.snap = Object.assign({}, this.defaultSnapConfig, opts.dragit.snap);
-            } else {
-                opts.dragit.snap = this.defaultSnapConfig;
+        // normalize drag config
+        if (options.dragit) {
+            ['start', 'drag', 'stop'].forEach(function (item) {
+                if (options.dragit[item]) {
+                    if (typeof options.dragit[item] === 'function') {
+                        options.dragit[item] = [options.dragit[item]];
+                    }
+                } else {
+                    options.dragit[item] = [];
+                }
+            });
+            if (options.dragit.snap) {
+                if (_typeof(options.dragit.snap) === 'object') {
+                    options.dragit.snap = Object.assign({}, this.defaultSnapConfig, options.dragit.snap);
+                } else {
+                    options.dragit.snap = this.defaultSnapConfig;
+                }
             }
         }
 
-        opts.template = opts.template || false;
+        // normalize resizeit config
+        if (options.resizeit) {
+            ['start', 'resize', 'stop'].forEach(function (item) {
+                if (options.resizeit[item]) {
+                    if (typeof options.resizeit[item] === 'function') {
+                        options.resizeit[item] = [options.resizeit[item]];
+                    }
+                } else {
+                    options.resizeit[item] = [];
+                }
+            });
+        }
+
+        // normalize on... callbacks
+        ['onbeforeclose', 'onbeforemaximize', 'onbeforeminimize', 'onbeforenormalize', 'onbeforesmallify', 'onbeforeunsmallify', 'onclosed', 'onfronted', 'onmaximized', 'onminimized', 'onnormalized', 'onsmallified', 'onstatuschange', 'onunsmallified'].forEach(function (item) {
+            if (options[item]) {
+                if (typeof options[item] === 'function') {
+                    options[item] = [options[item]];
+                }
+            } else {
+                options[item] = [];
+            }
+        });
 
         /* Compat code ------------------------------------------ */
-        if (opts.headerRemove) {
-            opts.header = false;
+        if (options.headerRemove) {
+            options.header = false;
         }
         /* ------------------------------------------------------ */
 
-        var self = opts.template ? opts.template : this.createPanelTemplate();
+        var self = options.template ? options.template : this.createPanelTemplate();
 
         // Properties
-        self.options = opts;
+        self.options = options;
         self.status = 'initialized';
         self.currentData = {};
         self.header = self.querySelector('.jsPanel-hdr'); // complete header section
@@ -2153,21 +2189,21 @@ var jsPanel = {
         self.snapped = false;
 
         // Events
-        var jspanelloaded = new CustomEvent('jspanelloaded', { 'detail': opts.id }),
-            jspanelbeforeclose = new CustomEvent('jspanelbeforeclose', { 'detail': opts.id }),
-            jspanelclosed = new CustomEvent('jspanelclosed', { 'detail': opts.id }),
-            jspanelstatuschange = new CustomEvent('jspanelstatuschange', { 'detail': opts.id }),
-            jspanelbeforenormalize = new CustomEvent('jspanelbeforenormalize', { 'detail': opts.id }),
-            jspanelnormalized = new CustomEvent('jspanelnormalized', { 'detail': opts.id }),
-            jspanelbeforemaximize = new CustomEvent('jspanelbeforemaximize', { 'detail': opts.id }),
-            jspanelmaximized = new CustomEvent('jspanelmaximized', { 'detail': opts.id }),
-            jspanelbeforeminimize = new CustomEvent('jspanelbeforeminimize', { 'detail': opts.id }),
-            jspanelminimized = new CustomEvent('jspanelminimized', { 'detail': opts.id }),
-            jspanelbeforesmallify = new CustomEvent('jspanelbeforesmallify', { 'detail': opts.id }),
-            jspanelsmallified = new CustomEvent('jspanelsmallified', { 'detail': opts.id }),
-            jspanelsmallifiedmax = new CustomEvent('jspanelsmallifiedmax', { 'detail': opts.id }),
-            jspanelbeforeunsmallify = new CustomEvent('jspanelbeforeunsmallify', { 'detail': opts.id }),
-            jspanelfronted = new CustomEvent('jspanelfronted', { 'detail': opts.id });
+        var jspanelloaded = new CustomEvent('jspanelloaded', { 'detail': options.id }),
+            jspanelbeforeclose = new CustomEvent('jspanelbeforeclose', { 'detail': options.id }),
+            jspanelclosed = new CustomEvent('jspanelclosed', { 'detail': options.id }),
+            jspanelstatuschange = new CustomEvent('jspanelstatuschange', { 'detail': options.id }),
+            jspanelbeforenormalize = new CustomEvent('jspanelbeforenormalize', { 'detail': options.id }),
+            jspanelnormalized = new CustomEvent('jspanelnormalized', { 'detail': options.id }),
+            jspanelbeforemaximize = new CustomEvent('jspanelbeforemaximize', { 'detail': options.id }),
+            jspanelmaximized = new CustomEvent('jspanelmaximized', { 'detail': options.id }),
+            jspanelbeforeminimize = new CustomEvent('jspanelbeforeminimize', { 'detail': options.id }),
+            jspanelminimized = new CustomEvent('jspanelminimized', { 'detail': options.id }),
+            jspanelbeforesmallify = new CustomEvent('jspanelbeforesmallify', { 'detail': options.id }),
+            jspanelsmallified = new CustomEvent('jspanelsmallified', { 'detail': options.id }),
+            jspanelsmallifiedmax = new CustomEvent('jspanelsmallifiedmax', { 'detail': options.id }),
+            jspanelbeforeunsmallify = new CustomEvent('jspanelbeforeunsmallify', { 'detail': options.id }),
+            jspanelfronted = new CustomEvent('jspanelfronted', { 'detail': options.id });
 
         // controls handlers
         var hasCloseBtn = self.querySelector('.jsPanel-btn-close'),
@@ -2226,7 +2262,7 @@ var jsPanel = {
             });
         }
 
-        // import extensions
+        // import extensions (extensions of the individual panel, not the global object jsPanel)
         var extensions = jsPanel.extensions;
         for (var ext in extensions) {
             if (extensions.hasOwnProperty(ext)) {
@@ -2284,7 +2320,7 @@ var jsPanel = {
                 self.content.classList.add('jsPanel-content-' + themeDetails.filling);
             }
 
-            if (!opts.headerToolbar) {
+            if (!options.headerToolbar) {
                 self.content.style.background = '';
                 self.content.style.borderTop = '1px solid ' + self.headertitle.style.color;
             }
@@ -2301,7 +2337,7 @@ var jsPanel = {
                 item.style.color = themeDetails.colors[3];
             });
 
-            if (opts.headerToolbar) {
+            if (options.headerToolbar) {
                 jsPanel.setStyle(self.headertoolbar, {
                     boxShadow: '0 0 1px ' + themeDetails.colors[3] + ' inset',
                     width: 'calc(100% + 4px)',
@@ -2365,12 +2401,10 @@ var jsPanel = {
         };
 
         self.applyThemeBorder = function (themeDetails) {
-            var bordervalues = opts.border.split(' ');
+            var bordervalues = options.border.split(' ');
             self.style.borderWidth = bordervalues[0];
             self.style.borderStyle = bordervalues[1];
             self.style.borderColor = bordervalues[2];
-            self.header.style.borderTopLeftRadius = '1px';
-            self.header.style.borderTopRightRadius = '1px';
             if (!themeDetails.bs) {
                 if (jsPanel.themes.indexOf(themeDetails.color) === -1) {
                     // arbitrary themes only (for built-in themes it's taken from the css file)
@@ -2397,7 +2431,7 @@ var jsPanel = {
                 }
             });
             if (autoPos) {
-                opts.container.querySelectorAll('.' + autoPos).forEach(function (item) {
+                options.container.querySelectorAll('.' + autoPos).forEach(function (item) {
                     item.reposition();
                 });
             }
@@ -2405,7 +2439,7 @@ var jsPanel = {
 
         self.calcSizeFactors = function () {
             var styles = window.getComputedStyle(self);
-            if (opts.container === document.body) {
+            if (options.container === document.body) {
                 self.hf = parseFloat(self.style.left) / (document.body.clientWidth - parseFloat(self.style.width));
                 self.vf = parseFloat(self.style.top) / (window.innerHeight - parseFloat(styles.height));
             } else {
@@ -2442,7 +2476,7 @@ var jsPanel = {
         self.close = function (callback) {
 
             var doClose = function doClose() {
-                var panelId = opts.id;
+                var panelId = options.id;
 
                 if (closetimer) {
                     window.clearTimeout(closetimer);
@@ -2463,8 +2497,8 @@ var jsPanel = {
                     callback.call(panelId, panelId);
                 }
 
-                if (opts.onclosed) {
-                    jsPanel.processCallbacks(self, opts.onclosed, 'every');
+                if (options.onclosed) {
+                    jsPanel.processCallbacks(self, options.onclosed, 'every');
                 }
 
                 // if panel is autopositioned reposition remaining autopositioned panels
@@ -2473,15 +2507,15 @@ var jsPanel = {
 
             document.dispatchEvent(jspanelbeforeclose);
 
-            if (opts.onbeforeclose && !jsPanel.processCallbacks(self, opts.onbeforeclose)) {
+            if (options.onbeforeclose && options.onbeforeclose.length > 0 && !jsPanel.processCallbacks(self, options.onbeforeclose)) {
                 return self;
             }
 
-            if (opts.animateOut) {
-                if (opts.animateIn) {
-                    jsPanel.remClass(self, opts.animateIn);
+            if (options.animateOut) {
+                if (options.animateIn) {
+                    jsPanel.remClass(self, options.animateIn);
                 }
-                jsPanel.setClass(self, opts.animateOut);
+                jsPanel.setClass(self, options.animateOut);
                 self.addEventListener('animationend', function () {
                     doClose();
                 });
@@ -2512,7 +2546,7 @@ var jsPanel = {
             var panelStyles = window.getComputedStyle(self),
                 hdrStyles = window.getComputedStyle(self.header),
                 ftrStyles = window.getComputedStyle(self.footer),
-                hdrHeight = opts.header ? hdrStyles.height : 0,
+                hdrHeight = options.header ? hdrStyles.height : 0,
                 ftrHeight = ftrStyles.display === 'none' ? 0 : ftrStyles.height;
             var contentHeight = parseFloat(panelStyles.height) - parseFloat(hdrHeight) - parseFloat(ftrHeight) - parseFloat(panelStyles.borderTopWidth) - parseFloat(panelStyles.borderBottomWidth);
             self.content.style.height = contentHeight + 'px';
@@ -2525,7 +2559,7 @@ var jsPanel = {
         self.createMinimizedReplacement = function () {
             var tpl = jsPanel.createMinimizedTemplate(),
                 color = window.getComputedStyle(self.headertitle).color,
-                font = opts.iconfont,
+                font = options.iconfont,
                 controlbar = tpl.querySelector('.jsPanel-controlbar');
 
             tpl.style.backgroundColor = window.getComputedStyle(self.header).backgroundColor === 'transparent' ? window.getComputedStyle(self).backgroundColor : window.getComputedStyle(self.header).backgroundColor;
@@ -2569,6 +2603,21 @@ var jsPanel = {
             return tpl;
         };
 
+        self.dragit = function (string) {
+            var dragitOptions = Object.assign({}, jsPanel.defaults.dragit, options.dragit),
+                handles = self.querySelectorAll(dragitOptions.handles);
+            if (string === 'disable') {
+                handles.forEach(function (handle) {
+                    handle.style.pointerEvents = 'none';
+                });
+            } else {
+                handles.forEach(function (handle) {
+                    handle.style.pointerEvents = 'auto';
+                });
+            }
+            return self;
+        };
+
         self.front = function (callback) {
             var execOnFrontedCallbacks = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
@@ -2577,8 +2626,8 @@ var jsPanel = {
             if (callback) {
                 callback.call(self, self);
             }
-            if (opts.onfronted && execOnFrontedCallbacks) {
-                jsPanel.processCallbacks(self, opts.onfronted, 'every');
+            if (options.onfronted && execOnFrontedCallbacks) {
+                jsPanel.processCallbacks(self, options.onfronted, 'every');
             }
             return self;
         };
@@ -2623,14 +2672,14 @@ var jsPanel = {
         self.maximize = function (callback) {
             // Note: do not disable maximize method for already maximized panels -> onwindowresize wouldn't work
 
-            if (opts.onbeforemaximize && !jsPanel.processCallbacks(self, opts.onbeforemaximize)) {
+            if (options.onbeforemaximize && options.onbeforemaximize.length > 0 && !jsPanel.processCallbacks(self, options.onbeforemaximize)) {
                 return self;
             }
 
             document.dispatchEvent(jspanelbeforemaximize);
 
             var parent = self.parentElement,
-                margins = opts.maximizedMargin;
+                margins = options.maximizedMargin;
 
             if (parent === document.body) {
                 // maximize within window
@@ -2639,7 +2688,7 @@ var jsPanel = {
                 self.style.left = margins[3] + 'px';
                 self.style.top = margins[0] + 'px';
 
-                if (!opts.position.fixed) {
+                if (!options.position.fixed) {
                     self.style.left = window.pageXOffset + margins[3] + 'px';
                     self.style.top = window.pageYOffset + margins[0] + 'px';
                 }
@@ -2659,16 +2708,16 @@ var jsPanel = {
             document.dispatchEvent(jspanelmaximized);
             document.dispatchEvent(jspanelstatuschange);
 
-            if (opts.onstatuschange) {
-                jsPanel.processCallbacks(self, opts.onstatuschange, 'every');
+            if (options.onstatuschange) {
+                jsPanel.processCallbacks(self, options.onstatuschange, 'every');
             }
 
             if (callback) {
                 callback.call(self, self);
             }
 
-            if (opts.onmaximized) {
-                jsPanel.processCallbacks(self, opts.onmaximized, 'every');
+            if (options.onmaximized) {
+                jsPanel.processCallbacks(self, options.onmaximized, 'every');
             }
 
             return self;
@@ -2679,7 +2728,7 @@ var jsPanel = {
                 return self;
             }
 
-            if (opts.onbeforeminimize && !jsPanel.processCallbacks(self, opts.onbeforeminimize)) {
+            if (options.onbeforeminimize && options.onbeforeminimize.length > 0 && !jsPanel.processCallbacks(self, options.onbeforeminimize)) {
                 return self;
             }
 
@@ -2698,23 +2747,23 @@ var jsPanel = {
             document.dispatchEvent(jspanelminimized);
             document.dispatchEvent(jspanelstatuschange);
 
-            if (opts.onstatuschange) {
-                jsPanel.processCallbacks(self, opts.onstatuschange, 'every');
+            if (options.onstatuschange) {
+                jsPanel.processCallbacks(self, options.onstatuschange, 'every');
             }
 
-            if (opts.minimizeTo) {
+            if (options.minimizeTo) {
                 var replacement = self.createMinimizedReplacement();
                 var container = void 0,
                     parent = void 0,
                     list = void 0;
-                if (opts.minimizeTo === 'default') {
+                if (options.minimizeTo === 'default') {
                     document.getElementById('jsPanel-replacement-container').append(replacement);
-                } else if (opts.minimizeTo === 'parentpanel') {
+                } else if (options.minimizeTo === 'parentpanel') {
                     parent = self.closest('.jsPanel-content').parentElement;
                     list = parent.querySelectorAll('.jsPanel-minimized-box');
                     container = list[list.length - 1];
                     container.append(replacement);
-                } else if (opts.minimizeTo === 'parent') {
+                } else if (options.minimizeTo === 'parent') {
                     parent = self.parentElement;
                     container = parent.querySelector('.jsPanel-minimized-container');
                     if (!container) {
@@ -2725,7 +2774,7 @@ var jsPanel = {
                     container.append(replacement);
                 } else {
                     // all other strings are assumed to be selector strings returning a single element to append the min replacement to
-                    document.querySelector(opts.minimizeTo).append(replacement);
+                    document.querySelector(options.minimizeTo).append(replacement);
                 }
             }
 
@@ -2733,8 +2782,8 @@ var jsPanel = {
                 callback.call(self, self);
             }
 
-            if (opts.onminimized) {
-                jsPanel.processCallbacks(self, opts.onminimized, 'every');
+            if (options.onminimized) {
+                jsPanel.processCallbacks(self, options.onminimized, 'every');
             }
 
             return self;
@@ -2745,7 +2794,7 @@ var jsPanel = {
                 return self;
             }
 
-            if (opts.onbeforenormalize && !jsPanel.processCallbacks(self, opts.onbeforenormalize)) {
+            if (options.onbeforenormalize && options.onbeforenormalize.length > 0 && !jsPanel.processCallbacks(self, options.onbeforenormalize)) {
                 return self;
             }
 
@@ -2762,16 +2811,16 @@ var jsPanel = {
             document.dispatchEvent(jspanelnormalized);
             document.dispatchEvent(jspanelstatuschange);
 
-            if (opts.onstatuschange) {
-                jsPanel.processCallbacks(self, opts.onstatuschange, 'every');
+            if (options.onstatuschange) {
+                jsPanel.processCallbacks(self, options.onstatuschange, 'every');
             }
 
             if (callback) {
                 callback.call(self, self);
             }
 
-            if (opts.onnormalized) {
-                jsPanel.processCallbacks(self, opts.onnormalized, 'every');
+            if (options.onnormalized) {
+                jsPanel.processCallbacks(self, options.onnormalized, 'every');
             }
 
             return self;
@@ -2790,7 +2839,7 @@ var jsPanel = {
                 params[_key] = arguments[_key];
             }
 
-            var pos = opts.position,
+            var pos = options.position,
                 updateCache = true,
                 callback = void 0;
             params.forEach(function (value) {
@@ -2816,9 +2865,9 @@ var jsPanel = {
         self.repositionOnSnap = function (pos) {
             var offsetX = '0',
                 offsetY = '0';
-            var margins = jsPanel.pOcontainment(opts.dragit.containment);
+            var margins = jsPanel.pOcontainment(options.dragit.containment);
             // calculate offsets
-            if (opts.dragit.snap.containment) {
+            if (options.dragit.snap.containment) {
                 if (pos === 'left-top') {
                     offsetX = margins[3];
                     offsetY = margins[0];
@@ -2890,6 +2939,20 @@ var jsPanel = {
             return self;
         };
 
+        self.resizeit = function (string) {
+            var handles = self.querySelectorAll('.jsPanel-resizeit-handle');
+            if (string === 'disable') {
+                handles.forEach(function (handle) {
+                    handle.style.pointerEvents = 'none';
+                });
+            } else {
+                handles.forEach(function (handle) {
+                    handle.style.pointerEvents = 'auto';
+                });
+            }
+            return self;
+        };
+
         self.saveCurrentDimensions = function () {
             var normData = window.getComputedStyle(self);
             self.currentData.width = normData.width;
@@ -2953,7 +3016,7 @@ var jsPanel = {
 
         self.setHeaderControls = function (callback) {
             var controls = ['close', 'maximize', 'normalize', 'minimize', 'smallify', 'smallifyrev'],
-                option = opts.headerControls;
+                option = options.headerControls;
             if (typeof option === 'string') {
                 if (option === 'none') {
                     controls.forEach(function (item) {
@@ -3076,20 +3139,20 @@ var jsPanel = {
             });
             [self.headertitle, self.headertoolbar, self.content, self.footer].forEach(function (item) {
                 item.dir = 'rtl';
-                if (opts.rtl.lang) {
-                    item.lang = opts.rtl.lang;
+                if (options.rtl.lang) {
+                    item.lang = options.rtl.lang;
                 }
             });
         };
 
         self.setSize = function () {
-            if (opts.panelSize) {
-                var values = jsPanel.pOsize(self, opts.panelSize);
+            if (options.panelSize) {
+                var values = jsPanel.pOsize(self, options.panelSize);
                 self.style.width = values.width;
                 self.style.height = values.height;
                 self.contentResize();
-            } else if (opts.contentSize) {
-                var _values = jsPanel.pOsize(self, opts.contentSize);
+            } else if (options.contentSize) {
+                var _values = jsPanel.pOsize(self, options.contentSize);
                 self.content.style.width = _values.width;
                 self.content.style.height = _values.height;
                 self.style.width = _values.width; // explicitly assign current width/height to panel
@@ -3099,7 +3162,7 @@ var jsPanel = {
         };
 
         self.setTheme = function () {
-            var theme = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : opts.theme;
+            var theme = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : options.theme;
             var callback = arguments[1];
 
             // first remove all theme related syles
@@ -3124,7 +3187,7 @@ var jsPanel = {
                 self.applyBootstrapTheme(themeDetails);
             }
 
-            if (opts.border) {
+            if (options.border) {
                 self.applyThemeBorder(themeDetails);
             } else {
                 self.style.borderWidth = '';
@@ -3143,7 +3206,7 @@ var jsPanel = {
                 return self;
             }
 
-            if (opts.onbeforesmallify && !jsPanel.processCallbacks(self, opts.onbeforesmallify)) {
+            if (options.onbeforesmallify && options.onbeforesmallify.length > 0 && !jsPanel.processCallbacks(self, options.onbeforesmallify)) {
                 return self;
             }
 
@@ -3161,16 +3224,16 @@ var jsPanel = {
                 self.status = 'smallified';
                 document.dispatchEvent(jspanelsmallified);
                 document.dispatchEvent(jspanelstatuschange);
-                if (opts.onstatuschange) {
-                    jsPanel.processCallbacks(self, opts.onstatuschange, 'every');
+                if (options.onstatuschange) {
+                    jsPanel.processCallbacks(self, options.onstatuschange, 'every');
                 }
             } else if (self.status === 'maximized') {
                 self.setControls(['.jsPanel-btn-maximize', '.jsPanel-btn-smallify']);
                 self.status = 'smallifiedmax';
                 document.dispatchEvent(jspanelsmallifiedmax);
                 document.dispatchEvent(jspanelstatuschange);
-                if (opts.onstatuschange) {
-                    jsPanel.processCallbacks(self, opts.onstatuschange, 'every');
+                if (options.onstatuschange) {
+                    jsPanel.processCallbacks(self, options.onstatuschange, 'every');
                 }
             }
 
@@ -3181,8 +3244,8 @@ var jsPanel = {
                 callback.call(self, self);
             }
 
-            if (opts.onsmallified) {
-                jsPanel.processCallbacks(self, opts.onsmallified, 'every');
+            if (options.onsmallified) {
+                jsPanel.processCallbacks(self, options.onsmallified, 'every');
             }
 
             return self;
@@ -3191,7 +3254,7 @@ var jsPanel = {
         self.unsmallify = function (callback) {
             if (self.status === 'smallified' || self.status === 'smallifiedmax') {
 
-                if (opts.onbeforeunsmallify && !jsPanel.processCallbacks(self, opts.onbeforeunsmallify)) {
+                if (options.onbeforeunsmallify && options.onbeforeunsmallify.length > 0 && !jsPanel.processCallbacks(self, options.onbeforeunsmallify)) {
                     return self;
                 }
 
@@ -3206,8 +3269,8 @@ var jsPanel = {
                     self.status = 'normalized';
                     document.dispatchEvent(jspanelnormalized);
                     document.dispatchEvent(jspanelstatuschange);
-                    if (opts.onstatuschange) {
-                        jsPanel.processCallbacks(self, opts.onstatuschange, 'every');
+                    if (options.onstatuschange) {
+                        jsPanel.processCallbacks(self, options.onstatuschange, 'every');
                     }
                 } else if (self.status === 'smallifiedmax') {
                     self.maximize();
@@ -3222,51 +3285,22 @@ var jsPanel = {
                     callback.call(self, self);
                 }
 
-                if (opts.onunsmallified) {
-                    jsPanel.processCallbacks(self, opts.onunsmallified, 'every');
+                if (options.onunsmallified) {
+                    jsPanel.processCallbacks(self, options.onunsmallified, 'every');
                 }
             }
 
             return self;
         };
 
-        self.dragit = function (string) {
-            var dragitOptions = Object.assign({}, jsPanel.defaults.dragit, opts.dragit),
-                handles = self.querySelectorAll(dragitOptions.handles);
-            if (string === 'disable') {
-                handles.forEach(function (handle) {
-                    handle.style.pointerEvents = 'none';
-                });
-            } else {
-                handles.forEach(function (handle) {
-                    handle.style.pointerEvents = 'auto';
-                });
-            }
-            return self;
-        };
-
-        self.resizeit = function (string) {
-            var handles = self.querySelectorAll('.jsPanel-resizeit-handle');
-            if (string === 'disable') {
-                handles.forEach(function (handle) {
-                    handle.style.pointerEvents = 'none';
-                });
-            } else {
-                handles.forEach(function (handle) {
-                    handle.style.pointerEvents = 'auto';
-                });
-            }
-            return self;
-        };
-
         // option.id
-        self.id = opts.id;
+        self.id = options.id;
 
         // option.paneltype classname
-        self.classList.add('jsPanel-' + opts.paneltype);
+        self.classList.add('jsPanel-' + options.paneltype);
 
         // set z-index and paneltype class
-        if (opts.paneltype === 'standard') {
+        if (options.paneltype === 'standard') {
             self.style.zIndex = this.zi.next();
         }
 
@@ -3275,11 +3309,11 @@ var jsPanel = {
         self.front(false, false); // just to ensure iframe code in jsPanel.front() works for very first panel as well, second false prevents onfronted callbacks to be executed
 
         // option.theme
-        self.setTheme(opts.theme);
+        self.setTheme(options.theme);
 
         // option.boxShadow
-        if (opts.boxShadow) {
-            self.classList.add('jsPanel-depth-' + opts.boxShadow);
+        if (options.boxShadow) {
+            self.classList.add('jsPanel-depth-' + options.boxShadow);
         }
 
         /* option.header,
@@ -3288,17 +3322,17 @@ var jsPanel = {
          option.headerLogo,
          option.headerTitle
          */
-        if (opts.header) {
-            if (opts.headerLogo) {
-                self.setHeaderLogo(opts.headerLogo);
+        if (options.header) {
+            if (options.headerLogo) {
+                self.setHeaderLogo(options.headerLogo);
             }
-            self.setIconfont(opts.iconfont);
-            self.setHeaderTitle(opts.headerTitle);
+            self.setIconfont(options.iconfont);
+            self.setHeaderTitle(options.headerTitle);
             self.setHeaderControls();
 
-            if (opts.header === 'auto-show-hide') {
-                var bg = opts.theme.split('-'),
-                    boxShadow = 'jsPanel-depth-' + opts.boxShadow,
+            if (options.header === 'auto-show-hide') {
+                var bg = options.theme.split('-'),
+                    boxShadow = 'jsPanel-depth-' + options.boxShadow,
                     bgClass = 'bg-',
                     mdbColorClass = void 0;
                 if (bg[1]) {
@@ -3348,38 +3382,38 @@ var jsPanel = {
         }
 
         // option.headerToolbar
-        if (opts.headerToolbar) {
-            self.addToolbar(self.headertoolbar, opts.headerToolbar);
+        if (options.headerToolbar) {
+            self.addToolbar(self.headertoolbar, options.headerToolbar);
         }
         // option.footerToolbar
-        if (opts.footerToolbar) {
-            self.addToolbar(self.footer, opts.footerToolbar);
+        if (options.footerToolbar) {
+            self.addToolbar(self.footer, options.footerToolbar);
         }
 
         // option.content
-        if (opts.content) {
-            if (typeof opts.content === 'function') {
-                opts.content.call(self, self);
-            } else if (typeof opts.content === 'string') {
-                self.content.innerHTML = opts.content;
+        if (options.content) {
+            if (typeof options.content === 'function') {
+                options.content.call(self, self);
+            } else if (typeof options.content === 'string') {
+                self.content.innerHTML = options.content;
             } else {
-                self.content.append(opts.content);
+                self.content.append(options.content);
             }
         }
 
         // option.contentAjax
-        if (opts.contentAjax) {
-            this.ajax(self, opts.contentAjax);
+        if (options.contentAjax) {
+            this.ajax(self, options.contentAjax);
         }
 
         // option.contentFetch
-        if (opts.contentFetch) {
+        if (options.contentFetch) {
             this.fetch(self);
         }
 
         // option.contentOverflow
-        if (opts.contentOverflow) {
-            var value = opts.contentOverflow.split(' ');
+        if (options.contentOverflow) {
+            var value = options.contentOverflow.split(' ');
             if (value.length === 1) {
                 self.content.style.overflow = value[0];
             } else if (value.length === 2) {
@@ -3389,7 +3423,7 @@ var jsPanel = {
         }
 
         // option.rtl
-        if (opts.rtl) {
+        if (options.rtl) {
             self.setRtl();
         }
 
@@ -3399,8 +3433,8 @@ var jsPanel = {
         // option.position
         self.status = 'normalized';
         // if option.position evaluates to false panel will not be positioned at all
-        if (opts.position || opts.position !== 'cursor') {
-            this.position(self, opts.position);
+        if (options.position || options.position !== 'cursor') {
+            this.position(self, options.position);
         } else {
             self.style.opacity = 1;
         }
@@ -3408,30 +3442,31 @@ var jsPanel = {
         self.calcSizeFactors();
 
         // option.animateIn
-        if (opts.animateIn) {
+        if (options.animateIn) {
             // remove class again on animationend, otherwise opacity doesn't change when panel is dragged
             self.addEventListener('animationend', function () {
-                _this.remClass(self, opts.animateIn);
+                _this.remClass(self, options.animateIn);
             });
-            this.setClass(self, opts.animateIn);
+            this.setClass(self, options.animateIn);
         }
 
         // option.dragit AND option.resizeit AND option.syncMargins
-        if (opts.syncMargins) {
-            var containment = this.pOcontainment(opts.maximizedMargin);
-            if (opts.dragit) {
-                opts.dragit.containment = containment;
-                if (opts.dragit.snap) {
-                    opts.dragit.snap.containment = true;
+        if (options.syncMargins) {
+            var containment = this.pOcontainment(options.maximizedMargin);
+            if (options.dragit) {
+                options.dragit.containment = containment;
+                if (options.dragit.snap) {
+                    options.dragit.snap.containment = true;
                 }
             }
-            if (opts.resizeit) {
-                opts.resizeit.containment = containment;
+            if (options.resizeit) {
+                options.resizeit.containment = containment;
             }
         }
-        if (opts.dragit) {
-            this.dragit(self, opts.dragit);
-            document.addEventListener('dragstop', function (e) {
+
+        if (options.dragit) {
+            this.dragit(self, options.dragit);
+            document.addEventListener('jspaneldragstop', function (e) {
                 if (e.detail === self.id) {
                     self.calcSizeFactors();
                 }
@@ -3440,23 +3475,23 @@ var jsPanel = {
             self.titlebar.style.cursor = 'default';
         }
 
-        if (opts.resizeit) {
-            this.resizeit(self, opts.resizeit);
+        if (options.resizeit) {
+            this.resizeit(self, options.resizeit);
             var startstatus = void 0;
-            document.addEventListener('resizestart', function (e) {
+            document.addEventListener('jspanelresizestart', function (e) {
                 if (e.detail === self.id) {
                     startstatus = self.status;
                 }
             }, false);
-            document.addEventListener('resizestop', function (e) {
+            document.addEventListener('jspanelresizestop', function (e) {
                 if (e.detail === self.id) {
                     if ((startstatus === 'smallified' || startstatus === 'smallifiedmax' || startstatus === 'maximized') && parseFloat(self.style.height) > parseFloat(window.getComputedStyle(self.header).height)) {
                         self.setControls(['.jsPanel-btn-normalize', '.jsPanel-btn-smallifyrev']);
                         self.status = 'normalized';
                         document.dispatchEvent(jspanelnormalized);
                         document.dispatchEvent(jspanelstatuschange);
-                        if (opts.onstatuschange) {
-                            jsPanel.processCallbacks(self, opts.onstatuschange, 'every');
+                        if (options.onstatuschange) {
+                            jsPanel.processCallbacks(self, options.onstatuschange, 'every');
                         }
                         self.calcSizeFactors();
                     }
@@ -3469,8 +3504,8 @@ var jsPanel = {
         self.saveCurrentPosition();
 
         // option.setStatus
-        if (opts.setStatus) {
-            var newStatus = opts.setStatus;
+        if (options.setStatus) {
+            var newStatus = options.setStatus;
             if (newStatus === 'smallifiedmax') {
                 self.maximize().smallify();
             } else if (newStatus === 'smallified') {
@@ -3482,27 +3517,27 @@ var jsPanel = {
         }
 
         // option.autoclose
-        if (opts.autoclose) {
+        if (options.autoclose) {
             closetimer = window.setTimeout(function () {
                 if (self) self.close();
-            }, opts.autoclose);
+            }, options.autoclose);
         }
 
         // front panel on mousedown
         this.pointerdown.forEach(function (item) {
             self.addEventListener(item, function (e) {
-                if (!e.target.closest('.jsPanel-btn-close') && !e.target.closest('.jsPanel-btn-minimize') && opts.paneltype === 'standard') {
+                if (!e.target.closest('.jsPanel-btn-close') && !e.target.closest('.jsPanel-btn-minimize') && options.paneltype === 'standard') {
                     self.front();
                 }
             }, false);
         });
 
         // option.onwindowresize
-        if (opts.onwindowresize) {
-            window.addEventListener('resize', function (e) {
+        if (options.onwindowresize) {
+            window.addEventListener('jspanelresize', function (e) {
                 if (e.target === window) {
                     // see https://bugs.jqueryui.com/ticket/7514
-                    var param = opts.onwindowresize,
+                    var param = options.onwindowresize,
                         status = self.status,
                         parentStyles = window.getComputedStyle(self.parentElement);
                     if (status === 'maximized' && param === true) {
@@ -3513,7 +3548,7 @@ var jsPanel = {
                         } else {
                             self.style.left = function () {
                                 var l = void 0;
-                                if (opts.container === document.body) {
+                                if (options.container === document.body) {
                                     l = (document.body.clientWidth - parseFloat(self.style.width)) * self.hf;
                                 } else {
                                     l = (parseFloat(parentStyles.width) - parseFloat(self.style.width)) * self.hf;
@@ -3522,7 +3557,7 @@ var jsPanel = {
                             }();
                             self.style.top = function () {
                                 var t = void 0;
-                                if (opts.container === document.body) {
+                                if (options.container === document.body) {
                                     t = (window.innerHeight - parseFloat(self.currentData.height)) * self.vf;
                                 } else {
                                     t = (parseFloat(parentStyles.height) - parseFloat(self.currentData.height)) * self.vf;
@@ -3554,13 +3589,13 @@ var jsPanel = {
         }
 
         // option.callback
-        if (opts.callback) {
-            if (Array.isArray(opts.callback)) {
-                opts.callback.forEach(function (item) {
+        if (options.callback) {
+            if (Array.isArray(options.callback)) {
+                options.callback.forEach(function (item) {
                     item.call(self, self);
                 });
             } else {
-                opts.callback.call(self, self);
+                options.callback.call(self, self);
             }
         }
 
