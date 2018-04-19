@@ -1,5 +1,9 @@
 ## CHANGELOG
 
+### Version 4.0.0-beta.5.1 *released 2018-04-19*
+
++ **fixes** a typo disabling option `onwindowresize`
+
 ### Version 4.0.0-beta.5 *released 2018-04-19*
 
 + **new** events `jspaneldragstart`, `jspaneldrag`, `jspaneldragstop`, `jspanelresizestart`, `jspanelresize`, `jspanelresizestop`

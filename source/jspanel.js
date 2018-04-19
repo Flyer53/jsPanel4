@@ -4,8 +4,8 @@
 
 const jsPanel = {
 
-    version: '4.0.0-beta.5',
-    date:    '2018-04-19 09:00',
+    version: '4.0.0-beta.5.1',
+    date:    '2018-04-19 23:21',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -3385,7 +3385,7 @@ const jsPanel = {
 
         // option.onwindowresize
         if (options.onwindowresize) {
-            window.addEventListener('jspanelresize', (e) => {
+            window.addEventListener('resize', (e) => {
                 if (e.target === window) {       // see https://bugs.jqueryui.com/ticket/7514
                     const param = options.onwindowresize,
                         status = self.status,
