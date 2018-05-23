@@ -2,6 +2,8 @@
 /* global jsPanel */
 'use strict';
 
+//import {jsPanel} from '../../jspanel.js';
+
 if (!jsPanel.layout) {
 
     jsPanel.layout = {

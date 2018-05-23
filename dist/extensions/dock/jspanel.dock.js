@@ -2,6 +2,8 @@
 /* global jsPanel jsPanelError */
 'use strict';
 
+//import {jsPanel} from '../../jspanel.js';
+
 function dockPanel(config, cb) {
 
     var configDefault = {
@@ -57,16 +59,15 @@ function dockPanel(config, cb) {
     slave.resizeit('disable');
     slave.options.minimizeTo = false;
 
-    // TODO: If a docked panel is closed the drag/resize handler needs to be removed from the respective dragit.drag/resizeit.resizeit arrays
-
-
     // set necessary master options
     master.reposSlave = function () {
         if (document.querySelector('#' + slave.id)) {
             slave.reposition();
         }
     };
-    master.options.dragit.drag.push(master.reposSlave);
+    if (master.options.dragit) {
+        master.options.dragit.drag.push(master.reposSlave);
+    }
 
     master.resizeSlave = function () {
         if (document.querySelector('#' + slave.id)) {
@@ -85,14 +86,20 @@ function dockPanel(config, cb) {
             }
         }
     };
-    master.options.resizeit.resize.push(master.resizeSlave);
+    if (master.options.resizeit) {
+        master.options.resizeit.resize.push(master.resizeSlave);
+    }
 
     // do not replace following event handlers with master.on.... callbacks
     // remove drag/resize callbacks from master before master is closed, otherwise callbacks build up in arrays when master is recreated again after it was closed
     document.addEventListener('jspanelbeforeclose', function (evt) {
         if (evt.detail === master.id) {
-            master.options.dragit.drag = [];
-            master.options.resizeit.resize = [];
+            if (master.options.dragit) {
+                master.options.dragit.drag = [];
+            }
+            if (master.options.resizeit) {
+                master.options.resizeit.resize = [];
+            }
             return true;
         }
     }, false);
@@ -173,7 +180,7 @@ dockPanel.getVersion = function () {
     return '1.0.0';
 };
 dockPanel.getDate = function () {
-    return '2018-04-13 09:38';
+    return '2018-04-27 17:08';
 };
 
 jsPanel.extend({ dock: dockPanel });

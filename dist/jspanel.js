@@ -8,8 +8,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var jsPanel = {
 
-    version: '4.0.0-beta.5.1',
-    date: '2018-04-19 23:21',
+    version: '4.0.0',
+    date: '2018-05-22 09:09',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: function () {
@@ -47,8 +47,8 @@ var jsPanel = {
         position: 'center',
         resizeit: {
             handles: 'n, e, s, w, ne, se, sw, nw',
-            minWidth: 40,
-            minHeight: 40
+            minWidth: 128,
+            minHeight: 128
         },
         theme: 'default'
     },
@@ -589,7 +589,7 @@ var jsPanel = {
                 panel.setAttribute('data-btn' + item, 'enabled');
             });
         }
-        panel.innerHTML = '<div class="jsPanel-hdr">\n                                <div class="jsPanel-headerbar">\n                                    <div class="jsPanel-headerlogo"></div>\n                                    <div class="jsPanel-titlebar">\n                                        <span class="jsPanel-title"></span>\n                                    </div>\n                                    <div class="jsPanel-controlbar">\n                                        <div class="jsPanel-btn jsPanel-btn-smallify">' + this.icons.smallify + '</div>\n                                        <div class="jsPanel-btn jsPanel-btn-smallifyrev">' + this.icons.smallifyrev + '</div>\n                                        <div class="jsPanel-btn jsPanel-btn-minimize">' + this.icons.minimize + '</div>\n                                        <div class="jsPanel-btn jsPanel-btn-normalize">' + this.icons.normalize + '</div>\n                                        <div class="jsPanel-btn jsPanel-btn-maximize">' + this.icons.maximize + '</div>\n                                        <div class="jsPanel-btn jsPanel-btn-close">' + this.icons.close + '</div>\n                                    </div>\n                                </div>\n                                <div class="jsPanel-hdr-toolbar"></div>\n                            </div>\n                            <div class="jsPanel-content jsPanel-content-nofooter"></div>\n                            <div class="jsPanel-minimized-box"></div>\n                            <div class="jsPanel-ftr"></div>';
+        panel.innerHTML = '<div class="jsPanel-hdr">\n                                <div class="jsPanel-headerbar">\n                                    <div class="jsPanel-headerlogo"></div>\n                                    <div class="jsPanel-titlebar">\n                                        <span class="jsPanel-title"></span>\n                                    </div>\n                                    <div class="jsPanel-controlbar">\n                                        <div class="jsPanel-btn jsPanel-btn-smallify">' + this.icons.smallify + '</div>\n                                        <div class="jsPanel-btn jsPanel-btn-smallifyrev">' + this.icons.smallifyrev + '</div>\n                                        <div class="jsPanel-btn jsPanel-btn-minimize">' + this.icons.minimize + '</div>\n                                        <div class="jsPanel-btn jsPanel-btn-normalize">' + this.icons.normalize + '</div>\n                                        <div class="jsPanel-btn jsPanel-btn-maximize">' + this.icons.maximize + '</div>\n                                        <div class="jsPanel-btn jsPanel-btn-close">' + this.icons.close + '</div>\n                                    </div>\n                                </div>\n                                <div class="jsPanel-hdr-toolbar"></div>\n                            </div>\n                            <div class="jsPanel-content"></div>\n                            <div class="jsPanel-minimized-box"></div>\n                            <div class="jsPanel-ftr"></div>';
         return panel;
     },
     createMinimizedTemplate: function createMinimizedTemplate() {
@@ -1694,15 +1694,15 @@ var jsPanel = {
             maxHeight = typeof opts.maxHeight === 'function' ? opts.maxHeight() : opts.maxHeight || 10000,
             minWidth = typeof opts.minWidth === 'function' ? opts.minWidth() : opts.minWidth,
             minHeight = typeof opts.minHeight === 'function' ? opts.minHeight() : opts.minHeight,
-            jspanelresizestart = new CustomEvent('jspanelresizestart', { detail: elmt.id }),
-            jspanelresize = new CustomEvent('jspanelresize', { detail: elmt.id }),
-            jspanelresizestop = new CustomEvent('jspanelresizestop', { detail: elmt.id });
-        var containment = void 0,
+            containment = void 0,
             resizePanel = void 0,
             resizestarted = void 0,
             w = void 0,
             h = void 0,
             frames = [];
+        var jspanelresizestart = new CustomEvent('jspanelresizestart', { detail: elmt.id }),
+            jspanelresize = new CustomEvent('jspanelresize', { detail: elmt.id }),
+            jspanelresizestop = new CustomEvent('jspanelresizestop', { detail: elmt.id });
 
         // normalize containment config
         containment = this.pOcontainment(opts.containment);
@@ -1872,10 +1872,6 @@ var jsPanel = {
                             elmt.style.height = h + 'px';
                         }
 
-                        if (elmt) {
-                            elmt.contentResize();
-                        }
-
                         window.getSelection().removeAllRanges();
 
                         // get current position and size values while resizing
@@ -1969,10 +1965,6 @@ var jsPanel = {
                                 elmt.style.top = cy + (opts.grid[1] - modY) + 'px';
                             }
                         }
-                    }
-
-                    if (elmt) {
-                        elmt.contentResize();
                     }
                 }
 
@@ -2300,10 +2292,6 @@ var jsPanel = {
             }
 
             place.classList.add('active');
-            if (place === self.footer) {
-                self.content.classList.remove('jsPanel-content-nofooter');
-            }
-            self.contentResize();
             if (callback) {
                 callback.call(self, self);
             }
@@ -2487,7 +2475,7 @@ var jsPanel = {
                     self.parentElement.removeChild(self);
                 }
                 // return false if panel was not removed from dom
-                if (document.getElementById(panelId)) {
+                if (document.querySelector('#' + panelId)) {
                     return false;
                 }
                 self.removeMinimizedReplacement();
@@ -2542,20 +2530,6 @@ var jsPanel = {
             return self;
         };
 
-        self.contentResize = function (callback) {
-            var panelStyles = window.getComputedStyle(self),
-                hdrStyles = window.getComputedStyle(self.header),
-                ftrStyles = window.getComputedStyle(self.footer),
-                hdrHeight = options.header ? hdrStyles.height : 0,
-                ftrHeight = ftrStyles.display === 'none' ? 0 : ftrStyles.height;
-            var contentHeight = parseFloat(panelStyles.height) - parseFloat(hdrHeight) - parseFloat(ftrHeight) - parseFloat(panelStyles.borderTopWidth) - parseFloat(panelStyles.borderBottomWidth);
-            self.content.style.height = contentHeight + 'px';
-            if (callback) {
-                callback.call(self, self);
-            }
-            return self;
-        };
-
         self.createMinimizedReplacement = function () {
             var tpl = jsPanel.createMinimizedTemplate(),
                 color = window.getComputedStyle(self.headertitle).color,
@@ -2575,7 +2549,7 @@ var jsPanel = {
             if (self.dataset.btnnormalize === 'enabled') {
                 jsPanel.pointerup.forEach(function (evt) {
                     tpl.querySelector('.jsPanel-btn-normalize').addEventListener(evt, function () {
-                        self.normalize().removeMinimizedReplacement();
+                        self.normalize();
                     });
                 });
             } else {
@@ -2584,7 +2558,7 @@ var jsPanel = {
             if (self.dataset.btnmaximize === 'enabled') {
                 jsPanel.pointerup.forEach(function (evt) {
                     tpl.querySelector('.jsPanel-btn-maximize').addEventListener(evt, function () {
-                        self.maximize().removeMinimizedReplacement();
+                        self.maximize();
                     });
                 });
             } else {
@@ -2593,7 +2567,7 @@ var jsPanel = {
             if (self.dataset.btnclose === 'enabled') {
                 jsPanel.pointerup.forEach(function (evt) {
                     tpl.querySelector('.jsPanel-btn-close').addEventListener(evt, function () {
-                        self.removeMinimizedReplacement().close();
+                        self.close();
                     });
                 });
             } else {
@@ -2700,7 +2674,6 @@ var jsPanel = {
                 self.style.top = margins[0] + 'px';
             }
 
-            self.contentResize();
             self.removeMinimizedReplacement();
             self.status = 'maximized';
             self.setControls(['.jsPanel-btn-maximize', '.jsPanel-btn-smallifyrev']);
@@ -2801,7 +2774,6 @@ var jsPanel = {
             document.dispatchEvent(jspanelbeforenormalize);
             self.style.width = self.currentData.width;
             self.style.height = self.currentData.height;
-            self.contentResize();
             self.style.left = self.currentData.left;
             self.style.top = self.currentData.top;
             self.removeMinimizedReplacement();
@@ -2929,7 +2901,6 @@ var jsPanel = {
             var values = jsPanel.pOsize(self, size);
             self.style.width = values.width;
             self.style.height = values.height;
-            self.contentResize();
             if (updateCache) {
                 self.saveCurrentDimensions();
             }
@@ -3047,7 +3018,6 @@ var jsPanel = {
                 if (hdrLogo.substr(0, 1) !== '<') {
                     // is assumed to be an img url
                     var img = document.createElement('img');
-                    img.style.maxHeight = getComputedStyle(self.headerbar).height;
                     img.src = hdrLogo;
                     jsPanel.emptyNode(self.headerlogo);
                     self.headerlogo.append(img);
@@ -3059,6 +3029,10 @@ var jsPanel = {
                 jsPanel.emptyNode(self.headerlogo);
                 self.headerlogo.append(hdrLogo);
             }
+            // set max-height of logo to equal height of headerbar
+            self.headerlogo.querySelectorAll('img').forEach(function (img) {
+                img.style.maxHeight = getComputedStyle(self.headerbar).height;
+            });
             if (callback) {
                 callback.call(self, self);
             }
@@ -3150,7 +3124,6 @@ var jsPanel = {
                 var values = jsPanel.pOsize(self, options.panelSize);
                 self.style.width = values.width;
                 self.style.height = values.height;
-                self.contentResize();
             } else if (options.contentSize) {
                 var _values = jsPanel.pOsize(self, options.contentSize);
                 self.content.style.width = _values.width;
@@ -3265,7 +3238,6 @@ var jsPanel = {
                 if (self.status === 'smallified') {
                     self.style.height = self.currentData.height;
                     self.setControls(['.jsPanel-btn-normalize', '.jsPanel-btn-smallifyrev']);
-                    self.contentResize();
                     self.status = 'normalized';
                     document.dispatchEvent(jspanelnormalized);
                     document.dispatchEvent(jspanelstatuschange);

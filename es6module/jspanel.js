@@ -2,7 +2,7 @@
 /* global jsPanel, $ */
 'use strict';
 
-const jsPanel = {
+export const jsPanel = {
 
     version: '4.0.0',
     date:    '2018-05-22 09:09',

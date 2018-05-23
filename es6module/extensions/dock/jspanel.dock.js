@@ -2,7 +2,7 @@
 /* global jsPanel jsPanelError */
 'use strict';
 
-//import {jsPanel} from '../../jspanel.js';
+import {jsPanel} from '../../jspanel.js';
 
 function dockPanel (config, cb) {
 

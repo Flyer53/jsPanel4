@@ -2,7 +2,7 @@
 /* global jsPanel */
 'use strict';
 
-//import {jsPanel} from '../../jspanel.js';
+import {jsPanel} from '../../jspanel.js';
 
 // TODO: autoreposition tooltip after creation if it intersects window boundaries
 

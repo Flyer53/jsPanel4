@@ -2,7 +2,7 @@
 /* global jsPanel */
 'use strict';
 
-//import {jsPanel} from '../../jspanel.js';
+import {jsPanel} from '../../jspanel.js';
 
 /*
 If option.dragit is enabled on a modal AND an already open panel has option.syncMargins set to true the modal somehow inherits

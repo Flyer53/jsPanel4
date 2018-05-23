@@ -1,5 +1,5 @@
 @charset "UTF-8"
-/* jspanel.sass: 2018-04-18 20:24 */
+/* jspanel.sass: 2018-05-20 13:13 */
 /* http://stackoverflow.com/questions/30421570/sass-unicode-escape-is-not-preserved-in-css-file */
 //@function unicode($str)
 //  @return unquote("\"")+unquote(str-insert($str, "\\", 1))+unquote("\"")
@@ -14,18 +14,9 @@
   font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif
   font-weight: normal
 
-=flex-mixin
-  display: flex
-
-=footer-mixin
-  flex-direction: row
-  justify-content: flex-end
-  flex-wrap: nowrap
-  align-items: center
-
 =header-mixin
   box-sizing: border-box
-  +flex-mixin
+  display: flex
   flex-direction: row
   flex-wrap: nowrap
   align-items: center
@@ -56,12 +47,16 @@
     position: relative
     overflow-x: hidden
     overflow-y: auto
+    flex-grow: 1
 
     pre
       color: inherit /* this is just to override the bootstrap setting */
 
   .jsPanel-ftr
-    +footer-mixin
+    flex-direction: row
+    justify-content: flex-end
+    flex-wrap: nowrap
+    align-items: center
     border-top: 1px solid #e0e0e0
     display: none
     box-sizing: border-box
@@ -73,7 +68,8 @@
     overflow: hidden
 
   .jsPanel-ftr.active
-    +flex-mixin
+    display: flex
+    flex-shrink: 0
 
     > *
       margin: 3px 8px
@@ -108,18 +104,19 @@
     font-size: 1rem
     font-variant: small-caps
     font-weight: normal
+    line-height: 1.5
     margin: 0 5px 0 8px
     min-width: 0    // needed in order to make text-overflow: ellipsis work
 
     small
-      font-size: 75%
+      font-size: 70%
       color: inherit
 
 .jsPanel-titlebar.jsPanel-rtl
   flex-direction: row-reverse
 
 .jsPanel-controlbar
-  +flex-mixin
+  display: flex
   align-items: center
   //overflow: hidden
   touch-action: none
@@ -177,7 +174,7 @@
 
 /* container that takes the minified jsPanels */
 #jsPanel-replacement-container, .jsPanel-minimized-box, .jsPanel-minimized-container
-  +flex-mixin
+  display: flex
   flex-flow: row wrap-reverse
   background: transparent none repeat scroll 0 0
   bottom: 0

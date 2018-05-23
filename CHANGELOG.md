@@ -1,5 +1,12 @@
 ## CHANGELOG
 
+### Version 4.0.0 *released 2018-05-23*
+
++ **bugfix** in the dock extensions
++ **bugfix** in the function creating the minimized replacement
++ **option resizeit** defaults of `minWidth` and `minHeight` set to `128`
++ various tweaks in css and js
+
 ### Version 4.0.0-beta.5.1 *released 2018-04-19*
 
 + **fixes** a typo disabling option `onwindowresize`
@@ -17,7 +24,6 @@
 ### Version 4.0.0-beta.4.1 *released 2018-04-04*
 
 + **bugfix** in jspanel.css
-
 
 ### Version 4.0.0-beta.4 *released 2018-03-30*
 
