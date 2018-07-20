@@ -8,8 +8,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var jsPanel = {
 
-    version: '4.0.0',
-    date: '2018-05-22 09:09',
+    version: '4.1.0',
+    date: '2018-07-20 09:44',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: function () {
@@ -185,6 +185,16 @@ var jsPanel = {
     themes: ['default', 'primary', 'info', 'success', 'warning', 'danger'],
     ziBase: 100,
 
+    addScript: function addScript(path) {
+        var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'text/javascript';
+        var callback = arguments[2];
+
+        var script = document.createElement('script');
+        script.onload = callback;
+        script.src = path;
+        script.type = type;
+        document.head.appendChild(script);
+    },
     ajax: function ajax(obj, ajaxConfig) {
         // check whether obj is a jsPanel or something else
         var objIsPanel = void 0;
@@ -657,6 +667,11 @@ var jsPanel = {
                     // prevent body scroll on drag init
                     e.preventDefault();
 
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) {
+                        return false;
+                    }
+
                     // footer elmts with the class "jsPanel-ftr-btn" don't drag a panel
                     // do not compare e.target with e.currentTarget because there might be footer elmts supposed to drag the panel
                     if (e.target.closest('.jsPanel-ftr-btn')) {
@@ -979,7 +994,7 @@ var jsPanel = {
         }
     },
     fetch: function (_fetch) {
-        function fetch(_x3) {
+        function fetch(_x4) {
             return _fetch.apply(this, arguments);
         }
 
@@ -1721,6 +1736,11 @@ var jsPanel = {
                     // prevent window scroll while resizing elmt
                     e.preventDefault();
 
+                    // disable resizing for all mouse buttons but left
+                    if (e.button && e.button > 0) {
+                        return false;
+                    }
+
                     frames = document.querySelectorAll('iframe');
                     if (frames.length) {
                         frames.forEach(function (item) {
@@ -2209,6 +2229,10 @@ var jsPanel = {
             jsPanel.pointerup.forEach(function (item) {
                 hasCloseBtn.addEventListener(item, function (e) {
                     e.preventDefault();
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) {
+                        return false;
+                    }
                     self.close();
                 });
             });
@@ -2217,6 +2241,10 @@ var jsPanel = {
             jsPanel.pointerup.forEach(function (item) {
                 hasMaxBtn.addEventListener(item, function (e) {
                     e.preventDefault();
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) {
+                        return false;
+                    }
                     self.maximize();
                 });
             });
@@ -2225,6 +2253,10 @@ var jsPanel = {
             jsPanel.pointerup.forEach(function (item) {
                 hasNormBtn.addEventListener(item, function (e) {
                     e.preventDefault();
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) {
+                        return false;
+                    }
                     self.normalize();
                 });
             });
@@ -2233,6 +2265,10 @@ var jsPanel = {
             jsPanel.pointerup.forEach(function (item) {
                 hasSmallBtn.addEventListener(item, function (e) {
                     e.preventDefault();
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) {
+                        return false;
+                    }
                     self.smallify();
                 });
             });
@@ -2241,6 +2277,10 @@ var jsPanel = {
             jsPanel.pointerup.forEach(function (item) {
                 hasSmallrevBtn.addEventListener(item, function (e) {
                     e.preventDefault();
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) {
+                        return false;
+                    }
                     self.unsmallify();
                 });
             });
@@ -2249,6 +2289,10 @@ var jsPanel = {
             jsPanel.pointerup.forEach(function (item) {
                 hasMinBtn.addEventListener(item, function (e) {
                     e.preventDefault();
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) {
+                        return false;
+                    }
                     self.minimize();
                 });
             });
@@ -2423,6 +2467,34 @@ var jsPanel = {
                     item.reposition();
                 });
             }
+        };
+
+        self.borderRadius = function () {
+            var rad = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5;
+
+            var br = typeof rad === 'string' ? rad : rad + 'px',
+                hdr = self.header.style,
+                cont = self.content.style,
+                ftr = self.footer.style;
+            // set border-radius of outer div
+            self.style.borderRadius = br;
+            // set border-radius of either header or content section depending on presence of header
+            if (self.querySelector('.jsPanel-hdr')) {
+                hdr.borderTopLeftRadius = br;
+                hdr.borderTopRightRadius = br;
+            } else {
+                cont.borderTopLeftRadius = br;
+                cont.borderTopRightRadius = br;
+            }
+            // set border-radius of either footer or content section depending on presence of header
+            if (self.querySelector('.jsPanel-ftr.active')) {
+                ftr.borderBottomLeftRadius = br;
+                ftr.borderBottomRightRadius = br;
+            } else {
+                cont.borderBottomLeftRadius = br;
+                cont.borderBottomRightRadius = br;
+            }
+            return self;
         };
 
         self.calcSizeFactors = function () {
@@ -3190,7 +3262,9 @@ var jsPanel = {
             }
 
             self.style.overflow = 'hidden';
-            self.style.height = window.getComputedStyle(self.headerbar).height;
+            var selfStyles = window.getComputedStyle(self),
+                selfHeaderHeight = parseFloat(window.getComputedStyle(self.headerbar).height);
+            self.style.height = parseFloat(selfStyles.borderTopWidth) + parseFloat(selfStyles.borderBottomWidth) + selfHeaderHeight + 'px';
 
             if (self.status === 'normalized') {
                 self.setControls(['.jsPanel-btn-normalize', '.jsPanel-btn-smallify']);
@@ -3360,6 +3434,11 @@ var jsPanel = {
         // option.footerToolbar
         if (options.footerToolbar) {
             self.addToolbar(self.footer, options.footerToolbar);
+        }
+
+        // option.borderRadius
+        if (options.borderRadius) {
+            self.borderRadius(options.borderRadius);
         }
 
         // option.content

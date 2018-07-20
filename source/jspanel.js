@@ -4,8 +4,8 @@
 
 const jsPanel = {
 
-    version: '4.0.0',
-    date:    '2018-05-22 09:09',
+    version: '4.1.0',
+    date:    '2018-07-20 09:44',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -183,6 +183,14 @@ const jsPanel = {
     })(),
     themes: ['default', 'primary', 'info', 'success', 'warning', 'danger'],
     ziBase: 100,
+
+    addScript(path, type = 'text/javascript', callback) {
+        let script = document.createElement('script');
+        script.onload = callback;
+        script.src = path;
+        script.type = type;
+        document.head.appendChild(script);
+    },
 
     ajax(obj, ajaxConfig) {
         // check whether obj is a jsPanel or something else
@@ -676,6 +684,9 @@ const jsPanel = {
                 handle.addEventListener(item, (e) => {
                     // prevent body scroll on drag init
                     e.preventDefault();
+
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) { return false; }
 
                     // footer elmts with the class "jsPanel-ftr-btn" don't drag a panel
                     // do not compare e.target with e.currentTarget because there might be footer elmts supposed to drag the panel
@@ -1702,6 +1713,9 @@ const jsPanel = {
                     // prevent window scroll while resizing elmt
                     e.preventDefault();
 
+                    // disable resizing for all mouse buttons but left
+                    if (e.button && e.button > 0) { return false; }
+
                     frames = document.querySelectorAll('iframe');
                     if (frames.length) {
                         frames.forEach(function (item) {
@@ -2159,6 +2173,8 @@ const jsPanel = {
             jsPanel.pointerup.forEach((item) => {
                 hasCloseBtn.addEventListener(item, (e) => {
                     e.preventDefault();
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) { return false; }
                     self.close();
                 });
             });
@@ -2167,6 +2183,8 @@ const jsPanel = {
             jsPanel.pointerup.forEach((item) => {
                 hasMaxBtn.addEventListener(item, (e) => {
                     e.preventDefault();
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) { return false; }
                     self.maximize();
                 });
             });
@@ -2175,6 +2193,8 @@ const jsPanel = {
             jsPanel.pointerup.forEach((item) => {
                 hasNormBtn.addEventListener(item, (e) => {
                     e.preventDefault();
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) { return false; }
                     self.normalize();
                 });
             });
@@ -2183,6 +2203,8 @@ const jsPanel = {
             jsPanel.pointerup.forEach((item) => {
                 hasSmallBtn.addEventListener(item, (e) => {
                     e.preventDefault();
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) { return false; }
                     self.smallify();
                 });
             });
@@ -2191,6 +2213,8 @@ const jsPanel = {
             jsPanel.pointerup.forEach((item) => {
                 hasSmallrevBtn.addEventListener(item, (e) => {
                     e.preventDefault();
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) { return false; }
                     self.unsmallify();
                 });
             });
@@ -2199,6 +2223,8 @@ const jsPanel = {
             jsPanel.pointerup.forEach((item) => {
                 hasMinBtn.addEventListener(item, (e) => {
                     e.preventDefault();
+                    // disable draging for all mouse buttons but left
+                    if (e.button && e.button > 0) { return false; }
                     self.minimize();
                 });
             });
@@ -2371,6 +2397,32 @@ const jsPanel = {
                     item.reposition();
                 });
             }
+        };
+
+        self.borderRadius = (rad = 5) => {
+            var br = typeof rad === 'string' ? rad : rad + 'px',
+                hdr = self.header.style,
+                cont = self.content.style,
+                ftr = self.footer.style;
+            // set border-radius of outer div
+            self.style.borderRadius = br;
+            // set border-radius of either header or content section depending on presence of header
+            if (self.querySelector('.jsPanel-hdr')) {
+                hdr.borderTopLeftRadius = br;
+                hdr.borderTopRightRadius = br;
+            } else {
+                cont.borderTopLeftRadius = br;
+                cont.borderTopRightRadius = br;
+            }
+            // set border-radius of either footer or content section depending on presence of header
+            if (self.querySelector('.jsPanel-ftr.active')) {
+                ftr.borderBottomLeftRadius = br;
+                ftr.borderBottomRightRadius = br;
+            } else {
+                cont.borderBottomLeftRadius = br;
+                cont.borderBottomRightRadius = br;
+            }
+            return self;
         };
 
         self.calcSizeFactors = () => {
@@ -3059,7 +3111,9 @@ const jsPanel = {
             }
 
             self.style.overflow = 'hidden';
-            self.style.height = window.getComputedStyle(self.headerbar).height;
+            let selfStyles = window.getComputedStyle(self),
+                selfHeaderHeight = parseFloat(window.getComputedStyle(self.headerbar).height);
+            self.style.height = (parseFloat(selfStyles.borderTopWidth) + parseFloat(selfStyles.borderBottomWidth) + selfHeaderHeight) + 'px';
 
             if (self.status === 'normalized') {
                 self.setControls(['.jsPanel-btn-normalize', '.jsPanel-btn-smallify']);
@@ -3083,7 +3137,6 @@ const jsPanel = {
             minBoxes[minBoxes.length - 1].style.display = 'none';
 
             if (callback) {callback.call(self, self);}
-
 
             if (options.onsmallified) {
                 jsPanel.processCallbacks(self, options.onsmallified, 'every');
@@ -3218,6 +3271,11 @@ const jsPanel = {
         // option.footerToolbar
         if (options.footerToolbar) {
             self.addToolbar(self.footer, options.footerToolbar);
+        }
+
+        // option.borderRadius
+        if (options.borderRadius) {
+            self.borderRadius(options.borderRadius);
         }
 
         // option.content

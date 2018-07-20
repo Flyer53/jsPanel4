@@ -6,12 +6,10 @@
 
 jsPanel.extend({
 
-    overlay: function overlay() {
-        var arg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'panel';
-
+    overlay: function (arg = 'panel') {
 
         // create overlay and spinner elements
-        var overlay = document.createElement('div'),
+        let overlay = document.createElement('div'),
             spinner = document.createElement('i');
 
         // style overlay
@@ -48,9 +46,10 @@ jsPanel.extend({
 
         // return panel to allow for chaining other panel methods
         return this;
+
     },
 
-    clear: function clear() {
+    clear: function () {
 
         if (this.deactivated) {
 
@@ -58,7 +57,7 @@ jsPanel.extend({
             this.style.pointerEvents = 'auto';
 
             // remove overlay again
-            var overlay = this.querySelector('.jsPanel-overlay');
+            let overlay = this.querySelector('.jsPanel-overlay');
             if (overlay) {
                 if (overlay.parentElement.classList.contains('jsPanel')) {
                     this.removeChild(overlay);
@@ -72,10 +71,13 @@ jsPanel.extend({
 
             // return panel to allow for chaining other panel methods
             return this;
+
         }
+
     }
 
 });
+
 
 /*
 let p = jsPanel.create({

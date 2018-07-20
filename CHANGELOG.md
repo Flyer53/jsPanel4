@@ -1,5 +1,12 @@
 ## CHANGELOG
 
+### Version 4.1.0 *released 2018-07-20*
+
++ **improved** method `.smallify()`
++ **added** method `jsPanel.addScript()` in order to add a script to the document
++ **added** option `borderRadius` applies a css border-radius to the panel
++ when using a mouse **draging/resizing** and **all controls** of a panel are now limited to the left mouse button
+
 ### Version 4.0.0 *released 2018-05-23*
 
 + **bugfix** in the dock extensions

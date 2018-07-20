@@ -1,4 +1,4 @@
-/* jspanel.sass: 2018-05-20 13:13 */
+/* jspanel.sass: 2018-06-01 15:17 */
 /* http://stackoverflow.com/questions/30421570/sass-unicode-escape-is-not-preserved-in-css-file */
 .jsPanel {
   border: 0;
@@ -81,7 +81,6 @@
   height: 100%;
   overflow: hidden; }
   .jsPanel-titlebar .jsPanel-title {
-    color: #000000;
     font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
     white-space: nowrap;
     overflow: hidden;
