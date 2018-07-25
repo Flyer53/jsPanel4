@@ -1,5 +1,5 @@
 @charset "UTF-8"
-/* jspanel.sass: 2018-06-01 15:17 */
+/* jspanel.sass: 2018-07-25 09:12 */
 /* http://stackoverflow.com/questions/30421570/sass-unicode-escape-is-not-preserved-in-css-file */
 //@function unicode($str)
 //  @return unquote("\"")+unquote(str-insert($str, "\\", 1))+unquote("\"")
@@ -126,6 +126,7 @@
   .jsPanel-btn
     cursor: pointer
     touch-action: none
+    padding: 6px 8px 8px 3px
 
     span
       vertical-align: middle
@@ -134,12 +135,8 @@
     span.glyphicon
       padding: 0 2px
 
-    svg
-      margin: 0 8px 0 3px
-
-    .jsPanel-icon
-      padding-top: 9px
-      margin: 0 4px 0 0
+    svg.jsPanel-icon
+      vertical-align: middle
 
   .jsPanel-btn-normalize, .jsPanel-btn-smallifyrev
     display: none

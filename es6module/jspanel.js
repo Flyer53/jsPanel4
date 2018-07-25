@@ -4,8 +4,8 @@
 
 export const jsPanel = {
 
-    version: '4.1.0',
-    date:    '2018-07-20 09:44',
+    version: '4.1.1',
+    date:    '2018-07-25 09:12',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -60,19 +60,19 @@ export const jsPanel = {
                 this.message = message || '';
                 this.stack = (new Error()).stack;
             };
-            jsPanelError.prototype = Object.create(Error.prototype);
-            jsPanelError.prototype.constructor = jsPanelError;
+            window.jsPanelError.prototype = Object.create(Error.prototype);
+            window.jsPanelError.prototype.constructor = window.jsPanelError;
         }
     })(),
     extensions: {},
     globalCallbacks: false,
     icons: {
-        close:       `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="28" height="32" viewBox="0 0 28 32"><path fill="currentColor" d="M17.75 16l9.85-9.85c0.5-0.5 0.5-1.3 0-1.75-0.5-0.5-1.3-0.5-1.75 0l-9.85 9.85-9.85-9.9c-0.5-0.5-1.3-0.5-1.75 0-0.5 0.5-0.5 1.3 0 1.75l9.85 9.9-9.9 9.85c-0.5 0.5-0.5 1.3 0 1.75 0.25 0.25 0.55 0.35 0.9 0.35s0.65-0.1 0.9-0.35l9.85-9.85 9.85 9.85c0.25 0.25 0.55 0.35 0.9 0.35s0.65-0.1 0.9-0.35c0.5-0.5 0.5-1.3 0-1.75l-9.9-9.85z"></path></svg>`,
-        maximize:    `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="28" height="32" viewBox="0 0 28 32"><path fill="currentColor" d="M27.55 3.9h-22.6c-0.55 0-1 0.45-1 1v22.3c0 0.55 0.45 1 1 1h22.55c0.55 0 1-0.45 1-1v-22.3c0.050-0.55-0.4-1-0.95-1zM5.95 26.15v-18h20.55v18h-20.55z"></path></svg>`,
-        normalize:   `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="28" height="32" viewBox="0 0 28 32"><path fill="currentColor" d="M27.9 3.75h-18.8c-0.4 0-0.75 0.35-0.75 0.75v4.3c0 0.1 0 0.2 0.050 0.3h-4.2c-0.55 0-1 0.45-1 1v17.4c0 0.55 0.45 1 1 1h17.65c0.55 0 1-0.45 1-1v-3.7c0.050 0 0.1 0.050 0.2 0.050h4.9c0.4 0 0.75-0.35 0.75-0.75v-18.6c-0.050-0.4-0.4-0.75-0.8-0.75zM5.2 26.5v-12.95c0.050 0 0.1 0 0.15 0h15.4c0.050 0 0.1 0 0.15 0v12.95h-15.7zM27.15 22.35h-4.15c-0.050 0-0.15 0-0.2 0.050v-12.3c0-0.55-0.45-1-1-1h-12c0.050-0.1 0.050-0.2 0.050-0.3v-3.55h17.3v17.1z"></path></svg>`,
-        minimize:    `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="28" height="32" viewBox="0 0 28 32"><path fill="currentColor" d="M27.3 28.5h-22.6c-0.85 0-1.5-0.65-1.5-1.5s0.65-1.5 1.5-1.5h22.55c0.85 0 1.5 0.65 1.5 1.5s-0.65 1.5-1.45 1.5z"></path></svg>`,
-        smallifyrev: `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="28" height="32" viewBox="0 0 28 32"><path fill="currentColor" d="M15.95 23.2c0 0 0 0 0 0-0.35 0-0.65-0.15-0.9-0.35l-11.7-11.9c-0.5-0.5-0.5-1.3 0-1.75 0.5-0.5 1.3-0.5 1.75 0l10.85 10.95 10.9-10.8c0.5-0.5 1.3-0.5 1.75 0s0.5 1.3 0 1.75l-11.75 11.7c-0.25 0.25-0.55 0.4-0.9 0.4z"></path></svg>`,
-        smallify:    `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="28" height="32" viewBox="0 0 28 32"><path fill="currentColor" d="M28.65 20.85l-11.8-11.65c-0.5-0.5-1.3-0.5-1.75 0l-11.75 11.85c-0.5 0.5-0.5 1.3 0 1.75 0.25 0.25 0.55 0.35 0.9 0.35 0.3 0 0.65-0.1 0.9-0.35l10.85-10.95 10.9 10.8c0.5 0.5 1.3 0.5 1.75 0 0.5-0.5 0.5-1.3 0-1.8z"></path></svg>`
+        close:       `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 28 28"><path fill="currentColor" d="M17.75 16l9.85-9.85c0.5-0.5 0.5-1.3 0-1.75-0.5-0.5-1.3-0.5-1.75 0l-9.85 9.85-9.85-9.9c-0.5-0.5-1.3-0.5-1.75 0-0.5 0.5-0.5 1.3 0 1.75l9.85 9.9-9.9 9.85c-0.5 0.5-0.5 1.3 0 1.75 0.25 0.25 0.55 0.35 0.9 0.35s0.65-0.1 0.9-0.35l9.85-9.85 9.85 9.85c0.25 0.25 0.55 0.35 0.9 0.35s0.65-0.1 0.9-0.35c0.5-0.5 0.5-1.3 0-1.75l-9.9-9.85z"></path></svg>`,
+        maximize:    `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 28 28"><path fill="currentColor" d="M27.55 3.9h-22.6c-0.55 0-1 0.45-1 1v22.3c0 0.55 0.45 1 1 1h22.55c0.55 0 1-0.45 1-1v-22.3c0.050-0.55-0.4-1-0.95-1zM5.95 26.15v-18h20.55v18h-20.55z"></path></svg>`,
+        normalize:   `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 28 28"><path fill="currentColor" d="M27.9 3.75h-18.8c-0.4 0-0.75 0.35-0.75 0.75v4.3c0 0.1 0 0.2 0.050 0.3h-4.2c-0.55 0-1 0.45-1 1v17.4c0 0.55 0.45 1 1 1h17.65c0.55 0 1-0.45 1-1v-3.7c0.050 0 0.1 0.050 0.2 0.050h4.9c0.4 0 0.75-0.35 0.75-0.75v-18.6c-0.050-0.4-0.4-0.75-0.8-0.75zM5.2 26.5v-12.95c0.050 0 0.1 0 0.15 0h15.4c0.050 0 0.1 0 0.15 0v12.95h-15.7zM27.15 22.35h-4.15c-0.050 0-0.15 0-0.2 0.050v-12.3c0-0.55-0.45-1-1-1h-12c0.050-0.1 0.050-0.2 0.050-0.3v-3.55h17.3v17.1z"></path></svg>`,
+        minimize:    `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 28 28"><path fill="currentColor" d="M27.3 28.5h-22.6c-0.85 0-1.5-0.65-1.5-1.5s0.65-1.5 1.5-1.5h22.55c0.85 0 1.5 0.65 1.5 1.5s-0.65 1.5-1.45 1.5z"></path></svg>`,
+        smallifyrev: `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 28 28"><path fill="currentColor" d="M15.95 23.2c0 0 0 0 0 0-0.35 0-0.65-0.15-0.9-0.35l-11.7-11.9c-0.5-0.5-0.5-1.3 0-1.75 0.5-0.5 1.3-0.5 1.75 0l10.85 10.95 10.9-10.8c0.5-0.5 1.3-0.5 1.75 0s0.5 1.3 0 1.75l-11.75 11.7c-0.25 0.25-0.55 0.4-0.9 0.4z"></path></svg>`,
+        smallify:    `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 28 28"><path fill="currentColor" d="M28.65 20.85l-11.8-11.65c-0.5-0.5-1.3-0.5-1.75 0l-11.75 11.85c-0.5 0.5-0.5 1.3 0 1.75 0.25 0.25 0.55 0.35 0.9 0.35 0.3 0 0.65-0.1 0.9-0.35l10.85-10.95 10.9 10.8c0.5 0.5 1.3 0.5 1.75 0 0.5-0.5 0.5-1.3 0-1.8z"></path></svg>`
     },
     idCounter: 0,
     isIE: (() => {return navigator.appVersion.match(/Trident/);})(),
@@ -104,6 +104,7 @@ export const jsPanel = {
                         el = this;
                     do {
                         i = matches.length;
+                        // eslint-disable-next-line no-empty
                         while (--i >= 0 && matches.item(i) !== el) {}
                     } while ((i < 0) && (el = el.parentElement));
                     return el;
@@ -151,7 +152,7 @@ export const jsPanel = {
         // Polyfills for IE11 only
         // CustomEvent - https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
         (function () {
-            if ( typeof window.CustomEvent === "function" ) return false;
+            if ( typeof window.CustomEvent === 'function' ) return false;
             function CustomEvent ( event, params ) {
                 params = params || { bubbles: false, cancelable: false, detail: undefined };
                 let evt = document.createEvent( 'CustomEvent' );
@@ -205,19 +206,19 @@ export const jsPanel = {
         }
 
         const conf = ajaxConfig,
-              configDefaults = {
-                  method: 'GET',
-                  async: true,
-                  user: '',
-                  pwd: '',
-                  done: function () {
-                      objIsPanel
-                      ? obj.content.innerHTML = this.responseText
-                      : obj.innerHTML = this.responseText;
-                  },
-                  autoresize: true,
-                  autoreposition: true
-              };
+            configDefaults = {
+                method: 'GET',
+                async: true,
+                user: '',
+                pwd: '',
+                done: function () {
+                    objIsPanel
+                        ? obj.content.innerHTML = this.responseText
+                        : obj.innerHTML = this.responseText;
+                },
+                autoresize: true,
+                autoreposition: true
+            };
         let config;
 
         if (typeof conf === 'string') {
@@ -319,11 +320,11 @@ export const jsPanel = {
 
     calcColors(primaryColor) {
         const primeColor = this.color(primaryColor),
-              secondColor = this.lighten(primaryColor, 0.81),
-              thirdColor = this.darken(primaryColor, 0.5),
-              fontColorForPrimary = this.perceivedBrightness(primaryColor) <= 0.556 ? '#ffffff' : '#000000',
-              fontColorForSecond = this.perceivedBrightness(secondColor) <= 0.556 ? '#ffffff' : '#000000',
-              fontColorForThird = this.perceivedBrightness(thirdColor) <= 0.556 ? '#000000' : '#ffffff';
+            secondColor = this.lighten(primaryColor, 0.81),
+            thirdColor = this.darken(primaryColor, 0.5),
+            fontColorForPrimary = this.perceivedBrightness(primaryColor) <= 0.556 ? '#ffffff' : '#000000',
+            fontColorForSecond = this.perceivedBrightness(secondColor) <= 0.556 ? '#ffffff' : '#000000',
+            fontColorForThird = this.perceivedBrightness(thirdColor) <= 0.556 ? '#000000' : '#ffffff';
         return [primeColor.hsl.css, secondColor, thirdColor, fontColorForPrimary, fontColorForSecond, fontColorForThird];
     },
 
@@ -332,158 +333,158 @@ export const jsPanel = {
         let color = val.toLowerCase(),
             r, g, b, h, s, l, match, channels, hsl, result = {};
         const hexPattern = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/gi, // matches "#123" or "#f05a78" with or without "#"
-              RGBAPattern = /^rgba?\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3}),?(0|1|0\.[0-9]{1,2}|\.[0-9]{1,2})?\)$/gi, // matches rgb/rgba color values, whitespace allowed
-              HSLAPattern = /^hsla?\(([0-9]{1,3}),([0-9]{1,3}%),([0-9]{1,3}%),?(0|1|0\.[0-9]{1,2}|\.[0-9]{1,2})?\)$/gi,
-              namedColors = {
-                  aliceblue:            'f0f8ff',
-                  antiquewhite:         'faebd7',
-                  aqua:                 '0ff',
-                  aquamarine:           '7fffd4',
-                  azure:                'f0ffff',
-                  beige:                'f5f5dc',
-                  bisque:               'ffe4c4',
-                  black:                '000',
-                  blanchedalmond:       'ffebcd',
-                  blue:                 '00f',
-                  blueviolet:           '8a2be2',
-                  brown:                'a52a2a',
-                  burlywood:            'deb887',
-                  cadetblue:            '5f9ea0',
-                  chartreuse:           '7fff00',
-                  chocolate:            'd2691e',
-                  coral:                'ff7f50',
-                  cornflowerblue:       '6495ed',
-                  cornsilk:             'fff8dc',
-                  crimson:              'dc143c',
-                  cyan:                 '0ff',
-                  darkblue:             '00008b',
-                  darkcyan:             '008b8b',
-                  darkgoldenrod:        'b8860b',
-                  darkgray:             'a9a9a9',
-                  darkgrey:             'a9a9a9',
-                  darkgreen:            '006400',
-                  darkkhaki:            'bdb76b',
-                  darkmagenta:          '8b008b',
-                  darkolivegreen:       '556b2f',
-                  darkorange:           'ff8c00',
-                  darkorchid:           '9932cc',
-                  darkred:              '8b0000',
-                  darksalmon:           'e9967a',
-                  darkseagreen:         '8fbc8f',
-                  darkslateblue:        '483d8b',
-                  darkslategray:        '2f4f4f',
-                  darkslategrey:        '2f4f4f',
-                  darkturquoise:        '00ced1',
-                  darkviolet:           '9400d3',
-                  deeppink:             'ff1493',
-                  deepskyblue:          '00bfff',
-                  dimgray:              '696969',
-                  dimgrey:              '696969',
-                  dodgerblue:           '1e90ff',
-                  firebrick:            'b22222',
-                  floralwhite:          'fffaf0',
-                  forestgreen:          '228b22',
-                  fuchsia:              'f0f',
-                  gainsboro:            'dcdcdc',
-                  ghostwhite:           'f8f8ff',
-                  gold:                 'ffd700',
-                  goldenrod:            'daa520',
-                  gray:                 '808080',
-                  grey:                 '808080',
-                  green:                '008000',
-                  greenyellow:          'adff2f',
-                  honeydew:             'f0fff0',
-                  hotpink:              'ff69b4',
-                  indianred:            'cd5c5c',
-                  indigo:               '4b0082',
-                  ivory:                'fffff0',
-                  khaki:                'f0e68c',
-                  lavender:             'e6e6fa',
-                  lavenderblush:        'fff0f5',
-                  lawngreen:            '7cfc00',
-                  lemonchiffon:         'fffacd',
-                  lightblue:            'add8e6',
-                  lightcoral:           'f08080',
-                  lightcyan:            'e0ffff',
-                  lightgoldenrodyellow: 'fafad2',
-                  lightgray:            'd3d3d3',
-                  lightgrey:            'd3d3d3',
-                  lightgreen:           '90ee90',
-                  lightpink:            'ffb6c1',
-                  lightsalmon:          'ffa07a',
-                  lightseagreen:        '20b2aa',
-                  lightskyblue:         '87cefa',
-                  lightslategray:       '789',
-                  lightslategrey:       '789',
-                  lightsteelblue:       'b0c4de',
-                  lightyellow:          'ffffe0',
-                  lime:                 '0f0',
-                  limegreen:            '32cd32',
-                  linen:                'faf0e6',
-                  magenta:              'f0f',
-                  maroon:               '800000',
-                  mediumaquamarine:     '66cdaa',
-                  mediumblue:           '0000cd',
-                  mediumorchid:         'ba55d3',
-                  mediumpurple:         '9370d8',
-                  mediumseagreen:       '3cb371',
-                  mediumslateblue:      '7b68ee',
-                  mediumspringgreen:    '00fa9a',
-                  mediumturquoise:      '48d1cc',
-                  mediumvioletred:      'c71585',
-                  midnightblue:         '191970',
-                  mintcream:            'f5fffa',
-                  mistyrose:            'ffe4e1',
-                  moccasin:             'ffe4b5',
-                  navajowhite:          'ffdead',
-                  navy:                 '000080',
-                  oldlace:              'fdf5e6',
-                  olive:                '808000',
-                  olivedrab:            '6b8e23',
-                  orange:               'ffa500',
-                  orangered:            'ff4500',
-                  orchid:               'da70d6',
-                  palegoldenrod:        'eee8aa',
-                  palegreen:            '98fb98',
-                  paleturquoise:        'afeeee',
-                  palevioletred:        'd87093',
-                  papayawhip:           'ffefd5',
-                  peachpuff:            'ffdab9',
-                  peru:                 'cd853f',
-                  pink:                 'ffc0cb',
-                  plum:                 'dda0dd',
-                  powderblue:           'b0e0e6',
-                  purple:               '800080',
-                  rebeccapurple:        '639',
-                  red:                  'f00',
-                  rosybrown:            'bc8f8f',
-                  royalblue:            '4169e1',
-                  saddlebrown:          '8b4513',
-                  salmon:               'fa8072',
-                  sandybrown:           'f4a460',
-                  seagreen:             '2e8b57',
-                  seashell:             'fff5ee',
-                  sienna:               'a0522d',
-                  silver:               'c0c0c0',
-                  skyblue:              '87ceeb',
-                  slateblue:            '6a5acd',
-                  slategray:            '708090',
-                  slategrey:            '708090',
-                  snow:                 'fffafa',
-                  springgreen:          '00ff7f',
-                  steelblue:            '4682b4',
-                  tan:                  'd2b48c',
-                  teal:                 '008080',
-                  thistle:              'd8bfd8',
-                  tomato:               'ff6347',
-                  turquoise:            '40e0d0',
-                  violet:               'ee82ee',
-                  wheat:                'f5deb3',
-                  white:                'fff',
-                  whitesmoke:           'f5f5f5',
-                  yellow:               'ff0',
-                  yellowgreen:          '9acd32'
-              };
+            RGBAPattern = /^rgba?\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3}),?(0|1|0\.[0-9]{1,2}|\.[0-9]{1,2})?\)$/gi, // matches rgb/rgba color values, whitespace allowed
+            HSLAPattern = /^hsla?\(([0-9]{1,3}),([0-9]{1,3}%),([0-9]{1,3}%),?(0|1|0\.[0-9]{1,2}|\.[0-9]{1,2})?\)$/gi,
+            namedColors = {
+                aliceblue:            'f0f8ff',
+                antiquewhite:         'faebd7',
+                aqua:                 '0ff',
+                aquamarine:           '7fffd4',
+                azure:                'f0ffff',
+                beige:                'f5f5dc',
+                bisque:               'ffe4c4',
+                black:                '000',
+                blanchedalmond:       'ffebcd',
+                blue:                 '00f',
+                blueviolet:           '8a2be2',
+                brown:                'a52a2a',
+                burlywood:            'deb887',
+                cadetblue:            '5f9ea0',
+                chartreuse:           '7fff00',
+                chocolate:            'd2691e',
+                coral:                'ff7f50',
+                cornflowerblue:       '6495ed',
+                cornsilk:             'fff8dc',
+                crimson:              'dc143c',
+                cyan:                 '0ff',
+                darkblue:             '00008b',
+                darkcyan:             '008b8b',
+                darkgoldenrod:        'b8860b',
+                darkgray:             'a9a9a9',
+                darkgrey:             'a9a9a9',
+                darkgreen:            '006400',
+                darkkhaki:            'bdb76b',
+                darkmagenta:          '8b008b',
+                darkolivegreen:       '556b2f',
+                darkorange:           'ff8c00',
+                darkorchid:           '9932cc',
+                darkred:              '8b0000',
+                darksalmon:           'e9967a',
+                darkseagreen:         '8fbc8f',
+                darkslateblue:        '483d8b',
+                darkslategray:        '2f4f4f',
+                darkslategrey:        '2f4f4f',
+                darkturquoise:        '00ced1',
+                darkviolet:           '9400d3',
+                deeppink:             'ff1493',
+                deepskyblue:          '00bfff',
+                dimgray:              '696969',
+                dimgrey:              '696969',
+                dodgerblue:           '1e90ff',
+                firebrick:            'b22222',
+                floralwhite:          'fffaf0',
+                forestgreen:          '228b22',
+                fuchsia:              'f0f',
+                gainsboro:            'dcdcdc',
+                ghostwhite:           'f8f8ff',
+                gold:                 'ffd700',
+                goldenrod:            'daa520',
+                gray:                 '808080',
+                grey:                 '808080',
+                green:                '008000',
+                greenyellow:          'adff2f',
+                honeydew:             'f0fff0',
+                hotpink:              'ff69b4',
+                indianred:            'cd5c5c',
+                indigo:               '4b0082',
+                ivory:                'fffff0',
+                khaki:                'f0e68c',
+                lavender:             'e6e6fa',
+                lavenderblush:        'fff0f5',
+                lawngreen:            '7cfc00',
+                lemonchiffon:         'fffacd',
+                lightblue:            'add8e6',
+                lightcoral:           'f08080',
+                lightcyan:            'e0ffff',
+                lightgoldenrodyellow: 'fafad2',
+                lightgray:            'd3d3d3',
+                lightgrey:            'd3d3d3',
+                lightgreen:           '90ee90',
+                lightpink:            'ffb6c1',
+                lightsalmon:          'ffa07a',
+                lightseagreen:        '20b2aa',
+                lightskyblue:         '87cefa',
+                lightslategray:       '789',
+                lightslategrey:       '789',
+                lightsteelblue:       'b0c4de',
+                lightyellow:          'ffffe0',
+                lime:                 '0f0',
+                limegreen:            '32cd32',
+                linen:                'faf0e6',
+                magenta:              'f0f',
+                maroon:               '800000',
+                mediumaquamarine:     '66cdaa',
+                mediumblue:           '0000cd',
+                mediumorchid:         'ba55d3',
+                mediumpurple:         '9370d8',
+                mediumseagreen:       '3cb371',
+                mediumslateblue:      '7b68ee',
+                mediumspringgreen:    '00fa9a',
+                mediumturquoise:      '48d1cc',
+                mediumvioletred:      'c71585',
+                midnightblue:         '191970',
+                mintcream:            'f5fffa',
+                mistyrose:            'ffe4e1',
+                moccasin:             'ffe4b5',
+                navajowhite:          'ffdead',
+                navy:                 '000080',
+                oldlace:              'fdf5e6',
+                olive:                '808000',
+                olivedrab:            '6b8e23',
+                orange:               'ffa500',
+                orangered:            'ff4500',
+                orchid:               'da70d6',
+                palegoldenrod:        'eee8aa',
+                palegreen:            '98fb98',
+                paleturquoise:        'afeeee',
+                palevioletred:        'd87093',
+                papayawhip:           'ffefd5',
+                peachpuff:            'ffdab9',
+                peru:                 'cd853f',
+                pink:                 'ffc0cb',
+                plum:                 'dda0dd',
+                powderblue:           'b0e0e6',
+                purple:               '800080',
+                rebeccapurple:        '639',
+                red:                  'f00',
+                rosybrown:            'bc8f8f',
+                royalblue:            '4169e1',
+                saddlebrown:          '8b4513',
+                salmon:               'fa8072',
+                sandybrown:           'f4a460',
+                seagreen:             '2e8b57',
+                seashell:             'fff5ee',
+                sienna:               'a0522d',
+                silver:               'c0c0c0',
+                skyblue:              '87ceeb',
+                slateblue:            '6a5acd',
+                slategray:            '708090',
+                slategrey:            '708090',
+                snow:                 'fffafa',
+                springgreen:          '00ff7f',
+                steelblue:            '4682b4',
+                tan:                  'd2b48c',
+                teal:                 '008080',
+                thistle:              'd8bfd8',
+                tomato:               'ff6347',
+                turquoise:            '40e0d0',
+                violet:               'ee82ee',
+                wheat:                'f5deb3',
+                white:                'fff',
+                whitesmoke:           'f5f5f5',
+                yellow:               'ff0',
+                yellowgreen:          '9acd32'
+            };
 
         // change named color to corresponding hex value
         if (namedColors[color]) {
@@ -628,7 +629,7 @@ export const jsPanel = {
 
     createSnapArea(panel, pos, snapsens) {
         const el = document.createElement('div'),
-              parent = panel.parentElement;
+            parent = panel.parentElement;
         el.className = `jsPanel-snap-area jsPanel-snap-area-${pos}`;
         if (pos === 'lt' || pos === 'rt' || pos === 'rb' || pos === 'lb') {
             el.style.width = snapsens+'px';
@@ -649,8 +650,8 @@ export const jsPanel = {
     darken(val, amount) {
         // amount is value between 0 and 1
         const hsl = this.color(val).hsl,
-              l = parseFloat(hsl.l),
-              lnew = l - (l * amount) + '%';
+            l = parseFloat(hsl.l),
+            lnew = l - (l * amount) + '%';
         return `hsl(${hsl.h},${hsl.s},${lnew})`;
     },
 
@@ -661,8 +662,8 @@ export const jsPanel = {
             containment,
             frames = [];
         const jspaneldragstart = new CustomEvent('jspaneldragstart', {detail: elmt.id}),
-              jspaneldrag      = new CustomEvent('jspaneldrag',      {detail: elmt.id}),
-              jspaneldragstop  = new CustomEvent('jspaneldragstop',  {detail: elmt.id});
+            jspaneldrag      = new CustomEvent('jspaneldrag',      {detail: elmt.id}),
+            jspaneldragstop  = new CustomEvent('jspaneldragstop',  {detail: elmt.id});
 
         // normalize grid config
         if (opts.grid && Array.isArray(opts.grid)) {
@@ -701,13 +702,13 @@ export const jsPanel = {
                     }
 
                     const startStyles  = window.getComputedStyle(elmt),
-                          startLeft    = parseFloat(startStyles.left),
-                          startTop     = parseFloat(startStyles.top),
-                          psx          = e.touches ? e.touches[0].clientX : e.clientX,	// pointer x on mousedown (don't use pageX, doesn't work on FF for Android)
-                          psy          = e.touches ? e.touches[0].clientY : e.clientY,	// pointer y on mousedown (don't use pageY, doesn't work on FF for Android)
-                          parent       = elmt.parentElement,
-                          parentRect   = parent.getBoundingClientRect(),
-                          parentStyles = window.getComputedStyle(parent);
+                        startLeft    = parseFloat(startStyles.left),
+                        startTop     = parseFloat(startStyles.top),
+                        psx          = e.touches ? e.touches[0].clientX : e.clientX,	// pointer x on mousedown (don't use pageX, doesn't work on FF for Android)
+                        psy          = e.touches ? e.touches[0].clientY : e.clientY,	// pointer y on mousedown (don't use pageY, doesn't work on FF for Android)
+                        parent       = elmt.parentElement,
+                        parentRect   = parent.getBoundingClientRect(),
+                        parentStyles = window.getComputedStyle(parent);
                     let startLeftCorrection = 0;
 
                     // function actually draging the elmt
@@ -742,8 +743,8 @@ export const jsPanel = {
 
                         let elmtL, elmtL2, elmtT, elmtT2, elmtR, elmtR2, elmtB, elmtB2, right, bottom;
                         const pmx = e.touches ? e.touches[0].clientX : e.clientX,	// current pointer x while pointer moves (don't use pageX, doesn't work on FF for Android)
-                              pmy   = e.touches ? e.touches[0].clientY : e.clientY,	// current pointer y while pointer moves (don't use pageY, doesn't work on FF for Android)
-                              dragStyles = window.getComputedStyle(elmt);             // get current styles while draging
+                            pmy   = e.touches ? e.touches[0].clientY : e.clientY,	// current pointer y while pointer moves (don't use pageY, doesn't work on FF for Android)
+                            dragStyles = window.getComputedStyle(elmt);             // get current styles while draging
 
                         // EDGE reports "auto" instead of pixel value using getComputedStyle(), so some values need to be calculated different
                         if (parent === document.body) {
@@ -777,15 +778,15 @@ export const jsPanel = {
                         }
 
                         const lefttopVectorDrag   = Math.sqrt(elmtL2 + elmtT2),
-                              leftbottomVectorDrag  = Math.sqrt(elmtL2 + elmtB2),
-                              righttopVectorDrag    = Math.sqrt(elmtR2 + elmtT2),
-                              rightbottomVectorDrag = Math.sqrt(elmtR2 + elmtB2),
-                              horizontalDeltaDrag   = Math.abs(elmtL - elmtR)/2,
-                              verticalDeltaDrag     = Math.abs(elmtT - elmtB)/2,
-                              leftVectorDrag        = Math.sqrt(elmtL2 + verticalDeltaDrag ** 2),
-                              topVectorDrag         = Math.sqrt(elmtT2 + horizontalDeltaDrag ** 2),
-                              rightVectorDrag       = Math.sqrt(elmtR2 + verticalDeltaDrag ** 2),
-                              bottomVectorDrag      = Math.sqrt(elmtB2 + horizontalDeltaDrag ** 2);
+                            leftbottomVectorDrag  = Math.sqrt(elmtL2 + elmtB2),
+                            righttopVectorDrag    = Math.sqrt(elmtR2 + elmtT2),
+                            rightbottomVectorDrag = Math.sqrt(elmtR2 + elmtB2),
+                            horizontalDeltaDrag   = Math.abs(elmtL - elmtR)/2,
+                            verticalDeltaDrag     = Math.abs(elmtT - elmtB)/2,
+                            leftVectorDrag        = Math.sqrt(elmtL2 + verticalDeltaDrag ** 2),
+                            topVectorDrag         = Math.sqrt(elmtT2 + horizontalDeltaDrag ** 2),
+                            rightVectorDrag       = Math.sqrt(elmtR2 + verticalDeltaDrag ** 2),
+                            bottomVectorDrag      = Math.sqrt(elmtB2 + horizontalDeltaDrag ** 2);
 
                         // prevent selctions while draging
                         window.getSelection().removeAllRanges();
@@ -804,9 +805,9 @@ export const jsPanel = {
                         // apply grid option
                         if (opts.grid) {
                             const cx   = parseFloat(dragStyles.left),
-                                  cy   = parseFloat(dragStyles.top),
-                                  modX = cx % opts.grid[0],
-                                  modY = cy % opts.grid[1];
+                                cy   = parseFloat(dragStyles.top),
+                                modX = cx % opts.grid[0],
+                                modY = cy % opts.grid[1];
                             if (modX < opts.grid[0] / 2) {
                                 elmt.style.left = (cx - modX) + 'px';
                             } else {
@@ -856,8 +857,8 @@ export const jsPanel = {
                         // apply snap options
                         if (opts.snap) {
                             const snapSens = opts.snap.sensitivity,
-                                  topSensAreaLength = parent === document.body ? window.innerWidth/8 : parentRect.width/8,
-                                  sideSensAreaLength = parent === document.body ? window.innerHeight/8 : parentRect.height/8;
+                                topSensAreaLength = parent === document.body ? window.innerWidth/8 : parentRect.width/8,
+                                sideSensAreaLength = parent === document.body ? window.innerHeight/8 : parentRect.height/8;
                             elmt.snappableTo = false;
                             jsPanel.removeSnapAreas(elmt);
 
@@ -1029,52 +1030,52 @@ export const jsPanel = {
 
             }).then(function(response){
 
-            conf.done.call(obj, obj, response);
+                conf.done.call(obj, obj, response);
 
-            // extract and eval content of script tags if "evalscripttags"
-            if (conf.evalscripttags) {
-                // get all script tags within responseText
-                const scripttags = response.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gi);
-                if (scripttags) {
-                    scripttags.forEach((tag) => {
-                        // remove tags from string and trim it
-                        let js = tag.replace(/<script\b[^>]*>/i, '').replace(/<\/script>/i, '').trim();
-                        // execute javascript
-                        eval(js);
-                    });
-                }
-            }
-
-            // resize and reposition panel if either width or height is set to 'auto'
-            const oContentSize = obj.options.contentSize;
-            if (conf.autoresize || conf.autoreposition) {
-                if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
-                    const parts = oContentSize.split(' ');
-                    const sizes = Object.assign({}, {width: parts[0], height: parts[1]});
-                    if (conf.autoresize) {
-                        obj.resize(sizes);
-                    }
-                    if (!obj.classList.contains('jsPanel-contextmenu')) {
-                        if (conf.autoreposition) {
-                            obj.reposition();
-                        }
-                    }
-                } else if (typeof oContentSize === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
-                    const sizes = Object.assign({}, oContentSize);
-                    if (conf.autoresize) {
-                        obj.resize(sizes);
-                    }
-                    if (!obj.classList.contains('jsPanel-contextmenu')) {
-                        if (conf.autoreposition) {
-                            obj.reposition();
-                        }
+                // extract and eval content of script tags if "evalscripttags"
+                if (conf.evalscripttags) {
+                    // get all script tags within responseText
+                    const scripttags = response.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gi);
+                    if (scripttags) {
+                        scripttags.forEach((tag) => {
+                            // remove tags from string and trim it
+                            let js = tag.replace(/<script\b[^>]*>/i, '').replace(/<\/script>/i, '').trim();
+                            // execute javascript
+                            eval(js);
+                        });
                     }
                 }
-            }
 
-        }).catch(function(error) {
-            console.error('There has been a problem with your fetch operation: ' + error.message);
-        });
+                // resize and reposition panel if either width or height is set to 'auto'
+                const oContentSize = obj.options.contentSize;
+                if (conf.autoresize || conf.autoreposition) {
+                    if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
+                        const parts = oContentSize.split(' ');
+                        const sizes = Object.assign({}, {width: parts[0], height: parts[1]});
+                        if (conf.autoresize) {
+                            obj.resize(sizes);
+                        }
+                        if (!obj.classList.contains('jsPanel-contextmenu')) {
+                            if (conf.autoreposition) {
+                                obj.reposition();
+                            }
+                        }
+                    } else if (typeof oContentSize === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
+                        const sizes = Object.assign({}, oContentSize);
+                        if (conf.autoresize) {
+                            obj.resize(sizes);
+                        }
+                        if (!obj.classList.contains('jsPanel-contextmenu')) {
+                            if (conf.autoreposition) {
+                                obj.reposition();
+                            }
+                        }
+                    }
+                }
+
+            }).catch(function(error) {
+                console.error('There has been a problem with your fetch operation: ' + error.message);
+            });
 
     },
 
@@ -1157,8 +1158,8 @@ export const jsPanel = {
     lighten(val, amount) {
         // amount is value between 0 and 1
         const hsl = this.color(val).hsl,
-              l = parseFloat(hsl.l),
-              lnew = (l + ((100 - l) * amount)) + '%';
+            l = parseFloat(hsl.l),
+            lnew = (l + ((100 - l) * amount)) + '%';
         return `hsl(${hsl.h},${hsl.s},${lnew})`;
     },
 
@@ -1184,7 +1185,7 @@ export const jsPanel = {
             }
         }
 
-        const error = new jsPanelError('NO NEW PANEL CREATED!\nThe container to append the panel to does not exist or a container was not specified!');
+        const error = new window.jsPanelError('NO NEW PANEL CREATED!\nThe container to append the panel to does not exist or a container was not specified!');
         try {
             throw error;
         } catch (e) {
@@ -1236,7 +1237,7 @@ export const jsPanel = {
                 values.width = window.innerWidth * (parseFloat(values.width)/100) + 'px';
             } else {
                 const prtStyles = window.getComputedStyle(parent),
-                      border = parseFloat(prtStyles.borderLeftWidth) + parseFloat(prtStyles.borderRightWidth);
+                    border = parseFloat(prtStyles.borderLeftWidth) + parseFloat(prtStyles.borderRightWidth);
                 values.width = (parseFloat(prtStyles.width) - border) * (parseFloat(values.width)/100) + 'px';
             }
         } else if (typeof values.width === 'function') {
@@ -1256,7 +1257,7 @@ export const jsPanel = {
                 values.height = window.innerHeight * (parseFloat(values.height)/100) + 'px';
             } else {
                 const prtStyles = window.getComputedStyle(parent),
-                      border = parseFloat(prtStyles.borderTopWidth) + parseFloat(prtStyles.borderBottomWidth);
+                    border = parseFloat(prtStyles.borderTopWidth) + parseFloat(prtStyles.borderBottomWidth);
                 values.height = (parseFloat(prtStyles.height) - border) * (parseFloat(values.height)/100) + 'px';
             }
         } else if (typeof values.height === 'function') {
@@ -1273,8 +1274,8 @@ export const jsPanel = {
 
     pOposition(positionString) {
         const posValue   = positionString.match(/\b[a-z]{4,6}-{1}[a-z]{3,6}\b/i),
-              autoposValue = positionString.match(/down|up|right([^-]|$)|left([^-]|$)/i),
-              offsetValue  = positionString.match(/[+-]?\d?\.?\d+([a-z%]{2,4}\b|%?)/gi);
+            autoposValue = positionString.match(/down|up|right([^-]|$)|left([^-]|$)/i),
+            offsetValue  = positionString.match(/[+-]?\d?\.?\d+([a-z%]{2,4}\b|%?)/gi);
         let settings;
 
         if (posValue) {
@@ -1317,12 +1318,12 @@ export const jsPanel = {
             atXcorrection = 0, atYcorrection = 0;
 
         const defaults = {my:'center', at:'center', of:'window', offsetX:'0px', offsetY:'0px'},
-              windowRect = {
-                  width: document.documentElement.clientWidth,
-                  height: window.innerHeight
-              },
-              scrollX = pageXOffset,
-              scrollY = pageYOffset;
+            windowRect = {
+                width: document.documentElement.clientWidth,
+                height: window.innerHeight
+            },
+            scrollX = pageXOffset,
+            scrollY = pageYOffset;
 
         if (typeof elmt === 'string') {
             // arg elmt is assumed to be a selector string
@@ -1428,7 +1429,7 @@ export const jsPanel = {
         else if (parentContainerTagName !== 'body' && (posSettings.of === 'window' || !posSettings.of)) {
             // calc corrections to position panel relative to parentContainer content-box, not border-box
             const pContainerLRBorderWidth = parseFloat(parentContainerStyles.borderLeftWidth) + parseFloat(parentContainerStyles.borderRightWidth),
-                  pContainerTBBorderWidth = parseFloat(parentContainerStyles.borderTopWidth) + parseFloat(parentContainerStyles.borderBottomWidth);
+                pContainerTBBorderWidth = parseFloat(parentContainerStyles.borderTopWidth) + parseFloat(parentContainerStyles.borderBottomWidth);
 
             // calc left corrections due to parent container width
             if (posSettings.at.match(/^center-top$|^center$|^center-bottom$/i)) {
@@ -1480,7 +1481,7 @@ export const jsPanel = {
 
             // get all panels with same class
             const newClassAll = Array.prototype.slice.call(document.querySelectorAll(`.${newClass}`)),
-                  ownIndex = newClassAll.indexOf(elmtToPosition);
+                ownIndex = newClassAll.indexOf(elmtToPosition);
 
             // if more than 1 position new panel
             if (newClassAll.length > 1) {
@@ -1523,14 +1524,14 @@ export const jsPanel = {
         // apply offsets
         if (posSettings.offsetX) {
             typeof posSettings.offsetX === 'number'
-            ? elmtToPosition.style.left = `calc(${calculatedPosition.left} + ${posSettings.offsetX}px)`
-            : elmtToPosition.style.left = `calc(${calculatedPosition.left} + ${posSettings.offsetX})`;
+                ? elmtToPosition.style.left = `calc(${calculatedPosition.left} + ${posSettings.offsetX}px)`
+                : elmtToPosition.style.left = `calc(${calculatedPosition.left} + ${posSettings.offsetX})`;
             calculatedPosition.left = window.getComputedStyle(elmtToPosition).left;
         }
         if (posSettings.offsetY) {
             typeof posSettings.offsetY === 'number'
-            ? elmtToPosition.style.top = `calc(${calculatedPosition.top} + ${posSettings.offsetY}px)`
-            : elmtToPosition.style.top = `calc(${calculatedPosition.top} + ${posSettings.offsetY})`;
+                ? elmtToPosition.style.top = `calc(${calculatedPosition.top} + ${posSettings.offsetY}px)`
+                : elmtToPosition.style.top = `calc(${calculatedPosition.top} + ${posSettings.offsetY})`;
             calculatedPosition.top = window.getComputedStyle(elmtToPosition).top;
         }
 
@@ -1625,15 +1626,15 @@ export const jsPanel = {
             s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
 
             switch (max) {
-                case r:
-                    h = (g - b) / d + (g < b ? 6 : 0);
-                    break;
-                case g:
-                    h = (b - r) / d + 2;
-                    break;
-                case b:
-                    h = (r - g) / d + 4;
-                    break;
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
             }
             h /= 6;
         }
@@ -1692,8 +1693,8 @@ export const jsPanel = {
             w, h,
             frames = [];
         const jspanelresizestart = new CustomEvent('jspanelresizestart', {detail: elmt.id}),
-              jspanelresize      = new CustomEvent('jspanelresize', {detail: elmt.id}),
-              jspanelresizestop  = new CustomEvent('jspanelresizestop', {detail: elmt.id});
+            jspanelresize      = new CustomEvent('jspanelresize', {detail: elmt.id}),
+            jspanelresizestop  = new CustomEvent('jspanelresizestop', {detail: elmt.id});
 
 
         // normalize containment config
@@ -1724,16 +1725,16 @@ export const jsPanel = {
                     }
 
                     const elmtRect = elmt.getBoundingClientRect(),             /* needs to be calculated on pointerdown!! */
-                          elmtParentRect = elmtParent.getBoundingClientRect(), /* needs to be calculated on pointerdown!! */
-                          elmtParentStyles = window.getComputedStyle(elmtParent, null),
-                          elmtParentBLW = parseInt(elmtParentStyles.borderLeftWidth, 10),
-                          elmtParentBTW = parseInt(elmtParentStyles.borderTopWidth, 10),
-                          elmtParentPosition = elmtParentStyles.getPropertyValue('position'),
-                          startX = e.clientX || e.touches[0].clientX,
-                          startY = e.clientY || e.touches[0].clientY,
-                          startWidth = elmtRect.width,
-                          startHeight = elmtRect.height,
-                          resizeHandleClassList = e.target.classList;
+                        elmtParentRect = elmtParent.getBoundingClientRect(), /* needs to be calculated on pointerdown!! */
+                        elmtParentStyles = window.getComputedStyle(elmtParent, null),
+                        elmtParentBLW = parseInt(elmtParentStyles.borderLeftWidth, 10),
+                        elmtParentBTW = parseInt(elmtParentStyles.borderTopWidth, 10),
+                        elmtParentPosition = elmtParentStyles.getPropertyValue('position'),
+                        startX = e.clientX || e.touches[0].clientX,
+                        startY = e.clientY || e.touches[0].clientY,
+                        startWidth = elmtRect.width,
+                        startHeight = elmtRect.height,
+                        resizeHandleClassList = e.target.classList;
                     let startLeft = elmtRect.left,
                         startTop = elmtRect.top,
                         maxWidthEast = 10000, maxWidthWest = 10000, maxHeightSouth = 10000, maxHeightNorth = 10000;
@@ -1851,14 +1852,14 @@ export const jsPanel = {
 
                         // get current position and size values while resizing
                         const styles = window.getComputedStyle(elmt),
-                              values = {
-                                  left:   parseFloat(styles.left),
-                                  top:    parseFloat(styles.top),
-                                  right:  parseFloat(styles.right),
-                                  bottom: parseFloat(styles.bottom),
-                                  width:  parseFloat(styles.width),
-                                  height: parseFloat(styles.height)
-                              };
+                            values = {
+                                left:   parseFloat(styles.left),
+                                top:    parseFloat(styles.top),
+                                right:  parseFloat(styles.right),
+                                bottom: parseFloat(styles.bottom),
+                                width:  parseFloat(styles.width),
+                                height: parseFloat(styles.height)
+                            };
 
                         // callback while resizing
                         if (opts.resize) {
@@ -1907,13 +1908,13 @@ export const jsPanel = {
                             opts.grid[1] = opts.grid[0];
                         }
                         const cw   = parseFloat(elmt.style.width),
-                              ch   = parseFloat(elmt.style.height),
-                              modW = cw % opts.grid[0],
-                              modH = ch % opts.grid[1],
-                              cx   = parseFloat(elmt.style.left),
-                              cy   = parseFloat(elmt.style.top),
-                              modX = cx % opts.grid[0],
-                              modY = cy % opts.grid[1];
+                            ch   = parseFloat(elmt.style.height),
+                            modW = cw % opts.grid[0],
+                            modH = ch % opts.grid[1],
+                            cx   = parseFloat(elmt.style.left),
+                            cy   = parseFloat(elmt.style.top),
+                            modX = cx % opts.grid[0],
+                            modY = cy % opts.grid[1];
 
                         if (modW < opts.grid[0] / 2) {
                             elmt.style.width = (cw - modW) + 'px';
@@ -2010,7 +2011,7 @@ export const jsPanel = {
             if (panel.options.dragit.snap.containment) {
                 if (panel.options.dragit.containment) {
                     const containment = this.pOcontainment(panel.options.dragit.containment),
-                          position    = panel.snappableTo;
+                        position    = panel.snappableTo;
                     if (position.startsWith('left')) {
                         offsets[0] = containment[3];
                     } else if (position.startsWith('right')) {
@@ -2059,7 +2060,7 @@ export const jsPanel = {
         if (p !== null) {
             // if a panel with passed id already exists, front it and return error object
             if (p.classList.contains('jsPanel')) {p.front();}
-            const error = new jsPanelError('NO NEW PANEL CREATED!\nAn element with the ID <'+ options.id + '> already exists in the document.');
+            const error = new window.jsPanelError('NO NEW PANEL CREATED!\nAn element with the ID <'+ options.id + '> already exists in the document.');
             try {
                 throw error;
             } catch (e) {
@@ -2123,7 +2124,7 @@ export const jsPanel = {
         });
 
         /* Compat code ------------------------------------------ */
-        if (options.headerRemove) {options.header = false}
+        if (options.headerRemove) {options.header = false;}
         /* ------------------------------------------------------ */
 
         let self = options.template ? options.template : this.createPanelTemplate();
@@ -2146,28 +2147,28 @@ export const jsPanel = {
 
         // Events
         const jspanelloaded         = new CustomEvent('jspanelloaded', {'detail': options.id}),
-              jspanelbeforeclose      = new CustomEvent('jspanelbeforeclose', {'detail': options.id}),
-              jspanelclosed           = new CustomEvent('jspanelclosed', {'detail': options.id}),
-              jspanelstatuschange     = new CustomEvent('jspanelstatuschange', {'detail': options.id}),
-              jspanelbeforenormalize  = new CustomEvent('jspanelbeforenormalize', {'detail': options.id}),
-              jspanelnormalized       = new CustomEvent('jspanelnormalized', {'detail': options.id}),
-              jspanelbeforemaximize   = new CustomEvent('jspanelbeforemaximize', {'detail': options.id}),
-              jspanelmaximized        = new CustomEvent('jspanelmaximized', {'detail': options.id}),
-              jspanelbeforeminimize   = new CustomEvent('jspanelbeforeminimize', {'detail': options.id}),
-              jspanelminimized        = new CustomEvent('jspanelminimized', {'detail': options.id}),
-              jspanelbeforesmallify   = new CustomEvent('jspanelbeforesmallify', {'detail': options.id}),
-              jspanelsmallified       = new CustomEvent('jspanelsmallified', {'detail': options.id}),
-              jspanelsmallifiedmax    = new CustomEvent('jspanelsmallifiedmax', {'detail': options.id}),
-              jspanelbeforeunsmallify = new CustomEvent('jspanelbeforeunsmallify', {'detail': options.id}),
-              jspanelfronted          = new CustomEvent('jspanelfronted', {'detail': options.id});
+            jspanelbeforeclose      = new CustomEvent('jspanelbeforeclose', {'detail': options.id}),
+            jspanelclosed           = new CustomEvent('jspanelclosed', {'detail': options.id}),
+            jspanelstatuschange     = new CustomEvent('jspanelstatuschange', {'detail': options.id}),
+            jspanelbeforenormalize  = new CustomEvent('jspanelbeforenormalize', {'detail': options.id}),
+            jspanelnormalized       = new CustomEvent('jspanelnormalized', {'detail': options.id}),
+            jspanelbeforemaximize   = new CustomEvent('jspanelbeforemaximize', {'detail': options.id}),
+            jspanelmaximized        = new CustomEvent('jspanelmaximized', {'detail': options.id}),
+            jspanelbeforeminimize   = new CustomEvent('jspanelbeforeminimize', {'detail': options.id}),
+            jspanelminimized        = new CustomEvent('jspanelminimized', {'detail': options.id}),
+            jspanelbeforesmallify   = new CustomEvent('jspanelbeforesmallify', {'detail': options.id}),
+            jspanelsmallified       = new CustomEvent('jspanelsmallified', {'detail': options.id}),
+            jspanelsmallifiedmax    = new CustomEvent('jspanelsmallifiedmax', {'detail': options.id}),
+            jspanelbeforeunsmallify = new CustomEvent('jspanelbeforeunsmallify', {'detail': options.id}),
+            jspanelfronted          = new CustomEvent('jspanelfronted', {'detail': options.id});
 
         // controls handlers
         const hasCloseBtn  = self.querySelector('.jsPanel-btn-close'),
-              hasMaxBtn      = self.querySelector('.jsPanel-btn-maximize'),
-              hasNormBtn     = self.querySelector('.jsPanel-btn-normalize'),
-              hasSmallBtn    = self.querySelector('.jsPanel-btn-smallify'),
-              hasSmallrevBtn = self.querySelector('.jsPanel-btn-smallifyrev'),
-              hasMinBtn      = self.querySelector('.jsPanel-btn-minimize');
+            hasMaxBtn      = self.querySelector('.jsPanel-btn-maximize'),
+            hasNormBtn     = self.querySelector('.jsPanel-btn-normalize'),
+            hasSmallBtn    = self.querySelector('.jsPanel-btn-smallify'),
+            hasSmallrevBtn = self.querySelector('.jsPanel-btn-smallifyrev'),
+            hasMinBtn      = self.querySelector('.jsPanel-btn-minimize');
 
         if (hasCloseBtn) {
             jsPanel.pointerup.forEach((item) => {
@@ -2291,6 +2292,7 @@ export const jsPanel = {
         };
 
         self.applyArbitraryTheme = (themeDetails) => {
+            self.style.backgroundColor = themeDetails.colors[0];
             self.header.style.backgroundColor = themeDetails.colors[0];
             ['.jsPanel-headerlogo', '.jsPanel-title', '.jsPanel-hdr-toolbar'].forEach((item) => {
                 self.querySelector(item).style.color = themeDetails.colors[3];
@@ -2321,7 +2323,7 @@ export const jsPanel = {
 
         self.applyBootstrapTheme = (themeDetails) => {
             const bsTheme = themeDetails.bstheme,
-                  bsVersion = $.fn.button.Constructor.VERSION[0];
+                bsVersion = $.fn.button.Constructor.VERSION[0];
 
             if (bsVersion === '4') {
                 self.classList.add(`bg-${bsTheme}`);
@@ -2400,7 +2402,7 @@ export const jsPanel = {
         };
 
         self.borderRadius = (rad = 5) => {
-            var br = typeof rad === 'string' ? rad : rad + 'px',
+            let br = typeof rad === 'string' ? rad : rad + 'px',
                 hdr = self.header.style,
                 cont = self.content.style,
                 ftr = self.footer.style;
@@ -2519,13 +2521,13 @@ export const jsPanel = {
 
         self.createMinimizedReplacement = () => {
             const tpl = jsPanel.createMinimizedTemplate(),
-                  color = window.getComputedStyle(self.headertitle).color,
-                  font = options.iconfont,
-                  controlbar = tpl.querySelector('.jsPanel-controlbar');
+                color = window.getComputedStyle(self.headertitle).color,
+                font = options.iconfont,
+                controlbar = tpl.querySelector('.jsPanel-controlbar');
 
             tpl.style.backgroundColor = window.getComputedStyle(self.header).backgroundColor === 'transparent'
-                                        ? window.getComputedStyle(self).backgroundColor
-                                        : window.getComputedStyle(self.header).backgroundColor;
+                ? window.getComputedStyle(self).backgroundColor
+                : window.getComputedStyle(self.header).backgroundColor;
             tpl.id = self.id + '-min';
             tpl.querySelector('.jsPanel-headerbar').replaceChild(self.headerlogo.cloneNode(true), tpl.querySelector('.jsPanel-headerlogo'));
             tpl.querySelector('.jsPanel-titlebar').replaceChild(self.headertitle.cloneNode(true), tpl.querySelector('.jsPanel-title'));
@@ -2568,7 +2570,7 @@ export const jsPanel = {
 
         self.dragit = (string) => {
             const dragitOptions = Object.assign({}, jsPanel.defaults.dragit, options.dragit),
-                  handles = self.querySelectorAll(dragitOptions.handles);
+                handles = self.querySelectorAll(dragitOptions.handles);
             if (string === 'disable') {
                 handles.forEach((handle) => {
                     handle.style.pointerEvents = 'none';
@@ -2597,7 +2599,7 @@ export const jsPanel = {
 
         self.getThemeDetails = (th) => {
             const passedTheme = th.toLowerCase().replace(/ /g, ''),
-                  theme = {color: false, colors: false, filling: false, bs: false, bstheme: false};
+                theme = {color: false, colors: false, filling: false, bs: false, bstheme: false};
 
             if (passedTheme.substr(-6, 6) === 'filled') {
                 theme.filling = 'filled';
@@ -2636,7 +2638,7 @@ export const jsPanel = {
             document.dispatchEvent(jspanelbeforemaximize);
 
             const parent = self.parentElement,
-                  margins = options.maximizedMargin;
+                margins = options.maximizedMargin;
 
             if (parent === document.body) {
                 // maximize within window
@@ -2934,7 +2936,7 @@ export const jsPanel = {
 
         self.setHeaderControls = (callback) => {
             const controls = ['close', 'maximize', 'normalize', 'minimize', 'smallify', 'smallifyrev'],
-                  option = options.headerControls;
+                option = options.headerControls;
             if (typeof option === 'string') {
                 if (option === 'none') {
                     controls.forEach((item) => {
@@ -3013,11 +3015,12 @@ export const jsPanel = {
                     classArray = ['glyphicon glyphicon-remove', 'glyphicon glyphicon-fullscreen', 'glyphicon glyphicon-resize-full', 'glyphicon glyphicon-minus', 'glyphicon glyphicon-chevron-down', 'glyphicon glyphicon-chevron-up'];
                 } else if (font === 'fa' || font === 'far' || font === 'fal' || font === 'fas') {
                     classArray = [`${font} fa-window-close`, `${font} fa-window-maximize`, `${font} fa-window-restore`, `${font} fa-window-minimize`, `${font} fa-chevron-down`, `${font} fa-chevron-up`];
-                    self.controlbar.style.padding = '6px 0 3px 0';
                 } else if (font === 'material-icons') {
                     classArray = [font, font, font, font, font, font];
                     textArray = ['close', 'fullscreen', 'fullscreen_exit', 'call_received', 'expand_more', 'expand_less'];
-                    self.controlbar.style.padding = '4px 0 5px 0';
+                    panel.controlbar.querySelectorAll('.jsPanel-btn').forEach(function (item) {
+                        item.style.padding = '6px 0 8px 0';
+                    });
                 } else if (Array.isArray(font)) {
                     classArray = [`custom-control-icon ${font[5]}`, `custom-control-icon ${font[4]}`, `custom-control-icon ${font[3]}`, `custom-control-icon ${font[2]}`, `custom-control-icon ${font[1]}`, `custom-control-icon ${font[0]}`];
                 } else {
@@ -3421,8 +3424,8 @@ export const jsPanel = {
             window.addEventListener('resize', (e) => {
                 if (e.target === window) {       // see https://bugs.jqueryui.com/ticket/7514
                     const param = options.onwindowresize,
-                          status = self.status,
-                          parentStyles = window.getComputedStyle(self.parentElement);
+                        status = self.status,
+                        parentStyles = window.getComputedStyle(self.parentElement);
                     if (status === 'maximized' && param === true) {
                         self.maximize();
                     } else if (status === 'normalized' || status === 'smallified' || status === 'maximized') {

@@ -1,4 +1,4 @@
-/* jspanel.sass: 2018-06-01 15:17 */
+/* jspanel.sass: 2018-07-25 09:12 */
 /* http://stackoverflow.com/questions/30421570/sass-unicode-escape-is-not-preserved-in-css-file */
 .jsPanel {
   border: 0;
@@ -106,17 +106,15 @@
     opacity: .6; }
   .jsPanel-controlbar .jsPanel-btn {
     cursor: pointer;
-    touch-action: none; }
+    touch-action: none;
+    padding: 6px 8px 8px 3px; }
     .jsPanel-controlbar .jsPanel-btn span {
       vertical-align: middle;
       padding: 0 4px 0 2px; }
     .jsPanel-controlbar .jsPanel-btn span.glyphicon {
       padding: 0 2px; }
-    .jsPanel-controlbar .jsPanel-btn svg {
-      margin: 0 8px 0 3px; }
-    .jsPanel-controlbar .jsPanel-btn .jsPanel-icon {
-      padding-top: 9px;
-      margin: 0 4px 0 0; }
+    .jsPanel-controlbar .jsPanel-btn svg.jsPanel-icon {
+      vertical-align: middle; }
   .jsPanel-controlbar .jsPanel-btn-normalize, .jsPanel-controlbar .jsPanel-btn-smallifyrev {
     display: none; }
 

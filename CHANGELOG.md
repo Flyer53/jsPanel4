@@ -1,5 +1,12 @@
 ## CHANGELOG
 
+### Version 4.1.1 *released 2018-07-25*
+
++ **fixed** `jspanel.min.js` to make it work with IE11
++ **fixed** CSS and JS to improve compatibility with Bootstrap > 4.1.2
++ **fix** in the internal function applying a arbitrary theme
++ **replaced** some wrong files in the folder `es6module`
+
 ### Version 4.1.0 *released 2018-07-20*
 
 + **improved** method `.smallify()`
