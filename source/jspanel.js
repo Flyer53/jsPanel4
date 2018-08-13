@@ -4,8 +4,8 @@
 
 const jsPanel = {
 
-    version: '4.1.1',
-    date:    '2018-07-25 09:12',
+    version: '4.1.2',
+    date:    '2018-08-13 09:12',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -694,7 +694,7 @@ const jsPanel = {
                     if (e.target.closest('.jsPanel-ftr-btn')) {return;}
 
                     elmt.controlbar.style.pointerEvents = 'none';
-                    frames = document.querySelectorAll('iframe');
+                    frames = document.querySelectorAll('iframe, object');
                     if (frames.length) {
                         frames.forEach((item) => {
                             item.style.pointerEvents = 'none';
@@ -1717,7 +1717,7 @@ const jsPanel = {
                     // disable resizing for all mouse buttons but left
                     if (e.button && e.button > 0) { return false; }
 
-                    frames = document.querySelectorAll('iframe');
+                    frames = document.querySelectorAll('iframe, object');
                     if (frames.length) {
                         frames.forEach(function (item) {
                             item.style.pointerEvents = 'none';

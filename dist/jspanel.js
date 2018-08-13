@@ -8,8 +8,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var jsPanel = {
 
-    version: '4.1.1',
-    date: '2018-07-25 09:12',
+    version: '4.1.2',
+    date: '2018-08-13 09:12',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: function () {
@@ -680,7 +680,7 @@ var jsPanel = {
                     }
 
                     elmt.controlbar.style.pointerEvents = 'none';
-                    frames = document.querySelectorAll('iframe');
+                    frames = document.querySelectorAll('iframe, object');
                     if (frames.length) {
                         frames.forEach(function (item) {
                             item.style.pointerEvents = 'none';
@@ -1742,7 +1742,7 @@ var jsPanel = {
                         return false;
                     }
 
-                    frames = document.querySelectorAll('iframe');
+                    frames = document.querySelectorAll('iframe, object');
                     if (frames.length) {
                         frames.forEach(function (item) {
                             item.style.pointerEvents = 'none';

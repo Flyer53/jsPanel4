@@ -4,6 +4,8 @@
 
 import {jsPanel} from '../../jspanel.js';
 
+// TODO: autoreposition tooltip after creation if it intersects window boundaries
+
 if (!jsPanel.tooltip) {
 
     jsPanel.tooltip = {

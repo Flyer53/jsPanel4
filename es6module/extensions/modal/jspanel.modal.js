@@ -14,12 +14,13 @@ if (!jsPanel.modal) {
 
     jsPanel.modal = {
 
-        version: '1.0.0',
-        date: '2017-05-17 22:15',
+        version: '1.0.1',
+        date: '2018-07-31 10:34',
 
         defaults: {
-            headerControls: 'closeonly',
+            closeOnEscape:  true,
             dragit:         false,
+            headerControls: 'closeonly',
             resizeit:       false,
             syncMargins:    false
         },
@@ -80,6 +81,12 @@ if (!jsPanel.modal) {
                 modal.style.zIndex = jsPanel.modal.ziModal.next();
                 modal.header.style.cursor = 'default';
                 modal.footer.style.cursor = 'default';
+                // close modal on click in backdrop
+                jsPanel.pointerdown.forEach(function (evt) {
+                    document.getElementById(`jsPanel-modal-backdrop-${opts.id}`).addEventListener(evt, function () {
+                        modal.close();
+                    });
+                });
             });
 
         }

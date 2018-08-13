@@ -1,5 +1,11 @@
 ## CHANGELOG
 
+### Version 4.1.2 *released 2018-08-13*
+
++ **fix** in options `dragit` and `resizeit` - handler was not unbound when mouse cursor came over a `<object>` tag in content section of a jsPanel
++ **added** click on modal backdrop will close a modal jsPanel
++ **changed** `option.closeOnEscape` is set to `true` by default for a modal jPanel
+
 ### Version 4.1.1 *released 2018-07-25*
 
 + **fixed** `jspanel.min.js` to make it work with IE11
