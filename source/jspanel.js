@@ -2,6 +2,10 @@
 /* global jsPanel, $ */
 'use strict';
 
+function GetJsPanel() {
+    return jsPanel;
+}
+
 const jsPanel = {
 
     version: '4.1.2',
