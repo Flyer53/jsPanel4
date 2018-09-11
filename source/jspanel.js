@@ -2487,6 +2487,10 @@ const jsPanel = {
 
                 // if panel is autopositioned reposition remaining autopositioned panels
                 self.autopositionRemaining();
+                
+                document.removeEventListener('jspaneldragstop', self.onjspaneldragstop);
+                document.removeEventListener('jspanelresizestart', self.onjspanelresizestart);
+                document.removeEventListener('jspanelresizestop', self.onjspanelresizestop);
             };
 
             document.dispatchEvent(jspanelbeforeclose);
@@ -3352,40 +3356,47 @@ const jsPanel = {
                 options.resizeit.containment = containment;
             }
         }
+        
+        self.onjspaneldragstop = (e) => {
+            if (e.detail === self.id) {
+                self.calcSizeFactors();
+            }
+        }
 
         if (options.dragit) {
             this.dragit(self, options.dragit);
-            document.addEventListener('jspaneldragstop', (e) => {
-                if (e.detail === self.id) {
-                    self.calcSizeFactors();
-                }
-            },false);
+            document.addEventListener('jspaneldragstop', self.onjspaneldragstop, false);
         } else {
             self.titlebar.style.cursor = 'default';
+        }
+        
+        let startstatus;
+
+        self.onjspanelresizestart = (e) => {
+            if (e.detail === self.id) {
+                startstatus = self.status;
+            }
+        }
+        
+        self.onjspanelresizestop = (e) => {
+            if (e.detail === self.id) {
+                if ((startstatus === 'smallified' || startstatus === 'smallifiedmax' || startstatus === 'maximized') && parseFloat(self.style.height) > parseFloat(window.getComputedStyle(self.header).height)) {
+                    self.setControls(['.jsPanel-btn-normalize', '.jsPanel-btn-smallifyrev']);
+                    self.status = 'normalized';
+                    document.dispatchEvent(jspanelnormalized);
+                    document.dispatchEvent(jspanelstatuschange);
+                    if (options.onstatuschange) {
+                        jsPanel.processCallbacks(self, options.onstatuschange, 'every');
+                    }
+                    self.calcSizeFactors();
+                }
+            }
         }
 
         if (options.resizeit) {
             this.resizeit(self, options.resizeit);
-            let startstatus;
-            document.addEventListener('jspanelresizestart', (e) => {
-                if (e.detail === self.id) {
-                    startstatus = self.status;
-                }
-            },false);
-            document.addEventListener('jspanelresizestop', (e) => {
-                if (e.detail === self.id) {
-                    if ((startstatus === 'smallified' || startstatus === 'smallifiedmax' || startstatus === 'maximized') && parseFloat(self.style.height) > parseFloat(window.getComputedStyle(self.header).height)) {
-                        self.setControls(['.jsPanel-btn-normalize', '.jsPanel-btn-smallifyrev']);
-                        self.status = 'normalized';
-                        document.dispatchEvent(jspanelnormalized);
-                        document.dispatchEvent(jspanelstatuschange);
-                        if (options.onstatuschange) {
-                            jsPanel.processCallbacks(self, options.onstatuschange, 'every');
-                        }
-                        self.calcSizeFactors();
-                    }
-                }
-            },false);
+            document.addEventListener('jspanelresizestart', self.onjspanelresizestart, false);
+            document.addEventListener('jspanelresizestop', self.onjspanelresizestop, false);
         }
 
         // initialize self.currentData - must be after options position & size
