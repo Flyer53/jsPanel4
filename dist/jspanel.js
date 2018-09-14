@@ -1,4 +1,4 @@
-/* jspanel.js - License MIT, copyright 2013 - 2018 Stefan Straesser <info@jspanel.de> (http://jspanel.de) */
+/* jspanel.js - License MIT, copyright 2013 - 2018 Stefan Straesser <info@jspanel.de> (https://jspanel.de) */
 /* global jsPanel, $ */
 'use strict';
 
@@ -8,8 +8,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var jsPanel = {
 
-    version: '4.1.2',
-    date: '2018-08-13 09:12',
+    version: '4.2.1',
+    date: '2018-09-14 13:11',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: function () {
@@ -641,8 +641,7 @@ var jsPanel = {
         var dragstarted = void 0,
             opts = Object.assign({}, this.defaults.dragit, options),
             dragElmt = void 0,
-            containment = void 0,
-            frames = [];
+            containment = void 0;
         var jspaneldragstart = new CustomEvent('jspaneldragstart', { detail: elmt.id }),
             jspaneldrag = new CustomEvent('jspaneldrag', { detail: elmt.id }),
             jspaneldragstop = new CustomEvent('jspaneldragstop', { detail: elmt.id });
@@ -680,12 +679,7 @@ var jsPanel = {
                     }
 
                     elmt.controlbar.style.pointerEvents = 'none';
-                    frames = document.querySelectorAll('iframe, object');
-                    if (frames.length) {
-                        frames.forEach(function (item) {
-                            item.style.pointerEvents = 'none';
-                        });
-                    }
+                    elmt.content.style.pointerEvents = 'none'; // without this code handler might not be unbound when content has iframe or object tag
 
                     var startStyles = window.getComputedStyle(elmt),
                         startLeft = parseFloat(startStyles.left),
@@ -962,11 +956,7 @@ var jsPanel = {
                     }
 
                     elmt.controlbar.style.pointerEvents = 'inherit';
-                    if (frames.length) {
-                        frames.forEach(function (item) {
-                            item.style.pointerEvents = 'inherit';
-                        });
-                    }
+                    elmt.content.style.pointerEvents = 'inherit';
                 });
             });
 
@@ -1360,6 +1350,9 @@ var jsPanel = {
         var parentContainerTagName = parentContainer.tagName.toLowerCase();
 
         if (posSettings.of && posSettings.of !== 'window') {
+            if (typeof posSettings.of === 'function') {
+                posSettings.of = posSettings.of();
+            }
             if (typeof posSettings.of === 'string') {
                 // posSettings.of is assumed to be a selector string
                 elmtToPositionAgainst = document.querySelector(posSettings.of);
@@ -1367,6 +1360,14 @@ var jsPanel = {
                 // otherwise posSettings.of is assumed to be a node object
                 elmtToPositionAgainst = posSettings.of;
             }
+        }
+
+        // process my/at functions if applicable
+        if (typeof posSettings.my === 'function') {
+            posSettings.my = posSettings.my(); // function must return a proper string value
+        }
+        if (typeof posSettings.at === 'function') {
+            posSettings.at = posSettings.at(); // function must return a proper string value
         }
 
         // calc left corrections due to panel size, should be the same for all scenarios
@@ -1479,6 +1480,11 @@ var jsPanel = {
 
         // autoposition panels only if ...
         if (posSettings.autoposition && posSettings.my === posSettings.at && ['left-top', 'center-top', 'right-top', 'left-bottom', 'center-bottom', 'right-bottom'].indexOf(posSettings.my) >= 0) {
+
+            if (typeof posSettings.autoposition === 'function') {
+                posSettings.autoposition = posSettings.autoposition(); // function must return a proper string value
+            }
+
             // add class with position and autoposition direction
             var newClass = posSettings.my + '-' + posSettings.autoposition.toLowerCase();
             elmtToPosition.classList.add(newClass);
@@ -1527,16 +1533,31 @@ var jsPanel = {
 
         // apply offsets
         if (posSettings.offsetX) {
+
+            if (typeof posSettings.offsetX === 'function') {
+                posSettings.offsetX = posSettings.offsetX(); // function must return a proper number or string
+            }
+
             typeof posSettings.offsetX === 'number' ? elmtToPosition.style.left = 'calc(' + calculatedPosition.left + ' + ' + posSettings.offsetX + 'px)' : elmtToPosition.style.left = 'calc(' + calculatedPosition.left + ' + ' + posSettings.offsetX + ')';
             calculatedPosition.left = window.getComputedStyle(elmtToPosition).left;
         }
         if (posSettings.offsetY) {
+
+            if (typeof posSettings.offsetY === 'function') {
+                posSettings.offsetY = posSettings.offsetY(); // function must return a proper number or string
+            }
+
             typeof posSettings.offsetY === 'number' ? elmtToPosition.style.top = 'calc(' + calculatedPosition.top + ' + ' + posSettings.offsetY + 'px)' : elmtToPosition.style.top = 'calc(' + calculatedPosition.top + ' + ' + posSettings.offsetY + ')';
             calculatedPosition.top = window.getComputedStyle(elmtToPosition).top;
         }
 
         // apply minLeft
         if (posSettings.minLeft) {
+
+            if (typeof posSettings.minLeft === 'function') {
+                posSettings.minLeft = posSettings.minLeft(); // function must return a proper number or string
+            }
+
             // save current left of panel as pixel value
             var initialLeft = parseFloat(calculatedPosition.left);
             // convert minLeft number to pixel value
@@ -1555,6 +1576,11 @@ var jsPanel = {
         }
         // apply maxLeft
         if (posSettings.maxLeft) {
+
+            if (typeof posSettings.maxLeft === 'function') {
+                posSettings.maxLeft = posSettings.maxLeft(); // function must return a proper number or string
+            }
+
             var _initialLeft = parseFloat(calculatedPosition.left);
             if (typeof posSettings.maxLeft === 'number') {
                 posSettings.maxLeft += 'px';
@@ -1568,6 +1594,11 @@ var jsPanel = {
         }
         // apply maxTop
         if (posSettings.maxTop) {
+
+            if (typeof posSettings.maxTop === 'function') {
+                posSettings.maxTop = posSettings.maxTop(); // function must return a proper number or string
+            }
+
             var initialTop = parseFloat(calculatedPosition.top);
             if (typeof posSettings.maxTop === 'number') {
                 posSettings.maxTop += 'px';
@@ -1581,6 +1612,11 @@ var jsPanel = {
         }
         // apply minTop
         if (posSettings.minTop) {
+
+            if (typeof posSettings.minTop === 'function') {
+                posSettings.minTop = posSettings.minTop(); // function must return a proper number or string
+            }
+
             var _initialTop = parseFloat(calculatedPosition.top);
             if (typeof posSettings.minTop === 'number') {
                 posSettings.minTop += 'px';
@@ -1714,8 +1750,7 @@ var jsPanel = {
             resizePanel = void 0,
             resizestarted = void 0,
             w = void 0,
-            h = void 0,
-            frames = [];
+            h = void 0;
         var jspanelresizestart = new CustomEvent('jspanelresizestart', { detail: elmt.id }),
             jspanelresize = new CustomEvent('jspanelresize', { detail: elmt.id }),
             jspanelresizestop = new CustomEvent('jspanelresizestop', { detail: elmt.id });
@@ -1742,12 +1777,7 @@ var jsPanel = {
                         return false;
                     }
 
-                    frames = document.querySelectorAll('iframe, object');
-                    if (frames.length) {
-                        frames.forEach(function (item) {
-                            item.style.pointerEvents = 'none';
-                        });
-                    }
+                    elmt.content.style.pointerEvents = 'none';
 
                     var elmtRect = elmt.getBoundingClientRect(),
                         /* needs to be calculated on pointerdown!! */
@@ -1768,9 +1798,6 @@ var jsPanel = {
                         maxWidthWest = 10000,
                         maxHeightSouth = 10000,
                         maxHeightNorth = 10000;
-
-                    // important if content contains another document
-                    elmt.content.style.pointerEvents = 'none';
 
                     if (elmtParentTagName !== 'body') {
                         startLeft = elmtRect.left - elmtParentRect.left + elmtParent.scrollLeft;
@@ -2000,11 +2027,7 @@ var jsPanel = {
                     }
                 }
 
-                if (frames.length) {
-                    frames.forEach(function (item) {
-                        item.style.pointerEvents = 'inherit';
-                    });
-                }
+                elmt.content.style.pointerEvents = 'inherit';
             }, false);
         });
 
@@ -2505,9 +2528,9 @@ var jsPanel = {
                 self.hf = parseFloat(self.style.left) / (document.body.clientWidth - parseFloat(self.style.width));
                 self.vf = parseFloat(self.style.top) / (window.innerHeight - parseFloat(styles.height));
             } else {
-                var parentStyles = window.getComputedStyle(self.parentElement);
-                self.hf = parseFloat(self.style.left) / (parseFloat(parentStyles.width) - parseFloat(self.style.width));
-                self.vf = parseFloat(self.style.top) / (parseFloat(parentStyles.height) - parseFloat(styles.height));
+                var parentStyles = self.parentElement.getBoundingClientRect();
+                self.hf = parseFloat(self.style.left) / (parentStyles.width - parseFloat(self.style.width));
+                self.vf = parseFloat(self.style.top) / (parentStyles.height - parseFloat(styles.height));
             }
         };
 
@@ -3088,25 +3111,40 @@ var jsPanel = {
         };
 
         self.setHeaderLogo = function (hdrLogo, callback) {
+            var logos = [self.headerlogo],
+                minPanel = document.querySelector('#' + self.id + '-min');
+            if (minPanel) {
+                logos.push(minPanel.querySelector('.jsPanel-headerlogo'));
+            }
+
             if (typeof hdrLogo === 'string') {
                 if (hdrLogo.substr(0, 1) !== '<') {
                     // is assumed to be an img url
-                    var img = document.createElement('img');
-                    img.src = hdrLogo;
-                    jsPanel.emptyNode(self.headerlogo);
-                    self.headerlogo.append(img);
+                    logos.forEach(function (item) {
+                        jsPanel.emptyNode(item);
+                        var img = document.createElement('img');
+                        img.src = hdrLogo;
+                        item.append(img);
+                    });
                 } else {
-                    self.headerlogo.innerHTML = hdrLogo;
+                    logos.forEach(function (item) {
+                        item.innerHTML = hdrLogo;
+                    });
                 }
             } else {
                 // assumed to be a node object
-                jsPanel.emptyNode(self.headerlogo);
-                self.headerlogo.append(hdrLogo);
+                logos.forEach(function (item) {
+                    jsPanel.emptyNode(item);
+                    item.append(hdrLogo);
+                });
             }
             // set max-height of logo to equal height of headerbar
-            self.headerlogo.querySelectorAll('img').forEach(function (img) {
-                img.style.maxHeight = getComputedStyle(self.headerbar).height;
+            logos.forEach(function (item) {
+                item.querySelectorAll('img').forEach(function (img) {
+                    img.style.maxHeight = getComputedStyle(self.headerbar).height;
+                });
             });
+
             if (callback) {
                 callback.call(self, self);
             }
@@ -3127,16 +3165,28 @@ var jsPanel = {
         };
 
         self.setHeaderTitle = function (hdrTitle, callback) {
+            var titles = [self.headertitle],
+                minPanel = document.querySelector('#' + self.id + '-min');
+            if (minPanel) {
+                titles.push(minPanel.querySelector('.jsPanel-title'));
+            }
             if (typeof hdrTitle === 'string') {
-                self.headertitle.innerHTML = hdrTitle;
+                titles.forEach(function (item) {
+                    item.innerHTML = hdrTitle;
+                });
             } else if (typeof hdrTitle === 'function') {
-                jsPanel.emptyNode(self.headertitle);
-                self.headertitle.innerHTML = hdrTitle();
+                titles.forEach(function (item) {
+                    jsPanel.emptyNode(item);
+                    item.innerHTML = hdrTitle();
+                });
             } else {
                 // assumed to be a node object
-                jsPanel.emptyNode(self.headertitle);
-                self.headertitle.append(hdrTitle);
+                titles.forEach(function (item) {
+                    jsPanel.emptyNode(item);
+                    item.append(hdrTitle);
+                });
             }
+
             if (callback) {
                 callback.call(self, self);
             }
@@ -3520,7 +3570,7 @@ var jsPanel = {
 
         if (options.dragit) {
             this.dragit(self, options.dragit);
-            document.addEventListener('jspaneldragstop', function (e) {
+            self.addEventListener('jspaneldragstop', function (e) {
                 if (e.detail === self.id) {
                     self.calcSizeFactors();
                 }
@@ -3532,12 +3582,12 @@ var jsPanel = {
         if (options.resizeit) {
             this.resizeit(self, options.resizeit);
             var startstatus = void 0;
-            document.addEventListener('jspanelresizestart', function (e) {
+            self.addEventListener('jspanelresizestart', function (e) {
                 if (e.detail === self.id) {
                     startstatus = self.status;
                 }
             }, false);
-            document.addEventListener('jspanelresizestop', function (e) {
+            self.addEventListener('jspanelresizestop', function (e) {
                 if (e.detail === self.id) {
                     if ((startstatus === 'smallified' || startstatus === 'smallifiedmax' || startstatus === 'maximized') && parseFloat(self.style.height) > parseFloat(window.getComputedStyle(self.header).height)) {
                         self.setControls(['.jsPanel-btn-normalize', '.jsPanel-btn-smallifyrev']);

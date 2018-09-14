@@ -1,5 +1,12 @@
 ## CHANGELOG
 
+### Version 4.2.1 *released 2018-09-14*
+
++ **fix** in methods `setHeaderLogo()` and `setHeaderTitle()` - logo and title are now updated in minimized replacement as well
++ **fix** in css concerning only IE11 when using very long title texts (controls were pushed out of panel boundaries)
++ **fix** in options `dragit` and `resizeit` - see https://github.com/Flyer53/jsPanel4/issues/53
++ **added:** All parameters of option `position` now accept a function as value
+
 ### Version 4.1.2 *released 2018-08-13*
 
 + **fix** in options `dragit` and `resizeit` - handler was not unbound when mouse cursor came over a `<object>` tag in content section of a jsPanel

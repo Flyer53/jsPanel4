@@ -1,6 +1,6 @@
 {
   "name": "jspanel4",
-  "version": "4.1.2",
+  "version": "4.2.1",
   "description": "A javascript tool to create highly configurable multifunctional floating panels for use in backend solutions and other web applications. Also usable as modal, tooltip, hint or contextmenu. With built in support for bootstrap (3 & 4), right-to-left text direction and a lot more ...",
   "files": "dist/",
   "main": "./es6module/jspanel.min.js",
