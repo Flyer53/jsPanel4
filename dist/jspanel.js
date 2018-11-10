@@ -8,8 +8,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var jsPanel = {
 
-    version: '4.2.1',
-    date: '2018-09-14 13:11',
+    version: '4.3.0',
+    date: '2018-11-10 10:36',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: function () {
@@ -29,7 +29,7 @@ var jsPanel = {
     }(),
     defaults: {
         boxShadow: 3,
-        container: document.body,
+        container: 'window',
         contentSize: { width: '400px', height: '200px' }, // must be object
         dragit: {
             cursor: 'move',
@@ -185,6 +185,426 @@ var jsPanel = {
     }(),
     themes: ['default', 'primary', 'info', 'success', 'warning', 'danger'],
     ziBase: 100,
+    colorLighteningFactor: 0.81,
+    colorDarkeningFactor: 0.5,
+    colorBrightnessThreshold: 0.55,
+    colorNames: {
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#Color_keywords
+        aliceblue: 'f0f8ff',
+        antiquewhite: 'faebd7',
+        aqua: '0ff',
+        aquamarine: '7fffd4',
+        azure: 'f0ffff',
+        beige: 'f5f5dc',
+        bisque: 'ffe4c4',
+        black: '000',
+        blanchedalmond: 'ffebcd',
+        blue: '00f',
+        blueviolet: '8a2be2',
+        brown: 'a52a2a',
+        burlywood: 'deb887',
+        cadetblue: '5f9ea0',
+        chartreuse: '7fff00',
+        chocolate: 'd2691e',
+        coral: 'ff7f50',
+        cornflowerblue: '6495ed',
+        cornsilk: 'fff8dc',
+        crimson: 'dc143c',
+        cyan: '0ff',
+        darkblue: '00008b',
+        darkcyan: '008b8b',
+        darkgoldenrod: 'b8860b',
+        darkgray: 'a9a9a9', darkgrey: 'a9a9a9',
+        darkgreen: '006400',
+        darkkhaki: 'bdb76b',
+        darkmagenta: '8b008b',
+        darkolivegreen: '556b2f',
+        darkorange: 'ff8c00',
+        darkorchid: '9932cc',
+        darkred: '8b0000',
+        darksalmon: 'e9967a',
+        darkseagreen: '8fbc8f',
+        darkslateblue: '483d8b',
+        darkslategray: '2f4f4f', darkslategrey: '2f4f4f',
+        darkturquoise: '00ced1',
+        darkviolet: '9400d3',
+        deeppink: 'ff1493',
+        deepskyblue: '00bfff',
+        dimgray: '696969', dimgrey: '696969',
+        dodgerblue: '1e90ff',
+        firebrick: 'b22222',
+        floralwhite: 'fffaf0',
+        forestgreen: '228b22',
+        fuchsia: 'f0f',
+        gainsboro: 'dcdcdc',
+        ghostwhite: 'f8f8ff',
+        gold: 'ffd700',
+        goldenrod: 'daa520',
+        gray: '808080', grey: '808080',
+        green: '008000',
+        greenyellow: 'adff2f',
+        honeydew: 'f0fff0',
+        hotpink: 'ff69b4',
+        indianred: 'cd5c5c',
+        indigo: '4b0082',
+        ivory: 'fffff0',
+        khaki: 'f0e68c',
+        lavender: 'e6e6fa',
+        lavenderblush: 'fff0f5',
+        lawngreen: '7cfc00',
+        lemonchiffon: 'fffacd',
+        lightblue: 'add8e6',
+        lightcoral: 'f08080',
+        lightcyan: 'e0ffff',
+        lightgoldenrodyellow: 'fafad2',
+        lightgray: 'd3d3d3', lightgrey: 'd3d3d3',
+        lightgreen: '90ee90',
+        lightpink: 'ffb6c1',
+        lightsalmon: 'ffa07a',
+        lightseagreen: '20b2aa',
+        lightskyblue: '87cefa',
+        lightslategray: '789', lightslategrey: '789',
+        lightsteelblue: 'b0c4de',
+        lightyellow: 'ffffe0',
+        lime: '0f0',
+        limegreen: '32cd32',
+        linen: 'faf0e6',
+        magenta: 'f0f',
+        maroon: '800000',
+        mediumaquamarine: '66cdaa',
+        mediumblue: '0000cd',
+        mediumorchid: 'ba55d3',
+        mediumpurple: '9370d8',
+        mediumseagreen: '3cb371',
+        mediumslateblue: '7b68ee',
+        mediumspringgreen: '00fa9a',
+        mediumturquoise: '48d1cc',
+        mediumvioletred: 'c71585',
+        midnightblue: '191970',
+        mintcream: 'f5fffa',
+        mistyrose: 'ffe4e1',
+        moccasin: 'ffe4b5',
+        navajowhite: 'ffdead',
+        navy: '000080',
+        oldlace: 'fdf5e6',
+        olive: '808000',
+        olivedrab: '6b8e23',
+        orange: 'ffa500',
+        orangered: 'ff4500',
+        orchid: 'da70d6',
+        palegoldenrod: 'eee8aa',
+        palegreen: '98fb98',
+        paleturquoise: 'afeeee',
+        palevioletred: 'd87093',
+        papayawhip: 'ffefd5',
+        peachpuff: 'ffdab9',
+        peru: 'cd853f',
+        pink: 'ffc0cb',
+        plum: 'dda0dd',
+        powderblue: 'b0e0e6',
+        purple: '800080',
+        rebeccapurple: '639',
+        red: 'f00',
+        rosybrown: 'bc8f8f',
+        royalblue: '4169e1',
+        saddlebrown: '8b4513',
+        salmon: 'fa8072',
+        sandybrown: 'f4a460',
+        seagreen: '2e8b57',
+        seashell: 'fff5ee',
+        sienna: 'a0522d',
+        silver: 'c0c0c0',
+        skyblue: '87ceeb',
+        slateblue: '6a5acd',
+        slategray: '708090', slategrey: '708090',
+        snow: 'fffafa',
+        springgreen: '00ff7f',
+        steelblue: '4682b4',
+        tan: 'd2b48c',
+        teal: '008080',
+        thistle: 'd8bfd8',
+        tomato: 'ff6347',
+        turquoise: '40e0d0',
+        violet: 'ee82ee',
+        wheat: 'f5deb3',
+        white: 'fff',
+        whitesmoke: 'f5f5f5',
+        yellow: 'ff0',
+        yellowgreen: '9acd32',
+        /* Material Design Colors https://material.io/design/color/the-color-system.html#tools-for-picking-colors */
+        grey50: 'fafafa', gray50: 'fafafa',
+        grey100: 'f5f5f5', gray100: 'f5f5f5',
+        grey200: 'eee', gray200: 'eee',
+        grey300: 'e0e0e0', gray300: 'e0e0e0',
+        grey400: 'bdbdbd', gray400: 'bdbdbd',
+        grey500: '9e9e9e', gray500: '9e9e9e',
+        grey600: '757575', gray600: '757575',
+        grey700: '616161', gray700: '616161',
+        grey800: '424242', gray800: '424242',
+        grey900: '212121', gray900: '212121',
+        bluegrey50: 'eceff1', bluegray50: 'eceff1',
+        bluegrey100: 'CFD8DC', bluegray100: 'CFD8DC',
+        bluegrey200: 'B0BEC5', bluegray200: 'B0BEC5',
+        bluegrey300: '90A4AE', bluegray300: '90A4AE',
+        bluegrey400: '78909C', bluegray400: '78909C',
+        bluegrey500: '607D8B', bluegray500: '607D8B',
+        bluegrey600: '546E7A', bluegray600: '546E7A',
+        bluegrey700: '455A64', bluegray700: '455A64',
+        bluegrey800: '37474F', bluegray800: '37474F',
+        bluegrey900: '263238', bluegray900: '263238',
+        red50: 'FFEBEE', red100: 'FFCDD2', red200: 'EF9A9A', red300: 'E57373', red400: 'EF5350', red500: 'F44336', red600: 'E53935', red700: 'D32F2F', red800: 'C62828', red900: 'B71C1C',
+        reda100: 'FF8A80', reda200: 'FF5252', reda400: 'FF1744', reda700: 'D50000',
+        pink50: 'FCE4EC', pink100: 'F8BBD0', pink200: 'F48FB1', pink300: 'F06292', pink400: 'EC407A', pink500: 'E91E63', pink600: 'D81B60', pink700: 'C2185B', pink800: 'AD1457', pink900: '880E4F',
+        pinka100: 'FF80AB', pinka200: 'FF4081', pinka400: 'F50057', pinka700: 'C51162',
+        purple50: 'F3E5F5', purple100: 'E1BEE7', purple200: 'CE93D8', purple300: 'BA68C8', purple400: 'AB47BC', purple500: '9C27B0', purple600: '8E24AA', purple700: '7B1FA2', purple800: '6A1B9A', purple900: '4A148C',
+        purplea100: 'EA80FC', purplea200: 'E040FB', purplea400: 'D500F9', purplea700: 'AA00FF',
+        deeppurple50: 'EDE7F6', deeppurple100: 'D1C4E9', deeppurple200: 'B39DDB', deeppurple300: '9575CD', deeppurple400: '7E57C2', deeppurple500: '673AB7', deeppurple600: '5E35B1', deeppurple700: '512DA8', deeppurple800: '4527A0', deeppurple900: '311B92',
+        deeppurplea100: 'B388FF', deeppurplea200: '7C4DFF', deeppurplea400: '651FFF', deeppurplea700: '6200EA',
+        indigo50: 'E8EAF6', indigo100: 'C5CAE9', indigo200: '9FA8DA', indigo300: '7986CB', indigo400: '5C6BC0', indigo500: '3F51B5', indigo600: '3949AB', indigo700: '303F9F', indigo800: '283593', indigo900: '1A237E',
+        indigoa100: '8C9EFF', indigoa200: '536DFE', indigoa400: '3D5AFE', indigoa700: '304FFE',
+        blue50: 'E3F2FD', blue100: 'BBDEFB', blue200: '90CAF9', blue300: '64B5F6', blue400: '42A5F5', blue500: '2196F3', blue600: '1E88E5', blue700: '1976D2', blue800: '1565C0', blue900: '0D47A1',
+        bluea100: '82B1FF', bluea200: '448AFF', bluea400: '2979FF', bluea700: '2962FF',
+        lightblue50: 'E1F5FE', lightblue100: 'B3E5FC', lightblue200: '81D4FA', lightblue300: '4FC3F7', lightblue400: '29B6F6', lightblue500: '03A9F4', lightblue600: '039BE5', lightblue700: '0288D1', lightblue800: '0277BD', lightblue900: '01579B',
+        lightbluea100: '80D8FF', lightbluea200: '40C4FF', lightbluea400: '00B0FF', lightbluea700: '0091EA',
+        cyan50: 'E0F7FA', cyan100: 'B2EBF2', cyan200: '80DEEA', cyan300: '4DD0E1', cyan400: '26C6DA', cyan500: '00BCD4', cyan600: '00ACC1', cyan700: '0097A7', cyan800: '00838F', cyan900: '006064',
+        cyana100: '84FFFF', cyana200: '18FFFF', cyana400: '00E5FF', cyana700: '00B8D4',
+        teal50: 'E0F2F1', teal100: 'B2DFDB', teal200: '80CBC4', teal300: '4DB6AC', teal400: '26A69A', teal500: '009688', teal600: '00897B', teal700: '00796B', teal800: '00695C', teal900: '004D40',
+        teala100: 'A7FFEB', teala200: '64FFDA', teala400: '1DE9B6', teala700: '00BFA5',
+        green50: 'E8F5E9', green100: 'C8E6C9', green200: 'A5D6A7', green300: '81C784', green400: '66BB6A', green500: '4CAF50', green600: '43A047', green700: '388E3C', green800: '2E7D32', green900: '1B5E20',
+        greena100: 'B9F6CA', greena200: '69F0AE', greena400: '00E676', greena700: '00C853',
+        lightgreen50: 'F1F8E9', lightgreen100: 'DCEDC8', lightgreen200: 'C5E1A5', lightgreen300: 'AED581', lightgreen400: '9CCC65', lightgreen500: '8BC34A', lightgreen600: '7CB342', lightgreen700: '689F38', lightgreen800: '558B2F', lightgreen900: '33691E',
+        lightgreena100: 'CCFF90', lightgreena200: 'B2FF59', lightgreena400: '76FF03', lightgreena700: '64DD17',
+        lime50: 'F9FBE7', lime100: 'F0F4C3', lime200: 'E6EE9C', lime300: 'DCE775', lime400: 'D4E157', lime500: 'CDDC39', lime600: 'C0CA33', lime700: 'AFB42B', lime800: '9E9D24', lime900: '827717',
+        limea100: 'F4FF81', limea200: 'EEFF41', limea400: 'C6FF00', limea700: 'AEEA00',
+        yellow50: 'FFFDE7', yellow100: 'FFF9C4', yellow200: 'FFF59D', yellow300: 'FFF176', yellow400: 'FFEE58', yellow500: 'FFEB3B', yellow600: 'FDD835', yellow700: 'FBC02D', yellow800: 'F9A825', yellow900: 'F57F17',
+        yellowa100: 'FFFF8D', yellowa200: 'FFFF00', yellowa400: 'FFEA00', yellowa700: 'FFD600',
+        amber50: 'FFF8E1', amber100: 'FFECB3', amber200: 'FFE082', amber300: 'FFD54F', amber400: 'FFCA28', amber500: 'FFC107', amber600: 'FFB300', amber700: 'FFA000', amber800: 'FF8F00', amber900: 'FF6F00',
+        ambera100: 'FFE57F', ambera200: 'FFD740', ambera400: 'FFC400', ambera700: 'FFAB00',
+        orange50: 'FFF3E0', orange100: 'FFE0B2', orange200: 'FFCC80', orange300: 'FFB74D', orange400: 'FFA726', orange500: 'FF9800', orange600: 'FB8C00', orange700: 'F57C00', orange800: 'EF6C00', orange900: 'E65100',
+        orangea100: 'FFD180', orangea200: 'FFAB40', orangea400: 'FF9100', orangea700: 'FF6D00',
+        deeporange50: 'FBE9E7', deeporange100: 'FFCCBC', deeporange200: 'FFAB91', deeporange300: 'FF8A65', deeporange400: 'FF7043', deeporange500: 'FF5722', deeporange600: 'F4511E', deeporange700: 'E64A19', deeporange800: 'D84315', deeporange900: 'BF360C',
+        deeporangea100: 'FF9E80', deeporangea200: 'FF6E40', deeporangea400: 'FF3D00', deeporangea700: 'DD2C00',
+        brown50: 'EFEBE9', brown100: 'D7CCC8', brown200: 'BCAAA4', brown300: 'A1887F', brown400: '8D6E63', brown500: '795548', brown600: '6D4C41', brown700: '5D4037', brown800: '4E342E', brown900: '3E2723'
+    },
+
+    // color methods ----
+    color: function color(val) {
+
+        var color = val.toLowerCase(),
+            r = void 0,
+            g = void 0,
+            b = void 0,
+            h = void 0,
+            s = void 0,
+            l = void 0,
+            match = void 0,
+            channels = void 0,
+            hsl = void 0,
+            result = {};
+        var hexPattern = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/gi,
+            // matches "#123" or "#f05a78" with or without "#"
+        RGBAPattern = /^rgba?\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3}),?(0|1|0\.[0-9]{1,2}|\.[0-9]{1,2})?\)$/gi,
+            // matches rgb/rgba color values, whitespace allowed
+        HSLAPattern = /^hsla?\(([0-9]{1,3}),([0-9]{1,3}%),([0-9]{1,3}%),?(0|1|0\.[0-9]{1,2}|\.[0-9]{1,2})?\)$/gi,
+            namedColors = this.colorNames;
+
+        // change named color to corresponding hex value
+        if (namedColors[color]) {
+            color = namedColors[color];
+        }
+
+        // check val for hex color
+        if (color.match(hexPattern) !== null) {
+
+            // '#' entfernen wenn vorhanden
+            color = color.replace('#', '');
+
+            // color has either 3 or 6 characters
+            if (color.length % 2 === 1) {
+
+                // color has 3 char -> convert to 6 char
+                // r = color.substr(0,1).repeat(2);
+                // g = color.substr(1,1).repeat(2); // String.prototype.repeat() doesn't work in IE11
+                // b = color.substr(2,1).repeat(2);
+                r = String(color.substr(0, 1)) + color.substr(0, 1);
+                g = String(color.substr(1, 1)) + color.substr(1, 1);
+                b = String(color.substr(2, 1)) + color.substr(2, 1);
+
+                result.rgb = {
+                    r: parseInt(r, 16),
+                    g: parseInt(g, 16),
+                    b: parseInt(b, 16)
+                };
+
+                result.hex = '#' + r + g + b;
+            } else {
+
+                // color has 6 char
+                result.rgb = {
+                    r: parseInt(color.substr(0, 2), 16),
+                    g: parseInt(color.substr(2, 2), 16),
+                    b: parseInt(color.substr(4, 2), 16)
+                };
+
+                result.hex = '#' + color;
+            }
+
+            hsl = this.rgbToHsl(result.rgb.r, result.rgb.g, result.rgb.b);
+            result.hsl = hsl;
+            result.rgb.css = 'rgb(' + result.rgb.r + ',' + result.rgb.g + ',' + result.rgb.b + ')';
+        }
+        // check val for rgb/rgba color
+        else if (color.match(RGBAPattern)) {
+
+                match = RGBAPattern.exec(color);
+                result.rgb = { css: color, r: match[1], g: match[2], b: match[3] };
+                result.hex = this.rgbToHex(match[1], match[2], match[3]);
+                hsl = this.rgbToHsl(match[1], match[2], match[3]);
+                result.hsl = hsl;
+            }
+            // check val for hsl/hsla color
+            else if (color.match(HSLAPattern)) {
+
+                    match = HSLAPattern.exec(color);
+
+                    h = match[1] / 360;
+                    s = match[2].substr(0, match[2].length - 1) / 100;
+                    l = match[3].substr(0, match[3].length - 1) / 100;
+
+                    channels = this.hslToRgb(h, s, l);
+
+                    result.rgb = {
+                        css: 'rgb(' + channels[0] + ',' + channels[1] + ',' + channels[2] + ')',
+                        r: channels[0],
+                        g: channels[1],
+                        b: channels[2]
+                    };
+                    result.hex = this.rgbToHex(result.rgb.r, result.rgb.g, result.rgb.b);
+                    result.hsl = { css: 'hsl(' + match[1] + ',' + match[2] + ',' + match[3] + ')', h: match[1], s: match[2], l: match[3] };
+                }
+
+                // or return #f5f5f5
+                else {
+                        result.hex = '#f5f5f5';
+                        result.rgb = { css: 'rgb(245,245,245)', r: 245, g: 245, b: 245 };
+                        result.hsl = { css: 'hsl(0,0%,96%)', h: 0, s: '0%', l: '96%' };
+                    }
+
+        return result;
+    },
+    calcColors: function calcColors(primaryColor) {
+        var threshold = this.colorBrightnessThreshold,
+            primeColor = this.color(primaryColor),
+            secondColor = this.lighten(primaryColor, this.colorLighteningFactor),
+            thirdColor = this.darken(primaryColor, this.colorDarkeningFactor),
+            fontColorForPrimary = this.perceivedBrightness(primaryColor) <= threshold ? '#ffffff' : '#000000',
+            fontColorForSecond = this.perceivedBrightness(secondColor) <= threshold ? '#ffffff' : '#000000',
+            fontColorForThird = this.perceivedBrightness(thirdColor) <= threshold ? '#ffffff' : '#000000';
+        return [primeColor.hsl.css, secondColor, thirdColor, fontColorForPrimary, fontColorForSecond, fontColorForThird];
+    },
+    darken: function darken(val, amount) {
+        // amount is value between 0 and 1
+        var hsl = this.color(val).hsl,
+            l = parseFloat(hsl.l),
+            lnew = Math.round(l - l * amount) + '%';
+        return 'hsl(' + hsl.h + ',' + hsl.s + ',' + lnew + ')';
+    },
+    lighten: function lighten(val, amount) {
+        // amount is value between 0 and 1
+        var hsl = this.color(val).hsl,
+            l = parseFloat(hsl.l),
+            lnew = Math.round(l + (100 - l) * amount) + '%';
+        return 'hsl(' + hsl.h + ',' + hsl.s + ',' + lnew + ')';
+    },
+    hslToRgb: function hslToRgb(h, s, l) {
+        // h, s and l must be values between 0 and 1
+        var r = void 0,
+            g = void 0,
+            b = void 0;
+        if (s === 0) {
+            r = g = b = l; // achromatic
+        } else {
+            var hue2rgb = function hue2rgb(p, q, t) {
+                if (t < 0) {
+                    t += 1;
+                }
+                if (t > 1) {
+                    t -= 1;
+                }
+                if (t < 1 / 6) {
+                    return p + (q - p) * 6 * t;
+                }
+                if (t < 1 / 2) {
+                    return q;
+                }
+                if (t < 2 / 3) {
+                    return p + (q - p) * (2 / 3 - t) * 6;
+                }
+                return p;
+            };
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s,
+                p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1 / 3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1 / 3);
+        }
+        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    },
+    rgbToHsl: function rgbToHsl(r, g, b) {
+        r /= 255, g /= 255, b /= 255;
+        var max = Math.max(r, g, b),
+            min = Math.min(r, g, b),
+            h = void 0,
+            s = void 0,
+            l = (max + min) / 2;
+        if (max === min) {
+            h = s = 0; // achromatic
+        } else {
+            var d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+            switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
+            }
+            h /= 6;
+        }
+        //return [ h, s, l ];
+        h = Math.round(h * 360);
+        s = Math.round(s * 100) + '%';
+        l = Math.round(l * 100) + '%';
+        return { css: 'hsl(' + h + ',' + s + ',' + l + ')', h: h, s: s, l: l };
+    },
+    rgbToHex: function rgbToHex(r, g, b) {
+        var red = Number(r).toString(16),
+            green = Number(g).toString(16),
+            blue = Number(b).toString(16);
+        if (red.length === 1) {
+            red = '0' + red;
+        }
+        if (green.length === 1) {
+            green = '0' + green;
+        }
+        if (blue.length === 1) {
+            blue = '0' + blue;
+        }
+        return '#' + red + green + blue;
+    },
+    perceivedBrightness: function perceivedBrightness(val) {
+        var rgb = this.color(val).rgb;
+        // return value is in the range 0 - 1 and input rgb values must also be in the range 0 - 1
+        // https://www.w3.org/TR/WCAG20-TECHS/G18.html
+        return rgb.r / 255 * 0.2126 + rgb.g / 255 * 0.7152 + rgb.b / 255 * 0.0722;
+    },
+
+    // ---------------------------------------------------
 
     addScript: function addScript(path) {
         var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'text/javascript';
@@ -328,268 +748,6 @@ var jsPanel = {
 
         return obj;
     },
-    calcColors: function calcColors(primaryColor) {
-        var primeColor = this.color(primaryColor),
-            secondColor = this.lighten(primaryColor, 0.81),
-            thirdColor = this.darken(primaryColor, 0.5),
-            fontColorForPrimary = this.perceivedBrightness(primaryColor) <= 0.556 ? '#ffffff' : '#000000',
-            fontColorForSecond = this.perceivedBrightness(secondColor) <= 0.556 ? '#ffffff' : '#000000',
-            fontColorForThird = this.perceivedBrightness(thirdColor) <= 0.556 ? '#000000' : '#ffffff';
-        return [primeColor.hsl.css, secondColor, thirdColor, fontColorForPrimary, fontColorForSecond, fontColorForThird];
-    },
-    color: function color(val) {
-
-        var color = val.toLowerCase(),
-            r = void 0,
-            g = void 0,
-            b = void 0,
-            h = void 0,
-            s = void 0,
-            l = void 0,
-            match = void 0,
-            channels = void 0,
-            hsl = void 0,
-            result = {};
-        var hexPattern = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/gi,
-            // matches "#123" or "#f05a78" with or without "#"
-        RGBAPattern = /^rgba?\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3}),?(0|1|0\.[0-9]{1,2}|\.[0-9]{1,2})?\)$/gi,
-            // matches rgb/rgba color values, whitespace allowed
-        HSLAPattern = /^hsla?\(([0-9]{1,3}),([0-9]{1,3}%),([0-9]{1,3}%),?(0|1|0\.[0-9]{1,2}|\.[0-9]{1,2})?\)$/gi,
-            namedColors = {
-            aliceblue: 'f0f8ff',
-            antiquewhite: 'faebd7',
-            aqua: '0ff',
-            aquamarine: '7fffd4',
-            azure: 'f0ffff',
-            beige: 'f5f5dc',
-            bisque: 'ffe4c4',
-            black: '000',
-            blanchedalmond: 'ffebcd',
-            blue: '00f',
-            blueviolet: '8a2be2',
-            brown: 'a52a2a',
-            burlywood: 'deb887',
-            cadetblue: '5f9ea0',
-            chartreuse: '7fff00',
-            chocolate: 'd2691e',
-            coral: 'ff7f50',
-            cornflowerblue: '6495ed',
-            cornsilk: 'fff8dc',
-            crimson: 'dc143c',
-            cyan: '0ff',
-            darkblue: '00008b',
-            darkcyan: '008b8b',
-            darkgoldenrod: 'b8860b',
-            darkgray: 'a9a9a9',
-            darkgrey: 'a9a9a9',
-            darkgreen: '006400',
-            darkkhaki: 'bdb76b',
-            darkmagenta: '8b008b',
-            darkolivegreen: '556b2f',
-            darkorange: 'ff8c00',
-            darkorchid: '9932cc',
-            darkred: '8b0000',
-            darksalmon: 'e9967a',
-            darkseagreen: '8fbc8f',
-            darkslateblue: '483d8b',
-            darkslategray: '2f4f4f',
-            darkslategrey: '2f4f4f',
-            darkturquoise: '00ced1',
-            darkviolet: '9400d3',
-            deeppink: 'ff1493',
-            deepskyblue: '00bfff',
-            dimgray: '696969',
-            dimgrey: '696969',
-            dodgerblue: '1e90ff',
-            firebrick: 'b22222',
-            floralwhite: 'fffaf0',
-            forestgreen: '228b22',
-            fuchsia: 'f0f',
-            gainsboro: 'dcdcdc',
-            ghostwhite: 'f8f8ff',
-            gold: 'ffd700',
-            goldenrod: 'daa520',
-            gray: '808080',
-            grey: '808080',
-            green: '008000',
-            greenyellow: 'adff2f',
-            honeydew: 'f0fff0',
-            hotpink: 'ff69b4',
-            indianred: 'cd5c5c',
-            indigo: '4b0082',
-            ivory: 'fffff0',
-            khaki: 'f0e68c',
-            lavender: 'e6e6fa',
-            lavenderblush: 'fff0f5',
-            lawngreen: '7cfc00',
-            lemonchiffon: 'fffacd',
-            lightblue: 'add8e6',
-            lightcoral: 'f08080',
-            lightcyan: 'e0ffff',
-            lightgoldenrodyellow: 'fafad2',
-            lightgray: 'd3d3d3',
-            lightgrey: 'd3d3d3',
-            lightgreen: '90ee90',
-            lightpink: 'ffb6c1',
-            lightsalmon: 'ffa07a',
-            lightseagreen: '20b2aa',
-            lightskyblue: '87cefa',
-            lightslategray: '789',
-            lightslategrey: '789',
-            lightsteelblue: 'b0c4de',
-            lightyellow: 'ffffe0',
-            lime: '0f0',
-            limegreen: '32cd32',
-            linen: 'faf0e6',
-            magenta: 'f0f',
-            maroon: '800000',
-            mediumaquamarine: '66cdaa',
-            mediumblue: '0000cd',
-            mediumorchid: 'ba55d3',
-            mediumpurple: '9370d8',
-            mediumseagreen: '3cb371',
-            mediumslateblue: '7b68ee',
-            mediumspringgreen: '00fa9a',
-            mediumturquoise: '48d1cc',
-            mediumvioletred: 'c71585',
-            midnightblue: '191970',
-            mintcream: 'f5fffa',
-            mistyrose: 'ffe4e1',
-            moccasin: 'ffe4b5',
-            navajowhite: 'ffdead',
-            navy: '000080',
-            oldlace: 'fdf5e6',
-            olive: '808000',
-            olivedrab: '6b8e23',
-            orange: 'ffa500',
-            orangered: 'ff4500',
-            orchid: 'da70d6',
-            palegoldenrod: 'eee8aa',
-            palegreen: '98fb98',
-            paleturquoise: 'afeeee',
-            palevioletred: 'd87093',
-            papayawhip: 'ffefd5',
-            peachpuff: 'ffdab9',
-            peru: 'cd853f',
-            pink: 'ffc0cb',
-            plum: 'dda0dd',
-            powderblue: 'b0e0e6',
-            purple: '800080',
-            rebeccapurple: '639',
-            red: 'f00',
-            rosybrown: 'bc8f8f',
-            royalblue: '4169e1',
-            saddlebrown: '8b4513',
-            salmon: 'fa8072',
-            sandybrown: 'f4a460',
-            seagreen: '2e8b57',
-            seashell: 'fff5ee',
-            sienna: 'a0522d',
-            silver: 'c0c0c0',
-            skyblue: '87ceeb',
-            slateblue: '6a5acd',
-            slategray: '708090',
-            slategrey: '708090',
-            snow: 'fffafa',
-            springgreen: '00ff7f',
-            steelblue: '4682b4',
-            tan: 'd2b48c',
-            teal: '008080',
-            thistle: 'd8bfd8',
-            tomato: 'ff6347',
-            turquoise: '40e0d0',
-            violet: 'ee82ee',
-            wheat: 'f5deb3',
-            white: 'fff',
-            whitesmoke: 'f5f5f5',
-            yellow: 'ff0',
-            yellowgreen: '9acd32'
-        };
-
-        // change named color to corresponding hex value
-        if (namedColors[color]) {
-            color = namedColors[color];
-        }
-
-        // check val for hex color
-        if (color.match(hexPattern) !== null) {
-
-            // '#' entfernen wenn vorhanden
-            color = color.replace('#', '');
-
-            // color has either 3 or 6 characters
-            if (color.length % 2 === 1) {
-
-                // color has 3 char -> convert to 6 char
-                // r = color.substr(0,1).repeat(2);
-                // g = color.substr(1,1).repeat(2); // String.prototype.repeat() doesn't work in IE11
-                // b = color.substr(2,1).repeat(2);
-                r = String(color.substr(0, 1)) + color.substr(0, 1);
-                g = String(color.substr(1, 1)) + color.substr(1, 1);
-                b = String(color.substr(2, 1)) + color.substr(2, 1);
-
-                result.rgb = {
-                    r: parseInt(r, 16),
-                    g: parseInt(g, 16),
-                    b: parseInt(b, 16)
-                };
-
-                result.hex = '#' + r + g + b;
-            } else {
-
-                // color has 6 char
-                result.rgb = {
-                    r: parseInt(color.substr(0, 2), 16),
-                    g: parseInt(color.substr(2, 2), 16),
-                    b: parseInt(color.substr(4, 2), 16)
-                };
-
-                result.hex = '#' + color;
-            }
-
-            hsl = this.rgbToHsl(result.rgb.r, result.rgb.g, result.rgb.b);
-            result.hsl = hsl;
-            result.rgb.css = 'rgb(' + result.rgb.r + ',' + result.rgb.g + ',' + result.rgb.b + ')';
-        }
-        // check val for rgb/rgba color
-        else if (color.match(RGBAPattern)) {
-
-                match = RGBAPattern.exec(color);
-                result.rgb = { css: color, r: match[1], g: match[2], b: match[3] };
-                result.hex = this.rgbToHex(match[1], match[2], match[3]);
-                hsl = this.rgbToHsl(match[1], match[2], match[3]);
-                result.hsl = hsl;
-            }
-            // check val for hsl/hsla color
-            else if (color.match(HSLAPattern)) {
-
-                    match = HSLAPattern.exec(color);
-
-                    h = match[1] / 360;
-                    s = match[2].substr(0, match[2].length - 1) / 100;
-                    l = match[3].substr(0, match[3].length - 1) / 100;
-
-                    channels = this.hslToRgb(h, s, l);
-
-                    result.rgb = {
-                        css: 'rgb(' + channels[0] + ',' + channels[1] + ',' + channels[2] + ')',
-                        r: channels[0],
-                        g: channels[1],
-                        b: channels[2]
-                    };
-                    result.hex = this.rgbToHex(result.rgb.r, result.rgb.g, result.rgb.b);
-                    result.hsl = { css: 'hsl(' + match[1] + ',' + match[2] + ',' + match[3] + ')', h: match[1], s: match[2], l: match[3] };
-                }
-
-                // or return #f5f5f5
-                else {
-                        result.hex = '#f5f5f5';
-                        result.rgb = { css: 'rgb(245,245,245)', r: 245, g: 245, b: 245 };
-                        result.hsl = { css: 'hsl(0,0%,96.08%)', h: 0, s: '0%', l: '96.08%' };
-                    }
-
-        return result;
-    },
     createPanelTemplate: function createPanelTemplate() {
         var dataAttr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -628,13 +786,6 @@ var jsPanel = {
             panel.parentElement.appendChild(el);
         }
     },
-    darken: function darken(val, amount) {
-        // amount is value between 0 and 1
-        var hsl = this.color(val).hsl,
-            l = parseFloat(hsl.l),
-            lnew = l - l * amount + '%';
-        return 'hsl(' + hsl.h + ',' + hsl.s + ',' + lnew + ')';
-    },
     dragit: function dragit(elmt) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -656,14 +807,20 @@ var jsPanel = {
         // normalize containment config
         containment = this.pOcontainment(opts.containment);
 
+        // handler when mouse leaves document(iframe) while dragging a panel
+        var remDragHandler = function remDragHandler() {
+            document.removeEventListener('mousemove', dragElmt);
+            elmt.style.opacity = 1;
+        };
+
         // attach handler to each drag handle
         elmt.querySelectorAll(opts.handles).forEach(function (handle) {
 
             handle.style.touchAction = 'none';
             handle.style.cursor = opts.cursor;
 
-            jsPanel.pointerdown.forEach(function (item) {
-                handle.addEventListener(item, function (e) {
+            jsPanel.pointerdown.forEach(function (evt) {
+                handle.addEventListener(evt, function (e) {
                     // prevent body scroll on drag init
                     e.preventDefault();
 
@@ -687,10 +844,11 @@ var jsPanel = {
                         psx = e.touches ? e.touches[0].clientX : e.clientX,
                         // pointer x on mousedown (don't use pageX, doesn't work on FF for Android)
                     psy = e.touches ? e.touches[0].clientY : e.clientY,
-                        // pointer y on mousedown (don't use pageY, doesn't work on FF for Android)
+                        // same as above
                     parent = elmt.parentElement,
                         parentRect = parent.getBoundingClientRect(),
-                        parentStyles = window.getComputedStyle(parent);
+                        parentStyles = window.getComputedStyle(parent),
+                        scaleFactor = elmt.getScaleFactor();
                     var startLeftCorrection = 0;
 
                     // function actually draging the elmt
@@ -789,10 +947,10 @@ var jsPanel = {
 
                         // move elmt
                         if (!opts.axis || opts.axis === 'x') {
-                            elmt.style.left = startLeft + (pmx - psx) + startLeftCorrection + 'px'; // set new css left of elmt depending on opts.axis
+                            elmt.style.left = startLeft + (pmx - psx) / scaleFactor.x + startLeftCorrection + 'px'; // set new css left of elmt depending on opts.axis
                         }
                         if (!opts.axis || opts.axis === 'y') {
-                            elmt.style.top = startTop + (pmy - psy) + 'px'; // set new css top of elmt depending on opts.axis
+                            elmt.style.top = startTop + (pmy - psy) / scaleFactor.y + 'px'; // set new css top of elmt depending on opts.axis
                         }
 
                         // apply grid option
@@ -825,8 +983,8 @@ var jsPanel = {
                             } else {
                                 var xCorr = parseFloat(parentStyles.borderLeftWidth) + parseFloat(parentStyles.borderRightWidth);
                                 var yCorr = parseFloat(parentStyles.borderTopWidth) + parseFloat(parentStyles.borderBottomWidth);
-                                maxLeft = parentRect.width - parseFloat(dragStyles.width) - containment[1] - xCorr;
-                                maxTop = parentRect.height - parseFloat(dragStyles.height) - containment[2] - yCorr;
+                                maxLeft = parentRect.width / scaleFactor.x - parseFloat(dragStyles.width) - containment[1] - xCorr;
+                                maxTop = parentRect.height / scaleFactor.y - parseFloat(dragStyles.height) - containment[2] - yCorr;
                             }
 
                             if (parseFloat(elmt.style.left) <= containment[3]) {
@@ -900,17 +1058,18 @@ var jsPanel = {
                         }
                     };
 
-                    jsPanel.pointermove.forEach(function (item) {
-                        document.addEventListener(item, dragElmt);
+                    jsPanel.pointermove.forEach(function (e) {
+                        document.addEventListener(e, dragElmt);
                     });
+                    document.addEventListener('mouseleave', remDragHandler);
                 });
             });
 
             jsPanel.pointerup.forEach(function (item) {
                 document.addEventListener(item, function () {
 
-                    jsPanel.pointermove.forEach(function (item) {
-                        document.removeEventListener(item, dragElmt);
+                    jsPanel.pointermove.forEach(function (e) {
+                        document.removeEventListener(e, dragElmt);
                     });
 
                     document.body.style.overflow = 'inherit';
@@ -957,6 +1116,7 @@ var jsPanel = {
 
                     elmt.controlbar.style.pointerEvents = 'inherit';
                     elmt.content.style.pointerEvents = 'inherit';
+                    document.removeEventListener('mouseleave', remDragHandler);
                 });
             });
 
@@ -1115,58 +1275,35 @@ var jsPanel = {
             return b.style.zIndex - a.style.zIndex;
         });
     },
-    hslToRgb: function hslToRgb(h, s, l) {
-        // h, s and l must be values between 0 and 1
-        var r = void 0,
-            g = void 0,
-            b = void 0;
-        if (s === 0) {
-            r = g = b = l; // achromatic
+    overlaps: function overlaps(panel, elmt) {
+        var pane = typeof panel === 'string' ? document.querySelector(panel) : panel,
+            containerRect = void 0,
+            panelRect = pane.getBoundingClientRect();
+
+        if (typeof elmt === 'string') {
+            if (elmt === 'window') {
+                containerRect = { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight };
+            } else if (elmt === 'parent') {
+                containerRect = pane.parentElement.getBoundingClientRect();
+            } else {
+                containerRect = document.querySelector(elmt).getBoundingClientRect();
+            }
         } else {
-            var hue2rgb = function hue2rgb(p, q, t) {
-                if (t < 0) {
-                    t += 1;
-                }
-                if (t > 1) {
-                    t -= 1;
-                }
-                if (t < 1 / 6) {
-                    return p + (q - p) * 6 * t;
-                }
-                if (t < 1 / 2) {
-                    return q;
-                }
-                if (t < 2 / 3) {
-                    return p + (q - p) * (2 / 3 - t) * 6;
-                }
-                return p;
-            };
-            var q = l < 0.5 ? l * (1 + s) : l + s - l * s,
-                p = 2 * l - q;
-            r = hue2rgb(p, q, h + 1 / 3);
-            g = hue2rgb(p, q, h);
-            b = hue2rgb(p, q, h - 1 / 3);
+            containerRect = elmt.getBoundingClientRect();
         }
-        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-    },
-    lighten: function lighten(val, amount) {
-        // amount is value between 0 and 1
-        var hsl = this.color(val).hsl,
-            l = parseFloat(hsl.l),
-            lnew = l + (100 - l) * amount + '%';
-        return 'hsl(' + hsl.h + ',' + hsl.s + ',' + lnew + ')';
-    },
-    perceivedBrightness: function perceivedBrightness(val) {
-        var rgb = this.color(val).rgb;
-        // return value is in the range 0 - 1 and input rgb values must also be in the range 0 - 1
-        // algorithm from: https://en.wikipedia.org/wiki/Rec._2020
-        return rgb.r / 255 * 0.2627 + rgb.g / 255 * 0.6780 + rgb.b / 255 * 0.0593;
+
+        return {
+            top: panelRect.top - containerRect.top,
+            left: panelRect.left - containerRect.left,
+            bottom: containerRect.bottom - panelRect.bottom,
+            right: containerRect.right - panelRect.right
+        };
     },
     pOcontainer: function pOcontainer(container, cb) {
         if (container) {
             var box = void 0;
             if (typeof container === 'string') {
-                box = document.querySelector(container);
+                box = container === 'window' ? document.body : document.querySelector(container);
             } else if (container.nodeType === 1) {
                 box = container;
             } else if (container.length) {
@@ -1191,21 +1328,25 @@ var jsPanel = {
 
     // normalizes values for option.maximizedMargin and containment of dragit/resizeit
     pOcontainment: function pOcontainment(arg) {
-        if (typeof arg === 'number') {
-            // arg: 20 => arg: [20, 20, 20, 20]
-            return [arg, arg, arg, arg];
-        } else if (Array.isArray(arg)) {
-            if (arg.length === 1) {
-                // arg: [20] => arg: [20, 20, 20, 20]
-                return [arg[0], arg[0], arg[0], arg[0]];
-            } else if (arg.length === 2) {
-                // arg: [20, 40] => arg: [20, 40, 20, 40]
-                return arg.concat(arg);
-            } else if (arg.length === 3) {
-                arg[3] = arg[1];
+        var value = arg;
+        if (typeof arg === 'function') {
+            value = arg();
+        }
+        if (typeof value === 'number') {
+            // value: 20 => value: [20, 20, 20, 20]
+            return [value, value, value, value];
+        } else if (Array.isArray(value)) {
+            if (value.length === 1) {
+                // value: [20] => value: [20, 20, 20, 20]
+                return [value[0], value[0], value[0], value[0]];
+            } else if (value.length === 2) {
+                // value: [20, 40] => value: [20, 40, 20, 40]
+                return value.concat(value);
+            } else if (value.length === 3) {
+                value[3] = value[1];
             }
         }
-        return arg; // assumed to be array with 4 values
+        return value; // assumed to be array with 4 values
     },
     pOsize: function pOsize(panel, size) {
         var values = size || this.defaults.contentSize,
@@ -1311,8 +1452,12 @@ var jsPanel = {
             atXcorrection = 0,
             atYcorrection = 0;
 
-        var defaults = { my: 'center', at: 'center', of: 'window', offsetX: '0px', offsetY: '0px' },
-            windowRect = {
+        var defaults = { my: 'center', at: 'center', of: 'window', offsetX: '0px', offsetY: '0px' };
+        if (elmt.options.container === document.body) {
+            defaults.of = document.body;
+        }
+
+        var windowRect = {
             width: document.documentElement.clientWidth,
             height: window.innerHeight
         },
@@ -1337,11 +1482,17 @@ var jsPanel = {
         // contains read-only left, top, right, bottom, x, y, width, height describing the !! border-box !! in pixels
         // Properties other than width and height are relative to the top-left of the viewport!!
 
-        // translate shorthand string to object - "top-left 50 50 down"
+        // translate shorthand string to object and execute parameter functions if needed
         if (typeof _position === 'string') {
             posSettings = Object.assign({}, defaults, jsPanel.pOposition(_position));
         } else {
             posSettings = Object.assign({}, defaults, _position);
+            // process parameter functions
+            ['my', 'at', 'of', 'offsetX', 'offsetY', 'minLeft', 'maxLeft', 'minTop', 'maxTop'].forEach(function (item) {
+                if (typeof posSettings[item] === 'function') {
+                    posSettings[item] = posSettings[item].call(elmt, elmt);
+                }
+            });
         }
 
         var parentContainer = elmtToPosition.parentElement;
@@ -1350,9 +1501,6 @@ var jsPanel = {
         var parentContainerTagName = parentContainer.tagName.toLowerCase();
 
         if (posSettings.of && posSettings.of !== 'window') {
-            if (typeof posSettings.of === 'function') {
-                posSettings.of = posSettings.of();
-            }
             if (typeof posSettings.of === 'string') {
                 // posSettings.of is assumed to be a selector string
                 elmtToPositionAgainst = document.querySelector(posSettings.of);
@@ -1360,14 +1508,6 @@ var jsPanel = {
                 // otherwise posSettings.of is assumed to be a node object
                 elmtToPositionAgainst = posSettings.of;
             }
-        }
-
-        // process my/at functions if applicable
-        if (typeof posSettings.my === 'function') {
-            posSettings.my = posSettings.my(); // function must return a proper string value
-        }
-        if (typeof posSettings.at === 'function') {
-            posSettings.at = posSettings.at(); // function must return a proper string value
         }
 
         // calc left corrections due to panel size, should be the same for all scenarios
@@ -1384,7 +1524,7 @@ var jsPanel = {
         }
 
         // SCENARIO 1 - panel appended to body and positioned relative to window -> make fixed
-        if (parentContainerTagName === 'body' && posSettings.of === 'window') {
+        if (elmt.options.container === 'window' && parentContainerTagName === 'body' && posSettings.of === 'window') {
             // calc left corrections due to window size
             if (posSettings.at.match(/^center-top$|^center$|^center-bottom$/i)) {
                 atXcorrection = windowRect.width / 2;
@@ -1525,6 +1665,29 @@ var jsPanel = {
             }
         }
 
+        // corrections if container has css transform: scale() ---------------- ON TEST --------------------------------
+        var scaleFactor = elmtToPosition.getScaleFactor();
+        calculatedPosition.left /= scaleFactor.x;
+        calculatedPosition.top /= scaleFactor.y;
+        // additional corrections if container has borders
+        var xBorders = parseFloat(parentContainerStyles.borderLeftWidth) + parseFloat(parentContainerStyles.borderRightWidth),
+            yBorders = parseFloat(parentContainerStyles.borderTopWidth) + parseFloat(parentContainerStyles.borderBottomWidth);
+        var xCorr100 = xBorders * (1 - scaleFactor.x) / scaleFactor.x,
+            yCorr100 = yBorders * (1 - scaleFactor.y) / scaleFactor.y;
+        // left correction needed for panels horizontally centered or right
+        if (posSettings.at.match(/^right-top$|^right-center$|^right-bottom$/i)) {
+            calculatedPosition.left += xCorr100;
+        } else if (posSettings.at.match(/^center-top$|^center$|^center-bottom$/i)) {
+            calculatedPosition.left += xCorr100 / 2;
+        }
+        // top correction needed for panels vertically centered or bottom
+        if (posSettings.at.match(/^left-bottom$|^center-bottom$|^right-bottom$/i)) {
+            calculatedPosition.top += yCorr100;
+        } else if (posSettings.at.match(/^left-center$|^center$|^right-center$/i)) {
+            calculatedPosition.top += yCorr100 / 2;
+        }
+        // end scale corrections ---------------------------------------------------------------------------------------
+
         // convert positioning numbers to pixel values and position panel
         calculatedPosition.left += 'px';
         calculatedPosition.top += 'px';
@@ -1533,31 +1696,16 @@ var jsPanel = {
 
         // apply offsets
         if (posSettings.offsetX) {
-
-            if (typeof posSettings.offsetX === 'function') {
-                posSettings.offsetX = posSettings.offsetX(); // function must return a proper number or string
-            }
-
             typeof posSettings.offsetX === 'number' ? elmtToPosition.style.left = 'calc(' + calculatedPosition.left + ' + ' + posSettings.offsetX + 'px)' : elmtToPosition.style.left = 'calc(' + calculatedPosition.left + ' + ' + posSettings.offsetX + ')';
             calculatedPosition.left = window.getComputedStyle(elmtToPosition).left;
         }
         if (posSettings.offsetY) {
-
-            if (typeof posSettings.offsetY === 'function') {
-                posSettings.offsetY = posSettings.offsetY(); // function must return a proper number or string
-            }
-
             typeof posSettings.offsetY === 'number' ? elmtToPosition.style.top = 'calc(' + calculatedPosition.top + ' + ' + posSettings.offsetY + 'px)' : elmtToPosition.style.top = 'calc(' + calculatedPosition.top + ' + ' + posSettings.offsetY + ')';
             calculatedPosition.top = window.getComputedStyle(elmtToPosition).top;
         }
 
         // apply minLeft
         if (posSettings.minLeft) {
-
-            if (typeof posSettings.minLeft === 'function') {
-                posSettings.minLeft = posSettings.minLeft(); // function must return a proper number or string
-            }
-
             // save current left of panel as pixel value
             var initialLeft = parseFloat(calculatedPosition.left);
             // convert minLeft number to pixel value
@@ -1576,11 +1724,6 @@ var jsPanel = {
         }
         // apply maxLeft
         if (posSettings.maxLeft) {
-
-            if (typeof posSettings.maxLeft === 'function') {
-                posSettings.maxLeft = posSettings.maxLeft(); // function must return a proper number or string
-            }
-
             var _initialLeft = parseFloat(calculatedPosition.left);
             if (typeof posSettings.maxLeft === 'number') {
                 posSettings.maxLeft += 'px';
@@ -1594,11 +1737,6 @@ var jsPanel = {
         }
         // apply maxTop
         if (posSettings.maxTop) {
-
-            if (typeof posSettings.maxTop === 'function') {
-                posSettings.maxTop = posSettings.maxTop(); // function must return a proper number or string
-            }
-
             var initialTop = parseFloat(calculatedPosition.top);
             if (typeof posSettings.maxTop === 'number') {
                 posSettings.maxTop += 'px';
@@ -1612,11 +1750,6 @@ var jsPanel = {
         }
         // apply minTop
         if (posSettings.minTop) {
-
-            if (typeof posSettings.minTop === 'function') {
-                posSettings.minTop = posSettings.minTop(); // function must return a proper number or string
-            }
-
             var _initialTop = parseFloat(calculatedPosition.top);
             if (typeof posSettings.minTop === 'number') {
                 posSettings.minTop += 'px';
@@ -1666,53 +1799,6 @@ var jsPanel = {
                 cb.call(panel, panel, param);
             });
         }
-    },
-    rgbToHsl: function rgbToHsl(r, g, b) {
-        r /= 255, g /= 255, b /= 255;
-        var max = Math.max(r, g, b),
-            min = Math.min(r, g, b),
-            h = void 0,
-            s = void 0,
-            l = (max + min) / 2;
-        if (max === min) {
-            h = s = 0; // achromatic
-        } else {
-            var d = max - min;
-            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-            switch (max) {
-                case r:
-                    h = (g - b) / d + (g < b ? 6 : 0);
-                    break;
-                case g:
-                    h = (b - r) / d + 2;
-                    break;
-                case b:
-                    h = (r - g) / d + 4;
-                    break;
-            }
-            h /= 6;
-        }
-        //return [ h, s, l ];
-        h = h * 360;
-        s = s * 100 + '%';
-        l = l * 100 + '%';
-        return { css: 'hsl(' + h + ',' + s + ',' + l + ')', h: h, s: s, l: l };
-    },
-    rgbToHex: function rgbToHex(r, g, b) {
-        var red = Number(r).toString(16),
-            green = Number(g).toString(16),
-            blue = Number(b).toString(16);
-        if (red.length === 1) {
-            red = '0' + red;
-        }
-        if (green.length === 1) {
-            green = '0' + green;
-        }
-        if (blue.length === 1) {
-            blue = '0' + blue;
-        }
-        return '#' + red + green + blue;
     },
     removeSnapAreas: function removeSnapAreas(panel) {
         document.querySelectorAll('.jsPanel-snap-area').forEach(function (el) {
@@ -1789,9 +1875,12 @@ var jsPanel = {
                         elmtParentPosition = elmtParentStyles.getPropertyValue('position'),
                         startX = e.clientX || e.touches[0].clientX,
                         startY = e.clientY || e.touches[0].clientY,
+                        startRatio = startX / startY,
                         startWidth = elmtRect.width,
                         startHeight = elmtRect.height,
-                        resizeHandleClassList = e.target.classList;
+                        resizeHandleClassList = e.target.classList,
+                        scaleFactor = elmt.getScaleFactor(),
+                        aspectRatio = elmtRect.width / elmtRect.height;
                     var startLeft = elmtRect.left,
                         startTop = elmtRect.top,
                         maxWidthEast = 10000,
@@ -1819,10 +1908,10 @@ var jsPanel = {
                                 maxWidthWest = elmtRect.width + (elmtRect.left - elmtParentRect.left) - elmtParentBLW;
                                 maxHeightNorth = elmtRect.height + (elmtRect.top - elmtParentRect.top) - elmtParentBTW;
                             } else {
-                                maxWidthEast = elmtParent.clientWidth - (elmtRect.left - elmtParentRect.left) + elmtParentBLW;
-                                maxHeightSouth = elmtParent.clientHeight - (elmtRect.top - elmtParentRect.top) + elmtParentBTW;
-                                maxWidthWest = elmtRect.width + (elmtRect.left - elmtParentRect.left) - elmtParentBLW;
-                                maxHeightNorth = elmt.clientHeight + (elmtRect.top - elmtParentRect.top) - elmtParentBTW;
+                                maxWidthEast = elmtParent.clientWidth - (elmtRect.left - elmtParentRect.left) / scaleFactor.x + elmtParentBLW;
+                                maxHeightSouth = elmtParent.clientHeight - (elmtRect.top - elmtParentRect.top) / scaleFactor.y + elmtParentBTW;
+                                maxWidthWest = (elmtRect.width + elmtRect.left - elmtParentRect.left) / scaleFactor.x - elmtParentBLW;
+                                maxHeightNorth = elmt.clientHeight + (elmtRect.top - elmtParentRect.top) / scaleFactor.y - elmtParentBTW;
                             }
                         }
                     }
@@ -1858,9 +1947,13 @@ var jsPanel = {
                         // trigger resize permanently while resizing
                         document.dispatchEvent(jspanelresize);
 
-                        if (resizeHandleClassList.contains('jsPanel-resizeit-e') || resizeHandleClassList.contains('jsPanel-resizeit-se') || resizeHandleClassList.contains('jsPanel-resizeit-ne')) {
+                        var eventX = evt.clientX || evt.touches[0].clientX,
+                            eventY = evt.clientY || evt.touches[0].clientY,
+                            overlaps = void 0;
 
-                            w = startWidth + (evt.clientX || evt.touches[0].clientX) - startX + wDif;
+                        if (resizeHandleClassList.contains('jsPanel-resizeit-e')) {
+
+                            w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
                             if (w >= maxWidthEast) {
                                 w = maxWidthEast;
                             }
@@ -1870,11 +1963,19 @@ var jsPanel = {
                                 w = minWidth;
                             }
                             elmt.style.width = w + 'px';
-                        }
+                            if (opts.aspectRatio) {
+                                elmt.style.height = w / aspectRatio + 'px';
+                                if (opts.containment) {
+                                    overlaps = elmt.overlaps(elmtParent);
+                                    if (overlaps.bottom <= containment[2]) {
+                                        elmt.style.height = maxHeightSouth + 'px';
+                                        elmt.style.width = maxHeightSouth * aspectRatio + 'px';
+                                    }
+                                }
+                            }
+                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-s')) {
 
-                        if (resizeHandleClassList.contains('jsPanel-resizeit-s') || resizeHandleClassList.contains('jsPanel-resizeit-se') || resizeHandleClassList.contains('jsPanel-resizeit-sw')) {
-
-                            h = startHeight + (evt.clientY || evt.touches[0].clientY) - startY + hDif;
+                            h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
                             if (h >= maxHeightSouth) {
                                 h = maxHeightSouth;
                             }
@@ -1884,13 +1985,21 @@ var jsPanel = {
                                 h = minHeight;
                             }
                             elmt.style.height = h + 'px';
-                        }
+                            if (opts.aspectRatio) {
+                                elmt.style.width = h * aspectRatio + 'px';
+                                if (opts.containment) {
+                                    overlaps = elmt.overlaps(elmtParent);
+                                    if (overlaps.right <= containment[1]) {
+                                        elmt.style.width = maxWidthEast + 'px';
+                                        elmt.style.height = maxWidthEast / aspectRatio + 'px';
+                                    }
+                                }
+                            }
+                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-w')) {
 
-                        if (resizeHandleClassList.contains('jsPanel-resizeit-w') || resizeHandleClassList.contains('jsPanel-resizeit-nw') || resizeHandleClassList.contains('jsPanel-resizeit-sw')) {
-
-                            w = startWidth + startX - (evt.clientX || evt.touches[0].clientX) + wDif;
+                            w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
                             if (w <= maxWidth && w >= minWidth && w <= maxWidthWest) {
-                                elmt.style.left = startLeft + (evt.clientX || evt.touches[0].clientX) - startX + xDif + 'px';
+                                elmt.style.left = startLeft + (eventX - startX) / scaleFactor.x + xDif + 'px';
                             }
                             if (w >= maxWidthWest) {
                                 w = maxWidthWest;
@@ -1901,13 +2010,21 @@ var jsPanel = {
                                 w = minWidth;
                             }
                             elmt.style.width = w + 'px';
-                        }
+                            if (opts.aspectRatio) {
+                                elmt.style.height = w / aspectRatio + 'px';
+                                if (opts.containment) {
+                                    overlaps = elmt.overlaps(elmtParent);
+                                    if (overlaps.bottom <= containment[2]) {
+                                        elmt.style.height = maxHeightSouth + 'px';
+                                        elmt.style.width = maxHeightSouth * aspectRatio + 'px';
+                                    }
+                                }
+                            }
+                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-n')) {
 
-                        if (resizeHandleClassList.contains('jsPanel-resizeit-n') || resizeHandleClassList.contains('jsPanel-resizeit-nw') || resizeHandleClassList.contains('jsPanel-resizeit-ne')) {
-
-                            h = startHeight + startY - (evt.clientY || evt.touches[0].clientY) + hDif;
+                            h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
                             if (h <= maxHeight && h >= minHeight && h <= maxHeightNorth) {
-                                elmt.style.top = startTop + (evt.clientY || evt.touches[0].clientY) - startY + yDif + 'px';
+                                elmt.style.top = startTop + (eventY - startY) / scaleFactor.y + yDif + 'px';
                             }
                             if (h >= maxHeightNorth) {
                                 h = maxHeightNorth;
@@ -1918,6 +2035,170 @@ var jsPanel = {
                                 h = minHeight;
                             }
                             elmt.style.height = h + 'px';
+                            if (opts.aspectRatio) {
+                                elmt.style.width = h * aspectRatio + 'px';
+                                if (opts.containment) {
+                                    overlaps = elmt.overlaps(elmtParent);
+                                    if (overlaps.right <= containment[1]) {
+                                        elmt.style.width = maxWidthEast + 'px';
+                                        elmt.style.height = maxWidthEast / aspectRatio + 'px';
+                                    }
+                                }
+                            }
+                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-se')) {
+
+                            w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
+                            if (w >= maxWidthEast) {
+                                w = maxWidthEast;
+                            }
+                            if (w >= maxWidth) {
+                                w = maxWidth;
+                            } else if (w <= minWidth) {
+                                w = minWidth;
+                            }
+                            elmt.style.width = w + 'px';
+                            if (opts.aspectRatio) {
+                                elmt.style.height = w / aspectRatio + 'px';
+                            }
+
+                            h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
+                            if (h >= maxHeightSouth) {
+                                h = maxHeightSouth;
+                            }
+                            if (h >= maxHeight) {
+                                h = maxHeight;
+                            } else if (h <= minHeight) {
+                                h = minHeight;
+                            }
+                            elmt.style.height = h + 'px';
+                            if (opts.aspectRatio) {
+                                elmt.style.width = h * aspectRatio + 'px';
+                                if (opts.containment) {
+                                    overlaps = elmt.overlaps(elmtParent);
+                                    if (overlaps.right <= containment[1]) {
+                                        elmt.style.width = maxWidthEast + 'px';
+                                        elmt.style.height = maxWidthEast / aspectRatio + 'px';
+                                    }
+                                }
+                            }
+                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-sw')) {
+
+                            h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
+                            if (h >= maxHeightSouth) {
+                                h = maxHeightSouth;
+                            }
+                            if (h >= maxHeight) {
+                                h = maxHeight;
+                            } else if (h <= minHeight) {
+                                h = minHeight;
+                            }
+                            elmt.style.height = h + 'px';
+                            if (opts.aspectRatio) {
+                                elmt.style.width = h * aspectRatio + 'px';
+                            }
+
+                            w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
+                            if (w <= maxWidth && w >= minWidth && w <= maxWidthWest) {
+                                elmt.style.left = startLeft + (eventX - startX) / scaleFactor.x + xDif + 'px';
+                            }
+                            if (w >= maxWidthWest) {
+                                w = maxWidthWest;
+                            }
+                            if (w >= maxWidth) {
+                                w = maxWidth;
+                            } else if (w <= minWidth) {
+                                w = minWidth;
+                            }
+                            elmt.style.width = w + 'px';
+                            if (opts.aspectRatio) {
+                                elmt.style.height = w / aspectRatio + 'px';
+                                if (opts.containment) {
+                                    overlaps = elmt.overlaps(elmtParent);
+                                    if (overlaps.bottom <= containment[2]) {
+                                        elmt.style.height = maxHeightSouth + 'px';
+                                        elmt.style.width = maxHeightSouth * aspectRatio + 'px';
+                                    }
+                                }
+                            }
+                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-ne')) {
+
+                            w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
+                            if (w >= maxWidthEast) {
+                                w = maxWidthEast;
+                            }
+                            if (w >= maxWidth) {
+                                w = maxWidth;
+                            } else if (w <= minWidth) {
+                                w = minWidth;
+                            }
+                            elmt.style.width = w + 'px';
+                            if (opts.aspectRatio) {
+                                elmt.style.height = w / aspectRatio + 'px';
+                            }
+
+                            h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
+                            if (h <= maxHeight && h >= minHeight && h <= maxHeightNorth) {
+                                elmt.style.top = startTop + (eventY - startY) / scaleFactor.y + yDif + 'px';
+                            }
+                            if (h >= maxHeightNorth) {
+                                h = maxHeightNorth;
+                            }
+                            if (h >= maxHeight) {
+                                h = maxHeight;
+                            } else if (h <= minHeight) {
+                                h = minHeight;
+                            }
+                            elmt.style.height = h + 'px';
+                            if (opts.aspectRatio) {
+                                elmt.style.width = h * aspectRatio + 'px';
+                                if (opts.containment) {
+                                    overlaps = elmt.overlaps(elmtParent);
+                                    if (overlaps.right <= containment[1]) {
+                                        elmt.style.width = maxWidthEast + 'px';
+                                        elmt.style.height = maxWidthEast / aspectRatio + 'px';
+                                    }
+                                }
+                            }
+                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-nw')) {
+
+                            if (opts.aspectRatio && resizeHandleClassList.contains('jsPanel-resizeit-nw')) {
+                                eventX = eventY * startRatio;
+                                eventY = eventX / startRatio;
+                            }
+
+                            w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
+                            if (w <= maxWidth && w >= minWidth && w <= maxWidthWest) {
+                                elmt.style.left = startLeft + (eventX - startX) / scaleFactor.x + xDif + 'px';
+                            }
+                            if (w >= maxWidthWest) {
+                                w = maxWidthWest;
+                            }
+                            if (w >= maxWidth) {
+                                w = maxWidth;
+                            } else if (w <= minWidth) {
+                                w = minWidth;
+                            }
+                            elmt.style.width = w + 'px';
+                            if (opts.aspectRatio) {
+                                elmt.style.height = w / aspectRatio + 'px';
+                            }
+
+                            h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
+                            if (h <= maxHeight && h >= minHeight && h <= maxHeightNorth) {
+                                elmt.style.top = startTop + (eventY - startY) / scaleFactor.y + yDif + 'px';
+                            }
+                            if (h >= maxHeightNorth) {
+                                h = maxHeightNorth;
+                            }
+                            if (h >= maxHeight) {
+                                h = maxHeight;
+                            } else if (h <= minHeight) {
+                                h = minHeight;
+                            }
+                            elmt.style.height = h + 'px';
+                            if (opts.aspectRatio) {
+                                elmt.style.width = h * aspectRatio + 'px';
+                            }
                         }
 
                         window.getSelection().removeAllRanges();
@@ -2228,6 +2509,7 @@ var jsPanel = {
         var jspanelloaded = new CustomEvent('jspanelloaded', { 'detail': options.id }),
             jspanelbeforeclose = new CustomEvent('jspanelbeforeclose', { 'detail': options.id }),
             jspanelclosed = new CustomEvent('jspanelclosed', { 'detail': options.id }),
+            jspanelcloseduser = new CustomEvent('jspanelcloseduser', { 'detail': options.id }),
             jspanelstatuschange = new CustomEvent('jspanelstatuschange', { 'detail': options.id }),
             jspanelbeforenormalize = new CustomEvent('jspanelbeforenormalize', { 'detail': options.id }),
             jspanelnormalized = new CustomEvent('jspanelnormalized', { 'detail': options.id }),
@@ -2253,11 +2535,12 @@ var jsPanel = {
             jsPanel.pointerup.forEach(function (item) {
                 hasCloseBtn.addEventListener(item, function (e) {
                     e.preventDefault();
-                    // disable draging for all mouse buttons but left
+                    // disable close for all mouse buttons but left
                     if (e.button && e.button > 0) {
                         return false;
                     }
                     self.close();
+                    document.dispatchEvent(jspanelcloseduser);
                 });
             });
         }
@@ -2265,7 +2548,7 @@ var jsPanel = {
             jsPanel.pointerup.forEach(function (item) {
                 hasMaxBtn.addEventListener(item, function (e) {
                     e.preventDefault();
-                    // disable draging for all mouse buttons but left
+                    // disable maximize for all mouse buttons but left
                     if (e.button && e.button > 0) {
                         return false;
                     }
@@ -2277,7 +2560,7 @@ var jsPanel = {
             jsPanel.pointerup.forEach(function (item) {
                 hasNormBtn.addEventListener(item, function (e) {
                     e.preventDefault();
-                    // disable draging for all mouse buttons but left
+                    // disable normalize for all mouse buttons but left
                     if (e.button && e.button > 0) {
                         return false;
                     }
@@ -2289,7 +2572,7 @@ var jsPanel = {
             jsPanel.pointerup.forEach(function (item) {
                 hasSmallBtn.addEventListener(item, function (e) {
                     e.preventDefault();
-                    // disable draging for all mouse buttons but left
+                    // disable smallifiy for all mouse buttons but left
                     if (e.button && e.button > 0) {
                         return false;
                     }
@@ -2301,7 +2584,7 @@ var jsPanel = {
             jsPanel.pointerup.forEach(function (item) {
                 hasSmallrevBtn.addEventListener(item, function (e) {
                     e.preventDefault();
-                    // disable draging for all mouse buttons but left
+                    // disable unsmallifiy for all mouse buttons but left
                     if (e.button && e.button > 0) {
                         return false;
                     }
@@ -2313,7 +2596,7 @@ var jsPanel = {
             jsPanel.pointerup.forEach(function (item) {
                 hasMinBtn.addEventListener(item, function (e) {
                     e.preventDefault();
-                    // disable draging for all mouse buttons but left
+                    // disable minimize for all mouse buttons but left
                     if (e.button && e.button > 0) {
                         return false;
                     }
@@ -2393,20 +2676,31 @@ var jsPanel = {
             self.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach(function (item) {
                 item.style.color = themeDetails.colors[3];
             });
-
+            var borderTop = themeDetails.colors[3] === '#000000' ? '1px solid rgba(0,0,0,0.2)' : '1px solid rgba(255,255,255,0.2)';
             if (options.headerToolbar) {
+                if (themeDetails.colors[3] === '#ffffff') {
+                    self.headertoolbar.style.borderTop = borderTop;
+                } else {
+                    self.headertoolbar.style.borderTop = borderTop;
+                }
                 jsPanel.setStyle(self.headertoolbar, {
                     boxShadow: '0 0 1px ' + themeDetails.colors[3] + ' inset',
                     width: 'calc(100% + 4px)',
                     marginLeft: '-1px'
                 });
             } else {
-                self.content.style.borderTop = '1px solid ' + themeDetails.colors[3];
+                self.content.style.borderTop = borderTop;
             }
 
             if (themeDetails.filling === 'filled') {
-                self.content.style.backgroundColor = themeDetails.colors[0];
-                self.content.style.color = themeDetails.colors[3];
+                jsPanel.setStyle(self.content, {
+                    backgroundColor: themeDetails.colors[0],
+                    color: themeDetails.colors[3],
+                    borderTop: borderTop
+                });
+                // self.content.style.backgroundColor = themeDetails.colors[0];
+                // self.content.style.color = themeDetails.colors[3];
+                // self.content.style.borderTop = borderTop;
             } else if (themeDetails.filling === 'filledlight') {
                 self.content.style.backgroundColor = themeDetails.colors[1];
             }
@@ -2488,7 +2782,8 @@ var jsPanel = {
                 }
             });
             if (autoPos) {
-                options.container.querySelectorAll('.' + autoPos).forEach(function (item) {
+                var box = options.container === 'window' ? document.body : options.container;
+                box.querySelectorAll('.' + autoPos).forEach(function (item) {
                     item.reposition();
                 });
             }
@@ -2560,8 +2855,10 @@ var jsPanel = {
 
         self.close = function (callback) {
 
+            var panelId = options.id;
+            var removed = void 0;
+
             var doClose = function doClose() {
-                var panelId = options.id;
 
                 if (closetimer) {
                     window.clearTimeout(closetimer);
@@ -2569,18 +2866,14 @@ var jsPanel = {
 
                 self.closeChildpanels();
                 if (self.parentElement) {
-                    self.parentElement.removeChild(self);
+                    removed = self.parentElement.removeChild(self);
                 }
                 // return false if panel was not removed from dom
-                if (document.querySelector('#' + panelId)) {
+                if (!removed) {
                     return false;
                 }
                 self.removeMinimizedReplacement();
                 document.dispatchEvent(jspanelclosed);
-
-                if (callback) {
-                    callback.call(panelId, panelId);
-                }
 
                 if (options.onclosed) {
                     jsPanel.processCallbacks(self, options.onclosed, 'every');
@@ -2606,6 +2899,21 @@ var jsPanel = {
                 });
             } else {
                 doClose();
+            }
+
+            if (removed) {
+                // panel removed successfully
+                if (callback) {
+                    callback.call(panelId, panelId);
+                }
+                removed = undefined;
+                return panelId;
+            } else {
+                // panel not removed
+                if (callback) {
+                    callback.call(self, panelId, self);
+                }
+                return false;
             }
         };
 
@@ -2707,14 +3015,22 @@ var jsPanel = {
             return Array.prototype.slice.call(self.content.querySelectorAll('.jsPanel'));
         };
 
+        self.getScaleFactor = function () {
+            var rect = self.getBoundingClientRect();
+            return {
+                x: rect.width / self.offsetWidth,
+                y: rect.height / self.offsetHeight
+            };
+        };
+
         self.getThemeDetails = function (th) {
             var passedTheme = th.toLowerCase().replace(/ /g, ''),
                 theme = { color: false, colors: false, filling: false, bs: false, bstheme: false };
 
-            if (passedTheme.substr(-6, 6) === 'filled') {
+            if (passedTheme.endsWith('filled')) {
                 theme.filling = 'filled';
                 theme.color = passedTheme.substr(0, passedTheme.length - 6);
-            } else if (passedTheme.substr(-11, 11) === 'filledlight') {
+            } else if (passedTheme.endsWith('filledlight')) {
                 theme.filling = 'filledlight';
                 theme.color = passedTheme.substr(0, passedTheme.length - 11);
             } else {
@@ -2893,6 +3209,10 @@ var jsPanel = {
             }
 
             return self;
+        };
+
+        self.overlaps = function (elmt) {
+            return jsPanel.overlaps(self, elmt);
         };
 
         self.removeMinimizedReplacement = function () {

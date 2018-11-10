@@ -1,5 +1,26 @@
 ## CHANGELOG
 
+### Version 4.3.0 *released 2018-11-10*
+
++ **added** event `jspanelcloseduser` which is fired when a panel is closed using the header control
++ **added** panel method `.overlaps()`
++ **added** parameter `aspectRatio` to option `resizeit`
++ **updated** panel method `.close()` - it now has a return value depending on whether the panel was closed successfully or not
++ `option.container` default value is changed to `'window'`. This might need a change in existing code when `container: doccument.body` is used even though this was the default previously
++ `option.maximizedMargin` now accepts a function as value
++ `option.theme` supports color names derived from the Material Design Color System like `'bluegray700'`, `'orangeA400'` etc.
++ **options** `position`, `dragit` and `resizeit` now correctly position, drag and resize panels appended to a container using css `transform: scale()` if both container and panel are scaled
++ **bugfix** in global color methods
++ **modal extension:** minor bugfixes
++ **tooltip extension:**
+    + **added** method `jsPanel.tooltip.reposition()` to reposition existing tooltips
+    + **added** parameter `autoshow` for tooltips
+    + **added** support for tooltips positioned relative to another element than target
+    + **improved** tooltip connectors
+    + a few **bugfixes** in the tooltip extension
+    + tooltip extension will load a `MouseEvent()` polyfill for IE11
++ various tweaks in css and js
+
 ### Version 4.2.1 *released 2018-09-14*
 
 + **fix** in methods `setHeaderLogo()` and `setHeaderTitle()` - logo and title are now updated in minimized replacement as well

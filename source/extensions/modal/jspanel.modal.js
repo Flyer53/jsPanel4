@@ -14,8 +14,8 @@ if (!jsPanel.modal) {
 
     jsPanel.modal = {
 
-        version: '1.0.1',
-        date: '2018-07-31 10:34',
+        version: '1.0.2',
+        date: '2018-11-08 16:55',
 
         defaults: {
             closeOnEscape:  true,
@@ -24,8 +24,6 @@ if (!jsPanel.modal) {
             resizeit:       false,
             syncMargins:    false
         },
-
-        ziModalBase: 10000,
 
         addBackdrop(id) {
             let modalCount = document.getElementsByClassName('jsPanel-modal-backdrop').length,
@@ -63,7 +61,7 @@ if (!jsPanel.modal) {
                 opts = Object.assign({}, options.config, options);
                 delete opts.config;
             }
-            opts = Object.assign({}, this.defaults, opts, {container: 'body'});
+            opts = Object.assign({}, this.defaults, opts, {container: 'window'});
 
             document.body.append(backdrop);
 
@@ -93,8 +91,8 @@ if (!jsPanel.modal) {
 
     };
 
-    jsPanel.modal.ziModal = (function(startValue = jsPanel.modal.ziModalBase) {
-        let val = startValue;
+    jsPanel.modal.ziModal = (() => {
+        let val = 10000;
         return {
             next: function() {
                 return val++;
