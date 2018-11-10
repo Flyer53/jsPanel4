@@ -9,7 +9,7 @@
 
 ---
 
-### jsPanel 4 beta homepage: [https://jspanel.de](https://jspanel.de/)
+### jsPanel 4 homepage: [https://jspanel.de](https://jspanel.de/)
 ### API and examples: [https://jspanel.de/api.html](https://jspanel.de/api.html)
 
 ### [Dependencies]()
