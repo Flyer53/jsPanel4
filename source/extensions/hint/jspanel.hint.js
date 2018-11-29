@@ -40,3 +40,7 @@ if (!jsPanel.hint) {
     };
 
 }
+
+if (typeof module !== 'undefined') {
+  module.exports = jsPanel
+}
