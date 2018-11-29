@@ -114,3 +114,8 @@ if (!jsPanel.contextmenu) {
     },false);
 
 }
+
+if (typeof module !== 'undefined') {
+  module.exports = jsPanel
+}
+
