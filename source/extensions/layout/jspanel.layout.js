@@ -122,3 +122,7 @@ if (!jsPanel.layout) {
     };
 
 }
+
+if (typeof module !== 'undefined') {
+  module.exports = jsPanel
+}
