@@ -175,3 +175,7 @@ dockPanel.getVersion = function () { return '1.0.0'; };
 dockPanel.getDate    = function () { return '2018-04-27 17:08'; };
 
 jsPanel.extend({ dock: dockPanel });
+
+if (typeof module !== 'undefined') {
+  module.exports = jsPanel
+}
