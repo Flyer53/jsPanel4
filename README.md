@@ -2,6 +2,7 @@
 
 ## [jsPanel 4.3.0 released 2018-11-10](#)
 
+<img src="https://res.cloudinary.com/stefanstraesser-eu/image/upload/v1543568282/github-banner_qlwp6s.jpg">
 
 **A dependency free javascript tool to create highly configurable multifunctional floating panels.**
 
