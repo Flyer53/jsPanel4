@@ -103,5 +103,5 @@ if (!jsPanel.modal) {
 }
 
 if (typeof module !== 'undefined') {
-  module.exports = jsPanel
+  module.exports = jsPanel;
 }

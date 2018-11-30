@@ -184,3 +184,5 @@ dockPanel.getDate = function () {
 };
 
 jsPanel.extend({ dock: dockPanel });
+
+if(typeof module !== 'undefined'){module.exports = jsPanel;}

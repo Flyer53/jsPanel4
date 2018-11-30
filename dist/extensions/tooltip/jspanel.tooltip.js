@@ -347,3 +347,5 @@ if (!jsPanel.tooltip) {
         }, false);
     });
 }
+
+if(typeof module !== 'undefined'){module.exports = jsPanel;}

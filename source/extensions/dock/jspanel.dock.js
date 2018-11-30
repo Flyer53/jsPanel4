@@ -177,5 +177,5 @@ dockPanel.getDate    = function () { return '2018-04-27 17:08'; };
 jsPanel.extend({ dock: dockPanel });
 
 if (typeof module !== 'undefined') {
-  module.exports = jsPanel
+  module.exports = jsPanel;
 }
