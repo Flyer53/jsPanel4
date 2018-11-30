@@ -8,8 +8,8 @@ if (!jsPanel.layout) {
 
     jsPanel.layout = {
 
-        version: '1.0.0',
-        date: '2018-04-04 09:05',
+        version: '1.1.0',
+        date: '2018-11-30 10:30',
 
         save(saveConfig = {}) {
             let selector = saveConfig.selector ? saveConfig.selector : '.jsPanel-standard';
@@ -123,6 +123,8 @@ if (!jsPanel.layout) {
 
 }
 
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
 if (typeof module !== 'undefined') {
-  module.exports = jsPanel;
+    module.exports = jsPanel;
 }

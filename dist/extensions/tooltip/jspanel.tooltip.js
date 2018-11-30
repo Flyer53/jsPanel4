@@ -31,8 +31,8 @@ if (!jsPanel.tooltip) {
 
     jsPanel.tooltip = {
 
-        version: '1.1.0',
-        date: '2018-10-26 18:35',
+        version: '1.2.0',
+        date: '2018-11-30 10:30',
 
         defaults: {
             //position: is set in jsPanel.tooltip.create()
@@ -348,4 +348,8 @@ if (!jsPanel.tooltip) {
     });
 }
 
-if(typeof module !== 'undefined'){module.exports = jsPanel;}
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') {
+    module.exports = jsPanel;
+}

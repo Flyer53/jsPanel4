@@ -1,50 +1,56 @@
-/* jspanel.dock.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
+/* jspanel.dock.js v1.1.0 - 2018-11-30 10:30, (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
 /* global jsPanel jsPanelError */
 'use strict';
 
 import {jsPanel} from '../../jspanel.js';
 
-function dockPanel (config, cb) {
+function dockPanel(config, cb) {
 
-    let configDefault = {
-        position: {my: 'left-top', at: 'right-top'},
+    var configDefault = {
+        position: { my: 'left-top', at: 'right-top' },
         linkSlaveHeight: false,
         linkSlaveWidth: false,
         callback: false
     };
-    let conf = Object.assign({}, configDefault, config);
-    let master;
+    var conf = Object.assign({}, configDefault, config);
+    var master = void 0;
     if (conf.master && conf.master.nodeType === 1) {
         master = conf.master;
     } else {
         master = document.querySelector(conf.master);
     }
     if (!master) {
-        const id = this.id;
-        const error = new jsPanelError('Could not dock panel with id <' + id + '> because the panel to dock to does not exist in the document!');
+        var id = this.id;
+        var error = new jsPanelError('Could not dock panel with id <' + id + '> because the panel to dock to does not exist in the document!');
         try {
             throw error;
         } catch (e) {
-            if (cb) {cb.call(e, e);}
+            if (cb) {
+                cb.call(e, e);
+            }
         }
-        return console.error(error.name+':', error.message);
+        return console.error(error.name + ':', error.message);
     }
 
-    let slave = document.getElementById(this.id);
-    let position = Object.assign({}, conf.position, {of: master, minLeft: false, minTop: false, maxLeft: false, maxTop: false, autoposition: false});
-    if (!position.my) {position.my = configDefault.position.my;}
-    if (!position.at) {position.at = configDefault.position.at;}
+    var slave = document.getElementById(this.id);
+    var position = Object.assign({}, conf.position, { of: master, minLeft: false, minTop: false, maxLeft: false, maxTop: false, autoposition: false });
+    if (!position.my) {
+        position.my = configDefault.position.my;
+    }
+    if (!position.at) {
+        position.at = configDefault.position.at;
+    }
     slave.options.position = position;
     ['smallify', 'smallifyrev', 'minimize', 'normalize', 'maximize'].forEach(function (ctrl) {
         slave.setControlStatus(ctrl, 'remove');
     });
     if (conf.linkSlaveHeight) {
-        let height = window.getComputedStyle(master).height;
-        slave.resize({height: height});
+        var height = window.getComputedStyle(master).height;
+        slave.resize({ height: height });
     }
     if (conf.linkSlaveWidth) {
-        let width = window.getComputedStyle(master).width;
-        slave.resize({width: width});
+        var width = window.getComputedStyle(master).width;
+        slave.resize({ width: width });
     }
     // position slave
     slave.reposition(position);
@@ -55,7 +61,7 @@ function dockPanel (config, cb) {
 
     // set necessary master options
     master.reposSlave = function () {
-        if (document.querySelector('#'+slave.id)) {
+        if (document.querySelector('#' + slave.id)) {
             slave.reposition();
         }
     };
@@ -64,16 +70,16 @@ function dockPanel (config, cb) {
     }
 
     master.resizeSlave = function () {
-        if (document.querySelector('#'+slave.id)) {
+        if (document.querySelector('#' + slave.id)) {
             slave.reposition();
             if (conf.linkSlaveHeight) {
-                let h = window.getComputedStyle(master).height;
+                var h = window.getComputedStyle(master).height;
                 slave.resize({
                     height: h
                 });
             }
             if (conf.linkSlaveWidth) {
-                let w = window.getComputedStyle(master).width;
+                var w = window.getComputedStyle(master).width;
                 slave.resize({
                     width: w
                 });
@@ -100,22 +106,22 @@ function dockPanel (config, cb) {
 
     // close slave when master is closed
     document.addEventListener('jspanelclosed', function (evt) {
-        if (evt.detail === master.id && document.querySelector('#'+slave.id)) {
+        if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
             slave.close();
         }
     }, false);
 
     // maximize slave when master is maximized
     document.addEventListener('jspanelmaximized', function (evt) {
-        if (evt.detail === master.id && document.querySelector('#'+slave.id)) {
+        if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
             slave.normalize();
             if (conf.linkSlaveHeight) {
-                let height = window.getComputedStyle(master).height;
-                slave.resize({height: height});
+                var _height = window.getComputedStyle(master).height;
+                slave.resize({ height: _height });
             }
             if (conf.linkSlaveWidth) {
-                let width = window.getComputedStyle(master).width;
-                slave.resize({width: width});
+                var _width = window.getComputedStyle(master).width;
+                slave.resize({ width: _width });
             }
             slave.reposition();
         }
@@ -123,22 +129,22 @@ function dockPanel (config, cb) {
 
     // minimize slave when master is minimized
     document.addEventListener('jspanelminimized', function (evt) {
-        if (evt.detail === master.id && document.querySelector('#'+slave.id)) {
+        if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
             slave.minimize();
         }
     }, false);
 
     // normalize slave when master is normalized
     document.addEventListener('jspanelnormalized', function (evt) {
-        if (evt.detail === master.id && document.querySelector('#'+slave.id)) {
+        if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
             slave.normalize();
             if (conf.linkSlaveHeight) {
-                let height = window.getComputedStyle(master).height;
-                slave.resize({height: height});
+                var _height2 = window.getComputedStyle(master).height;
+                slave.resize({ height: _height2 });
             }
             if (conf.linkSlaveWidth) {
-                let width = window.getComputedStyle(master).width;
-                slave.resize({width: width});
+                var _width2 = window.getComputedStyle(master).width;
+                slave.resize({ width: _width2 });
             }
             slave.reposition();
         }
@@ -146,17 +152,17 @@ function dockPanel (config, cb) {
 
     // smallify/unsmallify slave when master is smallified/unsmallified
     document.addEventListener('jspanelsmallifiedmax', function (evt) {
-        if (evt.detail === master.id && document.querySelector('#'+slave.id)) {
+        if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
             slave.smallify().reposition();
         }
     }, false);
     document.addEventListener('jspanelsmallified', function (evt) {
-        if (evt.detail === master.id && document.querySelector('#'+slave.id)) {
+        if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
             slave.smallify().reposition();
         }
     }, false);
     document.addEventListener('jspanelunsmallified', function (evt) {
-        if (evt.detail === master.id && document.querySelector('#'+slave.id)) {
+        if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
             slave.unsmallify().reposition();
         }
     }, false);
@@ -168,10 +174,13 @@ function dockPanel (config, cb) {
     }
 
     return slave;
-
 }
 
-dockPanel.getVersion = function () { return '1.0.0'; };
-dockPanel.getDate    = function () { return '2018-04-27 17:08'; };
+dockPanel.getVersion = function () {
+    return '1.1.0';
+};
+dockPanel.getDate = function () {
+    return '2018-11-30 10:30';
+};
 
 jsPanel.extend({ dock: dockPanel });

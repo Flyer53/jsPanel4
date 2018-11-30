@@ -1,4 +1,4 @@
-/* jspanel.hint.js v1.0.0 (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
+/* jspanel.hint.js v1.1.0 (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
 /* global jsPanel */
 'use strict';
 
@@ -8,8 +8,8 @@ if (!jsPanel.hint) {
 
     jsPanel.hint = {
 
-        version: '1.0.0',
-        date: '2017-05-17 22:15',
+        version: '1.1.0',
+        date: '2018-11-30 10:30',
 
         defaults: {
             autoclose: 8000,
@@ -40,4 +40,8 @@ if (!jsPanel.hint) {
     };
 }
 
-if(typeof module !== 'undefined'){module.exports = jsPanel;}
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') {
+    module.exports = jsPanel;
+}

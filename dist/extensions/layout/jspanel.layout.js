@@ -8,8 +8,8 @@ if (!jsPanel.layout) {
 
     jsPanel.layout = {
 
-        version: '1.0.0',
-        date: '2018-04-04 09:05',
+        version: '1.1.0',
+        date: '2018-11-30 10:30',
 
         save: function save() {
             var saveConfig = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -130,4 +130,8 @@ if (!jsPanel.layout) {
     };
 }
 
-if(typeof module !== 'undefined'){module.exports = jsPanel;}
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') {
+    module.exports = jsPanel;
+}

@@ -8,8 +8,8 @@ if (!jsPanel.contextmenu) {
 
     jsPanel.contextmenu = {
 
-        version: '1.0.0',
-        date: '2018-03-16 14:30',
+        version: '1.1.0',
+        date: '2018-11-30 10:30',
 
         defaults: {
             //position: is set in jsPanel.contextmenu.create()
@@ -17,27 +17,31 @@ if (!jsPanel.contextmenu) {
             dragit: false,
             resizeit: false,
             header: false,
-            headerControls: 'none',
+            headerControls: 'none'
         },
 
-        cmOverflow(elmt) {
-            let cltX = elmt.cmEvent.clientX,
+        cmOverflow: function cmOverflow(elmt) {
+            var cltX = elmt.cmEvent.clientX,
                 cltY = elmt.cmEvent.clientY,
                 panelW = elmt.offsetWidth,
                 panelH = elmt.offsetHeight,
                 corrLeft = window.innerWidth - (cltX + panelW),
-                corrTop  = window.innerHeight - (cltY + panelH);
+                corrTop = window.innerHeight - (cltY + panelH);
             if (corrLeft < 0) {
                 elmt.style.left = cltX + (window.scrollX || window.pageXOffset) - panelW + 'px';
             }
-            if (corrTop  < 0) {
+            if (corrTop < 0) {
                 elmt.style.top = cltY + (window.scrollY || window.pageYOffset) - panelH + 'px';
             }
         },
+        create: function create() {
+            var _this = this;
 
-        create(options = {}, evt = 'contextmenu') {
+            var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+            var evt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'contextmenu';
+
             options.paneltype = 'contextmenu';
-            let target = options.target;
+            var target = options.target;
 
             if (!target) {
                 return false;
@@ -47,31 +51,31 @@ if (!jsPanel.contextmenu) {
                 target = document.querySelector(target);
             }
 
-            target.addEventListener(evt, e => {
+            target.addEventListener(evt, function (e) {
                 e.preventDefault();
                 // close all contextmenus first
-                document.querySelectorAll('.jsPanel-contextmenu').forEach( item => {
+                document.querySelectorAll('.jsPanel-contextmenu').forEach(function (item) {
                     item.close();
                 });
 
-                let l = (e.pageX || e.touches[0].pageX) + 'px',
+                var l = (e.pageX || e.touches[0].pageX) + 'px',
                     t = (e.pageY || e.touches[0].pageY) + 'px',
                     opts = options;
                 if (options.config) {
                     opts = Object.assign({}, options.config, options);
                     delete opts.config;
                 }
-                opts = Object.assign({}, this.defaults, opts, {position: false, container: 'body'});
+                opts = Object.assign({}, _this.defaults, opts, { position: false, container: 'body' });
 
-                jsPanel.create(opts, cm => {
-                    jsPanel.setStyle(cm, {position:'absolute', left:l, top:t});
+                jsPanel.create(opts, function (cm) {
+                    jsPanel.setStyle(cm, { position: 'absolute', left: l, top: t });
 
                     // check whether contextmenu is triggered from within a modal panel or panel and if so update z-index
-                    let closestModal = target.closest('.jsPanel-modal');
+                    var closestModal = target.closest('.jsPanel-modal');
                     if (closestModal) {
                         cm.style.zIndex = closestModal.style.zIndex;
                     } else {
-                        let closestPanel = target.closest('.jsPanel');
+                        var closestPanel = target.closest('.jsPanel');
                         if (closestPanel) {
                             closestPanel.front();
                         }
@@ -84,17 +88,16 @@ if (!jsPanel.contextmenu) {
                     // update left/top values if menu overflows browser viewport
                     jsPanel.contextmenu.cmOverflow(cm);
 
-                    cm.addEventListener('mouseleave', () => {
+                    cm.addEventListener('mouseleave', function () {
                         cm.close();
                     }, false);
                     // don't close contextmenu on mousedown in target
-                    cm.addEventListener(jsPanel.evtStart, e => {
+                    cm.addEventListener(jsPanel.evtStart, function (e) {
                         e.stopPropagation();
                     }, false);
                 });
-            },false);
+            }, false);
         }
-
     };
 
     // add overflow check to jsPanel.contentAjax always callback
@@ -111,6 +114,5 @@ if (!jsPanel.contextmenu) {
                 item.close();
             }
         });
-    },false);
-
+    }, false);
 }

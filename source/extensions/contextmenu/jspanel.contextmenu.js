@@ -8,8 +8,8 @@ if (!jsPanel.contextmenu) {
 
     jsPanel.contextmenu = {
 
-        version: '1.0.0',
-        date: '2018-03-16 14:30',
+        version: '1.1.0',
+        date: '2018-11-30 10:30',
 
         defaults: {
             //position: is set in jsPanel.contextmenu.create()
@@ -115,7 +115,8 @@ if (!jsPanel.contextmenu) {
 
 }
 
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
 if (typeof module !== 'undefined') {
-  module.exports = jsPanel;
+    module.exports = jsPanel;
 }
-

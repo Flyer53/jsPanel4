@@ -14,8 +14,8 @@ if (!jsPanel.modal) {
 
     jsPanel.modal = {
 
-        version: '1.0.2',
-        date: '2018-11-08 16:55',
+        version: '1.1.0',
+        date: '2018-11-30 10:30',
 
         defaults: {
             closeOnEscape: true,
@@ -99,4 +99,8 @@ if (!jsPanel.modal) {
     }();
 }
 
-if(typeof module !== 'undefined'){module.exports = jsPanel;}
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') {
+    module.exports = jsPanel;
+}

@@ -1,5 +1,17 @@
 ## CHANGELOG
 
+### Version 4.4.0 *released 2018-11-30*
+
++ **added** theme modifier `fillcolor` to specify a custom background color for the content section
++ **updated** option `border` accepts all color names usable with option `theme`
++ **updated** method `.overlaps()`
++ **bugfix** in option `resizeit`
++ **bugfix** in option `onwindowresize`
++ **bugfix** in option `dragit` concerning option `onwindowresize`
++ **updated** `start`, `stop`, `drag/resize` callbacks in options `dragit/resizeit` now additionally get the `event object` as argument
++ **added** polyfill for `String.prototype.includes()`
++ **added** CommonJS module exports
+
 ### Version 4.3.0 *released 2018-11-10*
 
 + **added** event `jspanelcloseduser` which is fired when a panel is closed using the header control
