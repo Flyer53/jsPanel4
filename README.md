@@ -80,4 +80,4 @@ jsPanel.create({
 ```
 
 ##### A few example panels
-<img src="http://res.cloudinary.com/stefanstraesser-eu/image/upload/v1526313322/jspanel4-showcase_sevcid.jpg">
+<img src="https://res.cloudinary.com/stefanstraesser-eu/image/upload/v1526313322/jspanel4-showcase_sevcid.jpg">
