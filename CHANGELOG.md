@@ -1,5 +1,31 @@
 ## CHANGELOG
 
+### Version 4.5.0 *released 2019-02-12*
+
++ jsPanel now uses **pointer events** if supported
++ **bugfix** - recoded the complete `close()` function to fix a long standing bug
++ **bugfix** in `jsPanel.position()` concerning the use of the **dock extension**
++ **bugfix** in `minimize()` concerning the use of an image as background
++ **bugfix** in option `dragit`
++ **bugfix** in `tooltip` extension
++ jsPanel **themes** got numerous updates:
+  + additional built-in themes
+  + updated built-in theme colors
+  + all built-in themes are are now "normal" color themes &rarr; less CSS
+  + recoded bootstrap theme support &rarr; no more bootstrap adjustments in *jspanel.css* needed
+  + option theme can now be used with an object as value &rarr; more theming options and better support of images (includes css gradients) as panel background
+  + reworked built-in controls icons, updated CSS accordingly and changed hover effect of controls
++ **added** option `onparentresize` to autoreposition childpanels on various resize actions of the parentpanel
++ **added** parameter `status` to the callbacks `onbeforemaximize`, `onmaximized` etc.
++ **added** parameter options `'hide'` and `'show'` to panel method `setControlStatus()` parameter `action`
++ **added** optional callback function to panel method `getChildpanels()` and the method now returns a NodeList (instead of an array)
++ **added** optional callback function to panel method `isChildpanel()`
++ **added** support for setting `option.position.of` in a **position shorthand string**
++ various minor fixes/improvements in js and css
+
+#####Note:
+The numerous updates in theming might require an update of your code in case you used some kind of custom theme since there no more are theme specific css classes applied to a jsPanel.
+
 ### Version 4.4.0 *released 2018-11-30*
 
 + **added** theme modifier `fillcolor` to specify a custom background color for the content section

@@ -31,8 +31,8 @@ if (!jsPanel.tooltip) {
 
     jsPanel.tooltip = {
 
-        version: '1.2.0',
-        date: '2018-11-30 10:30',
+        version: '1.2.1',
+        date: '2019-02-09 12:07',
 
         defaults: {
             //position: is set in jsPanel.tooltip.create()
@@ -97,56 +97,60 @@ if (!jsPanel.tooltip) {
 
                 timer = window.setTimeout(function () {
 
-                    // do nothing if id already exsists in document
+                    // do nothing if id already exists in document
                     if (document.getElementById(options.id)) {
                         return false;
                     }
 
-                    jsPanel.create(opts, function (tip) {
+                    jsPanel.create(opts, function (panel) {
+
+                        var tipToClose = panel,
+                            closeTip = function closeTip() {
+                            tipToClose.close();
+                            target.removeEventListener('mouseleave', closeTip);
+                            panel.removeEventListener('mouseleave', closeTip);
+                        };
+
                         // by default tooltip will close when mouse leaves trigger
                         if (mode === 'default') {
-                            target.addEventListener('mouseleave', function () {
-                                tip.close();
-                            }, false);
+                            target.addEventListener('mouseleave', closeTip, false);
                         } else if (mode === 'semisticky') {
                             // close tooltip when mouse leaves tooltip
-                            tip.addEventListener('mouseleave', function () {
-                                tip.close();
-                            }, false);
+                            panel.addEventListener('mouseleave', closeTip, false);
                         }
                         // some more tooltip specifics
-                        tip.classList.add('jsPanel-tooltip');
-                        tip.style.overflow = 'visible';
-                        tip.header.style.cursor = 'default';
-                        tip.footer.style.cursor = 'default';
+                        panel.classList.add('jsPanel-tooltip');
+                        panel.style.overflow = 'visible';
+                        panel.header.style.cursor = 'default';
+                        panel.footer.style.cursor = 'default';
 
                         // check whether contextmenu is triggered from within a modal panel or panel and if so update z-index
                         if (target.closest('.jsPanel-modal')) {
-                            tip.style.zIndex = target.closest('.jsPanel-modal').style.zIndex;
+                            panel.style.zIndex = target.closest('.jsPanel-modal').style.zIndex;
                         } else {
                             if (target.closest('.jsPanel')) {
                                 target.closest('.jsPanel').front();
                             }
-                            tip.style.zIndex = jsPanel.zi.next();
+                            panel.style.zIndex = jsPanel.zi.next();
                         }
 
                         // do not use 'click' instead of jsPanel.evtStart
                         jsPanel.pointerdown.forEach(function (evt) {
-                            tip.addEventListener(evt, function (e) {
+                            panel.addEventListener(evt, function (e) {
                                 e.stopPropagation();
                             }, false);
                         });
 
                         // add tooltip connector
                         if (opts.connector) {
-                            var tipPos = jsPanel.tooltip.relativeTipPos(tip);
+                            var tipPos = jsPanel.tooltip.relativeTipPos(panel);
                             if (tipPos !== 'over') {
-                                tip.append(jsPanel.tooltip.addConnector(tip, tipPos));
+                                panel.append(jsPanel.tooltip.addConnector(panel, tipPos));
                             }
                         }
 
                         if (callback) {
-                            callback.call(tip, tip);
+                            callback.call(panel, panel);
                         }
                     });
                 }, opts.delay);

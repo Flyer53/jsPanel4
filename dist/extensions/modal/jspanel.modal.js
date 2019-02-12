@@ -1,5 +1,5 @@
 /* jspanel.modal.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-/* global jsPanel */
+/* global jsPanel, module */
 'use strict';
 
 //import {jsPanel} from '../../jspanel.js';
@@ -14,11 +14,12 @@ if (!jsPanel.modal) {
 
     jsPanel.modal = {
 
-        version: '1.1.0',
-        date: '2018-11-30 10:30',
+        version: '1.2.0',
+        date: '2019-01-17 13:54',
 
         defaults: {
             closeOnEscape: true,
+            closeOnBackdrop: true,
             dragit: false,
             headerControls: 'closeonly',
             resizeit: false,
@@ -80,11 +81,13 @@ if (!jsPanel.modal) {
                 modal.header.style.cursor = 'default';
                 modal.footer.style.cursor = 'default';
                 // close modal on click in backdrop
-                jsPanel.pointerdown.forEach(function (evt) {
-                    document.getElementById('jsPanel-modal-backdrop-' + opts.id).addEventListener(evt, function () {
-                        modal.close();
+                if (opts.closeOnBackdrop) {
+                    jsPanel.pointerup.forEach(function (evt) {
+                        document.getElementById('jsPanel-modal-backdrop-' + opts.id).addEventListener(evt, function () {
+                            modal.close();
+                        });
                     });
-                });
+                }
             });
         }
     };

@@ -5,18 +5,15 @@
 import {jsPanel} from '../../jspanel.js';
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent#Polyfill - needed for IE11
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 (function (window) {
     try {
         new MouseEvent('test');
         return false; // No need to polyfill
-    } catch (e) {}
-    // Need to polyfill - fall through
-
+    } catch (e) {
+        // Need to polyfill - fall through
+    }
     // Polyfills DOM4 MouseEvent
-    var MouseEvent = function MouseEvent(eventType, params) {
+    var MouseEvent = function (eventType, params) {
         params = params || { bubbles: false, cancelable: false };
         var mouseEvent = document.createEvent('MouseEvent');
         mouseEvent.initMouseEvent(eventType, params.bubbles, params.cancelable, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
@@ -31,8 +28,8 @@ if (!jsPanel.tooltip) {
 
     jsPanel.tooltip = {
 
-        version: '1.2.0',
-        date: '2018-11-30 10:30',
+        version: '1.2.1',
+        date: '2019-02-09 12:07',
 
         defaults: {
             //position: is set in jsPanel.tooltip.create()
@@ -44,47 +41,42 @@ if (!jsPanel.tooltip) {
             ttipEvent: 'mouseenter'
         },
 
-        create: function create() {
-            var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-            var callback = arguments[1];
-
+        create(options = {}, callback) {
 
             options.paneltype = 'tooltip';
 
             if (!options.id) {
-                options.id = 'jsPanel-' + (jsPanel.idCounter += 1);
+                options.id = `jsPanel-${jsPanel.idCounter += 1}`;
             } else if (typeof options.id === 'function') {
                 options.id = options.id();
             }
-            var target = options.target,
-                mode = options.mode || 'default',
-                timer = void 0;
+            let target = options.target,
+                mode   = options.mode || 'default',
+                timer;
 
             if (typeof target === 'string') {
                 target = document.querySelector(target);
             }
 
             if (!target) {
-                var error = new window.jsPanelError('TOOLTIP SETUP FAILED!\nEither option target is missing in the tooltip configuration or the target does nor exist in the document!');
+                const error = new window.jsPanelError('TOOLTIP SETUP FAILED!\nEither option target is missing in the tooltip configuration or the target does nor exist in the document!');
                 try {
                     throw error;
                 } catch (e) {
-                    if (callback) {
-                        callback.call(e, e);
-                    }
+                    if (callback) {callback.call(e, e);}
                 }
-                console.error(error.name + ':', error.message);
+                console.error(error.name+':', error.message);
                 return false;
             }
 
             // don't close tooltip or contextmenu on mousedown in target
             jsPanel.pointerdown.forEach(function (evt) {
-                target.addEventListener(evt, function (e) {
+                target.addEventListener(evt, e => {
                     e.stopPropagation();
                 }, false);
             });
 
-            var opts = options;
+            let opts = options;
             if (options.config) {
                 opts = Object.assign({}, options.config, options);
                 delete opts.config;
@@ -93,84 +85,91 @@ if (!jsPanel.tooltip) {
             opts.position = Object.assign({}, options.position);
             opts.position.of = options.position.of || target;
 
-            target.addEventListener(opts.ttipEvent, function () {
+            target.addEventListener(opts.ttipEvent, () => {
 
                 timer = window.setTimeout(function () {
 
-                    // do nothing if id already exsists in document
+                    // do nothing if id already exists in document
                     if (document.getElementById(options.id)) {
                         return false;
                     }
 
-                    jsPanel.create(opts, function (tip) {
+                    jsPanel.create(opts, function (panel) {
+
+                        const tipToClose = panel,
+                            closeTip = () => {
+                                tipToClose.close();
+                                target.removeEventListener('mouseleave', closeTip);
+                                panel.removeEventListener('mouseleave', closeTip);
+                            };
+
                         // by default tooltip will close when mouse leaves trigger
                         if (mode === 'default') {
-                            target.addEventListener('mouseleave', function () {
-                                tip.close();
-                            }, false);
+                            target.addEventListener('mouseleave', closeTip, false);
                         } else if (mode === 'semisticky') {
                             // close tooltip when mouse leaves tooltip
-                            tip.addEventListener('mouseleave', function () {
-                                tip.close();
-                            }, false);
+                            panel.addEventListener('mouseleave', closeTip, false);
                         }
                         // some more tooltip specifics
-                        tip.classList.add('jsPanel-tooltip');
-                        tip.style.overflow = 'visible';
-                        tip.header.style.cursor = 'default';
-                        tip.footer.style.cursor = 'default';
+                        panel.classList.add('jsPanel-tooltip');
+                        panel.style.overflow = 'visible';
+                        panel.header.style.cursor = 'default';
+                        panel.footer.style.cursor = 'default';
 
                         // check whether contextmenu is triggered from within a modal panel or panel and if so update z-index
                         if (target.closest('.jsPanel-modal')) {
-                            tip.style.zIndex = target.closest('.jsPanel-modal').style.zIndex;
+                            panel.style.zIndex = target.closest('.jsPanel-modal').style.zIndex;
                         } else {
                             if (target.closest('.jsPanel')) {
                                 target.closest('.jsPanel').front();
                             }
-                            tip.style.zIndex = jsPanel.zi.next();
+                            panel.style.zIndex = jsPanel.zi.next();
                         }
 
                         // do not use 'click' instead of jsPanel.evtStart
                         jsPanel.pointerdown.forEach(function (evt) {
-                            tip.addEventListener(evt, function (e) {
+                            panel.addEventListener(evt, e => {
                                 e.stopPropagation();
                             }, false);
                         });
 
                         // add tooltip connector
                         if (opts.connector) {
-                            var tipPos = jsPanel.tooltip.relativeTipPos(tip);
+                            let tipPos = jsPanel.tooltip.relativeTipPos(panel);
                             if (tipPos !== 'over') {
-                                tip.append(jsPanel.tooltip.addConnector(tip, tipPos));
+                                panel.append(jsPanel.tooltip.addConnector(panel, tipPos));
                             }
                         }
 
-                        if (callback) {
-                            callback.call(tip, tip);
-                        }
+                        if (callback) {callback.call(panel, panel);}
+
                     });
+
                 }, opts.delay);
+
             }, false);
 
             // immediately show tooltip
             if (opts.autoshow) {
-                var event = new MouseEvent('mouseenter');
+                let event = new MouseEvent('mouseenter');
                 target.dispatchEvent(event);
             }
 
             // do not create tooltip if mouse leaves target before delay elapsed
-            target.addEventListener('mouseleave', function () {
+            target.addEventListener('mouseleave', () => {
                 window.clearTimeout(timer);
             }, false);
+
         },
-        relativeTipPos: function relativeTipPos(tip) {
+
+        relativeTipPos(tip) {
             // returns the basic position of the tooltip relative to option.position.of (top, right, right-bottom etc.)
-            var relativePosition = void 0,
+            let relativePosition,
                 target = tip.options.position.of || tip.options.target;
             if (typeof target === 'string') {
                 target = document.querySelector(target);
             }
-            var tipRect = tip.getBoundingClientRect(),
+            let tipRect = tip.getBoundingClientRect(),
                 targetRect = target.getBoundingClientRect();
 
             if (parseInt(tipRect.right) <= parseInt(targetRect.left)) {
@@ -213,29 +212,25 @@ if (!jsPanel.tooltip) {
                 } else {
                     relativePosition = 'bottom';
                 }
-            } else {
-                relativePosition = 'over';
-            }
+            } else {relativePosition = 'over';}
 
             return relativePosition;
         },
-        addConnector: function addConnector(tip, relposition) {
-            var left = void 0,
-                top = void 0,
-                connCSS = void 0,
-                connBg = void 0,
+
+        addConnector(tip, relposition) {
+            let left, top, connCSS, connBg,
                 conn = document.createElement('div');
-            conn.className = 'jsPanel-connector jsPanel-connector-' + relposition;
+            conn.className = `jsPanel-connector jsPanel-connector-${relposition}`;
 
             // rest of tooltip positioning is in jspanel.sass
             if (relposition === 'top' || relposition === 'topleft' || relposition === 'topright') {
-                tip.style.top = parseFloat(tip.style.top) - 12 + 'px';
+                tip.style.top = (parseFloat(tip.style.top) - 12) + 'px';
             } else if (relposition === 'right' || relposition === 'righttop' || relposition === 'rightbottom') {
-                tip.style.left = parseFloat(tip.style.left) + 12 + 'px';
+                tip.style.left = (parseFloat(tip.style.left) + 12) + 'px';
             } else if (relposition === 'bottom' || relposition === 'bottomleft' || relposition === 'bottomright') {
-                tip.style.top = parseFloat(tip.style.top) + 12 + 'px';
+                tip.style.top = (parseFloat(tip.style.top) + 12) + 'px';
             } else if (relposition === 'left' || relposition === 'lefttop' || relposition === 'leftbottom') {
-                tip.style.left = parseFloat(tip.style.left) - 12 + 'px';
+                tip.style.left = (parseFloat(tip.style.left) - 12) + 'px';
             }
 
             if (typeof tip.options.connector === 'string') {
@@ -251,62 +246,62 @@ if (!jsPanel.tooltip) {
                     backgroundColor: connBg
                 };
             } else {
-                var styles = window.getComputedStyle(tip);
+                let styles = window.getComputedStyle(tip);
 
                 if (relposition === 'topleft' || relposition === 'topright') {
                     if (relposition === 'topleft') {
                         left = styles.borderBottomLeftRadius;
                     } else {
-                        var corr = 24 + parseInt(styles.borderBottomLeftRadius) + 'px';
-                        left = 'calc(100% - ' + corr + ')';
+                        let corr = (24 + parseInt(styles.borderBottomLeftRadius)) + 'px';
+                        left = `calc(100% - ${corr})`;
                     }
                     relposition = 'top';
-                } else if (relposition === 'bottomleft' || relposition === 'bottomright') {
+                } else if (relposition === 'bottomleft' || relposition === 'bottomright')  {
                     if (relposition === 'bottomleft') {
                         left = styles.borderTopLeftRadius;
                     } else {
-                        var _corr = 24 + parseInt(styles.borderTopRightRadius) + 'px';
-                        left = 'calc(100% - ' + _corr + ')';
+                        let corr = (24 + parseInt(styles.borderTopRightRadius)) + 'px';
+                        left = `calc(100% - ${corr})`;
                     }
                     relposition = 'bottom';
-                } else if (relposition === 'lefttop' || relposition === 'leftbottom') {
+                } else if (relposition === 'lefttop' || relposition === 'leftbottom')  {
                     if (relposition === 'lefttop') {
                         top = styles.borderTopRightRadius;
                     } else {
-                        var _corr2 = 24 + parseInt(styles.borderBottomRightRadius) + 'px';
-                        top = 'calc(100% - ' + _corr2 + ')';
+                        let corr = (24 + parseInt(styles.borderBottomRightRadius)) + 'px';
+                        top = `calc(100% - ${corr})`;
                     }
                     relposition = 'left';
-                } else if (relposition === 'righttop' || relposition === 'rightbottom') {
+                } else if (relposition === 'righttop' || relposition === 'rightbottom')  {
                     if (relposition === 'righttop') {
                         top = styles.borderTopLeftRadius;
                     } else {
-                        var _corr3 = 24 + parseInt(styles.borderBottomLeftRadius) + 'px';
-                        top = 'calc(100% - ' + _corr3 + ')';
+                        let corr = (24 + parseInt(styles.borderBottomLeftRadius)) + 'px';
+                        top = `calc(100% - ${corr})`;
                     }
                     relposition = 'right';
                 }
 
-                connCSS = _defineProperty({
+                connCSS = {
                     left: left,
-                    top: top
-                }, 'border-' + relposition + '-color', connBg);
+                    top: top,
+                    [`border-${relposition}-color`]: connBg
+                };
             }
 
             jsPanel.setStyle(conn, connCSS);
 
-            tip.classList.add('jsPanel-tooltip-' + relposition);
+            tip.classList.add(`jsPanel-tooltip-${relposition}`);
 
             return conn;
         },
 
-
         // reposition is still experimental
-        reposition: function reposition(tip, newposition, cb) {
+        reposition(tip, newposition, cb) {
             // newposition must be an object
             // first save connector setting and then remove connector
-            var connector = tip.querySelector('.jsPanel-connector'),
-                hasConnector = void 0;
+            let connector = tip.querySelector('.jsPanel-connector'),
+                hasConnector;
             if (connector) {
                 hasConnector = tip.options.connector;
                 tip.removeChild(connector);
@@ -320,18 +315,18 @@ if (!jsPanel.tooltip) {
 
             // ... and add connector again
             if (hasConnector) {
-                var tipPos = this.relativeTipPos(tip);
+                let tipPos = this.relativeTipPos(tip);
                 if (tipPos !== 'over') {
                     tip.append(this.addConnector(tip, tipPos));
                 }
             }
 
-            if (cb) {
-                cb.call(tip, tip);
-            }
+            if (cb) {cb.call(tip, tip);}
 
             return tip;
-        }
+
+        },
+
     };
 
     // close tooltips on pointerdown in document
@@ -344,6 +339,13 @@ if (!jsPanel.tooltip) {
                     }
                 }
             });
-        }, false);
+        },false);
     });
+
+}
+
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') {
+    module.exports = jsPanel;
 }

@@ -1,5 +1,5 @@
-/* jspanel.js - License MIT, copyright 2013 - 2018 Stefan Straesser <info@jspanel.de> (https://jspanel.de) */
-/* global jsPanel, $, module */
+/* jspanel.js - License MIT, copyright 2013 - 2019 Stefan Straesser <info@jspanel.de> (https://jspanel.de) */
+/* global jsPanel, module */
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -8,18 +8,18 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var jsPanel = {
 
-    version: '4.4.0',
-    date: '2018-11-30 10:30',
+    version: '4.5.0',
+    date: '2019-02-12 10:22',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: function () {
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' || e.code === 'Esc' || e.keyCode === 27) {
+            if (e.key === 'Escape' || e.code === 'Escape' || e.key === 'Esc') {
                 jsPanel.getPanels(function () {
                     return this.classList.contains('jsPanel');
                 }).some(function (item) {
                     if (item.options.closeOnEscape) {
-                        item.close();
+                        jsPanel.close(item);
                         return true;
                     }
                     return false;
@@ -43,8 +43,9 @@ var jsPanel = {
         iconfont: false,
         maximizedMargin: 0,
         minimizeTo: 'default',
+        onparentresize: false,
         paneltype: 'standard',
-        position: 'center',
+        position: { my: 'center', at: 'center', of: 'window', offsetX: '0px', offsetY: '0px' },
         resizeit: {
             handles: 'n, e, s, w, ne, se, sw, nw',
             minWidth: 128,
@@ -59,21 +60,20 @@ var jsPanel = {
     extensions: {},
     globalCallbacks: false,
     icons: {
-        close: '<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 28 28"><path fill="currentColor" d="M17.75 16l9.85-9.85c0.5-0.5 0.5-1.3 0-1.75-0.5-0.5-1.3-0.5-1.75 0l-9.85 9.85-9.85-9.9c-0.5-0.5-1.3-0.5-1.75 0-0.5 0.5-0.5 1.3 0 1.75l9.85 9.9-9.9 9.85c-0.5 0.5-0.5 1.3 0 1.75 0.25 0.25 0.55 0.35 0.9 0.35s0.65-0.1 0.9-0.35l9.85-9.85 9.85 9.85c0.25 0.25 0.55 0.35 0.9 0.35s0.65-0.1 0.9-0.35c0.5-0.5 0.5-1.3 0-1.75l-9.9-9.85z"></path></svg>',
-        maximize: '<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 28 28"><path fill="currentColor" d="M27.55 3.9h-22.6c-0.55 0-1 0.45-1 1v22.3c0 0.55 0.45 1 1 1h22.55c0.55 0 1-0.45 1-1v-22.3c0.050-0.55-0.4-1-0.95-1zM5.95 26.15v-18h20.55v18h-20.55z"></path></svg>',
-        normalize: '<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 28 28"><path fill="currentColor" d="M27.9 3.75h-18.8c-0.4 0-0.75 0.35-0.75 0.75v4.3c0 0.1 0 0.2 0.050 0.3h-4.2c-0.55 0-1 0.45-1 1v17.4c0 0.55 0.45 1 1 1h17.65c0.55 0 1-0.45 1-1v-3.7c0.050 0 0.1 0.050 0.2 0.050h4.9c0.4 0 0.75-0.35 0.75-0.75v-18.6c-0.050-0.4-0.4-0.75-0.8-0.75zM5.2 26.5v-12.95c0.050 0 0.1 0 0.15 0h15.4c0.050 0 0.1 0 0.15 0v12.95h-15.7zM27.15 22.35h-4.15c-0.050 0-0.15 0-0.2 0.050v-12.3c0-0.55-0.45-1-1-1h-12c0.050-0.1 0.050-0.2 0.050-0.3v-3.55h17.3v17.1z"></path></svg>',
-        minimize: '<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 28 28"><path fill="currentColor" d="M27.3 28.5h-22.6c-0.85 0-1.5-0.65-1.5-1.5s0.65-1.5 1.5-1.5h22.55c0.85 0 1.5 0.65 1.5 1.5s-0.65 1.5-1.45 1.5z"></path></svg>',
-        smallifyrev: '<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 28 28"><path fill="currentColor" d="M15.95 23.2c0 0 0 0 0 0-0.35 0-0.65-0.15-0.9-0.35l-11.7-11.9c-0.5-0.5-0.5-1.3 0-1.75 0.5-0.5 1.3-0.5 1.75 0l10.85 10.95 10.9-10.8c0.5-0.5 1.3-0.5 1.75 0s0.5 1.3 0 1.75l-11.75 11.7c-0.25 0.25-0.55 0.4-0.9 0.4z"></path></svg>',
-        smallify: '<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 28 28"><path fill="currentColor" d="M28.65 20.85l-11.8-11.65c-0.5-0.5-1.3-0.5-1.75 0l-11.75 11.85c-0.5 0.5-0.5 1.3 0 1.75 0.25 0.25 0.55 0.35 0.9 0.35 0.3 0 0.65-0.1 0.9-0.35l10.85-10.95 10.9 10.8c0.5 0.5 1.3 0.5 1.75 0 0.5-0.5 0.5-1.3 0-1.8z"></path></svg>'
+        close: '<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path fill="currentColor" d="M15.8,14l9.9-9.9c0.5-0.5,0.5-1.3,0-1.8c-0.5-0.5-1.3-0.5-1.8,0L14,12.3L4.1,2.4c-0.5-0.5-1.3-0.5-1.8,0c-0.5,0.5-0.5,1.3,0,1.8l9.9,9.9l-9.9,9.9c-0.5,0.5-0.5,1.3,0,1.8C2.6,25.9,2.9,26,3.3,26s0.7-0.1,0.9-0.3l9.8-9.9l9.9,9.9c0.3,0.3,0.5,0.3,0.9,0.3s0.6-0.1,0.9-0.3c0.5-0.5,0.5-1.3,0-1.8L15.8,14z"/></svg>',
+        maximize: '<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path fill="currentColor" d="M25.3,1.9H2.7c-0.6,0-1,0.4-1,1v22.3c0,0.5,0.4,1,1,1h22.5c0.5,0,1-0.5,1-1V2.9C26.3,2.3,25.9,1.9,25.3,1.9z M3.7,24.1v-18h20.5v18C24.3,24.1,3.7,24.1,3.7,24.1z"/></svg>',
+        normalize: '<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="currentColor" d="M18.5,1.2H5.1c-0.3,0-0.5,0.3-0.5,0.5v3.1c0,0.1,0,0.1,0,0.2h-3C1.2,5,0.9,5.3,0.9,5.7v12.4c0,0.4,0.3,0.7,0.7,0.7h12.6c0.4,0,0.7-0.3,0.7-0.7v-2.6c0,0,0.1,0,0.1,0h3.5c0.3,0,0.5-0.3,0.5-0.5V1.7C19.1,1.4,18.8,1.2,18.5,1.2z M2.3,17.4V8.2c0,0,0.1,0,0.1,0h11c0,0,0.1,0,0.1,0v9.3H2.3z M18,14.4h-3c0,0-0.1,0-0.1,0V5.7c0-0.4-0.3-0.7-0.7-0.7H5.6c0-0.1,0-0.1,0-0.2V2.2H18C18,2.2,18,14.4,18,14.4z"/></svg>',
+        minimize: '<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 20"><path fill="currentColor" d="M18.1,18.6H1.9c-0.6,0-1.1-0.5-1.1-1.1s0.5-1.1,1.1-1.1h16.1c0.6,0,1.1,0.5,1.1,1.1S18.7,18.6,18.1,18.6z"/></svg>',
+        smallifyrev: '<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 18"><path fill="currentColor" d="M10,15.1L10,15.1c-0.3,0-0.5-0.1-0.6-0.3L1,6.4C0.6,6,0.6,5.5,1,5.1c0.4-0.4,0.9-0.4,1.3,0L10,13l7.8-7.7c0.4-0.4,0.9-0.4,1.3,0c0.3,0.4,0.4,0.9,0,1.3l-8.4,8.4C10.5,15,10.2,15.1,10,15.1z"/></svg>',
+        smallify: '<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 18"><path fill="currentColor" d="M19,13.5l-8.4-8.3c-0.4-0.4-0.9-0.4-1.3,0L1,13.6c-0.4,0.4-0.4,0.9,0,1.3c0.2,0.2,0.4,0.3,0.6,0.3c0.2,0,0.5-0.1,0.6-0.3L10,7l7.8,7.7c0.4,0.4,0.9,0.4,1.3,0C19.4,14.4,19.4,13.8,19,13.5z"/></svg>'
     },
     idCounter: 0,
     isIE: function () {
         return navigator.appVersion.match(/Trident/);
     }(),
-    mdbthemes: ['secondary', 'elegant', 'stylish', 'unique', 'special'],
-    pointerdown: 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
-    pointermove: 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
-    pointerup: 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
+    pointerdown: 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
+    pointermove: 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
+    pointerup: 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
     polyfills: function () {
         // .append() polyfill needed for EDGE - https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/append
         (function (arr) {
@@ -184,7 +184,7 @@ var jsPanel = {
             };
         }
     }(),
-    themes: ['default', 'primary', 'info', 'success', 'warning', 'danger'],
+    themes: ['default', 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark'],
     ziBase: 100,
     colorLighteningFactor: 0.81,
     colorDarkeningFactor: 0.5,
@@ -340,58 +340,26 @@ var jsPanel = {
         yellow: 'ff0',
         yellowgreen: '9acd32',
         /* Material Design Colors https://material.io/design/color/the-color-system.html#tools-for-picking-colors */
-        grey50: 'fafafa', gray50: 'fafafa',
-        grey100: 'f5f5f5', gray100: 'f5f5f5',
-        grey200: 'eee', gray200: 'eee',
-        grey300: 'e0e0e0', gray300: 'e0e0e0',
-        grey400: 'bdbdbd', gray400: 'bdbdbd',
-        grey500: '9e9e9e', gray500: '9e9e9e',
-        grey600: '757575', gray600: '757575',
-        grey700: '616161', gray700: '616161',
-        grey800: '424242', gray800: '424242',
-        grey900: '212121', gray900: '212121',
-        bluegrey50: 'eceff1', bluegray50: 'eceff1',
-        bluegrey100: 'CFD8DC', bluegray100: 'CFD8DC',
-        bluegrey200: 'B0BEC5', bluegray200: 'B0BEC5',
-        bluegrey300: '90A4AE', bluegray300: '90A4AE',
-        bluegrey400: '78909C', bluegray400: '78909C',
-        bluegrey500: '607D8B', bluegray500: '607D8B',
-        bluegrey600: '546E7A', bluegray600: '546E7A',
-        bluegrey700: '455A64', bluegray700: '455A64',
-        bluegrey800: '37474F', bluegray800: '37474F',
-        bluegrey900: '263238', bluegray900: '263238',
-        red50: 'FFEBEE', red100: 'FFCDD2', red200: 'EF9A9A', red300: 'E57373', red400: 'EF5350', red500: 'F44336', red600: 'E53935', red700: 'D32F2F', red800: 'C62828', red900: 'B71C1C',
-        reda100: 'FF8A80', reda200: 'FF5252', reda400: 'FF1744', reda700: 'D50000',
-        pink50: 'FCE4EC', pink100: 'F8BBD0', pink200: 'F48FB1', pink300: 'F06292', pink400: 'EC407A', pink500: 'E91E63', pink600: 'D81B60', pink700: 'C2185B', pink800: 'AD1457', pink900: '880E4F',
-        pinka100: 'FF80AB', pinka200: 'FF4081', pinka400: 'F50057', pinka700: 'C51162',
-        purple50: 'F3E5F5', purple100: 'E1BEE7', purple200: 'CE93D8', purple300: 'BA68C8', purple400: 'AB47BC', purple500: '9C27B0', purple600: '8E24AA', purple700: '7B1FA2', purple800: '6A1B9A', purple900: '4A148C',
-        purplea100: 'EA80FC', purplea200: 'E040FB', purplea400: 'D500F9', purplea700: 'AA00FF',
-        deeppurple50: 'EDE7F6', deeppurple100: 'D1C4E9', deeppurple200: 'B39DDB', deeppurple300: '9575CD', deeppurple400: '7E57C2', deeppurple500: '673AB7', deeppurple600: '5E35B1', deeppurple700: '512DA8', deeppurple800: '4527A0', deeppurple900: '311B92',
-        deeppurplea100: 'B388FF', deeppurplea200: '7C4DFF', deeppurplea400: '651FFF', deeppurplea700: '6200EA',
-        indigo50: 'E8EAF6', indigo100: 'C5CAE9', indigo200: '9FA8DA', indigo300: '7986CB', indigo400: '5C6BC0', indigo500: '3F51B5', indigo600: '3949AB', indigo700: '303F9F', indigo800: '283593', indigo900: '1A237E',
-        indigoa100: '8C9EFF', indigoa200: '536DFE', indigoa400: '3D5AFE', indigoa700: '304FFE',
-        blue50: 'E3F2FD', blue100: 'BBDEFB', blue200: '90CAF9', blue300: '64B5F6', blue400: '42A5F5', blue500: '2196F3', blue600: '1E88E5', blue700: '1976D2', blue800: '1565C0', blue900: '0D47A1',
-        bluea100: '82B1FF', bluea200: '448AFF', bluea400: '2979FF', bluea700: '2962FF',
-        lightblue50: 'E1F5FE', lightblue100: 'B3E5FC', lightblue200: '81D4FA', lightblue300: '4FC3F7', lightblue400: '29B6F6', lightblue500: '03A9F4', lightblue600: '039BE5', lightblue700: '0288D1', lightblue800: '0277BD', lightblue900: '01579B',
-        lightbluea100: '80D8FF', lightbluea200: '40C4FF', lightbluea400: '00B0FF', lightbluea700: '0091EA',
-        cyan50: 'E0F7FA', cyan100: 'B2EBF2', cyan200: '80DEEA', cyan300: '4DD0E1', cyan400: '26C6DA', cyan500: '00BCD4', cyan600: '00ACC1', cyan700: '0097A7', cyan800: '00838F', cyan900: '006064',
-        cyana100: '84FFFF', cyana200: '18FFFF', cyana400: '00E5FF', cyana700: '00B8D4',
-        teal50: 'E0F2F1', teal100: 'B2DFDB', teal200: '80CBC4', teal300: '4DB6AC', teal400: '26A69A', teal500: '009688', teal600: '00897B', teal700: '00796B', teal800: '00695C', teal900: '004D40',
-        teala100: 'A7FFEB', teala200: '64FFDA', teala400: '1DE9B6', teala700: '00BFA5',
-        green50: 'E8F5E9', green100: 'C8E6C9', green200: 'A5D6A7', green300: '81C784', green400: '66BB6A', green500: '4CAF50', green600: '43A047', green700: '388E3C', green800: '2E7D32', green900: '1B5E20',
-        greena100: 'B9F6CA', greena200: '69F0AE', greena400: '00E676', greena700: '00C853',
-        lightgreen50: 'F1F8E9', lightgreen100: 'DCEDC8', lightgreen200: 'C5E1A5', lightgreen300: 'AED581', lightgreen400: '9CCC65', lightgreen500: '8BC34A', lightgreen600: '7CB342', lightgreen700: '689F38', lightgreen800: '558B2F', lightgreen900: '33691E',
-        lightgreena100: 'CCFF90', lightgreena200: 'B2FF59', lightgreena400: '76FF03', lightgreena700: '64DD17',
-        lime50: 'F9FBE7', lime100: 'F0F4C3', lime200: 'E6EE9C', lime300: 'DCE775', lime400: 'D4E157', lime500: 'CDDC39', lime600: 'C0CA33', lime700: 'AFB42B', lime800: '9E9D24', lime900: '827717',
-        limea100: 'F4FF81', limea200: 'EEFF41', limea400: 'C6FF00', limea700: 'AEEA00',
-        yellow50: 'FFFDE7', yellow100: 'FFF9C4', yellow200: 'FFF59D', yellow300: 'FFF176', yellow400: 'FFEE58', yellow500: 'FFEB3B', yellow600: 'FDD835', yellow700: 'FBC02D', yellow800: 'F9A825', yellow900: 'F57F17',
-        yellowa100: 'FFFF8D', yellowa200: 'FFFF00', yellowa400: 'FFEA00', yellowa700: 'FFD600',
-        amber50: 'FFF8E1', amber100: 'FFECB3', amber200: 'FFE082', amber300: 'FFD54F', amber400: 'FFCA28', amber500: 'FFC107', amber600: 'FFB300', amber700: 'FFA000', amber800: 'FF8F00', amber900: 'FF6F00',
-        ambera100: 'FFE57F', ambera200: 'FFD740', ambera400: 'FFC400', ambera700: 'FFAB00',
-        orange50: 'FFF3E0', orange100: 'FFE0B2', orange200: 'FFCC80', orange300: 'FFB74D', orange400: 'FFA726', orange500: 'FF9800', orange600: 'FB8C00', orange700: 'F57C00', orange800: 'EF6C00', orange900: 'E65100',
-        orangea100: 'FFD180', orangea200: 'FFAB40', orangea400: 'FF9100', orangea700: 'FF6D00',
-        deeporange50: 'FBE9E7', deeporange100: 'FFCCBC', deeporange200: 'FFAB91', deeporange300: 'FF8A65', deeporange400: 'FF7043', deeporange500: 'FF5722', deeporange600: 'F4511E', deeporange700: 'E64A19', deeporange800: 'D84315', deeporange900: 'BF360C',
-        deeporangea100: 'FF9E80', deeporangea200: 'FF6E40', deeporangea400: 'FF3D00', deeporangea700: 'DD2C00',
+        grey50: 'fafafa', grey100: 'f5f5f5', grey200: 'eee', grey300: 'e0e0e0', grey400: 'bdbdbd', grey500: '9e9e9e', grey600: '757575', grey700: '616161', grey800: '424242', grey900: '212121',
+        gray50: 'fafafa', gray100: 'f5f5f5', gray200: 'eee', gray300: 'e0e0e0', gray400: 'bdbdbd', gray500: '9e9e9e', gray600: '757575', gray700: '616161', gray800: '424242', gray900: '212121',
+        bluegrey50: 'eceff1', bluegrey100: 'CFD8DC', bluegrey200: 'B0BEC5', bluegrey300: '90A4AE', bluegrey400: '78909C', bluegrey500: '607D8B', bluegrey600: '546E7A', bluegrey700: '455A64', bluegrey800: '37474F', bluegrey900: '263238',
+        bluegray50: 'eceff1', bluegray100: 'CFD8DC', bluegray200: 'B0BEC5', bluegray300: '90A4AE', bluegray400: '78909C', bluegray500: '607D8B', bluegray600: '546E7A', bluegray700: '455A64', bluegray800: '37474F', bluegray900: '263238',
+        red50: 'FFEBEE', red100: 'FFCDD2', red200: 'EF9A9A', red300: 'E57373', red400: 'EF5350', red500: 'F44336', red600: 'E53935', red700: 'D32F2F', red800: 'C62828', red900: 'B71C1C', reda100: 'FF8A80', reda200: 'FF5252', reda400: 'FF1744', reda700: 'D50000',
+        pink50: 'FCE4EC', pink100: 'F8BBD0', pink200: 'F48FB1', pink300: 'F06292', pink400: 'EC407A', pink500: 'E91E63', pink600: 'D81B60', pink700: 'C2185B', pink800: 'AD1457', pink900: '880E4F', pinka100: 'FF80AB', pinka200: 'FF4081', pinka400: 'F50057', pinka700: 'C51162',
+        purple50: 'F3E5F5', purple100: 'E1BEE7', purple200: 'CE93D8', purple300: 'BA68C8', purple400: 'AB47BC', purple500: '9C27B0', purple600: '8E24AA', purple700: '7B1FA2', purple800: '6A1B9A', purple900: '4A148C', purplea100: 'EA80FC', purplea200: 'E040FB', purplea400: 'D500F9', purplea700: 'AA00FF',
+        deeppurple50: 'EDE7F6', deeppurple100: 'D1C4E9', deeppurple200: 'B39DDB', deeppurple300: '9575CD', deeppurple400: '7E57C2', deeppurple500: '673AB7', deeppurple600: '5E35B1', deeppurple700: '512DA8', deeppurple800: '4527A0', deeppurple900: '311B92', deeppurplea100: 'B388FF', deeppurplea200: '7C4DFF', deeppurplea400: '651FFF', deeppurplea700: '6200EA',
+        indigo50: 'E8EAF6', indigo100: 'C5CAE9', indigo200: '9FA8DA', indigo300: '7986CB', indigo400: '5C6BC0', indigo500: '3F51B5', indigo600: '3949AB', indigo700: '303F9F', indigo800: '283593', indigo900: '1A237E', indigoa100: '8C9EFF', indigoa200: '536DFE', indigoa400: '3D5AFE', indigoa700: '304FFE',
+        blue50: 'E3F2FD', blue100: 'BBDEFB', blue200: '90CAF9', blue300: '64B5F6', blue400: '42A5F5', blue500: '2196F3', blue600: '1E88E5', blue700: '1976D2', blue800: '1565C0', blue900: '0D47A1', bluea100: '82B1FF', bluea200: '448AFF', bluea400: '2979FF', bluea700: '2962FF',
+        lightblue50: 'E1F5FE', lightblue100: 'B3E5FC', lightblue200: '81D4FA', lightblue300: '4FC3F7', lightblue400: '29B6F6', lightblue500: '03A9F4', lightblue600: '039BE5', lightblue700: '0288D1', lightblue800: '0277BD', lightblue900: '01579B', lightbluea100: '80D8FF', lightbluea200: '40C4FF', lightbluea400: '00B0FF', lightbluea700: '0091EA',
+        cyan50: 'E0F7FA', cyan100: 'B2EBF2', cyan200: '80DEEA', cyan300: '4DD0E1', cyan400: '26C6DA', cyan500: '00BCD4', cyan600: '00ACC1', cyan700: '0097A7', cyan800: '00838F', cyan900: '006064', cyana100: '84FFFF', cyana200: '18FFFF', cyana400: '00E5FF', cyana700: '00B8D4',
+        teal50: 'E0F2F1', teal100: 'B2DFDB', teal200: '80CBC4', teal300: '4DB6AC', teal400: '26A69A', teal500: '009688', teal600: '00897B', teal700: '00796B', teal800: '00695C', teal900: '004D40', teala100: 'A7FFEB', teala200: '64FFDA', teala400: '1DE9B6', teala700: '00BFA5',
+        green50: 'E8F5E9', green100: 'C8E6C9', green200: 'A5D6A7', green300: '81C784', green400: '66BB6A', green500: '4CAF50', green600: '43A047', green700: '388E3C', green800: '2E7D32', green900: '1B5E20', greena100: 'B9F6CA', greena200: '69F0AE', greena400: '00E676', greena700: '00C853',
+        lightgreen50: 'F1F8E9', lightgreen100: 'DCEDC8', lightgreen200: 'C5E1A5', lightgreen300: 'AED581', lightgreen400: '9CCC65', lightgreen500: '8BC34A', lightgreen600: '7CB342', lightgreen700: '689F38', lightgreen800: '558B2F', lightgreen900: '33691E', lightgreena100: 'CCFF90', lightgreena200: 'B2FF59', lightgreena400: '76FF03', lightgreena700: '64DD17',
+        lime50: 'F9FBE7', lime100: 'F0F4C3', lime200: 'E6EE9C', lime300: 'DCE775', lime400: 'D4E157', lime500: 'CDDC39', lime600: 'C0CA33', lime700: 'AFB42B', lime800: '9E9D24', lime900: '827717', limea100: 'F4FF81', limea200: 'EEFF41', limea400: 'C6FF00', limea700: 'AEEA00',
+        yellow50: 'FFFDE7', yellow100: 'FFF9C4', yellow200: 'FFF59D', yellow300: 'FFF176', yellow400: 'FFEE58', yellow500: 'FFEB3B', yellow600: 'FDD835', yellow700: 'FBC02D', yellow800: 'F9A825', yellow900: 'F57F17', yellowa100: 'FFFF8D', yellowa200: 'FFFF00', yellowa400: 'FFEA00', yellowa700: 'FFD600',
+        amber50: 'FFF8E1', amber100: 'FFECB3', amber200: 'FFE082', amber300: 'FFD54F', amber400: 'FFCA28', amber500: 'FFC107', amber600: 'FFB300', amber700: 'FFA000', amber800: 'FF8F00', amber900: 'FF6F00', ambera100: 'FFE57F', ambera200: 'FFD740', ambera400: 'FFC400', ambera700: 'FFAB00',
+        orange50: 'FFF3E0', orange100: 'FFE0B2', orange200: 'FFCC80', orange300: 'FFB74D', orange400: 'FFA726', orange500: 'FF9800', orange600: 'FB8C00', orange700: 'F57C00', orange800: 'EF6C00', orange900: 'E65100', orangea100: 'FFD180', orangea200: 'FFAB40', orangea400: 'FF9100', orangea700: 'FF6D00',
+        deeporange50: 'FBE9E7', deeporange100: 'FFCCBC', deeporange200: 'FFAB91', deeporange300: 'FF8A65', deeporange400: 'FF7043', deeporange500: 'FF5722', deeporange600: 'F4511E', deeporange700: 'E64A19', deeporange800: 'D84315', deeporange900: 'BF360C', deeporangea100: 'FF9E80', deeporangea200: 'FF6E40', deeporangea400: 'FF3D00', deeporangea700: 'DD2C00',
         brown50: 'EFEBE9', brown100: 'D7CCC8', brown200: 'BCAAA4', brown300: 'A1887F', brown400: '8D6E63', brown500: '795548', brown600: '6D4C41', brown700: '5D4037', brown800: '4E342E', brown900: '3E2723'
     },
 
@@ -503,12 +471,12 @@ var jsPanel = {
     calcColors: function calcColors(primaryColor) {
         var threshold = this.colorBrightnessThreshold,
             primeColor = this.color(primaryColor),
-            secondColor = this.lighten(primaryColor, this.colorLighteningFactor),
-            thirdColor = this.darken(primaryColor, this.colorDarkeningFactor),
+            filledlightColor = this.lighten(primaryColor, this.colorLighteningFactor),
+            filledColor = this.darken(primaryColor, this.colorDarkeningFactor),
             fontColorForPrimary = this.perceivedBrightness(primaryColor) <= threshold ? '#ffffff' : '#000000',
-            fontColorForSecond = this.perceivedBrightness(secondColor) <= threshold ? '#ffffff' : '#000000',
-            fontColorForThird = this.perceivedBrightness(thirdColor) <= threshold ? '#ffffff' : '#000000';
-        return [primeColor.hsl.css, secondColor, thirdColor, fontColorForPrimary, fontColorForSecond, fontColorForThird];
+            fontColorFilledlight = this.perceivedBrightness(filledlightColor) <= threshold ? '#ffffff' : '#000000',
+            fontColorFilled = this.perceivedBrightness(filledColor) <= threshold ? '#ffffff' : '#000000';
+        return [primeColor.hsl.css, filledlightColor, filledColor, fontColorForPrimary, fontColorFilledlight, fontColorFilled];
     },
     darken: function darken(val, amount) {
         // amount is value between 0 and 1
@@ -559,7 +527,9 @@ var jsPanel = {
         return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
     },
     rgbToHsl: function rgbToHsl(r, g, b) {
-        r /= 255, g /= 255, b /= 255;
+        r /= 255;
+        g /= 255;
+        b /= 255;
         var max = Math.max(r, g, b),
             min = Math.min(r, g, b),
             h = void 0,
@@ -616,13 +586,15 @@ var jsPanel = {
 
     addScript: function addScript(path) {
         var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'text/javascript';
-        var callback = arguments[2];
+        var cb = arguments[2];
 
-        var script = document.createElement('script');
-        script.onload = callback;
-        script.src = path;
-        script.type = type;
-        document.head.appendChild(script);
+        if (!document.querySelector('script[src="' + path + '"]')) {
+            var script = document.createElement('script');
+            script.onload = cb;
+            script.src = path;
+            script.type = type;
+            document.head.appendChild(script);
+        }
     },
     ajax: function ajax(obj, ajaxConfig) {
         // check whether obj is a jsPanel or something else
@@ -636,8 +608,7 @@ var jsPanel = {
             }
         }
 
-        var conf = ajaxConfig,
-            configDefaults = {
+        var configDefaults = {
             method: 'GET',
             async: true,
             user: '',
@@ -650,11 +621,11 @@ var jsPanel = {
         };
         var config = void 0;
 
-        if (typeof conf === 'string') {
-            config = Object.assign({}, configDefaults, { url: encodeURI(conf), evalscripttags: true });
-        } else if ((typeof conf === 'undefined' ? 'undefined' : _typeof(conf)) === 'object' && conf.url) {
-            config = Object.assign({}, configDefaults, conf);
-            config.url = encodeURI(conf.url);
+        if (typeof ajaxConfig === 'string') {
+            config = Object.assign({}, configDefaults, { url: encodeURI(ajaxConfig), evalscripttags: true });
+        } else if ((typeof ajaxConfig === 'undefined' ? 'undefined' : _typeof(ajaxConfig)) === 'object' && ajaxConfig.url) {
+            config = Object.assign({}, configDefaults, ajaxConfig);
+            config.url = encodeURI(ajaxConfig.url);
             // reset timeout to 0, withCredentials & responseType to false if request is synchronous
             if (config.async === false) {
                 config.timeout = 0;
@@ -666,7 +637,11 @@ var jsPanel = {
                 }
             }
         } else {
-            console.info('XMLHttpRequest seems to miss the request url!');
+            try {
+                throw new jsPanel.jsPanelError('XMLHttpRequest seems to miss the <code>url</code> parameter!');
+            } catch (e) {
+                jsPanel.error(e);
+            }
             return obj;
         }
 
@@ -704,8 +679,8 @@ var jsPanel = {
                 if (objIsPanel) {
                     var oContentSize = obj.options.contentSize;
                     if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
-                        var parts = oContentSize.split(' ');
-                        var sizes = Object.assign({}, { width: parts[0], height: parts[1] });
+                        var parts = oContentSize.split(' '),
+                            sizes = Object.assign({}, { width: parts[0], height: parts[1] });
                         if (config.autoresize) {
                             obj.resize(sizes);
                         }
@@ -756,6 +731,62 @@ var jsPanel = {
 
         return obj;
     },
+    close: function close(panel, cb) {
+        if (panel.closetimer) {
+            window.clearTimeout(panel.closetimer);
+        }
+        var id = panel.id,
+            parent = panel.parentElement,
+            jspanelbeforeclose = new CustomEvent('jspanelbeforeclose', { 'detail': id }),
+            jspanelclosed = new CustomEvent('jspanelclosed', { 'detail': id });
+        document.dispatchEvent(jspanelbeforeclose);
+
+        if (panel.options.onbeforeclose && panel.options.onbeforeclose.length > 0 && !jsPanel.processCallbacks(panel, panel.options.onbeforeclose, 'some', panel.status)) {
+            return panel;
+        }
+
+        if (panel.options.animateOut) {
+            if (panel.options.animateIn) {
+                jsPanel.remClass(panel, panel.options.animateIn);
+            }
+            jsPanel.setClass(panel, panel.options.animateOut);
+            panel.addEventListener('animationend', function () {
+                parent.removeChild(panel);
+                if (!document.getElementById(id)) {
+                    jsPanel.removeMinimizedReplacement(panel);
+                    document.dispatchEvent(jspanelclosed);
+                    if (panel.options.onclosed) {
+                        jsPanel.processCallbacks(panel, panel.options.onclosed, 'every');
+                    }
+                    jsPanel.autopositionRemaining(panel);
+                    if (cb) {
+                        cb.call(id, id);
+                    }
+                } else {
+                    if (cb) {
+                        cb.call(panel, id, panel);
+                    }
+                }
+            });
+        } else {
+            parent.removeChild(panel);
+            if (!document.getElementById(id)) {
+                jsPanel.removeMinimizedReplacement(panel);
+                document.dispatchEvent(jspanelclosed);
+                if (panel.options.onclosed) {
+                    jsPanel.processCallbacks(panel, panel.options.onclosed, 'every');
+                }
+                jsPanel.autopositionRemaining(panel);
+                if (cb) {
+                    cb.call(id, id);
+                }
+            } else {
+                if (cb) {
+                    cb.call(panel, id, panel);
+                }
+            }
+        }
+    },
     createPanelTemplate: function createPanelTemplate() {
         var dataAttr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -798,12 +829,12 @@ var jsPanel = {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
         var dragstarted = void 0,
-            opts = Object.assign({}, this.defaults.dragit, options),
-            dragElmt = void 0,
-            containment = void 0;
+            dragElmt = void 0;
         var jspaneldragstart = new CustomEvent('jspaneldragstart', { detail: elmt.id }),
             jspaneldrag = new CustomEvent('jspaneldrag', { detail: elmt.id }),
-            jspaneldragstop = new CustomEvent('jspaneldragstop', { detail: elmt.id });
+            jspaneldragstop = new CustomEvent('jspaneldragstop', { detail: elmt.id }),
+            opts = Object.assign({}, this.defaults.dragit, options),
+            containment = this.pOcontainment(opts.containment);
 
         // normalize grid config
         if (opts.grid && Array.isArray(opts.grid)) {
@@ -811,15 +842,6 @@ var jsPanel = {
                 opts.grid[1] = opts.grid[0];
             }
         }
-
-        // normalize containment config
-        containment = this.pOcontainment(opts.containment);
-
-        // handler when mouse leaves document(iframe) while dragging a panel
-        var remDragHandler = function remDragHandler() {
-            document.removeEventListener('mousemove', dragElmt);
-            elmt.style.opacity = 1;
-        };
 
         // attach handler to each drag handle
         elmt.querySelectorAll(opts.handles).forEach(function (handle) {
@@ -832,13 +854,14 @@ var jsPanel = {
                     // prevent body scroll on drag init
                     e.preventDefault();
 
-                    // disable draging for all mouse buttons but left
+                    // disable dragging for all mouse buttons but left
                     if (e.button && e.button > 0) {
                         return false;
                     }
 
                     // footer elmts with the class "jsPanel-ftr-btn" don't drag a panel
                     // do not compare e.target with e.currentTarget because there might be footer elmts supposed to drag the panel
+                    // noinspection JSUnresolvedFunction
                     if (e.target.closest('.jsPanel-ftr-btn')) {
                         return;
                     }
@@ -856,10 +879,10 @@ var jsPanel = {
                     parent = elmt.parentElement,
                         parentRect = parent.getBoundingClientRect(),
                         parentStyles = window.getComputedStyle(parent),
-                        scaleFactor = elmt.getScaleFactor();
-                    var startLeftCorrection = 0;
+                        scaleFactor = elmt.getScaleFactor(),
+                        startLeftCorrection = 0;
 
-                    // function actually draging the elmt
+                    // function actually dragging the elmt
                     dragElmt = function dragElmt(e) {
                         e.preventDefault();
 
@@ -877,7 +900,7 @@ var jsPanel = {
                                 }
                             }
                             // dragstart callback
-                            if (opts.start) {
+                            if (opts.start.length) {
                                 jsPanel.processCallbacks(elmt, opts.start, false, { left: startLeft, top: startTop }, e);
                             }
                             jsPanel.front(elmt);
@@ -903,7 +926,7 @@ var jsPanel = {
                             // current pointer x while pointer moves (don't use pageX, doesn't work on FF for Android)
                         pmy = e.touches ? e.touches[0].clientY : e.clientY,
                             // current pointer y while pointer moves (don't use pageY, doesn't work on FF for Android)
-                        dragStyles = window.getComputedStyle(elmt); // get current styles while draging
+                        dragStyles = window.getComputedStyle(elmt); // get current styles while dragging
 
                         // EDGE reports "auto" instead of pixel value using getComputedStyle(), so some values need to be calculated different
                         if (parent === document.body) {
@@ -947,7 +970,7 @@ var jsPanel = {
                             rightVectorDrag = Math.sqrt(elmtR2 + Math.pow(verticalDeltaDrag, 2)),
                             bottomVectorDrag = Math.sqrt(elmtB2 + Math.pow(horizontalDeltaDrag, 2));
 
-                        // prevent selctions while draging
+                        // prevent selections while dragging
                         window.getSelection().removeAllRanges();
 
                         // trigger drag permanently while draging
@@ -981,8 +1004,8 @@ var jsPanel = {
                                 maxLeft = window.innerWidth - parseFloat(dragStyles.width) - containment[1];
                                 maxTop = window.innerHeight - parseFloat(dragStyles.height) - containment[2];
                             } else {
-                                var xCorr = parseFloat(parentStyles.borderLeftWidth) + parseFloat(parentStyles.borderRightWidth);
-                                var yCorr = parseFloat(parentStyles.borderTopWidth) + parseFloat(parentStyles.borderBottomWidth);
+                                var xCorr = parseFloat(parentStyles.borderLeftWidth) + parseFloat(parentStyles.borderRightWidth),
+                                    yCorr = parseFloat(parentStyles.borderTopWidth) + parseFloat(parentStyles.borderBottomWidth);
                                 maxLeft = parentRect.width / scaleFactor.x - parseFloat(dragStyles.width) - containment[1] - xCorr;
                                 maxTop = parentRect.height / scaleFactor.y - parseFloat(dragStyles.height) - containment[2] - yCorr;
                             }
@@ -1002,7 +1025,7 @@ var jsPanel = {
                         }
 
                         // callback while dragging
-                        if (opts.drag) {
+                        if (opts.drag.length) {
                             jsPanel.processCallbacks(elmt, opts.drag, false, { left: elmtL, top: elmtT, right: elmtR, bottom: elmtB }, e);
                         }
 
@@ -1026,11 +1049,13 @@ var jsPanel = {
                                 }
                             } else if (righttopVectorDrag < snapSens) {
                                 elmt.snappableTo = 'right-top';
+                                // noinspection JSUnresolvedVariable
                                 if (opts.snap.snapRightTop !== false) {
                                     jsPanel.createSnapArea(elmt, 'rt', snapSens);
                                 }
                             } else if (rightbottomVectorDrag < snapSens) {
                                 elmt.snappableTo = 'right-bottom';
+                                // noinspection JSUnresolvedVariable
                                 if (opts.snap.snapRightBottom !== false) {
                                     jsPanel.createSnapArea(elmt, 'rb', snapSens);
                                 }
@@ -1041,16 +1066,19 @@ var jsPanel = {
                                 }
                             } else if (elmtL < snapSens && leftVectorDrag < sideSensAreaLength) {
                                 elmt.snappableTo = 'left-center';
+                                // noinspection JSUnresolvedVariable
                                 if (opts.snap.snapLeftCenter !== false) {
                                     jsPanel.createSnapArea(elmt, 'lc', snapSens);
                                 }
                             } else if (elmtR < snapSens && rightVectorDrag < sideSensAreaLength) {
                                 elmt.snappableTo = 'right-center';
+                                // noinspection JSUnresolvedVariable
                                 if (opts.snap.snapRightCenter !== false) {
                                     jsPanel.createSnapArea(elmt, 'rc', snapSens);
                                 }
                             } else if (elmtB < snapSens && bottomVectorDrag < topSensAreaLength) {
                                 elmt.snappableTo = 'center-bottom';
+                                // noinspection JSUnresolvedVariable
                                 if (opts.snap.snapCenterBottom !== false) {
                                     jsPanel.createSnapArea(elmt, 'cb', snapSens);
                                 }
@@ -1061,7 +1089,16 @@ var jsPanel = {
                     jsPanel.pointermove.forEach(function (e) {
                         document.addEventListener(e, dragElmt);
                     });
-                    document.addEventListener('mouseleave', remDragHandler);
+
+                    // remove resize handler when mouse leaves browser window (mouseleave doesn't work)
+                    window.addEventListener('mouseout', function (e) {
+                        if (e.relatedTarget === null) {
+                            jsPanel.pointermove.forEach(function (item) {
+                                document.removeEventListener(item, dragElmt, false);
+                                elmt.style.opacity = 1;
+                            });
+                        }
+                    }, false);
                 });
             });
 
@@ -1088,16 +1125,21 @@ var jsPanel = {
                             } else if (elmt.snappableTo === 'center-top') {
                                 jsPanel.snapPanel(elmt, opts.snap.snapCenterTop);
                             } else if (elmt.snappableTo === 'right-top') {
+                                // noinspection JSUnresolvedVariable
                                 jsPanel.snapPanel(elmt, opts.snap.snapRightTop);
                             } else if (elmt.snappableTo === 'right-center') {
+                                // noinspection JSUnresolvedVariable
                                 jsPanel.snapPanel(elmt, opts.snap.snapRightCenter);
                             } else if (elmt.snappableTo === 'right-bottom') {
+                                // noinspection JSUnresolvedVariable
                                 jsPanel.snapPanel(elmt, opts.snap.snapRightBottom);
                             } else if (elmt.snappableTo === 'center-bottom') {
+                                // noinspection JSUnresolvedVariable
                                 jsPanel.snapPanel(elmt, opts.snap.snapCenterBottom);
                             } else if (elmt.snappableTo === 'left-bottom') {
                                 jsPanel.snapPanel(elmt, opts.snap.snapLeftBottom);
                             } else if (elmt.snappableTo === 'left-center') {
+                                // noinspection JSUnresolvedVariable
                                 jsPanel.snapPanel(elmt, opts.snap.snapLeftCenter);
                             }
 
@@ -1110,14 +1152,13 @@ var jsPanel = {
                             }
                         }
 
-                        if (opts.stop) {
+                        if (opts.stop.length) {
                             jsPanel.processCallbacks(elmt, opts.stop, false, { left: parseFloat(elmt.style.left), top: parseFloat(elmt.style.top) }, e);
                         }
                     }
 
                     elmt.controlbar.style.pointerEvents = 'inherit';
                     elmt.content.style.pointerEvents = 'inherit';
-                    document.removeEventListener('mouseleave', remDragHandler);
                 });
             });
 
@@ -1156,7 +1197,6 @@ var jsPanel = {
 
         return fetch;
     }(function (obj) {
-        var conf = obj.options.contentFetch;
         var confDefaults = {
             bodyMethod: 'text',
             evalscripttags: true,
@@ -1165,29 +1205,25 @@ var jsPanel = {
             done: function done(obj, response) {
                 obj.content.innerHTML = response;
             }
-        };
-
-        if (typeof conf === 'string') {
-            conf = Object.assign({ resource: obj.options.contentFetch }, confDefaults);
-        } else {
-            conf = Object.assign(confDefaults, conf);
-        }
+        },
+            conf = typeof obj.options.contentFetch === 'string' ? Object.assign({ resource: obj.options.contentFetch }, confDefaults) : Object.assign(confDefaults, obj.options.contentFetch);
         var fetchInit = conf.fetchInit || {};
-
+        if (!conf.resource) {
+            try {
+                throw new jsPanel.jsPanelError('The Fetch request seems to miss the <code>resource</code> parameter');
+            } catch (e) {
+                jsPanel.error(e);
+            }
+        }
         if (conf.beforeSend) {
             conf.beforeSend.call(obj, obj);
         }
-
         fetch(conf.resource, fetchInit).then(function (response) {
-
             if (response.ok) {
                 return response[conf.bodyMethod]();
             }
-            throw new Error('Network response was not ok.');
         }).then(function (response) {
-
             conf.done.call(obj, obj, response);
-
             // extract and eval content of script tags if "evalscripttags"
             if (conf.evalscripttags) {
                 // get all script tags within responseText
@@ -1201,13 +1237,12 @@ var jsPanel = {
                     });
                 }
             }
-
             // resize and reposition panel if either width or height is set to 'auto'
             var oContentSize = obj.options.contentSize;
             if (conf.autoresize || conf.autoreposition) {
                 if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
-                    var parts = oContentSize.split(' ');
-                    var sizes = Object.assign({}, { width: parts[0], height: parts[1] });
+                    var parts = oContentSize.split(' '),
+                        sizes = Object.assign({}, { width: parts[0], height: parts[1] });
                     if (conf.autoresize) {
                         obj.resize(sizes);
                     }
@@ -1228,8 +1263,6 @@ var jsPanel = {
                     }
                 }
             }
-        }).catch(function (error) {
-            console.error('There has been a problem with your fetch operation: ' + error.message);
         });
     }),
     front: function front(obj) {
@@ -1249,7 +1282,7 @@ var jsPanel = {
             this.resetZi();
         }
 
-        // iframe extra on test: panel with an iframe get a content overlay if panel is not the topmost panel -> content section click fronts the panel
+        // iframe extra: panel with an iframe get a content overlay if panel is not the topmost panel -> content section click fronts the panel
         this.getPanels().forEach(function (item, index) {
             var overlay = item.content.querySelector('.jsPanel-iframe-overlay');
             if (index > 0) {
@@ -1280,20 +1313,17 @@ var jsPanel = {
         // if elmtBox === 'paddingbox' elmt border-width is subtracted from return values
         // in other words: overlap is measured against elmt padding-box and not border-box
         var pane = typeof panel === 'string' ? document.querySelector(panel) : panel,
-            containerRect = void 0,
             panelRect = pane.getBoundingClientRect(),
+            parentStyle = getComputedStyle(pane.parentElement),
+            scaleFactor = pane.getScaleFactor(),
             parentBorderWidth = { top: 0, right: 0, bottom: 0, left: 0 };
+        var containerRect = void 0;
 
-        var scaleFactor = pane.getScaleFactor();
-
-        var parentStyle = getComputedStyle(pane.parentElement);
         if (pane.options.container !== 'window' && elmtBox === 'paddingbox') {
-            parentBorderWidth = {
-                top: parseInt(parentStyle.borderTopWidth, 10) * scaleFactor.y,
-                right: parseInt(parentStyle.borderRightWidth, 10) * scaleFactor.x,
-                bottom: parseInt(parentStyle.borderBottomWidth, 10) * scaleFactor.y,
-                left: parseInt(parentStyle.borderLeftWidth, 10) * scaleFactor.x
-            };
+            parentBorderWidth.top = parseInt(parentStyle.borderTopWidth, 10) * scaleFactor.y;
+            parentBorderWidth.right = parseInt(parentStyle.borderRightWidth, 10) * scaleFactor.x;
+            parentBorderWidth.bottom = parseInt(parentStyle.borderBottomWidth, 10) * scaleFactor.y;
+            parentBorderWidth.left = parseInt(parentStyle.borderLeftWidth, 10) * scaleFactor.x;
         }
 
         if (typeof elmt === 'string') {
@@ -1354,8 +1384,8 @@ var jsPanel = {
         return value; // assumed to be array with 4 values
     },
     pOsize: function pOsize(panel, size) {
-        var values = size || this.defaults.contentSize,
-            parent = panel.parentElement;
+        var values = size || this.defaults.contentSize;
+        var parent = panel.parentElement;
         if (typeof values === 'string') {
             var nums = values.trim().split(' ');
             values = {};
@@ -1363,8 +1393,10 @@ var jsPanel = {
             nums.length === 2 ? values.height = nums[1] : values.height = nums[0];
         } else {
             if (values.width && !values.height) {
+                // noinspection JSSuspiciousNameCombination
                 values.height = values.width;
             } else if (values.height && !values.width) {
+                // noinspection JSSuspiciousNameCombination
                 values.width = values.height;
             }
         }
@@ -1411,38 +1443,69 @@ var jsPanel = {
 
         return values; // return value must be object {width: xxx, height: xxx}
     },
-    pOposition: function pOposition(positionString) {
-        var posValue = positionString.match(/\b[a-z]{4,6}-{1}[a-z]{3,6}\b/i),
-            autoposValue = positionString.match(/down|up|right([^-]|$)|left([^-]|$)/i),
-            offsetValue = positionString.match(/[+-]?\d?\.?\d+([a-z%]{2,4}\b|%?)/gi);
-        var settings = void 0;
+    pOborder: function pOborder(border) {
+        border = border.trim();
+        var values = new Array(3),
+            regexStyle = /\s*(none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset)\s*/gi,
+            regexWidth = /\s*(thin|medium|thick)|(\d*\.?\d+[a-zA-Z]{2,4})\s*/gi,
+            borderStyle = border.match(regexStyle),
+            borderWidth = border.match(regexWidth);
 
-        if (posValue) {
-            settings = { my: posValue[0].toLowerCase(), at: posValue[0].toLowerCase() };
+        if (borderStyle) {
+            values[1] = borderStyle[0].trim();
+            border = border.replace(values[1], '');
         } else {
-            settings = { my: 'center', at: 'center' };
+            values[1] = 'solid';
         }
-
-        if (autoposValue) {
-            settings.autoposition = autoposValue[0].toLowerCase();
+        if (borderWidth) {
+            values[0] = borderWidth[0].trim();
+            border = border.replace(values[0], '');
+        } else {
+            values[0] = 'medium';
         }
+        values[2] = border.trim();
+        return values;
+    },
+    pOposition: function pOposition(positionString) {
+        var pos = positionString.trim().toLowerCase();
+        var settings = {},
+            regexMyAt = /(^|\s)((left-|right-)(top|center|bottom){1})|((center-){1}(top|bottom){1})|(center)/gi,
+            regexAutopos = /(^|\s)(right|down|left|up)/gi,
+            regexOffset = /(^|\s)-?(\d*\.?\d+)([a-zA-Z]{0,4})/gi;
 
-        if (offsetValue) {
-            // convert strings with only numbers to a number value
-            offsetValue.forEach(function (item, index) {
-                if (item.match(/^[+-]?[0-9]*$/)) {
-                    offsetValue[index] += 'px';
+        // find my and at
+        var my_at = pos.match(regexMyAt);
+        if (my_at) {
+            settings.my = my_at[0].trim();
+            settings.at = my_at[1] ? my_at[1].trim() : my_at[0].trim();
+        }
+        pos = pos.replace(regexMyAt, ' ').trim();
+
+        // find autoposition
+        var autopos = pos.match(regexAutopos); // do not move up in code
+        if (autopos) {
+            settings.autoposition = autopos[0].trim();
+        }
+        pos = pos.replace(regexAutopos, ' ').trim();
+
+        // find offsets
+        var offsets = pos.match(regexOffset); // do not move up in code
+        if (offsets) {
+            offsets.forEach(function (item, index) {
+                item = item.trim();
+                if (item.match(/(^|\s)(-?[0-9]*\.?[0-9]+)(\s|$)/)) {
+                    offsets[index] = (offsets[index] + 'px').trim();
                 }
-                offsetValue[index] = offsetValue[index].toLowerCase();
             });
-            // only one passed offset is used for both offsetX and offsetY
-            if (offsetValue.length === 1) {
-                settings.offsetX = offsetValue[0];
-                settings.offsetY = offsetValue[0];
-            } else {
-                settings.offsetX = offsetValue[0];
-                settings.offsetY = offsetValue[1];
-            }
+            settings.offsetX = offsets[0].trim();
+            settings.offsetY = offsets[1] ? offsets[1].trim() : offsets[0].trim();
+        }
+        pos = pos.replace(regexOffset, ' ').trim();
+
+        // find of
+        if (pos.length) {
+            // assumed to be a selector string
+            settings.of = pos;
         }
 
         return settings;
@@ -1451,23 +1514,20 @@ var jsPanel = {
         var elmtToPosition = void 0,
             posSettings = void 0,
             elmtToPositionAgainst = void 0,
-            calculatedPosition = { left: 0, top: 0 },
             myXcorrection = 0,
             myYcorrection = 0,
             atXcorrection = 0,
             atYcorrection = 0;
 
-        var defaults = { my: 'center', at: 'center', of: 'window', offsetX: '0px', offsetY: '0px' };
+        var calculatedPosition = { left: 0, top: 0 },
+            defaults = this.defaults.position,
+            windowRect = {
+            width: document.documentElement.clientWidth,
+            height: window.innerHeight
+        };
         if (elmt.options.container === document.body) {
             defaults.of = document.body;
         }
-
-        var windowRect = {
-            width: document.documentElement.clientWidth,
-            height: window.innerHeight
-        },
-            scrollX = pageXOffset,
-            scrollY = pageYOffset;
 
         if (typeof elmt === 'string') {
             // arg elmt is assumed to be a selector string
@@ -1500,10 +1560,10 @@ var jsPanel = {
             });
         }
 
-        var parentContainer = elmtToPosition.parentElement;
-        var parentContainerStyles = window.getComputedStyle(parentContainer);
-        var parentContainerRect = parentContainer.getBoundingClientRect();
-        var parentContainerTagName = parentContainer.tagName.toLowerCase();
+        var parentContainer = elmtToPosition.parentElement,
+            parentContainerStyles = window.getComputedStyle(parentContainer),
+            parentContainerRect = parentContainer.getBoundingClientRect(),
+            parentContainerTagName = parentContainer.tagName.toLowerCase();
 
         if (posSettings.of && posSettings.of !== 'window') {
             if (typeof posSettings.of === 'string') {
@@ -1528,7 +1588,7 @@ var jsPanel = {
             myYcorrection = elmtToPositionRect.height;
         }
 
-        // SCENARIO 1 - panel appended to body and positioned relative to window -> make fixed
+        // SCENARIO 1 - panel appended to body (window) and positioned relative to window -> make fixed
         if (elmt.options.container === 'window' && parentContainerTagName === 'body' && posSettings.of === 'window') {
             // calc left corrections due to window size
             if (posSettings.at.match(/^center-top$|^center$|^center-bottom$/i)) {
@@ -1542,86 +1602,102 @@ var jsPanel = {
             } else if (posSettings.at.match(/bottom/i)) {
                 atYcorrection = windowRect.height;
             }
-
             calculatedPosition.left = atXcorrection - myXcorrection - parseFloat(parentContainerStyles.borderLeftWidth);
             calculatedPosition.top = atYcorrection - myYcorrection - parseFloat(parentContainerStyles.borderTopWidth);
-
             // panel appended to body and positioned relative to window is always fixed
             elmtToPosition.style.position = 'fixed';
         }
 
-        // SCENARIO 2 - panel appended to body and positioned relative to another element in document
-        else if (parentContainerTagName === 'body' && posSettings.of !== 'window') {
+        // SCENARIO 1a - panel appended to body (window) and positioned relative to another panel in window
+        else if (elmt.options.container === 'window' && parentContainerTagName === 'body' && posSettings.of.classList && posSettings.of.classList.contains('jsPanel')) {
                 var elmtToPositionAgainstRect = elmtToPositionAgainst.getBoundingClientRect();
-
                 // calc left corrections due to position and size of elmtToPositionAgainst
                 if (posSettings.at.match(/^center-top$|^center$|^center-bottom$/i)) {
-                    atXcorrection = elmtToPositionAgainstRect.width / 2 + elmtToPositionAgainstRect.left + scrollX;
+                    atXcorrection = elmtToPositionAgainstRect.width / 2 + elmtToPositionAgainstRect.left;
                 } else if (posSettings.at.match(/right/i)) {
-                    atXcorrection = elmtToPositionAgainstRect.width + elmtToPositionAgainstRect.left + scrollX;
+                    atXcorrection = elmtToPositionAgainstRect.width + elmtToPositionAgainstRect.left;
                 } else {
-                    atXcorrection = elmtToPositionAgainstRect.left + scrollX;
+                    atXcorrection = elmtToPositionAgainstRect.left;
                 }
                 // calc top corrections due to position and size of elmtToPositionAgainst
                 if (posSettings.at.match(/^left-center$|^center$|^right-center$/i)) {
-                    atYcorrection = elmtToPositionAgainstRect.height / 2 + elmtToPositionAgainstRect.top + scrollY;
+                    atYcorrection = elmtToPositionAgainstRect.height / 2 + elmtToPositionAgainstRect.top;
                 } else if (posSettings.at.match(/bottom/i)) {
-                    atYcorrection = elmtToPositionAgainstRect.height + elmtToPositionAgainstRect.top + scrollY;
+                    atYcorrection = elmtToPositionAgainstRect.height + elmtToPositionAgainstRect.top;
                 } else {
-                    atYcorrection = elmtToPositionAgainstRect.top + scrollY;
+                    atYcorrection = elmtToPositionAgainstRect.top;
                 }
-
-                calculatedPosition.left = atXcorrection - myXcorrection - parseFloat(parentContainerStyles.borderLeftWidth);
-                calculatedPosition.top = atYcorrection - myYcorrection - parseFloat(parentContainerStyles.borderTopWidth);
+                calculatedPosition.left = atXcorrection - myXcorrection;
+                calculatedPosition.top = atYcorrection - myYcorrection;
+                elmtToPosition.style.position = 'fixed';
             }
 
-            // SCENARIO 3 - // panel appended to other element than body and positioned relative to its container
-            else if (parentContainerTagName !== 'body' && (posSettings.of === 'window' || !posSettings.of)) {
-                    // calc corrections to position panel relative to parentContainer content-box, not border-box
-                    var pContainerLRBorderWidth = parseFloat(parentContainerStyles.borderLeftWidth) + parseFloat(parentContainerStyles.borderRightWidth),
-                        pContainerTBBorderWidth = parseFloat(parentContainerStyles.borderTopWidth) + parseFloat(parentContainerStyles.borderBottomWidth);
-
-                    // calc left corrections due to parent container width
+            // SCENARIO 2 - panel appended to body and positioned relative to another element in document
+            else if (parentContainerTagName === 'body' && posSettings.of !== 'window') {
+                    var _elmtToPositionAgainstRect = elmtToPositionAgainst.getBoundingClientRect();
+                    // calc left corrections due to position and size of elmtToPositionAgainst
                     if (posSettings.at.match(/^center-top$|^center$|^center-bottom$/i)) {
-                        atXcorrection = parentContainerRect.width / 2 - pContainerLRBorderWidth / 2;
+                        atXcorrection = _elmtToPositionAgainstRect.width / 2 + _elmtToPositionAgainstRect.left + pageXOffset;
                     } else if (posSettings.at.match(/right/i)) {
-                        atXcorrection = parentContainerRect.width - pContainerLRBorderWidth;
+                        atXcorrection = _elmtToPositionAgainstRect.width + _elmtToPositionAgainstRect.left + pageXOffset;
+                    } else {
+                        atXcorrection = _elmtToPositionAgainstRect.left + pageXOffset;
                     }
-                    // calc top corrections due to parent container height
+                    // calc top corrections due to position and size of elmtToPositionAgainst
                     if (posSettings.at.match(/^left-center$|^center$|^right-center$/i)) {
-                        atYcorrection = parentContainerRect.height / 2 - pContainerTBBorderWidth / 2;
+                        atYcorrection = _elmtToPositionAgainstRect.height / 2 + _elmtToPositionAgainstRect.top + pageYOffset;
                     } else if (posSettings.at.match(/bottom/i)) {
-                        atYcorrection = parentContainerRect.height - pContainerTBBorderWidth;
+                        atYcorrection = _elmtToPositionAgainstRect.height + _elmtToPositionAgainstRect.top + pageYOffset;
+                    } else {
+                        atYcorrection = _elmtToPositionAgainstRect.top + pageYOffset;
                     }
-
-                    calculatedPosition.left = atXcorrection - myXcorrection;
-                    calculatedPosition.top = atYcorrection - myYcorrection;
+                    calculatedPosition.left = atXcorrection - myXcorrection - parseFloat(parentContainerStyles.borderLeftWidth);
+                    calculatedPosition.top = atYcorrection - myYcorrection - parseFloat(parentContainerStyles.borderTopWidth);
                 }
 
-                // SCENARIO 4 - panel appended to other element than body and positioned relative to an element within its container
-                else if (parentContainerTagName !== 'body' && parentContainer.contains(elmtToPositionAgainst)) {
-                        var _elmtToPositionAgainstRect = elmtToPositionAgainst.getBoundingClientRect();
-
-                        // calc left corrections due to position and size of elmtToPositionAgainst
+                // SCENARIO 3 - // panel appended to other element than body and positioned relative to its container
+                else if (parentContainerTagName !== 'body' && (posSettings.of === 'window' || !posSettings.of)) {
+                        // calc corrections to position panel relative to parentContainer content-box, not border-box
+                        var pContainerLRBorderWidth = parseFloat(parentContainerStyles.borderLeftWidth) + parseFloat(parentContainerStyles.borderRightWidth),
+                            pContainerTBBorderWidth = parseFloat(parentContainerStyles.borderTopWidth) + parseFloat(parentContainerStyles.borderBottomWidth);
+                        // calc left corrections due to parent container width
                         if (posSettings.at.match(/^center-top$|^center$|^center-bottom$/i)) {
-                            atXcorrection = _elmtToPositionAgainstRect.left - parentContainerRect.left + _elmtToPositionAgainstRect.width / 2;
+                            atXcorrection = parentContainerRect.width / 2 - pContainerLRBorderWidth / 2;
                         } else if (posSettings.at.match(/right/i)) {
-                            atXcorrection = _elmtToPositionAgainstRect.left - parentContainerRect.left + _elmtToPositionAgainstRect.width;
-                        } else {
-                            atXcorrection = _elmtToPositionAgainstRect.left - parentContainerRect.left;
+                            atXcorrection = parentContainerRect.width - pContainerLRBorderWidth;
                         }
-                        // calc top corrections due to position and size of elmtToPositionAgainst
+                        // calc top corrections due to parent container height
                         if (posSettings.at.match(/^left-center$|^center$|^right-center$/i)) {
-                            atYcorrection = _elmtToPositionAgainstRect.top - parentContainerRect.top + _elmtToPositionAgainstRect.height / 2;
+                            atYcorrection = parentContainerRect.height / 2 - pContainerTBBorderWidth / 2;
                         } else if (posSettings.at.match(/bottom/i)) {
-                            atYcorrection = _elmtToPositionAgainstRect.top - parentContainerRect.top + _elmtToPositionAgainstRect.height;
-                        } else {
-                            atYcorrection = _elmtToPositionAgainstRect.top - parentContainerRect.top;
+                            atYcorrection = parentContainerRect.height - pContainerTBBorderWidth;
                         }
-
-                        calculatedPosition.left = atXcorrection - myXcorrection - parseFloat(parentContainerStyles.borderLeftWidth);
-                        calculatedPosition.top = atYcorrection - myYcorrection - parseFloat(parentContainerStyles.borderTopWidth);
+                        calculatedPosition.left = atXcorrection - myXcorrection;
+                        calculatedPosition.top = atYcorrection - myYcorrection;
                     }
+
+                    // SCENARIO 4 - panel appended to other element than body and positioned relative to an element within its container
+                    else if (parentContainerTagName !== 'body' && parentContainer.contains(elmtToPositionAgainst)) {
+                            var _elmtToPositionAgainstRect2 = elmtToPositionAgainst.getBoundingClientRect();
+                            // calc left corrections due to position and size of elmtToPositionAgainst
+                            if (posSettings.at.match(/^center-top$|^center$|^center-bottom$/i)) {
+                                atXcorrection = _elmtToPositionAgainstRect2.left - parentContainerRect.left + _elmtToPositionAgainstRect2.width / 2;
+                            } else if (posSettings.at.match(/right/i)) {
+                                atXcorrection = _elmtToPositionAgainstRect2.left - parentContainerRect.left + _elmtToPositionAgainstRect2.width;
+                            } else {
+                                atXcorrection = _elmtToPositionAgainstRect2.left - parentContainerRect.left;
+                            }
+                            // calc top corrections due to position and size of elmtToPositionAgainst
+                            if (posSettings.at.match(/^left-center$|^center$|^right-center$/i)) {
+                                atYcorrection = _elmtToPositionAgainstRect2.top - parentContainerRect.top + _elmtToPositionAgainstRect2.height / 2;
+                            } else if (posSettings.at.match(/bottom/i)) {
+                                atYcorrection = _elmtToPositionAgainstRect2.top - parentContainerRect.top + _elmtToPositionAgainstRect2.height;
+                            } else {
+                                atYcorrection = _elmtToPositionAgainstRect2.top - parentContainerRect.top;
+                            }
+                            calculatedPosition.left = atXcorrection - myXcorrection - parseFloat(parentContainerStyles.borderLeftWidth);
+                            calculatedPosition.top = atYcorrection - myYcorrection - parseFloat(parentContainerStyles.borderTopWidth);
+                        }
 
         // autoposition panels only if ...
         if (posSettings.autoposition && posSettings.my === posSettings.at && ['left-top', 'center-top', 'right-top', 'left-bottom', 'center-bottom', 'right-bottom'].indexOf(posSettings.my) >= 0) {
@@ -1670,14 +1746,14 @@ var jsPanel = {
             }
         }
 
-        // corrections if container has css transform: scale() ---------------- ON TEST --------------------------------
-        var scaleFactor = elmtToPosition.getScaleFactor();
+        // corrections if container has css transform: scale()
+        var scaleFactor = elmtToPosition.getScaleFactor ? elmtToPosition.getScaleFactor() : { x: 1, y: 1 };
         calculatedPosition.left /= scaleFactor.x;
         calculatedPosition.top /= scaleFactor.y;
         // additional corrections if container has borders
         var xBorders = parseFloat(parentContainerStyles.borderLeftWidth) + parseFloat(parentContainerStyles.borderRightWidth),
-            yBorders = parseFloat(parentContainerStyles.borderTopWidth) + parseFloat(parentContainerStyles.borderBottomWidth);
-        var xCorr100 = xBorders * (1 - scaleFactor.x) / scaleFactor.x,
+            yBorders = parseFloat(parentContainerStyles.borderTopWidth) + parseFloat(parentContainerStyles.borderBottomWidth),
+            xCorr100 = xBorders * (1 - scaleFactor.x) / scaleFactor.x,
             yCorr100 = yBorders * (1 - scaleFactor.y) / scaleFactor.y;
         // left correction needed for panels horizontally centered or right
         if (posSettings.at.match(/^right-top$|^right-center$|^right-bottom$/i)) {
@@ -1691,7 +1767,7 @@ var jsPanel = {
         } else if (posSettings.at.match(/^left-center$|^center$|^right-center$/i)) {
             calculatedPosition.top += yCorr100 / 2;
         }
-        // end scale corrections ---------------------------------------------------------------------------------------
+        // end scale corrections
 
         // convert positioning numbers to pixel values and position panel
         calculatedPosition.left += 'px';
@@ -1830,21 +1906,18 @@ var jsPanel = {
         var opts = Object.assign({}, this.defaults.resizeit, options),
             elmtParent = elmt.parentElement,
             elmtParentTagName = elmtParent.tagName.toLowerCase(),
-            maxWidth = typeof opts.maxWidth === 'function' ? opts.maxWidth() : opts.maxWidth || 10000,
+            containment = this.pOcontainment(opts.containment),
+            jspanelresizestart = new CustomEvent('jspanelresizestart', { detail: elmt.id }),
+            jspanelresize = new CustomEvent('jspanelresize', { detail: elmt.id }),
+            jspanelresizestop = new CustomEvent('jspanelresizestop', { detail: elmt.id });
+        var maxWidth = typeof opts.maxWidth === 'function' ? opts.maxWidth() : opts.maxWidth || 10000,
             maxHeight = typeof opts.maxHeight === 'function' ? opts.maxHeight() : opts.maxHeight || 10000,
             minWidth = typeof opts.minWidth === 'function' ? opts.minWidth() : opts.minWidth,
             minHeight = typeof opts.minHeight === 'function' ? opts.minHeight() : opts.minHeight,
-            containment = void 0,
             resizePanel = void 0,
             resizestarted = void 0,
             w = void 0,
             h = void 0;
-        var jspanelresizestart = new CustomEvent('jspanelresizestart', { detail: elmt.id }),
-            jspanelresize = new CustomEvent('jspanelresize', { detail: elmt.id }),
-            jspanelresizestop = new CustomEvent('jspanelresizestop', { detail: elmt.id });
-
-        // normalize containment config
-        containment = this.pOcontainment(opts.containment);
 
         opts.handles.split(',').forEach(function (item) {
             var node = document.createElement('DIV');
@@ -1867,6 +1940,7 @@ var jsPanel = {
 
                     elmt.content.style.pointerEvents = 'none';
 
+                    // noinspection JSUnresolvedVariable
                     var elmtRect = elmt.getBoundingClientRect(),
                         /* needs to be calculated on pointerdown!! */
                     elmtParentRect = elmtParent.getBoundingClientRect(),
@@ -1926,10 +2000,10 @@ var jsPanel = {
                     }
 
                     // calculate corrections for rotated panels
-                    var computedStyle = window.getComputedStyle(elmt);
-                    var wDif = parseFloat(computedStyle.width) - elmtRect.width,
-                        hDif = parseFloat(computedStyle.height) - elmtRect.height,
-                        xDif = parseFloat(computedStyle.left) - elmtRect.left,
+                    var computedStyle = window.getComputedStyle(elmt),
+                        wDif = parseFloat(computedStyle.width) - elmtRect.width,
+                        hDif = parseFloat(computedStyle.height) - elmtRect.height;
+                    var xDif = parseFloat(computedStyle.left) - elmtRect.left,
                         yDif = parseFloat(computedStyle.top) - elmtRect.top;
                     if (elmtParent !== document.body) {
                         xDif += elmtParentRect.left;
@@ -1940,7 +2014,7 @@ var jsPanel = {
                         // trigger resizestarted only once per resize
                         if (!resizestarted) {
                             document.dispatchEvent(jspanelresizestart);
-                            if (opts.start) {
+                            if (opts.start.length) {
                                 jsPanel.processCallbacks(elmt, opts.start, false, { width: startWidth, height: startHeight }, evt);
                             }
                             jsPanel.front(elmt);
@@ -1949,6 +2023,7 @@ var jsPanel = {
                         // trigger resize permanently while resizing
                         document.dispatchEvent(jspanelresize);
 
+                        // possibly updated while resizing
                         var eventX = evt.touches ? evt.touches[0].clientX : evt.clientX,
                             eventY = evt.touches ? evt.touches[0].clientY : evt.clientY,
                             overlaps = void 0;
@@ -2217,7 +2292,7 @@ var jsPanel = {
                         };
 
                         // callback while resizing
-                        if (opts.resize) {
+                        if (opts.resize.length) {
                             jsPanel.processCallbacks(elmt, opts.resize, false, values, evt);
                         }
                     };
@@ -2248,8 +2323,8 @@ var jsPanel = {
                 if (e.target.classList && e.target.classList.contains('jsPanel-resizeit-handle')) {
 
                     var isLeftChange = void 0,
-                        isTopChange = void 0;
-                    var cl = e.target.className;
+                        isTopChange = void 0,
+                        cl = e.target.className;
                     if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-w|jsPanel-resizeit-sw/i)) {
                         isLeftChange = true;
                     }
@@ -2305,7 +2380,7 @@ var jsPanel = {
                     resizestarted = undefined;
                     elmt.saveCurrentDimensions();
                     elmt.saveCurrentPosition();
-                    if (opts.stop) {
+                    if (opts.stop.length) {
                         jsPanel.processCallbacks(elmt, opts.stop, false, { width: parseFloat(elmt.style.width), height: parseFloat(elmt.style.height) }, e);
                     }
                 }
@@ -2335,7 +2410,7 @@ var jsPanel = {
         });
         return elmt;
     },
-    setStyle: function setStyle(elmt, stylesobject) {
+    setStyles: function setStyles(elmt, stylesobject) {
         for (var prop in stylesobject) {
             if (stylesobject.hasOwnProperty(prop)) {
                 var property = String(prop).replace(/-\w/gi, function (match) {
@@ -2346,14 +2421,23 @@ var jsPanel = {
         }
         return elmt;
     },
+    setStyle: function setStyle(elmt, stylesobject) {
+        return this.setStyles.call(elmt, elmt, stylesobject);
+    },
+    // alias for setStyles()
+
     snapPanel: function snapPanel(panel, pos) {
-        // store panel size before it snaps
-        panel.currentData.beforeSnap = {
-            width: panel.currentData.width,
-            height: panel.currentData.height
-        };
+        var alreadySnapped = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+        // store panel size before it snaps, only if not snapped already
+        if (!alreadySnapped) {
+            panel.currentData.beforeSnap = {
+                width: panel.currentData.width,
+                height: panel.currentData.height
+            };
+        }
         // snap panel
-        if (pos && typeof pos === 'function') {
+        if (pos && typeof pos === 'function' && !alreadySnapped) {
             pos.call(panel, panel, panel.snappableTo);
         } else if (pos !== false) {
             var offsets = [0, 0];
@@ -2374,8 +2458,47 @@ var jsPanel = {
                 }
             }
             panel.reposition(panel.snappableTo + ' ' + offsets[0] + ' ' + offsets[1]);
-            panel.snapped = panel.snappableTo;
+            if (!alreadySnapped) {
+                panel.snapped = panel.snappableTo;
+            }
         }
+    },
+    removeMinimizedReplacement: function removeMinimizedReplacement(panel) {
+        var elmt = document.getElementById(panel.id + '-min');
+        if (elmt) {
+            elmt.parentElement.removeChild(elmt);
+        }
+    },
+    autopositionRemaining: function autopositionRemaining(panel) {
+        var autoPos = void 0;
+        ['left-top-down', 'left-top-right', 'center-top-down', 'right-top-down', 'right-top-left', 'left-bottom-up', 'left-bottom-right', 'center-bottom-up', 'right-bottom-up', 'right-bottom-left'].forEach(function (item) {
+            if (panel.classList.contains(item)) {
+                autoPos = item;
+            }
+        });
+        if (autoPos) {
+            var box = panel.options.container === 'window' ? document.body : panel.options.container;
+            box.querySelectorAll('.' + autoPos).forEach(function (item) {
+                item.reposition();
+            });
+        }
+    },
+    error: function error(e) {
+        this.create({
+            contentSize: { width: 'calc(100% - 10px)', height: 'auto' },
+            position: 'center-top 0 5 down',
+            animateIn: 'jsPanelFadeIn',
+            theme: 'danger filledlight',
+            border: '1px',
+            borderRadius: '4px',
+            header: false,
+            content: '<div class="jsPanel-error-content"><div class="jsPanel-error-content-left"><div><i class="fa fa-exclamation-triangle fa-2x"></i></div></div><div class="jsPanel-error-content-right"><p>' + e.message + '</p></div></div><div class="jsPanel-error-close"><span class="jsPanel-ftr-btn">' + jsPanel.icons.close + '</span></div>',
+            callback: function callback(panel) {
+                panel.content.querySelector('.jsPanel-ftr-btn').addEventListener('click', function () {
+                    panel.close();
+                });
+            }
+        });
     },
 
 
@@ -2385,7 +2508,6 @@ var jsPanel = {
 
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         var cb = arguments[1];
-
 
         // initialize z-index generator
         if (!jsPanel.zi) {
@@ -2401,7 +2523,6 @@ var jsPanel = {
             }();
         }
 
-        var closetimer = void 0;
         if (options.config) {
             options = Object.assign({}, this.defaults, options.config, options);
             delete options.config;
@@ -2419,14 +2540,22 @@ var jsPanel = {
             if (p.classList.contains('jsPanel')) {
                 p.front();
             }
-            console.error('NO NEW PANEL CREATED!\nAn element with the ID <' + options.id + '> already exists in the document.');
+            try {
+                throw new jsPanel.jsPanelError('&#9664; COULD NOT CREATE NEW JSPANEL &#9658;<br>An element with the ID <code>' + options.id + '</code> already exists in the document.');
+            } catch (e) {
+                jsPanel.error(e);
+            }
             return false;
         }
 
         // check whether container is valid -> if not return and log error
-        var panelContainer = this.pOcontainer(options.container, cb);
+        var panelContainer = this.pOcontainer(options.container);
         if (!panelContainer) {
-            console.error('NO NEW PANEL CREATED!\nThe container to append the panel to does not exist or a container was not specified!');
+            try {
+                throw new jsPanel.jsPanelError('&#9664; COULD NOT CREATE NEW JSPANEL &#9658;<br>The container to append the panel to does not exist');
+            } catch (e) {
+                jsPanel.error(e);
+            }
             return false;
         }
 
@@ -2477,23 +2606,18 @@ var jsPanel = {
             }
         });
 
-        /* Compat code ------------------------------------------ */
-        if (options.headerRemove) {
-            options.header = false;
-        }
-        /* ------------------------------------------------------ */
-
         var self = options.template ? options.template : this.createPanelTemplate();
 
         // Properties
         self.options = options;
+        self.closetimer = undefined;
         self.status = 'initialized';
         self.currentData = {};
         self.header = self.querySelector('.jsPanel-hdr'); // complete header section
         self.headerbar = self.header.querySelector('.jsPanel-headerbar'); // log, title and controls
         self.titlebar = self.header.querySelector('.jsPanel-titlebar'); // div surrounding title h3
         self.headerlogo = self.headerbar.querySelector('.jsPanel-headerlogo'); // logo only
-        self.headertitle = self.headerbar.querySelector('.jsPanel-title'); // title h3
+        self.headertitle = self.headerbar.querySelector('.jsPanel-title'); // title div
         self.controlbar = self.headerbar.querySelector('.jsPanel-controlbar'); // div surrounding all controls
         self.headertoolbar = self.header.querySelector('.jsPanel-hdr-toolbar');
         self.content = self.querySelector('.jsPanel-content');
@@ -2503,8 +2627,6 @@ var jsPanel = {
 
         // Events
         var jspanelloaded = new CustomEvent('jspanelloaded', { 'detail': options.id }),
-            jspanelbeforeclose = new CustomEvent('jspanelbeforeclose', { 'detail': options.id }),
-            jspanelclosed = new CustomEvent('jspanelclosed', { 'detail': options.id }),
             jspanelcloseduser = new CustomEvent('jspanelcloseduser', { 'detail': options.id }),
             jspanelstatuschange = new CustomEvent('jspanelstatuschange', { 'detail': options.id }),
             jspanelbeforenormalize = new CustomEvent('jspanelbeforenormalize', { 'detail': options.id }),
@@ -2519,30 +2641,40 @@ var jsPanel = {
             jspanelbeforeunsmallify = new CustomEvent('jspanelbeforeunsmallify', { 'detail': options.id }),
             jspanelfronted = new CustomEvent('jspanelfronted', { 'detail': options.id });
 
-        // controls handlers
-        var hasCloseBtn = self.querySelector('.jsPanel-btn-close'),
-            hasMaxBtn = self.querySelector('.jsPanel-btn-maximize'),
-            hasNormBtn = self.querySelector('.jsPanel-btn-normalize'),
-            hasSmallBtn = self.querySelector('.jsPanel-btn-smallify'),
-            hasSmallrevBtn = self.querySelector('.jsPanel-btn-smallifyrev'),
-            hasMinBtn = self.querySelector('.jsPanel-btn-minimize');
+        // controls buttons
+        var closeBtn = self.querySelector('.jsPanel-btn-close'),
+            maxBtn = self.querySelector('.jsPanel-btn-maximize'),
+            normBtn = self.querySelector('.jsPanel-btn-normalize'),
+            smallBtn = self.querySelector('.jsPanel-btn-smallify'),
+            smallrevBtn = self.querySelector('.jsPanel-btn-smallifyrev'),
+            minBtn = self.querySelector('.jsPanel-btn-minimize');
 
-        if (hasCloseBtn) {
+        // needed only to fix an issue with pointer events in Firefox
+        if ('onpointerdown' in window) {
+            self.controlbar.querySelectorAll('.jsPanel-btn').forEach(function (btn) {
+                btn.addEventListener('pointerdown', function (e) {
+                    e.preventDefault();
+                }, true);
+            });
+        }
+        // ----------------------------------------------------------
+
+        if (closeBtn) {
             jsPanel.pointerup.forEach(function (item) {
-                hasCloseBtn.addEventListener(item, function (e) {
+                closeBtn.addEventListener(item, function (e) {
                     e.preventDefault();
                     // disable close for all mouse buttons but left
                     if (e.button && e.button > 0) {
                         return false;
                     }
-                    self.close();
+                    jsPanel.close(self);
                     document.dispatchEvent(jspanelcloseduser);
                 });
             });
         }
-        if (hasMaxBtn) {
+        if (maxBtn) {
             jsPanel.pointerup.forEach(function (item) {
-                hasMaxBtn.addEventListener(item, function (e) {
+                maxBtn.addEventListener(item, function (e) {
                     e.preventDefault();
                     // disable maximize for all mouse buttons but left
                     if (e.button && e.button > 0) {
@@ -2552,9 +2684,9 @@ var jsPanel = {
                 });
             });
         }
-        if (hasNormBtn) {
+        if (normBtn) {
             jsPanel.pointerup.forEach(function (item) {
-                hasNormBtn.addEventListener(item, function (e) {
+                normBtn.addEventListener(item, function (e) {
                     e.preventDefault();
                     // disable normalize for all mouse buttons but left
                     if (e.button && e.button > 0) {
@@ -2564,11 +2696,11 @@ var jsPanel = {
                 });
             });
         }
-        if (hasSmallBtn) {
+        if (smallBtn) {
             jsPanel.pointerup.forEach(function (item) {
-                hasSmallBtn.addEventListener(item, function (e) {
+                smallBtn.addEventListener(item, function (e) {
                     e.preventDefault();
-                    // disable smallifiy for all mouse buttons but left
+                    // disable smallify for all mouse buttons but left
                     if (e.button && e.button > 0) {
                         return false;
                     }
@@ -2576,11 +2708,11 @@ var jsPanel = {
                 });
             });
         }
-        if (hasSmallrevBtn) {
+        if (smallrevBtn) {
             jsPanel.pointerup.forEach(function (item) {
-                hasSmallrevBtn.addEventListener(item, function (e) {
+                smallrevBtn.addEventListener(item, function (e) {
                     e.preventDefault();
-                    // disable unsmallifiy for all mouse buttons but left
+                    // disable unsmallify for all mouse buttons but left
                     if (e.button && e.button > 0) {
                         return false;
                     }
@@ -2588,9 +2720,9 @@ var jsPanel = {
                 });
             });
         }
-        if (hasMinBtn) {
+        if (minBtn) {
             jsPanel.pointerup.forEach(function (item) {
-                hasMinBtn.addEventListener(item, function (e) {
+                minBtn.addEventListener(item, function (e) {
                     e.preventDefault();
                     // disable minimize for all mouse buttons but left
                     if (e.button && e.button > 0) {
@@ -2610,67 +2742,96 @@ var jsPanel = {
         }
 
         // Methods
-        self.addToolbar = function (place, tb, callback) {
-            if (place === 'header') {
-                place = self.headertoolbar;
-            } else if (place === 'footer') {
-                place = self.footer;
-            }
-
-            if (typeof tb === 'string') {
-                place.innerHTML = tb;
-            } else if (Array.isArray(tb)) {
-                tb.forEach(function (item) {
-                    if (typeof item === 'string') {
-                        place.innerHTML += item;
-                    } else {
-                        place.append(item);
-                    }
+        self.clearTheme = function (cb) {
+            jsPanel.themes.forEach(function (value) {
+                ['panel', 'jsPanel-theme-' + value, 'panel-' + value, value + '-color'].forEach(function (item) {
+                    self.classList.remove(item);
                 });
-            } else if (typeof tb === 'function') {
-                var tool = tb.call(self, self);
-                if (typeof tool === 'string') {
-                    place.innerHTML = tool;
-                } else {
-                    place.append(tool);
-                }
-            } else {
-                place.append(tb);
-            }
-
-            place.classList.add('active');
-            if (callback) {
-                callback.call(self, self);
+                self.header.classList.remove('jsPanel-theme-' + value);
+            }, self);
+            self.content.classList.remove('jsPanel-content-filled', 'jsPanel-content-filledlight');
+            self.footer.classList.remove('panel-footer');
+            self.header.classList.remove('jsPanel-hdr-light');
+            self.header.classList.remove('jsPanel-hdr-dark');
+            jsPanel.setStyle(self, { backgroundColor: '', borderWidth: '', borderStyle: '', borderColor: '' });
+            jsPanel.setStyle(self.content, { background: '', border: '' });
+            jsPanel.setStyle(self.headertoolbar, { boxShadow: '', width: '', marginLeft: '' });
+            self.header.style.background = '';
+            Array.prototype.slice.call(self.controlbar.querySelectorAll('.jsPanel-icon')).concat([self.headerlogo, self.headertitle, self.headertoolbar, self.content]).forEach(function (item) {
+                item.style.color = '';
+            });
+            if (cb) {
+                cb.call(self, self);
             }
             return self;
         };
-
-        self.applyBuiltInTheme = function (themeDetails) {
-            self.classList.add('jsPanel-theme-' + themeDetails.color); // do not remove theme from jsP
-            self.header.classList.add('jsPanel-theme-' + themeDetails.color);
-
-            // optionally set theme filling
-            if (themeDetails.filling) {
-                var contentFill = themeDetails.filling;
-                if (contentFill === 'filled' || contentFill === 'filledlight') {
-                    self.content.style.background = '';
-                    self.content.classList.add('jsPanel-content-' + contentFill);
-                } else {
-                    var fontColor = jsPanel.perceivedBrightness(contentFill) <= jsPanel.colorBrightnessThreshold ? '#fff' : '#000';
-                    self.content.style.backgroundColor = contentFill;
-                    self.content.style.color = fontColor;
+        self.getThemeDetails = function (th) {
+            var passedTheme = th.toLowerCase(),
+                theme = { color: false, colors: false, filling: false },
+                step1 = passedTheme.split('fill');
+            theme.color = step1[0].trim().replace(/\s*/g, '');
+            if (step1.length === 2) {
+                if (step1[1].startsWith('edlight')) {
+                    theme.filling = 'filledlight';
+                } else if (step1[1].startsWith('ed')) {
+                    theme.filling = 'filled';
+                } else if (step1[1].startsWith('color')) {
+                    var step2 = step1[1].split('color'),
+                        fillcolor = step2[step2.length - 1].trim().replace(/\s*/g, '');
+                    if (jsPanel.colorNames[fillcolor]) {
+                        fillcolor = jsPanel.colorNames[fillcolor];
+                    }
+                    if (fillcolor.match(/^([0-9a-f]{3}|[0-9a-f]{6})$/gi)) {
+                        fillcolor = '#' + fillcolor;
+                    }
+                    theme.filling = fillcolor;
                 }
             }
 
-            if (!options.headerToolbar) {
-                //self.content.style.background = '';
-                self.content.style.borderTop = '1px solid ' + self.headertitle.style.color;
+            var builtIn = jsPanel.themes.some(function (item) {
+                return item === theme.color.split(/\s/i)[0];
+            });
+            if (builtIn) {
+                var baseTheme = theme.color.split(/\s/i)[0],
+                    btn = document.createElement('button');
+                btn.className = baseTheme + '-bg';
+                document.body.appendChild(btn);
+                theme.color = getComputedStyle(btn).backgroundColor.replace(/\s+/gi, '');
+                document.body.removeChild(btn);
+                // noinspection JSUnusedAssignment
+                btn = undefined;
+            } else if (theme.color.startsWith('bootstrap-')) {
+                // works with bootstrap 3 and 4
+                var index = theme.color.indexOf('-'),
+                    _btn = document.createElement('button');
+                _btn.className = 'btn btn' + theme.color.slice(index);
+                document.body.appendChild(_btn);
+                theme.color = getComputedStyle(_btn).backgroundColor.replace(/\s+/gi, '');
+                document.body.removeChild(_btn);
+                // noinspection JSUnusedAssignment
+                _btn = undefined;
+            } else if (theme.color.startsWith('mdb-')) {
+                // material design for bootstrap theme
+                var _index = theme.color.indexOf('-') + 1,
+                    span = document.createElement('span'),
+                    testClass = void 0;
+                if (theme.color.endsWith('-dark')) {
+                    testClass = theme.color.slice(_index);
+                    testClass = testClass.replace('-dark', '-color-dark');
+                } else {
+                    testClass = theme.color.slice(_index) + '-color';
+                }
+                span.className = testClass;
+                document.body.appendChild(span);
+                theme.color = getComputedStyle(span).backgroundColor.replace(/\s+/gi, '');
+                document.body.removeChild(span);
+                // noinspection JSUnusedAssignment
+                span = undefined;
             }
-
-            return self;
+            theme.colors = jsPanel.calcColors(theme.color);
+            return theme;
         };
-
-        self.applyArbitraryTheme = function (themeDetails) {
+        self.applyColorTheme = function (themeDetails) {
             self.style.backgroundColor = themeDetails.colors[0];
             self.header.style.backgroundColor = themeDetails.colors[0];
             ['.jsPanel-headerlogo', '.jsPanel-title', '.jsPanel-hdr-toolbar'].forEach(function (item) {
@@ -2679,20 +2840,15 @@ var jsPanel = {
             self.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach(function (item) {
                 item.style.color = themeDetails.colors[3];
             });
+
             var borderTop = themeDetails.colors[3] === '#000000' ? '1px solid rgba(0,0,0,0.2)' : '1px solid rgba(255,255,255,0.2)';
-            if (options.headerToolbar) {
-                if (themeDetails.colors[3] === '#ffffff') {
-                    self.headertoolbar.style.borderTop = borderTop;
-                } else {
-                    self.headertoolbar.style.borderTop = borderTop;
-                }
-                jsPanel.setStyle(self.headertoolbar, {
-                    boxShadow: '0 0 1px ' + themeDetails.colors[3] + ' inset',
-                    width: 'calc(100% + 4px)',
-                    marginLeft: '-1px'
-                });
+            self.headertoolbar.style.borderTop = borderTop;
+            self.content.style.borderTop = borderTop;
+
+            if (themeDetails.colors[3] === '#000000') {
+                self.header.classList.add('jsPanel-hdr-light');
             } else {
-                self.content.style.borderTop = borderTop;
+                self.header.classList.add('jsPanel-hdr-dark');
             }
 
             if (themeDetails.filling) {
@@ -2714,387 +2870,160 @@ var jsPanel = {
 
             return self;
         };
-
-        self.applyBootstrapTheme = function (themeDetails) {
-            var bsTheme = themeDetails.bstheme,
-                bsVersion = $.fn.button.Constructor.VERSION[0];
-
-            if (bsVersion === '4') {
-                self.classList.add('bg-' + bsTheme);
+        self.applyCustomTheme = function (theme) {
+            var defaults = { bgPanel: '#fff', bgContent: '#fff', colorHeader: '#000', colorContent: '#000' },
+                passedTheme = void 0;
+            if ((typeof theme === 'undefined' ? 'undefined' : _typeof(theme)) === 'object') {
+                passedTheme = Object.assign(defaults, theme);
             } else {
-                ['panel', 'panel-' + bsTheme].forEach(function (item) {
-                    self.classList.add(item);
-                });
-                self.header.classList.add('panel-heading');
+                passedTheme = defaults;
             }
+            var bgPanel = passedTheme.bgPanel,
+                bgContent = passedTheme.bgContent,
+                colorHeader = passedTheme.colorHeader,
+                colorContent = passedTheme.colorContent;
 
-            // added support for material-design-for-bootstrap 4.x colors
-            if (themeDetails.bs === 'mdb') {
-                var mdbColor = bsTheme + '-color';
-                if (themeDetails.mdbStyle) {
-                    mdbColor = mdbColor + '-dark';
-                }
-                self.classList.add(mdbColor);
+            // set background panel/header
+            jsPanel.colorNames[bgPanel] ? self.style.background = '#' + jsPanel.colorNames[bgPanel] : self.style.background = bgPanel;
+
+            // set font color header
+            if (jsPanel.colorNames[colorHeader]) {
+                colorHeader = '#' + jsPanel.colorNames[colorHeader];
             }
-
-            // get primary theme color
-            var pColor = void 0;
-            if (bsVersion === '4') {
-                pColor = window.getComputedStyle(self).backgroundColor.replace(/\s+/g, '');
-            } else {
-                pColor = window.getComputedStyle(self.header).backgroundColor.replace(/\s+/g, '');
-            }
-
-            // calc font color for header - needed for iconfonts other than default svg icons
-            var colors = jsPanel.calcColors(pColor);
-            self.header.style.color = colors[3];
-
-            if (themeDetails.filling) {
-                var contentFill = themeDetails.filling;
-                if (contentFill === 'filled' || contentFill === 'filledlight') {
-                    self.setTheme(pColor + ' ' + themeDetails.filling);
-                } else {
-                    self.setTheme(pColor);
-                    var fontColor = jsPanel.perceivedBrightness(contentFill) <= jsPanel.colorBrightnessThreshold ? '#fff' : '#000';
-                    self.content.style.backgroundColor = contentFill;
-                    self.content.style.color = fontColor;
-                }
-            }
-
-            return self;
-        };
-
-        self.applyThemeBorder = function (themeDetails) {
-            var bordervalues = options.border.split(/\s+/gi);
-            if (bordervalues[2]) {
-                if (jsPanel.colorNames[bordervalues[2]]) {
-                    if (jsPanel.colorNames[bordervalues[2]].match(/^([0-9a-f]{3}|[0-9a-f]{6})$/gi)) {
-                        bordervalues[2] = '#' + jsPanel.colorNames[bordervalues[2]];
-                    } else {
-                        bordervalues[2] = jsPanel.colorNames[bordervalues[2]];
-                    }
-                } else {
-                    if (bordervalues[2].match(/^([0-9a-f]{3}|[0-9a-f]{6})$/gi)) {
-                        bordervalues[2] = '#' + bordervalues[2];
-                    }
-                }
-            }
-            self.style.borderWidth = bordervalues[0];
-            self.style.borderStyle = bordervalues[1];
-            self.style.borderColor = bordervalues[2];
-            if (!themeDetails.bs) {
-                if (jsPanel.themes.indexOf(themeDetails.color) === -1) {
-                    // arbitrary themes only (for built-in themes it's taken from the css file)
-                    bordervalues[2] ? self.style.borderColor = bordervalues[2] : self.style.borderColor = themeDetails.colors[0];
-                }
-            } else {
-                // bootstrap
-                var pColor = void 0;
-                if (window.getComputedStyle(self.header).backgroundColor === 'transparent') {
-                    pColor = window.getComputedStyle(self).backgroundColor.replace(/\s+/g, '');
-                } else {
-                    pColor = window.getComputedStyle(self.header).backgroundColor.replace(/\s+/g, '');
-                }
-                bordervalues[2] ? self.style.borderColor = bordervalues[2] : self.style.borderColor = pColor;
-            }
-            return self;
-        };
-
-        self.autopositionRemaining = function () {
-            var autoPos = void 0;
-            ['left-top-down', 'left-top-right', 'center-top-down', 'right-top-down', 'right-top-left', 'left-bottom-up', 'left-bottom-right', 'center-bottom-up', 'right-bottom-up', 'right-bottom-left'].forEach(function (item) {
-                if (self.classList.contains(item)) {
-                    autoPos = item;
-                }
-            });
-            if (autoPos) {
-                var box = options.container === 'window' ? document.body : options.container;
-                box.querySelectorAll('.' + autoPos).forEach(function (item) {
-                    item.reposition();
-                });
-            }
-        };
-
-        self.borderRadius = function () {
-            var rad = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5;
-
-            var br = typeof rad === 'string' ? rad : rad + 'px',
-                hdr = self.header.style,
-                cont = self.content.style,
-                ftr = self.footer.style;
-            // set border-radius of outer div
-            self.style.borderRadius = br;
-            // set border-radius of either header or content section depending on presence of header
-            if (self.querySelector('.jsPanel-hdr')) {
-                hdr.borderTopLeftRadius = br;
-                hdr.borderTopRightRadius = br;
-            } else {
-                cont.borderTopLeftRadius = br;
-                cont.borderTopRightRadius = br;
-            }
-            // set border-radius of either footer or content section depending on presence of header
-            if (self.querySelector('.jsPanel-ftr.active')) {
-                ftr.borderBottomLeftRadius = br;
-                ftr.borderBottomRightRadius = br;
-            } else {
-                cont.borderBottomLeftRadius = br;
-                cont.borderBottomRightRadius = br;
-            }
-            return self;
-        };
-
-        self.calcSizeFactors = function () {
-            var styles = window.getComputedStyle(self);
-            if (options.container === document.body) {
-                self.hf = parseFloat(self.style.left) / (document.body.clientWidth - parseFloat(self.style.width));
-                self.vf = parseFloat(self.style.top) / (window.innerHeight - parseFloat(styles.height));
-            } else {
-                var parentStyles = self.parentElement.getBoundingClientRect();
-                self.hf = parseFloat(self.style.left) / (parentStyles.width - parseFloat(self.style.width));
-                self.vf = parseFloat(self.style.top) / (parentStyles.height - parseFloat(styles.height));
-            }
-        };
-
-        self.clearTheme = function (callback) {
-            jsPanel.themes.concat(jsPanel.mdbthemes).forEach(function (value) {
-                ['panel', 'jsPanel-theme-' + value, 'panel-' + value, value + '-color'].forEach(function (item) {
-                    self.classList.remove(item);
-                });
-                self.header.classList.remove('panel-heading', 'jsPanel-theme-' + value);
+            ['.jsPanel-headerlogo', '.jsPanel-title', '.jsPanel-hdr-toolbar'].forEach(function (item) {
+                self.querySelector(item).style.color = colorHeader;
             }, self);
-            self.headertitle.classList.remove('panel-title');
-            self.content.classList.remove('panel-body', 'jsPanel-content-filled', 'jsPanel-content-filledlight');
-            self.footer.classList.remove('panel-footer');
-            jsPanel.setStyle(self, { backgroundColor: '', borderWidth: '', borderStyle: '', borderColor: '' });
-            jsPanel.setStyle(self.content, { background: '', border: '' });
-            jsPanel.setStyle(self.headertoolbar, { boxShadow: '', width: '', marginLeft: '' });
-            self.header.style.background = '';
-            Array.prototype.slice.call(self.controlbar.querySelectorAll('.jsPanel-icon')).concat([self.headerlogo, self.headertitle, self.headertoolbar, self.content]).forEach(function (item) {
-                item.style.color = '';
+            self.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach(function (item) {
+                item.style.color = colorHeader;
             });
 
-            if (callback) {
-                callback.call(self, self);
+            // set content background
+            jsPanel.colorNames[bgContent] ? self.content.style.background = '#' + jsPanel.colorNames[bgContent] : self.content.style.background = bgContent;
+
+            // set content font color
+            jsPanel.colorNames[colorContent] ? self.content.style.color = '#' + jsPanel.colorNames[colorContent] : self.content.style.color = colorContent;
+
+            // set border-top for header toolbar and add header class
+            var pbPanel = jsPanel.perceivedBrightness(colorHeader);
+            if (pbPanel > jsPanel.colorBrightnessThreshold) {
+                self.headertoolbar.style.borderTop = '1px solid rgba(255,255,255,0.2)';
+                self.header.classList.add('jsPanel-hdr-dark');
+            } else {
+                self.headertoolbar.style.borderTop = '1px solid rgba(0,0,0,0.2)';
+                self.header.classList.add('jsPanel-hdr-light');
+            }
+
+            // set border-top for content
+            var pbContent = jsPanel.perceivedBrightness(colorContent);
+            pbContent > jsPanel.colorBrightnessThreshold ? self.content.style.borderTop = '1px solid rgba(255,255,255,0.2)' : self.content.style.borderTop = '1px solid rgba(0,0,0,0.2)';
+
+            // set panel border (option.border does not work for themes using an object)
+            if (passedTheme.border) {
+                var border = passedTheme.border,
+                    index = border.lastIndexOf(' '),
+                    col = border.slice(++index);
+                if (jsPanel.colorNames[col]) {
+                    border = border.replace(col, '#' + jsPanel.colorNames[col]);
+                }
+                self.style.border = border;
+            }
+
+            return self;
+        };
+        self.applyThemeBorder = function () {
+            var border = jsPanel.pOborder(options.border);
+            if (!border[2].length) {
+                border[2] = self.style.backgroundColor;
+            } else if (jsPanel.colorNames[border[2]]) {
+                border[2] = '#' + jsPanel.colorNames[border[2]];
+            }
+            border = border.join(' ');
+            self.style.border = border;
+            self.options.border = border;
+        };
+        self.applyThemeBorderRadius = function (rad) {
+            var br = typeof rad === 'string' ? rad.trim().match(/\d*\.?\d+[a-zA-Z]{2,4}/i) : rad + 'px',
+                cont = self.content.style;
+            if (br) {
+                br = typeof br === 'string' ? br : br[0];
+                self.style.borderRadius = br;
+                // set border-radius of either header or content section depending on presence of header
+                if (self.querySelector('.jsPanel-hdr')) {
+                    self.header.style.borderTopLeftRadius = br;
+                    self.header.style.borderTopRightRadius = br;
+                } else {
+                    cont.borderTopLeftRadius = br;
+                    cont.borderTopRightRadius = br;
+                }
+                // set border-radius of either footer or content section depending on presence of footer
+                if (self.querySelector('.jsPanel-ftr.active')) {
+                    self.footer.style.borderBottomRightRadius = br;
+                    self.footer.style.borderBottomLeftRadius = br;
+                } else {
+                    cont.borderBottomRightRadius = br;
+                    cont.borderBottomLeftRadius = br;
+                }
+                self.options.borderRadius = br;
+            } else {
+                self.options.borderRadius = undefined;
+            }
+            return self;
+        };
+        self.setTheme = function () {
+            var theme = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : options.theme;
+            var cb = arguments[1];
+
+            // if panel is minimized normalize it for theme change
+            var minimized = void 0;
+            if (self.status === 'minimized') {
+                minimized = true;
+                self.normalize();
+            }
+            // first remove all theme related styles
+            self.clearTheme();
+            if ((typeof theme === 'undefined' ? 'undefined' : _typeof(theme)) === 'object') {
+                options.border = undefined;
+                self.applyCustomTheme(theme);
+            } else {
+                if (theme === 'none') {
+                    // results in an all white panel without any theme related classes/styles applied
+                    // removal of footer background/border is done in jsP.toolbarAdd()
+                    self.style.backgroundColor = '#fff';
+                    self.header.classList.add('jsPanel-hdr-light');
+                    if (minimized) {
+                        self.minimize();
+                    } // minimize again if panel was minimized prior theme change
+                    return self;
+                }
+                var themeDetails = self.getThemeDetails(theme);
+                self.applyColorTheme(themeDetails);
+                if (options.border) {
+                    self.applyThemeBorder();
+                } else {
+                    self.style.borderWidth = '';
+                    self.style.borderStyle = '';
+                    self.style.borderColor = '';
+                }
+            }
+            // minimize again if panel was minimized prior theme change
+            if (minimized) {
+                self.minimize();
+            }
+
+            if (cb) {
+                cb.call(self, self);
             }
             return self;
         };
 
-        self.close = function (callback) {
-
-            var panelId = options.id;
-            var removed = void 0;
-
-            var doClose = function doClose() {
-
-                if (closetimer) {
-                    window.clearTimeout(closetimer);
-                }
-
-                self.closeChildpanels();
-                if (self.parentElement) {
-                    removed = self.parentElement.removeChild(self);
-                }
-                // return false if panel was not removed from dom
-                if (!removed) {
-                    return false;
-                }
-                self.removeMinimizedReplacement();
-                document.dispatchEvent(jspanelclosed);
-
-                if (options.onclosed) {
-                    jsPanel.processCallbacks(self, options.onclosed, 'every');
-                }
-
-                // if panel is autopositioned reposition remaining autopositioned panels
-                self.autopositionRemaining();
-            };
-
-            document.dispatchEvent(jspanelbeforeclose);
-
-            if (options.onbeforeclose && options.onbeforeclose.length > 0 && !jsPanel.processCallbacks(self, options.onbeforeclose)) {
-                return self;
-            }
-
-            if (options.animateOut) {
-                if (options.animateIn) {
-                    jsPanel.remClass(self, options.animateIn);
-                }
-                jsPanel.setClass(self, options.animateOut);
-                self.addEventListener('animationend', function () {
-                    doClose();
-                });
-            } else {
-                doClose();
-            }
-
-            if (removed) {
-                // panel removed successfully
-                if (callback) {
-                    callback.call(panelId, panelId);
-                }
-                removed = undefined;
-                return panelId;
-            } else {
-                // panel not removed
-                if (callback) {
-                    callback.call(self, panelId, self);
-                }
-                return false;
-            }
+        self.close = function (cb) {
+            jsPanel.close(self, cb);
         };
-
-        self.closeChildpanels = function (callback) {
-            self.getChildpanels().forEach(function (item) {
-                return item.close();
-            });
-            if (callback) {
-                callback.call(self, self);
-            }
-            return self;
-        };
-
-        self.contentRemove = function (callback) {
-            jsPanel.emptyNode(self.content);
-            if (callback) {
-                callback.call(self, self);
-            }
-            return self;
-        };
-
-        self.createMinimizedReplacement = function () {
-            var tpl = jsPanel.createMinimizedTemplate(),
-                color = window.getComputedStyle(self.headertitle).color,
-                font = options.iconfont,
-                controlbar = tpl.querySelector('.jsPanel-controlbar');
-
-            tpl.style.backgroundColor = window.getComputedStyle(self.header).backgroundColor === 'transparent' ? window.getComputedStyle(self).backgroundColor : window.getComputedStyle(self.header).backgroundColor;
-            tpl.id = self.id + '-min';
-            tpl.querySelector('.jsPanel-headerbar').replaceChild(self.headerlogo.cloneNode(true), tpl.querySelector('.jsPanel-headerlogo'));
-            tpl.querySelector('.jsPanel-titlebar').replaceChild(self.headertitle.cloneNode(true), tpl.querySelector('.jsPanel-title'));
-            tpl.querySelector('.jsPanel-title').style.color = color;
-            controlbar.style.color = color;
-
-            // set iconfont
-            self.setIconfont(font, tpl);
-
-            if (self.dataset.btnnormalize === 'enabled') {
-                jsPanel.pointerup.forEach(function (evt) {
-                    tpl.querySelector('.jsPanel-btn-normalize').addEventListener(evt, function () {
-                        self.normalize();
-                    });
-                });
-            } else {
-                controlbar.querySelector('.jsPanel-btn-normalize').style.display = 'none';
-            }
-            if (self.dataset.btnmaximize === 'enabled') {
-                jsPanel.pointerup.forEach(function (evt) {
-                    tpl.querySelector('.jsPanel-btn-maximize').addEventListener(evt, function () {
-                        self.maximize();
-                    });
-                });
-            } else {
-                controlbar.querySelector('.jsPanel-btn-maximize').style.display = 'none';
-            }
-            if (self.dataset.btnclose === 'enabled') {
-                jsPanel.pointerup.forEach(function (evt) {
-                    tpl.querySelector('.jsPanel-btn-close').addEventListener(evt, function () {
-                        self.close();
-                    });
-                });
-            } else {
-                controlbar.querySelector('.jsPanel-btn-close').style.display = 'none';
-            }
-
-            return tpl;
-        };
-
-        self.dragit = function (string) {
-            var dragitOptions = Object.assign({}, jsPanel.defaults.dragit, options.dragit),
-                handles = self.querySelectorAll(dragitOptions.handles);
-            if (string === 'disable') {
-                handles.forEach(function (handle) {
-                    handle.style.pointerEvents = 'none';
-                });
-            } else {
-                handles.forEach(function (handle) {
-                    handle.style.pointerEvents = 'auto';
-                });
-            }
-            return self;
-        };
-
-        self.front = function (callback) {
-            var execOnFrontedCallbacks = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
-            jsPanel.front(self);
-            document.dispatchEvent(jspanelfronted);
-            if (callback) {
-                callback.call(self, self);
-            }
-            if (options.onfronted && execOnFrontedCallbacks) {
-                jsPanel.processCallbacks(self, options.onfronted, 'every');
-            }
-            return self;
-        };
-
-        self.getChildpanels = function () {
-            return Array.prototype.slice.call(self.content.querySelectorAll('.jsPanel'));
-        };
-
-        self.getScaleFactor = function () {
-            var rect = self.getBoundingClientRect();
-            return {
-                x: rect.width / self.offsetWidth,
-                y: rect.height / self.offsetHeight
-            };
-        };
-
-        self.getThemeDetails = function (th) {
-            var passedTheme = th.toLowerCase().replace(/ /g, ''),
-                theme = { color: false, colors: false, filling: false, bs: false, bstheme: false };
-
-            if (passedTheme.endsWith('filled')) {
-                theme.filling = 'filled';
-                theme.color = passedTheme.substr(0, passedTheme.length - 6);
-            } else if (passedTheme.endsWith('filledlight')) {
-                theme.filling = 'filledlight';
-                theme.color = passedTheme.substr(0, passedTheme.length - 11);
-            } else if (passedTheme.includes('fillcolor')) {
-                var values = passedTheme.split('fillcolor');
-                if (jsPanel.colorNames[values[1]]) {
-                    values[1] = '#' + jsPanel.colorNames[values[1]];
-                }
-                if (values[1].match(/^([0-9a-f]{3}|[0-9a-f]{6})$/gi)) {
-                    values[1] = '#' + values[1];
-                }
-                theme.filling = values[1];
-                theme.color = values[0];
-            } else {
-                theme.filling = '';
-                theme.color = passedTheme; // themeDetails.color is the primary color
-            }
-            theme.colors = jsPanel.calcColors(theme.color);
-
-            // if first part of theme includes a "-" it's assumed to be a bootstrap theme
-            if (theme.color.match('-')) {
-                var bsVariant = theme.color.split('-');
-                theme.bs = bsVariant[0];
-                theme.bstheme = bsVariant[1];
-                theme.mdbStyle = bsVariant[2] || undefined;
-            }
-            return theme;
-        };
-
-        self.isChildpanel = function () {
-            // if panel is childpanel of another panel returns parentpanel
-            var pp = self.closest('.jsPanel-content');
-            return pp ? pp.parentElement : false;
-        };
-
-        self.maximize = function (callback) {
+        self.maximize = function (cb) {
             // Note: do not disable maximize method for already maximized panels -> onwindowresize wouldn't work
+            self.statusBefore = self.status;
 
-            if (options.onbeforemaximize && options.onbeforemaximize.length > 0 && !jsPanel.processCallbacks(self, options.onbeforemaximize)) {
+            if (options.onbeforemaximize && options.onbeforemaximize.length > 0 && !jsPanel.processCallbacks(self, options.onbeforemaximize, 'some', self.statusBefore)) {
                 return self;
             }
 
@@ -3122,7 +3051,7 @@ var jsPanel = {
                 self.style.top = margins[0] + 'px';
             }
 
-            self.removeMinimizedReplacement();
+            jsPanel.removeMinimizedReplacement(self);
             self.status = 'maximized';
             self.setControls(['.jsPanel-btn-maximize', '.jsPanel-btn-smallifyrev']);
             jsPanel.front(self);
@@ -3130,26 +3059,26 @@ var jsPanel = {
             document.dispatchEvent(jspanelstatuschange);
 
             if (options.onstatuschange) {
-                jsPanel.processCallbacks(self, options.onstatuschange, 'every');
+                jsPanel.processCallbacks(self, options.onstatuschange, 'every', self.statusBefore);
             }
 
-            if (callback) {
-                callback.call(self, self);
+            if (cb) {
+                cb.call(self, self, self.statusBefore);
             }
 
             if (options.onmaximized) {
-                jsPanel.processCallbacks(self, options.onmaximized, 'every');
+                jsPanel.processCallbacks(self, options.onmaximized, 'every', self.statusBefore);
             }
 
             return self;
         };
-
-        self.minimize = function (callback) {
+        self.minimize = function (cb) {
             if (self.status === 'minimized') {
                 return self;
             }
+            self.statusBefore = self.status;
 
-            if (options.onbeforeminimize && options.onbeforeminimize.length > 0 && !jsPanel.processCallbacks(self, options.onbeforeminimize)) {
+            if (options.onbeforeminimize && options.onbeforeminimize.length > 0 && !jsPanel.processCallbacks(self, options.onbeforeminimize, 'some', self.statusBefore)) {
                 return self;
             }
 
@@ -3163,25 +3092,23 @@ var jsPanel = {
             }
 
             self.style.left = '-9999px';
-            self.statusBefore = self.status;
             self.status = 'minimized';
             document.dispatchEvent(jspanelminimized);
             document.dispatchEvent(jspanelstatuschange);
 
             if (options.onstatuschange) {
-                jsPanel.processCallbacks(self, options.onstatuschange, 'every');
+                jsPanel.processCallbacks(self, options.onstatuschange, 'every', self.statusBefore);
             }
 
             if (options.minimizeTo) {
-                var replacement = self.createMinimizedReplacement();
-                var container = void 0,
-                    parent = void 0,
-                    list = void 0;
+                var replacement = self.createMinimizedReplacement(),
+                    container = void 0,
+                    parent = void 0;
                 if (options.minimizeTo === 'default') {
                     document.getElementById('jsPanel-replacement-container').append(replacement);
                 } else if (options.minimizeTo === 'parentpanel') {
                     parent = self.closest('.jsPanel-content').parentElement;
-                    list = parent.querySelectorAll('.jsPanel-minimized-box');
+                    var list = parent.querySelectorAll('.jsPanel-minimized-box');
                     container = list[list.length - 1];
                     container.append(replacement);
                 } else if (options.minimizeTo === 'parent') {
@@ -3199,23 +3126,23 @@ var jsPanel = {
                 }
             }
 
-            if (callback) {
-                callback.call(self, self);
+            if (cb) {
+                cb.call(self, self, self.statusBefore);
             }
 
             if (options.onminimized) {
-                jsPanel.processCallbacks(self, options.onminimized, 'every');
+                jsPanel.processCallbacks(self, options.onminimized, 'every', self.statusBefore);
             }
 
             return self;
         };
-
-        self.normalize = function (callback) {
+        self.normalize = function (cb) {
             if (self.status === 'normalized') {
                 return self;
             }
+            self.statusBefore = self.status;
 
-            if (options.onbeforenormalize && options.onbeforenormalize.length > 0 && !jsPanel.processCallbacks(self, options.onbeforenormalize)) {
+            if (options.onbeforenormalize && options.onbeforenormalize.length > 0 && !jsPanel.processCallbacks(self, options.onbeforenormalize, 'some', self.statusBefore)) {
                 return self;
             }
 
@@ -3224,7 +3151,7 @@ var jsPanel = {
             self.style.height = self.currentData.height;
             self.style.left = self.currentData.left;
             self.style.top = self.currentData.top;
-            self.removeMinimizedReplacement();
+            jsPanel.removeMinimizedReplacement(self);
             self.status = 'normalized';
             self.setControls(['.jsPanel-btn-normalize', '.jsPanel-btn-smallifyrev']);
             jsPanel.front(self);
@@ -3232,32 +3159,299 @@ var jsPanel = {
             document.dispatchEvent(jspanelstatuschange);
 
             if (options.onstatuschange) {
-                jsPanel.processCallbacks(self, options.onstatuschange, 'every');
+                jsPanel.processCallbacks(self, options.onstatuschange, 'every', self.statusBefore);
             }
 
-            if (callback) {
-                callback.call(self, self);
+            if (cb) {
+                cb.call(self, self, self.statusBefore);
             }
 
             if (options.onnormalized) {
-                jsPanel.processCallbacks(self, options.onnormalized, 'every');
+                jsPanel.processCallbacks(self, options.onnormalized, 'every', self.statusBefore);
             }
 
             return self;
         };
+        self.smallify = function (cb) {
+            if (self.status === 'smallified' || self.status === 'smallifiedmax') {
+                return self;
+            }
+            self.statusBefore = self.status;
 
-        self.overlaps = function (elmt, elmtBox) {
-            return jsPanel.overlaps(self, elmt, elmtBox);
+            if (options.onbeforesmallify && options.onbeforesmallify.length > 0 && !jsPanel.processCallbacks(self, options.onbeforesmallify, 'some', self.statusBefore)) {
+                return self;
+            }
+
+            document.dispatchEvent(jspanelbeforesmallify);
+            if (self.status === 'normalized') {
+                self.saveCurrentDimensions();
+            }
+
+            self.style.overflow = 'hidden';
+            var selfStyles = window.getComputedStyle(self),
+                selfHeaderHeight = parseFloat(window.getComputedStyle(self.headerbar).height);
+            self.style.height = parseFloat(selfStyles.borderTopWidth) + parseFloat(selfStyles.borderBottomWidth) + selfHeaderHeight + 'px';
+
+            if (self.status === 'normalized') {
+                self.setControls(['.jsPanel-btn-normalize', '.jsPanel-btn-smallify']);
+                self.status = 'smallified';
+                document.dispatchEvent(jspanelsmallified);
+                document.dispatchEvent(jspanelstatuschange);
+                if (options.onstatuschange) {
+                    jsPanel.processCallbacks(self, options.onstatuschange, 'every', self.statusBefore);
+                }
+            } else if (self.status === 'maximized') {
+                self.setControls(['.jsPanel-btn-maximize', '.jsPanel-btn-smallify']);
+                self.status = 'smallifiedmax';
+                document.dispatchEvent(jspanelsmallifiedmax);
+                document.dispatchEvent(jspanelstatuschange);
+                if (options.onstatuschange) {
+                    jsPanel.processCallbacks(self, options.onstatuschange, 'every', self.statusBefore);
+                }
+            }
+
+            var minBoxes = self.querySelectorAll('.jsPanel-minimized-box');
+            minBoxes[minBoxes.length - 1].style.display = 'none';
+
+            if (cb) {
+                cb.call(self, self, self.statusBefore);
+            }
+
+            if (options.onsmallified) {
+                jsPanel.processCallbacks(self, options.onsmallified, 'every', self.statusBefore);
+            }
+
+            return self;
         };
+        self.unsmallify = function (cb) {
+            self.statusBefore = self.status;
 
-        self.removeMinimizedReplacement = function () {
-            var elmt = document.getElementById(self.id + '-min');
-            if (elmt) {
-                elmt.parentElement.removeChild(elmt);
+            if (self.status === 'smallified' || self.status === 'smallifiedmax') {
+
+                if (options.onbeforeunsmallify && options.onbeforeunsmallify.length > 0 && !jsPanel.processCallbacks(self, options.onbeforeunsmallify, 'some', self.statusBefore)) {
+                    return self;
+                }
+
+                document.dispatchEvent(jspanelbeforeunsmallify);
+                self.style.overflow = 'visible';
+                jsPanel.front(self);
+
+                if (self.status === 'smallified') {
+                    self.style.height = self.currentData.height;
+                    self.setControls(['.jsPanel-btn-normalize', '.jsPanel-btn-smallifyrev']);
+                    self.status = 'normalized';
+                    document.dispatchEvent(jspanelnormalized);
+                    document.dispatchEvent(jspanelstatuschange);
+                    if (options.onstatuschange) {
+                        jsPanel.processCallbacks(self, options.onstatuschange, 'every', self.statusBefore);
+                    }
+                } else if (self.status === 'smallifiedmax') {
+                    self.maximize();
+                } else if (self.status === 'minimized') {
+                    self.normalize();
+                }
+
+                var minBoxes = self.querySelectorAll('.jsPanel-minimized-box');
+                minBoxes[minBoxes.length - 1].style.display = 'flex';
+
+                if (cb) {
+                    cb.call(self, self, self.statusBefore);
+                }
+
+                if (options.onunsmallified) {
+                    jsPanel.processCallbacks(self, options.onunsmallified, 'every', self.statusBefore);
+                }
+            }
+
+            return self;
+        };
+        self.front = function (callback) {
+            var execOnFrontedCallbacks = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+            jsPanel.front(self);
+            document.dispatchEvent(jspanelfronted);
+            if (callback) {
+                callback.call(self, self);
+            }
+            if (options.onfronted && execOnFrontedCallbacks) {
+                jsPanel.processCallbacks(self, options.onfronted, 'every', self.status);
             }
             return self;
         };
 
+        self.closeChildpanels = function (cb) {
+            self.getChildpanels().forEach(function (item) {
+                return jsPanel.close(item);
+            });
+            if (cb) {
+                cb.call(self, self);
+            }
+            return self;
+        };
+        self.getChildpanels = function (cb) {
+            var childpanels = self.content.querySelectorAll('.jsPanel');
+            if (cb) {
+                childpanels.forEach(function (panel, index, list) {
+                    cb.call(panel, panel, index, list);
+                });
+            }
+            return childpanels;
+        };
+        self.isChildpanel = function (cb) {
+            var pp = self.closest('.jsPanel-content'),
+                parentpanel = pp ? pp.parentElement : null;
+            if (cb) {
+                cb.call(self, self, parentpanel);
+            }
+            // if panel is childpanel of another panel returns parentpanel, otherwise false
+            return pp ? parentpanel : false;
+        };
+        self.contentRemove = function (cb) {
+            jsPanel.emptyNode(self.content);
+            if (cb) {
+                cb.call(self, self);
+            }
+            return self;
+        };
+        self.createMinimizedReplacement = function () {
+            var tpl = jsPanel.createMinimizedTemplate(),
+                color = window.getComputedStyle(self.headertitle).color,
+                selfStyles = window.getComputedStyle(self),
+                font = options.iconfont,
+                controlbar = tpl.querySelector('.jsPanel-controlbar');
+
+            tpl.style.backgroundColor = window.getComputedStyle(self.header).backgroundColor === 'transparent' ? window.getComputedStyle(self).backgroundColor : window.getComputedStyle(self.header).backgroundColor;
+
+            // if panel background is an image (that includes gradients) instead of a color value
+            if (selfStyles.backgroundImage) {
+                jsPanel.setStyle(tpl, {
+                    backgroundColor: selfStyles.backgroundColor,
+                    backgroundPositionX: selfStyles.backgroundPositionX,
+                    backgroundPositionY: selfStyles.backgroundPositionY,
+                    backgroundRepeat: selfStyles.backgroundRepeat,
+                    backgroundAttachment: selfStyles.backgroundAttachment,
+                    backgroundImage: selfStyles.backgroundImage,
+                    backgroundSize: selfStyles.backgroundSize,
+                    backgroundOrigin: selfStyles.backgroundOrigin,
+                    backgroundClip: selfStyles.backgroundClip
+                });
+            }
+
+            tpl.id = self.id + '-min';
+            tpl.querySelector('.jsPanel-headerbar').replaceChild(self.headerlogo.cloneNode(true), tpl.querySelector('.jsPanel-headerlogo'));
+            tpl.querySelector('.jsPanel-titlebar').replaceChild(self.headertitle.cloneNode(true), tpl.querySelector('.jsPanel-title'));
+            tpl.querySelector('.jsPanel-title').style.color = color;
+            controlbar.style.color = color;
+
+            ['jsPanel-hdr-dark', 'jsPanel-hdr-light'].forEach(function (item) {
+                if (self.header.classList.contains(item)) {
+                    tpl.querySelector('.jsPanel-hdr').classList.add(item);
+                }
+            });
+
+            // set iconfont
+            self.setIconfont(font, tpl);
+
+            // needed only to fix an issue with pointer events in Firefox
+            if ('onpointerdown' in window) {
+                tpl.querySelectorAll('.jsPanel-btn').forEach(function (btn) {
+                    btn.addEventListener('pointerdown', function (e) {
+                        e.preventDefault();
+                    }, true);
+                });
+            }
+            // ----------------------------------------------------------
+
+            if (self.dataset.btnnormalize === 'enabled') {
+                jsPanel.pointerup.forEach(function (evt) {
+                    tpl.querySelector('.jsPanel-btn-normalize').addEventListener(evt, function () {
+                        self.normalize();
+                    });
+                });
+            } else {
+                controlbar.querySelector('.jsPanel-btn-normalize').style.display = 'none';
+            }
+            if (self.dataset.btnmaximize === 'enabled') {
+                jsPanel.pointerup.forEach(function (evt) {
+                    tpl.querySelector('.jsPanel-btn-maximize').addEventListener(evt, function () {
+                        self.maximize();
+                    });
+                });
+            } else {
+                controlbar.querySelector('.jsPanel-btn-maximize').style.display = 'none';
+            }
+            if (self.dataset.btnclose === 'enabled') {
+                jsPanel.pointerup.forEach(function (evt) {
+                    tpl.querySelector('.jsPanel-btn-close').addEventListener(evt, function () {
+                        jsPanel.close(self);
+                    });
+                });
+            } else {
+                controlbar.querySelector('.jsPanel-btn-close').style.display = 'none';
+            }
+
+            return tpl;
+        };
+        self.dragit = function (string) {
+            var dragitOptions = Object.assign({}, jsPanel.defaults.dragit, options.dragit),
+                handles = self.querySelectorAll(dragitOptions.handles);
+            if (string === 'disable') {
+                handles.forEach(function (handle) {
+                    handle.style.pointerEvents = 'none';
+                });
+            } else {
+                handles.forEach(function (handle) {
+                    handle.style.pointerEvents = 'auto';
+                });
+            }
+            return self;
+        };
+        self.resizeit = function (string) {
+            var handles = self.querySelectorAll('.jsPanel-resizeit-handle');
+            if (string === 'disable') {
+                handles.forEach(function (handle) {
+                    handle.style.pointerEvents = 'none';
+                });
+            } else {
+                handles.forEach(function (handle) {
+                    handle.style.pointerEvents = 'auto';
+                });
+            }
+            return self;
+        };
+
+        self.getScaleFactor = function () {
+            var rect = self.getBoundingClientRect();
+            return {
+                x: rect.width / self.offsetWidth,
+                y: rect.height / self.offsetHeight
+            };
+        };
+        self.calcSizeFactors = function () {
+            var styles = window.getComputedStyle(self);
+            if (options.container === 'window') {
+                self.hf = parseFloat(self.style.left) / (window.innerWidth - parseFloat(self.style.width));
+                self.vf = parseFloat(self.style.top) / (window.innerHeight - parseFloat(styles.height));
+            } else {
+                if (self.parentElement) {
+                    var parentStyles = self.parentElement.getBoundingClientRect();
+                    self.hf = parseFloat(self.style.left) / (parentStyles.width - parseFloat(self.style.width));
+                    self.vf = parseFloat(self.style.top) / (parentStyles.height - parseFloat(styles.height));
+                }
+            }
+        };
+        self.saveCurrentDimensions = function () {
+            var normData = window.getComputedStyle(self);
+            self.currentData.width = normData.width;
+            if (self.status === 'normalized') {
+                self.currentData.height = normData.height;
+            }
+        };
+        self.saveCurrentPosition = function () {
+            var normData = window.getComputedStyle(self);
+            self.currentData.left = normData.left;
+            self.currentData.top = normData.top;
+        };
         self.reposition = function () {
             for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
                 params[_key] = arguments[_key];
@@ -3285,11 +3479,10 @@ var jsPanel = {
             }
             return self;
         };
-
         self.repositionOnSnap = function (pos) {
             var offsetX = '0',
-                offsetY = '0';
-            var margins = jsPanel.pOcontainment(options.dragit.containment);
+                offsetY = '0',
+                margins = jsPanel.pOcontainment(options.dragit.containment);
             // calculate offsets
             if (options.dragit.snap.containment) {
                 if (pos === 'left-top') {
@@ -3328,14 +3521,44 @@ var jsPanel = {
                 top: 'calc(' + self.style.top + ' + ' + offsetY + 'px)'
             });
         };
-
+        self.overlaps = function (elmt, elmtBox) {
+            return jsPanel.overlaps(self, elmt, elmtBox);
+        };
+        self.shiftWithinParent = function (parent) {
+            var parentStyles = parent.getBoundingClientRect(),
+                margins = self.options.maximizedMargin;
+            var left = void 0,
+                top = void 0;
+            self.style.left = function () {
+                left = (parentStyles.width - parseFloat(self.style.width)) * self.hf;
+                return left <= margins[3] ? margins[3] + 'px' : left + 'px';
+            }();
+            self.style.top = function () {
+                top = (parentStyles.height - parseFloat(self.currentData.height)) * self.vf;
+                return top <= margins[0] ? margins[0] + 'px' : top + 'px';
+            }();
+        };
+        self.setSize = function () {
+            if (options.panelSize) {
+                var values = jsPanel.pOsize(self, options.panelSize);
+                self.style.width = values.width;
+                self.style.height = values.height;
+            } else if (options.contentSize) {
+                var _values = jsPanel.pOsize(self, options.contentSize);
+                self.content.style.width = _values.width;
+                self.content.style.height = _values.height;
+                self.style.width = _values.width; // explicitly assign current width/height to panel
+                self.content.style.width = '100%';
+            }
+            return self;
+        };
         self.resize = function () {
             for (var _len2 = arguments.length, params = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
                 params[_key2] = arguments[_key2];
             }
 
-            var dimensions = window.getComputedStyle(self);
-            var size = { width: dimensions.width, height: dimensions.height },
+            var dimensions = window.getComputedStyle(self),
+                size = { width: dimensions.width, height: dimensions.height },
                 updateCache = true,
                 callback = void 0;
             params.forEach(function (value) {
@@ -3362,36 +3585,13 @@ var jsPanel = {
             return self;
         };
 
-        self.resizeit = function (string) {
-            var handles = self.querySelectorAll('.jsPanel-resizeit-handle');
-            if (string === 'disable') {
-                handles.forEach(function (handle) {
-                    handle.style.pointerEvents = 'none';
-                });
-            } else {
-                handles.forEach(function (handle) {
-                    handle.style.pointerEvents = 'auto';
-                });
-            }
-            return self;
-        };
-
-        self.saveCurrentDimensions = function () {
-            var normData = window.getComputedStyle(self);
-            self.currentData.width = normData.width;
-            if (self.status === 'normalized') {
-                self.currentData.height = normData.height;
-            }
-        };
-        self.saveCurrentPosition = function () {
-            var normData = window.getComputedStyle(self);
-            self.currentData.left = normData.left;
-            self.currentData.top = normData.top;
-        };
-
-        self.setControls = function (sel, callback) {
+        self.setControls = function (sel, cb) {
             self.header.querySelectorAll('.jsPanel-btn').forEach(function (item) {
-                item.style.display = 'block';
+                var btnClass = item.className.split('-'),
+                    btn = btnClass[btnClass.length - 1];
+                if (self.getAttribute('data-btn' + btn) !== 'hidden') {
+                    item.style.display = 'block';
+                }
             });
             sel.forEach(function (item) {
                 var btn = self.controlbar.querySelector(item);
@@ -3399,45 +3599,57 @@ var jsPanel = {
                     btn.style.display = 'none';
                 }
             });
-            if (callback) {
-                callback.call(self, self);
+            if (cb) {
+                cb.call(self, self);
             }
             return self;
         };
-
         self.setControlStatus = function (ctrl) {
             var action = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'enable';
-            var callback = arguments[2];
+            var cb = arguments[2];
 
+            var btn = self.controlbar.querySelector('.jsPanel-btn-' + ctrl);
             if (action === 'disable') {
                 if (self.getAttribute('data-btn' + ctrl) !== 'removed') {
                     self.setAttribute('data-btn' + ctrl, 'disabled');
-                    var btn = self.controlbar.querySelector('.jsPanel-btn-' + ctrl);
                     btn.style.pointerEvents = 'none';
                     btn.style.opacity = 0.4;
                     btn.style.cursor = 'default';
                 }
-            } else if (action === 'enable') {
+            } else if (action === 'hide') {
+                if (self.getAttribute('data-btn' + ctrl) !== 'removed') {
+                    self.setAttribute('data-btn' + ctrl, 'hidden');
+                    btn.style.display = 'none';
+                }
+            } else if (action === 'show') {
                 if (self.getAttribute('data-btn' + ctrl) !== 'removed') {
                     self.setAttribute('data-btn' + ctrl, 'enabled');
-                    var _btn = self.controlbar.querySelector('.jsPanel-btn-' + ctrl);
-                    _btn.style.pointerEvents = 'auto';
-                    _btn.style.opacity = 1;
-                    _btn.style.cursor = 'pointer';
+                    btn.style.display = 'block';
+                    btn.style.pointerEvents = 'auto';
+                    btn.style.opacity = 1;
+                    btn.style.cursor = 'pointer';
+                }
+            } else if (action === 'enable') {
+                if (self.getAttribute('data-btn' + ctrl) !== 'removed') {
+                    if (self.getAttribute('data-btn' + ctrl) === 'hidden') {
+                        btn.style.display = 'block';
+                    }
+                    self.setAttribute('data-btn' + ctrl, 'enabled');
+                    btn.style.pointerEvents = 'auto';
+                    btn.style.opacity = 1;
+                    btn.style.cursor = 'pointer';
                 }
             } else if (action === 'remove') {
-                var _btn2 = self.controlbar.querySelector('.jsPanel-btn-' + ctrl);
-                self.controlbar.removeChild(_btn2);
+                self.controlbar.removeChild(btn);
                 self.setAttribute('data-btn' + ctrl, 'removed');
             }
 
-            if (callback) {
-                callback.call(self, self);
+            if (cb) {
+                cb.call(self, self);
             }
             return self;
         };
-
-        self.setHeaderControls = function (callback) {
+        self.setHeaderControls = function (cb) {
             var controls = ['close', 'maximize', 'normalize', 'minimize', 'smallify', 'smallifyrev'],
                 option = options.headerControls;
             if (typeof option === 'string') {
@@ -3459,38 +3671,37 @@ var jsPanel = {
                     }
                 });
             }
-            if (callback) {
-                callback.call(self, self);
+            if (cb) {
+                cb.call(self, self);
             }
             return self;
         };
-
-        self.setHeaderLogo = function (hdrLogo, callback) {
+        self.setHeaderLogo = function (logo, cb) {
             var logos = [self.headerlogo],
                 minPanel = document.querySelector('#' + self.id + '-min');
             if (minPanel) {
                 logos.push(minPanel.querySelector('.jsPanel-headerlogo'));
             }
 
-            if (typeof hdrLogo === 'string') {
-                if (hdrLogo.substr(0, 1) !== '<') {
+            if (typeof logo === 'string') {
+                if (logo.substr(0, 1) !== '<') {
                     // is assumed to be an img url
                     logos.forEach(function (item) {
                         jsPanel.emptyNode(item);
                         var img = document.createElement('img');
-                        img.src = hdrLogo;
+                        img.src = logo;
                         item.append(img);
                     });
                 } else {
                     logos.forEach(function (item) {
-                        item.innerHTML = hdrLogo;
+                        item.innerHTML = logo;
                     });
                 }
             } else {
                 // assumed to be a node object
                 logos.forEach(function (item) {
                     jsPanel.emptyNode(item);
-                    item.append(hdrLogo);
+                    item.append(logo);
                 });
             }
             // set max-height of logo to equal height of headerbar
@@ -3500,26 +3711,24 @@ var jsPanel = {
                 });
             });
 
-            if (callback) {
-                callback.call(self, self);
+            if (cb) {
+                cb.call(self, self);
             }
             return self;
         };
-
-        self.setHeaderRemove = function (callback) {
+        self.setHeaderRemove = function (cb) {
             self.removeChild(self.header);
             self.content.classList.add('jsPanel-content-noheader');
             ['close', 'maximize', 'normalize', 'minimize', 'smallify', 'smallifyrev'].forEach(function (item) {
                 self.setAttribute('data-btn' + item, 'removed');
             });
 
-            if (callback) {
-                callback.call(self, self);
+            if (cb) {
+                cb.call(self, self);
             }
             return self;
         };
-
-        self.setHeaderTitle = function (hdrTitle, callback) {
+        self.setHeaderTitle = function (hdrTitle, cb) {
             var titles = [self.headertitle],
                 minPanel = document.querySelector('#' + self.id + '-min');
             if (minPanel) {
@@ -3542,16 +3751,15 @@ var jsPanel = {
                 });
             }
 
-            if (callback) {
-                callback.call(self, self);
+            if (cb) {
+                cb.call(self, self);
             }
             return self;
         };
-
         self.setIconfont = function () {
             var font = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
             var panel = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : self;
-            var callback = arguments[2];
+            var cb = arguments[2];
 
             if (font !== false) {
                 var classArray = void 0,
@@ -3563,9 +3771,6 @@ var jsPanel = {
                 } else if (font === 'material-icons') {
                     classArray = [font, font, font, font, font, font];
                     textArray = ['close', 'fullscreen', 'fullscreen_exit', 'call_received', 'expand_more', 'expand_less'];
-                    panel.controlbar.querySelectorAll('.jsPanel-btn').forEach(function (item) {
-                        item.style.padding = '6px 0 8px 0';
-                    });
                 } else if (Array.isArray(font)) {
                     classArray = ['custom-control-icon ' + font[5], 'custom-control-icon ' + font[4], 'custom-control-icon ' + font[3], 'custom-control-icon ' + font[2], 'custom-control-icon ' + font[1], 'custom-control-icon ' + font[0]];
                 } else {
@@ -3581,170 +3786,53 @@ var jsPanel = {
                     }
                 });
             }
-            if (callback) {
-                callback.call(panel, panel);
+            if (cb) {
+                cb.call(panel, panel);
             }
             return panel;
         };
+        self.addToolbar = function (place, tb, cb) {
+            if (place === 'header') {
+                place = self.headertoolbar;
+            } else if (place === 'footer') {
+                place = self.footer;
+            }
+
+            if (typeof tb === 'string') {
+                place.innerHTML = tb;
+            } else if (Array.isArray(tb)) {
+                tb.forEach(function (item) {
+                    if (typeof item === 'string') {
+                        place.innerHTML += item;
+                    } else {
+                        place.append(item);
+                    }
+                });
+            } else if (typeof tb === 'function') {
+                var tool = tb.call(self, self);
+                if (typeof tool === 'string') {
+                    place.innerHTML = tool;
+                } else {
+                    place.append(tool);
+                }
+            } else {
+                place.append(tb);
+            }
+
+            place.classList.add('active');
+            if (cb) {
+                cb.call(self, self);
+            }
+            return self;
+        };
 
         self.setRtl = function () {
-            [self.header, self.headerbar, self.titlebar, self.controlbar, self.headertoolbar, self.footer].forEach(function (item) {
-                item.classList.add('jsPanel-rtl');
-            });
-            [self.headertitle, self.headertoolbar, self.content, self.footer].forEach(function (item) {
+            [self.header, self.headerlogo, self.titlebar, self.headertitle, self.controlbar, self.headertoolbar, self.content, self.footer].forEach(function (item) {
                 item.dir = 'rtl';
                 if (options.rtl.lang) {
                     item.lang = options.rtl.lang;
                 }
             });
-        };
-
-        self.setSize = function () {
-            if (options.panelSize) {
-                var values = jsPanel.pOsize(self, options.panelSize);
-                self.style.width = values.width;
-                self.style.height = values.height;
-            } else if (options.contentSize) {
-                var _values = jsPanel.pOsize(self, options.contentSize);
-                self.content.style.width = _values.width;
-                self.content.style.height = _values.height;
-                self.style.width = _values.width; // explicitly assign current width/height to panel
-                self.content.style.width = '100%';
-            }
-            return self;
-        };
-
-        self.setTheme = function () {
-            var theme = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : options.theme;
-            var callback = arguments[1];
-
-            // first remove all theme related syles
-            self.clearTheme();
-
-            if (theme === 'none') {
-                // results in an all white panel without any theme related classes/styles applied
-                // removal of footer background/border is done in jsP.toolbarAdd()
-                self.style.backgroundColor = '#fff';
-                return self;
-            }
-
-            var themeDetails = self.getThemeDetails(theme);
-
-            if (!themeDetails.bs) {
-                if (jsPanel.themes.indexOf(themeDetails.color) !== -1) {
-                    self.applyBuiltInTheme(themeDetails);
-                } else {
-                    self.applyArbitraryTheme(themeDetails);
-                }
-            } else {
-                self.applyBootstrapTheme(themeDetails);
-            }
-
-            if (options.border) {
-                self.applyThemeBorder(themeDetails);
-            } else {
-                self.style.borderWidth = '';
-                self.style.borderStyle = '';
-                self.style.borderColor = '';
-            }
-
-            if (callback) {
-                callback.call(self, self);
-            }
-            return self;
-        };
-
-        self.smallify = function (callback) {
-            if (self.status === 'smallified' || self.status === 'smallifiedmax') {
-                return self;
-            }
-
-            if (options.onbeforesmallify && options.onbeforesmallify.length > 0 && !jsPanel.processCallbacks(self, options.onbeforesmallify)) {
-                return self;
-            }
-
-            document.dispatchEvent(jspanelbeforesmallify);
-
-            if (self.status === 'normalized') {
-                self.saveCurrentDimensions();
-            }
-
-            self.style.overflow = 'hidden';
-            var selfStyles = window.getComputedStyle(self),
-                selfHeaderHeight = parseFloat(window.getComputedStyle(self.headerbar).height);
-            self.style.height = parseFloat(selfStyles.borderTopWidth) + parseFloat(selfStyles.borderBottomWidth) + selfHeaderHeight + 'px';
-
-            if (self.status === 'normalized') {
-                self.setControls(['.jsPanel-btn-normalize', '.jsPanel-btn-smallify']);
-                self.status = 'smallified';
-                document.dispatchEvent(jspanelsmallified);
-                document.dispatchEvent(jspanelstatuschange);
-                if (options.onstatuschange) {
-                    jsPanel.processCallbacks(self, options.onstatuschange, 'every');
-                }
-            } else if (self.status === 'maximized') {
-                self.setControls(['.jsPanel-btn-maximize', '.jsPanel-btn-smallify']);
-                self.status = 'smallifiedmax';
-                document.dispatchEvent(jspanelsmallifiedmax);
-                document.dispatchEvent(jspanelstatuschange);
-                if (options.onstatuschange) {
-                    jsPanel.processCallbacks(self, options.onstatuschange, 'every');
-                }
-            }
-
-            var minBoxes = self.querySelectorAll('.jsPanel-minimized-box');
-            minBoxes[minBoxes.length - 1].style.display = 'none';
-
-            if (callback) {
-                callback.call(self, self);
-            }
-
-            if (options.onsmallified) {
-                jsPanel.processCallbacks(self, options.onsmallified, 'every');
-            }
-
-            return self;
-        };
-
-        self.unsmallify = function (callback) {
-            if (self.status === 'smallified' || self.status === 'smallifiedmax') {
-
-                if (options.onbeforeunsmallify && options.onbeforeunsmallify.length > 0 && !jsPanel.processCallbacks(self, options.onbeforeunsmallify)) {
-                    return self;
-                }
-
-                document.dispatchEvent(jspanelbeforeunsmallify);
-                self.style.overflow = 'visible';
-                jsPanel.front(self);
-
-                if (self.status === 'smallified') {
-                    self.style.height = self.currentData.height;
-                    self.setControls(['.jsPanel-btn-normalize', '.jsPanel-btn-smallifyrev']);
-                    self.status = 'normalized';
-                    document.dispatchEvent(jspanelnormalized);
-                    document.dispatchEvent(jspanelstatuschange);
-                    if (options.onstatuschange) {
-                        jsPanel.processCallbacks(self, options.onstatuschange, 'every');
-                    }
-                } else if (self.status === 'smallifiedmax') {
-                    self.maximize();
-                } else if (self.status === 'minimized') {
-                    self.normalize();
-                }
-
-                var minBoxes = self.querySelectorAll('.jsPanel-minimized-box');
-                minBoxes[minBoxes.length - 1].style.display = 'flex';
-
-                if (callback) {
-                    callback.call(self, self);
-                }
-
-                if (options.onunsmallified) {
-                    jsPanel.processCallbacks(self, options.onunsmallified, 'every');
-                }
-            }
-
-            return self;
         };
 
         // option.id
@@ -3785,48 +3873,19 @@ var jsPanel = {
             self.setHeaderControls();
 
             if (options.header === 'auto-show-hide') {
-                var bg = options.theme.split('-'),
-                    boxShadow = 'jsPanel-depth-' + options.boxShadow,
-                    bgClass = 'bg-',
-                    mdbColorClass = void 0;
-                if (bg[1]) {
-                    bgClass += bg[1];
-                }
-                if (bg[2]) {
-                    mdbColorClass = bg[1] + '-' + 'color-' + bg[2];
-                }
-
+                var boxShadow = 'jsPanel-depth-' + options.boxShadow;
                 self.header.style.opacity = 0;
-
-                if (bg[0] === 'bootstrap' || bg[0] === 'mdb') {
-                    this.remClass(self, bgClass);
-                    if (bg[0] === 'mdb') {
-                        this.remClass(self, mdbColorClass);
-                    }
-                }
                 self.style.backgroundColor = 'transparent';
                 this.remClass(self, boxShadow);
                 this.setClass(self.content, boxShadow);
 
                 self.header.addEventListener('mouseenter', function () {
                     self.header.style.opacity = 1;
-                    if (bg[0] === 'bootstrap' || bg[0] === 'mdb') {
-                        jsPanel.setClass(self, bgClass);
-                        if (bg[0] === 'mdb') {
-                            jsPanel.setClass(self, mdbColorClass);
-                        }
-                    }
                     jsPanel.setClass(self, boxShadow);
                     jsPanel.remClass(self.content, boxShadow);
                 });
                 self.header.addEventListener('mouseleave', function () {
                     self.header.style.opacity = 0;
-                    if (bg[0] === 'bootstrap' || bg[0] === 'mdb') {
-                        jsPanel.remClass(self, bgClass);
-                        if (bg[0] === 'mdb') {
-                            jsPanel.remClass(self, mdbColorClass);
-                        }
-                    }
                     jsPanel.remClass(self, boxShadow);
                     jsPanel.setClass(self.content, boxShadow);
                 });
@@ -3846,7 +3905,7 @@ var jsPanel = {
 
         // option.borderRadius
         if (options.borderRadius) {
-            self.borderRadius(options.borderRadius);
+            self.applyThemeBorderRadius(options.borderRadius);
         }
 
         // option.content
@@ -3964,21 +4023,20 @@ var jsPanel = {
 
         // option.setStatus
         if (options.setStatus) {
-            var newStatus = options.setStatus;
-            if (newStatus === 'smallifiedmax') {
+            if (options.setStatus === 'smallifiedmax') {
                 self.maximize().smallify();
-            } else if (newStatus === 'smallified') {
+            } else if (options.setStatus === 'smallified') {
                 self.smallify();
             } else {
-                var func = newStatus.substr(0, newStatus.length - 1);
-                self[func]();
+                // remove the char 'd' from end of string to get function name to call
+                self[options.setStatus.substr(0, options.setStatus.length - 1)]();
             }
         }
 
         // option.autoclose
         if (options.autoclose) {
-            closetimer = window.setTimeout(function () {
-                if (self) self.close();
+            self.closetimer = window.setTimeout(function () {
+                if (self) jsPanel.close(self);
             }, options.autoclose);
         }
 
@@ -3997,17 +4055,17 @@ var jsPanel = {
                 if (e.target === window) {
                     // see https://bugs.jqueryui.com/ticket/7514
                     var param = options.onwindowresize,
-                        status = self.status;
-                    var parentStyles = void 0;
-
+                        status = self.status,
+                        parentStyles = void 0;
                     if (self.parentElement) {
                         parentStyles = window.getComputedStyle(self.parentElement);
                     } else {
                         return false;
                     }
-
                     if (status === 'maximized' && param === true) {
                         self.maximize();
+                    } else if (self.snapped) {
+                        jsPanel.snapPanel(self, self.snapped, true);
                     } else if (status === 'normalized' || status === 'smallified' || status === 'maximized') {
                         if (typeof param === 'function') {
                             param.call(self, e, self);
@@ -4036,12 +4094,55 @@ var jsPanel = {
             }, false);
         }
 
-        // without this handler content section would have pointerEvents = none when clicking header section (see dragit)
-        this.pointerup.forEach(function (item) {
-            self.addEventListener(item, function () {
-                self.content.style.pointerEvents = 'inherit';
-            });
-        });
+        // option onparentresize
+        if (options.onparentresize) {
+            var parentpanel = self.isChildpanel(),
+                parentOptions = parentpanel.options,
+                isFunction = typeof options.onparentresize === 'function';
+            var handleSelf = function handleSelf() {
+                if (self.status !== 'minimized') {
+                    if (self.status === 'maximized') {
+                        self.maximize();
+                    } else if (self.status === 'smallifiedmax') {
+                        self.maximize().smallify();
+                    } else if (self.snapped) {
+                        jsPanel.snapPanel(self, self.snapped, true);
+                    } else {
+                        self.shiftWithinParent(parentpanel.content);
+                    }
+                }
+            };
+            if (parentpanel) {
+                /* for some reason I don't understand code below does not work as intended this cb has to be set in the code generating the childpanel
+                self.options.resizeit.stop.push(function () {self.calcSizeFactors();});
+                */
+                if (isFunction) {
+                    parentOptions.resizeit.resize.push(function () {
+                        if (self.status !== 'minimized') {
+                            var parentStyles = parentpanel.content.getBoundingClientRect();
+                            options.onparentresize.call(self, self, { width: parentStyles.width, height: parentStyles.height });
+                        }
+                    });
+                } else {
+                    parentOptions.resizeit.resize.push(function () {
+                        handleSelf();
+                    });
+                    parentOptions.onmaximized.push(function () {
+                        handleSelf();
+                    });
+                    parentOptions.onnormalized.push(function () {
+                        handleSelf();
+                    });
+                    self.options.onnormalized.push(function () {
+                        if (self.snapped) {
+                            jsPanel.snapPanel(self, self.snapped, true);
+                        } else {
+                            self.shiftWithinParent(parentpanel.content);
+                        }
+                    });
+                }
+            }
+        }
 
         // global callbacks
         if (this.globalCallbacks) {
@@ -4065,7 +4166,7 @@ var jsPanel = {
             }
         }
 
-        // construtor callback
+        // constructor callback
         if (cb) {
             cb.call(self, self);
         }
@@ -4074,6 +4175,12 @@ var jsPanel = {
         return self;
     }
 };
+
+jsPanel.jsPanelError = function (msg) {
+    this.message = msg;
+    this.name = 'jsPanel Error';
+};
+jsPanel.jsPanelError.prototype = new Error();
 
 // Add CommonJS module exports, so it can be imported using require() in Node.js
 // https://nodejs.org/docs/latest/api/modules.html

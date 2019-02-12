@@ -18,24 +18,31 @@ if (!jsPanel.hint) {
             headerControls: 'none'
         },
 
-        create: function create() {
-            var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
+        create(options = {}) {
 
             options.paneltype = 'hint';
 
-            var opts = options;
+            let opts = options;
             if (options.config) {
                 opts = Object.assign({}, options.config, options);
                 delete opts.config;
             }
             opts = Object.assign({}, this.defaults, opts);
 
-            return jsPanel.create(opts, function (hint) {
+            return jsPanel.create(opts, hint => {
                 hint.style.zIndex = 9999;
                 hint.header.style.cursor = 'default';
                 hint.footer.style.cursor = 'default';
             });
+
         }
+
     };
+
+}
+
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') {
+    module.exports = jsPanel;
 }
