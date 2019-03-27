@@ -3,9 +3,8 @@
 'use strict';
 
 const jsPanel = {
-
-    version: '4.5.0',
-    date: '2019-02-12 10:22',
+    version: '4.6.0',
+    date: '2019-03-27 10:00',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -35,7 +34,7 @@ const jsPanel = {
         },
         header: true,
         headerTitle: 'jsPanel',
-        headerControls: 'all',
+        headerControls: {size: 'md'}, // must be object
         iconfont: false,
         maximizedMargin: 0,
         minimizeTo: 'default',
@@ -59,7 +58,7 @@ const jsPanel = {
         close:       `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path fill="currentColor" d="M15.8,14l9.9-9.9c0.5-0.5,0.5-1.3,0-1.8c-0.5-0.5-1.3-0.5-1.8,0L14,12.3L4.1,2.4c-0.5-0.5-1.3-0.5-1.8,0c-0.5,0.5-0.5,1.3,0,1.8l9.9,9.9l-9.9,9.9c-0.5,0.5-0.5,1.3,0,1.8C2.6,25.9,2.9,26,3.3,26s0.7-0.1,0.9-0.3l9.8-9.9l9.9,9.9c0.3,0.3,0.5,0.3,0.9,0.3s0.6-0.1,0.9-0.3c0.5-0.5,0.5-1.3,0-1.8L15.8,14z"/></svg>`,
         maximize:    `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path fill="currentColor" d="M25.3,1.9H2.7c-0.6,0-1,0.4-1,1v22.3c0,0.5,0.4,1,1,1h22.5c0.5,0,1-0.5,1-1V2.9C26.3,2.3,25.9,1.9,25.3,1.9z M3.7,24.1v-18h20.5v18C24.3,24.1,3.7,24.1,3.7,24.1z"/></svg>`,
         normalize:   `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="currentColor" d="M18.5,1.2H5.1c-0.3,0-0.5,0.3-0.5,0.5v3.1c0,0.1,0,0.1,0,0.2h-3C1.2,5,0.9,5.3,0.9,5.7v12.4c0,0.4,0.3,0.7,0.7,0.7h12.6c0.4,0,0.7-0.3,0.7-0.7v-2.6c0,0,0.1,0,0.1,0h3.5c0.3,0,0.5-0.3,0.5-0.5V1.7C19.1,1.4,18.8,1.2,18.5,1.2z M2.3,17.4V8.2c0,0,0.1,0,0.1,0h11c0,0,0.1,0,0.1,0v9.3H2.3z M18,14.4h-3c0,0-0.1,0-0.1,0V5.7c0-0.4-0.3-0.7-0.7-0.7H5.6c0-0.1,0-0.1,0-0.2V2.2H18C18,2.2,18,14.4,18,14.4z"/></svg>`,
-        minimize:    `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 20"><path fill="currentColor" d="M18.1,18.6H1.9c-0.6,0-1.1-0.5-1.1-1.1s0.5-1.1,1.1-1.1h16.1c0.6,0,1.1,0.5,1.1,1.1S18.7,18.6,18.1,18.6z"/></svg>`,
+        minimize:    `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 20"><path fill="currentColor" d="M20.4,18.6H1.8c-0.7,0-1.3-0.5-1.3-1.1s0.6-1.1,1.3-1.1h18.5c0.7,0,1.3,0.5,1.3,1.1S21,18.6,20.4,18.6z"/></svg>`,
         smallifyrev: `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 18"><path fill="currentColor" d="M10,15.1L10,15.1c-0.3,0-0.5-0.1-0.6-0.3L1,6.4C0.6,6,0.6,5.5,1,5.1c0.4-0.4,0.9-0.4,1.3,0L10,13l7.8-7.7c0.4-0.4,0.9-0.4,1.3,0c0.3,0.4,0.4,0.9,0,1.3l-8.4,8.4C10.5,15,10.2,15.1,10,15.1z"/></svg>`,
         smallify:    `<svg class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 18"><path fill="currentColor" d="M19,13.5l-8.4-8.3c-0.4-0.4-0.9-0.4-1.3,0L1,13.6c-0.4,0.4-0.4,0.9,0,1.3c0.2,0.2,0.4,0.3,0.6,0.3c0.2,0,0.5-0.1,0.6-0.3L10,7l7.8,7.7c0.4,0.4,0.9,0.4,1.3,0C19.4,14.4,19.4,13.8,19,13.5z"/></svg>`
     },
@@ -185,8 +184,9 @@ const jsPanel = {
     })(),
     themes: ['default', 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark'],
     ziBase: 100,
-    colorLighteningFactor: 0.81,
-    colorDarkeningFactor: 0.5,
+    colorFilledLight: 0.81,
+    colorFilledDark: 0.08,
+    colorFilled: 0,
     colorBrightnessThreshold: 0.55,
     colorNames: {
         // https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#Color_keywords
@@ -361,10 +361,10 @@ const jsPanel = {
         deeporange50: 'FBE9E7', deeporange100: 'FFCCBC', deeporange200: 'FFAB91', deeporange300: 'FF8A65', deeporange400: 'FF7043', deeporange500: 'FF5722', deeporange600: 'F4511E', deeporange700: 'E64A19', deeporange800: 'D84315', deeporange900: 'BF360C', deeporangea100: 'FF9E80', deeporangea200: 'FF6E40', deeporangea400: 'FF3D00', deeporangea700: 'DD2C00',
         brown50: 'EFEBE9', brown100: 'D7CCC8', brown200: 'BCAAA4', brown300: 'A1887F', brown400: '8D6E63', brown500: '795548', brown600: '6D4C41', brown700: '5D4037', brown800: '4E342E', brown900: '3E2723'
     },
+    errorReporting: 'on',
 
     // color methods ----
     color(val) {
-
         let color = val.toLowerCase(),
             r, g, b, h, s, l, match, channels, hsl, result = {};
         const hexPattern = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/gi, // matches "#123" or "#f05a78" with or without "#"
@@ -379,10 +379,8 @@ const jsPanel = {
 
         // check val for hex color
         if (color.match(hexPattern) !== null) {
-
-            // '#' entfernen wenn vorhanden
+            // '#' remove
             color = color.replace('#', '');
-
             // color has either 3 or 6 characters
             if (color.length % 2 === 1) {
 
@@ -418,7 +416,6 @@ const jsPanel = {
             hsl = this.rgbToHsl(result.rgb.r, result.rgb.g, result.rgb.b);
             result.hsl = hsl;
             result.rgb.css = `rgb(${result.rgb.r},${result.rgb.g},${result.rgb.b})`;
-
         }
         // check val for rgb/rgba color
         else if (color.match(RGBAPattern)) {
@@ -460,20 +457,19 @@ const jsPanel = {
         }
 
         return result;
-
     },
-
     calcColors(primaryColor) {
         const threshold = this.colorBrightnessThreshold,
             primeColor = this.color(primaryColor),
-            filledlightColor = this.lighten(primaryColor, this.colorLighteningFactor),
-            filledColor = this.darken(primaryColor, this.colorDarkeningFactor),
+            filledlightColor = this.lighten(primaryColor, this.colorFilledLight),
+            filledColor = this.darken(primaryColor, this.colorFilled),
             fontColorForPrimary = this.perceivedBrightness(primaryColor) <= threshold ? '#ffffff' : '#000000',
             fontColorFilledlight = this.perceivedBrightness(filledlightColor) <= threshold ? '#ffffff' : '#000000',
-            fontColorFilled = this.perceivedBrightness(filledColor) <= threshold ? '#ffffff' : '#000000';
-        return [primeColor.hsl.css, filledlightColor, filledColor, fontColorForPrimary, fontColorFilledlight, fontColorFilled];
+            fontColorFilled = this.perceivedBrightness(filledColor) <= threshold ? '#ffffff' : '#000000',
+            filleddarkColor = this.lighten(primaryColor, this.colorFilledDark),
+            fontColorFilleddark = this.perceivedBrightness(filleddarkColor) <= threshold ? '#ffffff' : '#000000';
+        return [primeColor.hsl.css, filledlightColor, filledColor, fontColorForPrimary, fontColorFilledlight, fontColorFilled, filleddarkColor, fontColorFilleddark];
     },
-
     darken(val, amount) {
         // amount is value between 0 and 1
         const hsl = this.color(val).hsl,
@@ -481,7 +477,6 @@ const jsPanel = {
             lnew = Math.round(l - (l * amount)) + '%';
         return `hsl(${hsl.h},${hsl.s},${lnew})`;
     },
-
     lighten(val, amount) {
         // amount is value between 0 and 1
         const hsl = this.color(val).hsl,
@@ -489,7 +484,6 @@ const jsPanel = {
             lnew = Math.round(l + ((100 - l) * amount)) + '%';
         return `hsl(${hsl.h},${hsl.s},${lnew})`;
     },
-
     hslToRgb(h, s, l){
         // h, s and l must be values between 0 and 1
         let r, g, b;
@@ -522,7 +516,6 @@ const jsPanel = {
         }
         return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
     },
-
     rgbToHsl(r, g, b) {
         r /= 255;
         g /= 255;
@@ -555,7 +548,6 @@ const jsPanel = {
         l = Math.round(l * 100) + '%';
         return {css: 'hsl(' + h + ',' + s + ',' + l + ')', h: h, s: s, l: l};
     },
-
     rgbToHex(r, g, b) {
         let red = Number(r).toString(16),
             green = Number(g).toString(16),
@@ -571,7 +563,6 @@ const jsPanel = {
         }
         return `#${red}${green}${blue}`;
     },
-
     perceivedBrightness(val) {
         const rgb = this.color(val).rgb;
         // return value is in the range 0 - 1 and input rgb values must also be in the range 0 - 1
@@ -587,6 +578,21 @@ const jsPanel = {
             script.src = path;
             script.type = type;
             document.head.appendChild(script);
+        }
+    },
+
+    autopositionRemaining(panel) {
+        let autoPos;
+        ['left-top-down','left-top-right','center-top-down','right-top-down','right-top-left','left-bottom-up','left-bottom-right','center-bottom-up','right-bottom-up','right-bottom-left'].forEach((item) => {
+            if (panel.classList.contains(item)) {
+                autoPos = item;
+            }
+        });
+        if (autoPos) {
+            const box = (panel.options.container === 'window') ? document.body : panel.options.container;
+            box.querySelectorAll(`.${autoPos}`).forEach((item) => {
+                item.reposition();
+            });
         }
     },
 
@@ -629,8 +635,13 @@ const jsPanel = {
                 if (config.responseType) {config.responseType = undefined;}
             }
         } else {
-            try {throw new jsPanel.jsPanelError('XMLHttpRequest seems to miss the <code>url</code> parameter!');}
-            catch (e) {jsPanel.error(e);}
+            if (this.errorReporting) {
+                try {
+                    throw new jsPanel.jsPanelError('XMLHttpRequest seems to miss the <code>url</code> parameter!');
+                } catch (e) {
+                    jsPanel.error(e);
+                }
+            }
             return obj;
         }
 
@@ -803,9 +814,9 @@ const jsPanel = {
                                         <span class="jsPanel-title"></span>
                                     </div>
                                     <div class="jsPanel-controlbar">
-                                        <div class="jsPanel-btn jsPanel-btn-normalize">${this.icons.normalize}</div>
-                                        <div class="jsPanel-btn jsPanel-btn-maximize">${this.icons.maximize}</div>
-                                        <div class="jsPanel-btn jsPanel-btn-close">${this.icons.close}</div>
+                                        <div class="jsPanel-btn jsPanel-btn-md jsPanel-btn-normalize">${this.icons.normalize}</div>
+                                        <div class="jsPanel-btn jsPanel-btn-md jsPanel-btn-maximize">${this.icons.maximize}</div>
+                                        <div class="jsPanel-btn jsPanel-btn-md jsPanel-btn-close">${this.icons.close}</div>
                                     </div>
                                 </div>
                             </div>`;
@@ -912,9 +923,9 @@ const jsPanel = {
                         }
 
                         let elmtL, elmtL2, elmtT, elmtT2, elmtR, elmtR2, elmtB, elmtB2, right, bottom;
-                        let pmx = e.touches ? e.touches[0].clientX : e.clientX,	// current pointer x while pointer moves (don't use pageX, doesn't work on FF for Android)
-                            pmy   = e.touches ? e.touches[0].clientY : e.clientY,	// current pointer y while pointer moves (don't use pageY, doesn't work on FF for Android)
-                            dragStyles = window.getComputedStyle(elmt);             // get current styles while dragging
+                        let pmx = e.touches ? e.touches[0].clientX : e.clientX,	  // current pointer x while pointer moves (don't use pageX, doesn't work on FF for Android)
+                            pmy   = e.touches ? e.touches[0].clientY : e.clientY, // current pointer y while pointer moves (don't use pageY, doesn't work on FF for Android)
+                            dragStyles = window.getComputedStyle(elmt);           // get current styles while dragging
 
                         // EDGE reports "auto" instead of pixel value using getComputedStyle(), so some values need to be calculated different
                         if (parent === document.body) {
@@ -925,7 +936,7 @@ const jsPanel = {
                             right = parseInt(parentStyles.width, 10) - parseInt(parentStyles.borderLeftWidth, 10) - parseInt(parentStyles.borderRightWidth, 10) - (parseInt(dragStyles.left, 10) + parseInt(dragStyles.width, 10));
                             bottom = parseInt(parentStyles.height, 10) - parseInt(parentStyles.borderTopWidth, 10) - parseInt(parentStyles.borderBottomWidth, 10) - (parseInt(dragStyles.top, 10) + parseInt(dragStyles.height, 10));
                         }
-                        // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                        // -- -- --
 
                         elmtL = parseFloat(dragStyles.left);
                         elmtT = parseFloat(dragStyles.top);
@@ -935,19 +946,34 @@ const jsPanel = {
                         if (opts.snap) {
                             if (opts.snap.trigger === 'panel') {
                                 elmtL2 = elmtL ** 2;
+                                elmtT2 = elmtT ** 2;
+                                elmtR2 = elmtR ** 2;
+                                elmtB2 = elmtB ** 2;
                             } else if (opts.snap.trigger === 'pointer') {
-                                elmtL = pmx;
-                                elmtL2 = pmx ** 2;
-                                elmtT = pmy;
-                                elmtR = window.innerWidth - pmx;
-                                elmtB = window.innerHeight - pmy;
+                                if (elmt.options.container === 'window') {
+                                    elmtL = pmx;
+                                    elmtT = pmy;
+                                    elmtR = window.innerWidth - pmx;
+                                    elmtB = window.innerHeight - pmy;
+                                    elmtL2 = pmx ** 2;
+                                    elmtT2 = elmtT ** 2;
+                                    elmtR2 = elmtR ** 2;
+                                    elmtB2 = elmtB ** 2;
+                                } else {
+                                    let overlaps = jsPanel.overlaps(elmt, parent, 'paddingbox', e);
+                                    elmtL = overlaps.pointer.left;
+                                    elmtT = overlaps.pointer.top;
+                                    elmtR = overlaps.pointer.right;
+                                    elmtB = overlaps.pointer.bottom;
+                                    elmtL2 = overlaps.pointer.left ** 2;
+                                    elmtT2 = overlaps.pointer.top ** 2;
+                                    elmtR2 = overlaps.pointer.right ** 2;
+                                    elmtB2 = overlaps.pointer.bottom ** 2;
+                                }
                             }
-                            elmtT2 = elmtT ** 2;
-                            elmtR2 = elmtR ** 2;
-                            elmtB2 = elmtB ** 2;
                         }
 
-                        let lefttopVectorDrag   = Math.sqrt(elmtL2 + elmtT2),
+                        let lefttopVectorDrag     = Math.sqrt(elmtL2 + elmtT2),
                             leftbottomVectorDrag  = Math.sqrt(elmtL2 + elmtB2),
                             righttopVectorDrag    = Math.sqrt(elmtR2 + elmtT2),
                             rightbottomVectorDrag = Math.sqrt(elmtR2 + elmtB2),
@@ -961,7 +987,7 @@ const jsPanel = {
                         // prevent selections while dragging
                         window.getSelection().removeAllRanges();
 
-                        // trigger drag permanently while draging
+                        // trigger drag permanently while dragging
                         document.dispatchEvent(jspaneldrag);
 
                         // move elmt
@@ -1101,11 +1127,11 @@ const jsPanel = {
                     jsPanel.removeSnapAreas();
 
                     if (dragstarted) {
-                        document.dispatchEvent(jspaneldragstop);
                         elmt.style.opacity = 1;
                         dragstarted = undefined;
                         elmt.saveCurrentPosition();
                         elmt.calcSizeFactors(); // important for option.onwindowresize
+                        document.dispatchEvent(jspaneldragstop);
 
                         if (opts.snap) {
                             if (elmt.snappableTo === 'left-top') {
@@ -1188,8 +1214,14 @@ const jsPanel = {
                 : Object.assign(confDefaults, obj.options.contentFetch);
         const fetchInit = conf.fetchInit || {};
         if (!conf.resource) {
-            try {throw new jsPanel.jsPanelError('The Fetch request seems to miss the <code>resource</code> parameter');}
-            catch (e) {jsPanel.error(e);}
+            if (this.errorReporting) {
+                try {
+                    throw new jsPanel.jsPanelError('The Fetch request seems to miss the <code>resource</code> parameter');
+                } catch (e) {
+                    jsPanel.error(e);
+                }
+            }
+            return obj;
         }
         if (conf.beforeSend) {
             conf.beforeSend.call(obj, obj);
@@ -1259,7 +1291,6 @@ const jsPanel = {
             }
             this.resetZi();
         }
-
         // iframe extra: panel with an iframe get a content overlay if panel is not the topmost panel -> content section click fronts the panel
         this.getPanels().forEach(function(item, index) {
             const overlay = item.content.querySelector('.jsPanel-iframe-overlay');
@@ -1286,7 +1317,7 @@ const jsPanel = {
             });
     },
 
-    overlaps(panel, elmt, elmtBox) {
+    overlaps(panel, reference, elmtBox, event) {
         // if elmtBox === 'paddingbox' elmt border-width is subtracted from return values
         // in other words: overlap is measured against elmt padding-box and not border-box
         const pane = typeof panel === 'string' ? document.querySelector(panel) : panel,
@@ -1294,7 +1325,8 @@ const jsPanel = {
             parentStyle = getComputedStyle(pane.parentElement),
             scaleFactor = pane.getScaleFactor(),
             parentBorderWidth = {top: 0, right: 0, bottom: 0, left: 0};
-        let containerRect;
+        let referenceRect,
+            evtX = 0, evtY = 0, evtXparent = 0, evtYparent = 0;
 
         if (pane.options.container !== 'window' && elmtBox === 'paddingbox') {
             parentBorderWidth.top    = parseInt(parentStyle.borderTopWidth, 10) * scaleFactor.y;
@@ -1303,25 +1335,46 @@ const jsPanel = {
             parentBorderWidth.left   = parseInt(parentStyle.borderLeftWidth, 10) * scaleFactor.x;
         }
 
-        if (typeof elmt === 'string') {
-            if (elmt === 'window') {
-                containerRect = {left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight};
-            } else if (elmt === 'parent') {
-                containerRect = pane.parentElement.getBoundingClientRect();
+        if (typeof reference === 'string') {
+            if (reference === 'window') {
+                referenceRect = {left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight};
+            } else if (reference === 'parent') {
+                referenceRect = pane.parentElement.getBoundingClientRect();
             } else {
-                containerRect = document.querySelector(elmt).getBoundingClientRect();
+                referenceRect = document.querySelector(reference).getBoundingClientRect();
             }
         } else {
-            containerRect = elmt.getBoundingClientRect();
+            referenceRect = reference.getBoundingClientRect();
         }
 
+        if (event) {
+            evtX = event.touches ? event.touches[0].clientX : event.clientX;
+            evtY = event.touches ? event.touches[0].clientY : event.clientY;
+            evtXparent = evtX - referenceRect.left;
+            evtYparent = evtY - referenceRect.top;
+        }
+
+        let overlapsX = (panelRect.left < referenceRect.right) && (panelRect.right > referenceRect.left),
+            overlapsY = (panelRect.top < referenceRect.bottom) && (panelRect.bottom > referenceRect.top),
+            overlaps = overlapsX && overlapsY;
+
         return {
-            top: panelRect.top - containerRect.top - parentBorderWidth.top,
-            right: containerRect.right - panelRect.right - parentBorderWidth.right,
-            bottom: containerRect.bottom - panelRect.bottom - parentBorderWidth.bottom,
-            left: panelRect.left - containerRect.left - parentBorderWidth.left,
+            overlaps: overlaps,
+            top: panelRect.top - referenceRect.top - parentBorderWidth.top,
+            right: referenceRect.right - panelRect.right - parentBorderWidth.right,
+            bottom: referenceRect.bottom - panelRect.bottom - parentBorderWidth.bottom,
+            left: panelRect.left - referenceRect.left - parentBorderWidth.left,
             parentBorderWidth: parentBorderWidth,
-            panelRect: panelRect
+            panelRect: panelRect,
+            referenceRect: referenceRect,
+            pointer: {  // pointer coords relative to window and reference
+                clientX: evtX,
+                clientY: evtY,
+                left: evtXparent - parentBorderWidth.left,
+                top: evtYparent - parentBorderWidth.top,
+                right: referenceRect.width - evtXparent - parentBorderWidth.right,
+                bottom: referenceRect.height - evtYparent - parentBorderWidth.bottom
+            }
         };
     },
 
@@ -1489,6 +1542,27 @@ const jsPanel = {
         }
 
         return settings;
+    },
+
+    pOheaderControls(oHdrCtrls) {
+        if (typeof oHdrCtrls === 'string') {
+            let setting = {},
+                str = oHdrCtrls.toLowerCase(),
+                sizeMatch = str.match(/xl|lg|md|sm|xs/),
+                ctrlMatch = str.match(/closeonly|none/);
+            if (sizeMatch) {
+                setting.size = sizeMatch[0];
+            }
+            if (ctrlMatch) {
+                setting = Object.assign({}, setting, {maximize:'remove', normalize:'remove', minimize:'remove', smallify:'remove', smallifyrev:'remove'});
+                if (ctrlMatch[0] === 'none') {
+                    setting.close = 'remove';
+                }
+            }
+            return Object.assign({}, this.defaults.headerControls, setting);
+        } else {
+            return Object.assign({}, this.defaults.headerControls, oHdrCtrls);
+        }
     },
 
     position(elmt, position) {
@@ -1845,10 +1919,20 @@ const jsPanel = {
         }
     },
 
+    removeMinimizedReplacement(panel) {
+        const elmt = document.getElementById(`${panel.id}-min`);
+        if (elmt) {elmt.parentElement.removeChild(elmt);}
+    },
+
     removeSnapAreas() {
         document.querySelectorAll('.jsPanel-snap-area').forEach(function (el) {
             el.parentElement.removeChild(el);
         });
+    },
+
+    remClass(elmt, classnames) {
+        classnames.split(' ').forEach(item => elmt.classList.remove(item));
+        return elmt;
     },
 
     resetZi() {
@@ -2282,10 +2366,11 @@ const jsPanel = {
 
                 if (resizestarted) {
                     elmt.content.style.pointerEvents = 'inherit';
-                    document.dispatchEvent(jspanelresizestop);
                     resizestarted = undefined;
                     elmt.saveCurrentDimensions();
                     elmt.saveCurrentPosition();
+                    document.dispatchEvent(jspanelresizestop);
+
                     if (opts.stop.length) {
                         jsPanel.processCallbacks(elmt, opts.stop, false, {width: parseFloat(elmt.style.width), height: parseFloat(elmt.style.height)}, e);
                     }
@@ -2308,11 +2393,6 @@ const jsPanel = {
 
     setClass(elmt, classnames) {
         classnames.split(' ').forEach(item => elmt.classList.add(item));
-        return elmt;
-    },
-
-    remClass(elmt, classnames) {
-        classnames.split(' ').forEach(item => elmt.classList.remove(item));
         return elmt;
     },
 
@@ -2359,30 +2439,16 @@ const jsPanel = {
                 }
             }
             panel.reposition(`${panel.snappableTo} ${offsets[0]} ${offsets[1]}`);
-            if (!alreadySnapped) {
-                panel.snapped = panel.snappableTo;
-            }
+        }
+        if (!alreadySnapped) {
+            panel.snapped = panel.snappableTo;
         }
     },
 
-    removeMinimizedReplacement(panel) {
-        const elmt = document.getElementById(`${panel.id}-min`);
-        if (elmt) {elmt.parentElement.removeChild(elmt);}
-    },
-
-    autopositionRemaining(panel) {
-        let autoPos;
-        ['left-top-down','left-top-right','center-top-down','right-top-down','right-top-left','left-bottom-up','left-bottom-right','center-bottom-up','right-bottom-up','right-bottom-left'].forEach((item) => {
-            if (panel.classList.contains(item)) {
-                autoPos = item;
-            }
-        });
-        if (autoPos) {
-            const box = (panel.options.container === 'window') ? document.body : panel.options.container;
-            box.querySelectorAll(`.${autoPos}`).forEach((item) => {
-                item.reposition();
-            });
-        }
+    jsPanelError(msg) {
+        this.prototype = new (Error);
+        this.message = msg;
+        this.name = 'jsPanel Error';
     },
 
     error(e) {
@@ -2430,16 +2496,26 @@ const jsPanel = {
         if (p !== null) {
             // if a panel with passed id already exists, front it and return false
             if (p.classList.contains('jsPanel')) {p.front();}
-            try {throw new jsPanel.jsPanelError('&#9664; COULD NOT CREATE NEW JSPANEL &#9658;<br>An element with the ID <code>' + options.id + '</code> already exists in the document.');}
-            catch (e) {jsPanel.error(e);}
+            if (this.errorReporting) {
+                try {
+                    throw new jsPanel.jsPanelError('&#9664; COULD NOT CREATE NEW JSPANEL &#9658;<br>An element with the ID <code>' + options.id + '</code> already exists in the document.');
+                } catch (e) {
+                    jsPanel.error(e);
+                }
+            }
             return false;
         }
 
         // check whether container is valid -> if not return and log error
         const panelContainer = this.pOcontainer(options.container);
         if (!panelContainer) {
-            try {throw new jsPanel.jsPanelError('&#9664; COULD NOT CREATE NEW JSPANEL &#9658;<br>The container to append the panel to does not exist');}
-            catch (e) {jsPanel.error(e);}
+            if (this.errorReporting) {
+                try {
+                    throw new jsPanel.jsPanelError('&#9664; COULD NOT CREATE NEW JSPANEL &#9658;<br>The container to append the panel to does not exist');
+                } catch (e) {
+                    jsPanel.error(e);
+                }
+            }
             return false;
         }
 
@@ -2644,6 +2720,8 @@ const jsPanel = {
             if (step1.length === 2) {
                 if (step1[1].startsWith('edlight')) {
                     theme.filling = 'filledlight';
+                } else if (step1[1].startsWith('eddark')) {
+                    theme.filling = 'filleddark';
                 } else if (step1[1].startsWith('ed')) {
                     theme.filling = 'filled';
                 } else if (step1[1].startsWith('color')) {
@@ -2726,12 +2804,16 @@ const jsPanel = {
                 const contentFill = themeDetails.filling;
                 if (contentFill === 'filled') {
                     jsPanel.setStyle(self.content, {
-                        backgroundColor: themeDetails.colors[0],
-                        color: themeDetails.colors[3],
-                        borderTop: borderTop
+                        backgroundColor: themeDetails.colors[2],
+                        color: themeDetails.colors[3]
                     });
                 } else if (contentFill === 'filledlight') {
                     self.content.style.backgroundColor = themeDetails.colors[1];
+                } else if (contentFill === 'filleddark') {
+                    jsPanel.setStyle(self.content, {
+                        backgroundColor: themeDetails.colors[6],
+                        color: themeDetails.colors[7]
+                    });
                 } else {
                     const fontColor = jsPanel.perceivedBrightness(contentFill) <= jsPanel.colorBrightnessThreshold ? '#fff' : '#000';
                     self.content.style.backgroundColor = contentFill;
@@ -3164,12 +3246,8 @@ const jsPanel = {
                 font = options.iconfont,
                 controlbar = tpl.querySelector('.jsPanel-controlbar');
 
-            tpl.style.backgroundColor = window.getComputedStyle(self.header).backgroundColor === 'transparent'
-                ? window.getComputedStyle(self).backgroundColor
-                : window.getComputedStyle(self.header).backgroundColor;
-
             // if panel background is an image (that includes gradients) instead of a color value
-            if (selfStyles.backgroundImage) {
+            if (self.options.header !== 'auto-show-hide') {
                 jsPanel.setStyle(tpl, {
                     backgroundColor: selfStyles.backgroundColor,
                     backgroundPositionX: selfStyles.backgroundPositionX,
@@ -3181,11 +3259,14 @@ const jsPanel = {
                     backgroundOrigin: selfStyles.backgroundOrigin,
                     backgroundClip: selfStyles.backgroundClip
                 });
+            } else {
+                tpl.style.backgroundColor = window.getComputedStyle(self.header).backgroundColor;
             }
 
             tpl.id = self.id + '-min';
             tpl.querySelector('.jsPanel-headerbar').replaceChild(self.headerlogo.cloneNode(true), tpl.querySelector('.jsPanel-headerlogo'));
             tpl.querySelector('.jsPanel-titlebar').replaceChild(self.headertitle.cloneNode(true), tpl.querySelector('.jsPanel-title'));
+            tpl.querySelector('.jsPanel-titlebar').setAttribute('title', self.headertitle.textContent);
             tpl.querySelector('.jsPanel-title').style.color = color;
             controlbar.style.color = color;
 
@@ -3358,8 +3439,8 @@ const jsPanel = {
                 top:  `calc(${self.style.top} + ${offsetY}px)`
             });
         };
-        self.overlaps = (elmt, elmtBox) => {
-            return jsPanel.overlaps(self, elmt, elmtBox);
+        self.overlaps = (reference, elmtBox, event) => {
+            return jsPanel.overlaps(self, reference, elmtBox, event);
         };
         self.shiftWithinParent = (parent) => {
             const parentStyles = parent.getBoundingClientRect(),
@@ -3470,26 +3551,32 @@ const jsPanel = {
             if (cb) {cb.call(self, self);}
             return self;
         };
+        self.setControlSize = (ctrlSize) => {
+            // does not work with Font Awesome webfont (only svg/js)
+            const size = ctrlSize.toLowerCase(),
+                icons = self.controlbar.querySelectorAll('.jsPanel-btn');
+            icons.forEach((icon) => {
+                ['jsPanel-btn-xl', 'jsPanel-btn-lg', 'jsPanel-btn-md', 'jsPanel-btn-sm', 'jsPanel-btn-xs'].forEach((item) => {
+                    icon.classList.remove(item);
+                });
+                icon.classList.add(`jsPanel-btn-${size}`);
+            });
+            // adjust font-size of title
+            if (size === 'xl') {self.titlebar.style.fontSize = '1.5rem';}
+            else if (size === 'lg') {self.titlebar.style.fontSize = '1.25rem';}
+            else if (size === 'md') {self.titlebar.style.fontSize = '1.05rem';}
+            else if (size === 'sm') {self.titlebar.style.fontSize = '.9rem';}
+            else if (size === 'xs') {self.titlebar.style.fontSize = '.8rem';}
+        };
         self.setHeaderControls = (cb) => {
             const controls = ['close', 'maximize', 'normalize', 'minimize', 'smallify', 'smallifyrev'],
-                option = options.headerControls;
-            if (typeof option === 'string') {
-                if (option === 'none') {
-                    controls.forEach((item) => {
-                        self.setControlStatus(item, 'remove');
-                    });
-                } else if (option === 'closeonly') {
-                    controls.forEach((item) => {
-                        if (item !== 'close') {self.setControlStatus(item, 'remove');}
-                    });
+                option = jsPanel.pOheaderControls(options.headerControls);
+            controls.forEach((item) => {
+                if (option[item]) {
+                    self.setControlStatus(item, option[item]);
                 }
-            } else {
-                controls.forEach((item) => {
-                    if (option[item]) {
-                        self.setControlStatus(item, option[item]);
-                    }
-                });
-            }
+            });
+            self.setControlSize(option.size);
             if (cb) {cb.call(self, self);}
             return self;
         };
@@ -3634,10 +3721,8 @@ const jsPanel = {
                 if (options.rtl.lang) {item.lang = options.rtl.lang;}
             });
         };
-
         // option.id
         self.id = options.id;
-
         // option.paneltype classname
         self.classList.add('jsPanel-' + options.paneltype);
 
@@ -3649,7 +3734,6 @@ const jsPanel = {
         // option.container
         panelContainer.append(self);
         self.front(false, false); // just to ensure iframe code in jsPanel.front() works for very first panel as well, second false prevents onfronted callbacks to be executed
-
         // option.theme
         self.setTheme(options.theme);
 
@@ -3658,25 +3742,18 @@ const jsPanel = {
             self.classList.add(`jsPanel-depth-${options.boxShadow}`);
         }
 
-        /* option.header,
-         option.iconfont,
-         option.headerControls,
-         option.headerLogo,
-         option.headerTitle
-         */
+        /* option.header, option.iconfont, option.headerControls, option.headerLogo, option.headerTitle */
         if (options.header) {
             if (options.headerLogo) {self.setHeaderLogo(options.headerLogo);}
             self.setIconfont(options.iconfont);
             self.setHeaderTitle(options.headerTitle);
             self.setHeaderControls();
-
             if (options.header === 'auto-show-hide') {
                 let boxShadow = 'jsPanel-depth-' + options.boxShadow;
                 self.header.style.opacity = 0;
                 self.style.backgroundColor = 'transparent';
                 this.remClass(self, boxShadow);
                 this.setClass(self.content, boxShadow);
-
                 self.header.addEventListener('mouseenter', function () {
                     self.header.style.opacity = 1;
                     jsPanel.setClass(self, boxShadow);
@@ -3740,14 +3817,13 @@ const jsPanel = {
 
         // option.rtl
         if (options.rtl) {self.setRtl();}
-
         // option.size -- should be after option.theme
         self.setSize();
 
         // option.position
         self.status = 'normalized';
         // if option.position evaluates to false panel will not be positioned at all
-        if (options.position || options.position !== 'cursor') {
+        if (options.position) {
             this.position(self, options.position);
         } else {
             self.style.opacity = 1;
@@ -3961,12 +4037,6 @@ const jsPanel = {
     }
 
 };
-
-jsPanel.jsPanelError = function (msg) {
-    this.message = msg;
-    this.name = 'jsPanel Error';
-};
-jsPanel.jsPanelError.prototype = new (Error);
 
 // Add CommonJS module exports, so it can be imported using require() in Node.js
 // https://nodejs.org/docs/latest/api/modules.html

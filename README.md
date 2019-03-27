@@ -1,6 +1,6 @@
 ![license MIT](https://img.shields.io/badge/license-MIT-blue.svg) [![npm version](https://badge.fury.io/js/jspanel4.svg)](https://badge.fury.io/js/jspanel4) [![npm](https://img.shields.io/npm/dt/express.svg)](https://www.npmjs.com/package/jspanel4) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/jsPanel/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
-## [jsPanel 4.5.0 released 2019-02-12](#)
+## [jsPanel 4.6.0 released 2019-03-27](#)
 
 <img src="https://res.cloudinary.com/stefanstraesser-eu/image/upload/v1547636902/github-banner_glu4el.jpg">
 

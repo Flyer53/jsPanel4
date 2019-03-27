@@ -64,7 +64,7 @@ if (!jsPanel.layout) {
         restoreId(restoreConfig = {}) {
             let id, config, storage;
             if (!restoreConfig.id || !restoreConfig.config) {
-                console.error('Id or prefdefined panel configuration is missing!');
+                console.error('Id or predefined panel configuration is missing!');
                 return false;
             } else {
                 id = restoreConfig.id;
@@ -91,7 +91,7 @@ if (!jsPanel.layout) {
         restore(restoreConfig = {}) {
             let predefinedConfigs, storage;
             if (!restoreConfig.configs) {
-                console.error('Object with prefdefined panel configurations is missing!');
+                console.error('Object with predefined panel configurations is missing!');
                 return false;
             } else {
                 predefinedConfigs = restoreConfig.configs;

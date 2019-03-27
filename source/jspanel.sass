@@ -1,5 +1,5 @@
 @charset "UTF-8"
-/* jspanel.sass: 2019-02-12 09:32 */
+/* jspanel.sass: 2019-02-17 11:18 */
 
 .default-bg, .secondary-bg
   background-color: #b0bec5 // Marerial Design bluegray200
@@ -53,7 +53,6 @@
 
   .jsPanel-hdr
     +basic-mixin
-    font-size: 1rem
     display: flex
     flex-direction: column
     flex-shrink: 0
@@ -67,7 +66,6 @@
     overflow-x: hidden
     overflow-y: auto
     flex-grow: 1
-    //scrollbar-width: thin
 
     pre
       color: inherit /* this is just to override the bootstrap setting */
@@ -103,7 +101,7 @@
 .jsPanel-hdr.jsPanel-hdr-light .jsPanel-btn:hover
   background-color: rgba(0,0,0,0.15)
 
-.jsPanel-headerbar, .jsPanel-hdr-toolbar
+.jsPanel-hdr-toolbar
   font-size: 1rem
 
 .jsPanel-headerbar
@@ -116,6 +114,7 @@
 .jsPanel-titlebar
   display: flex
   align-items: center
+  font-size: 1rem
   flex: 1 1 0px
   cursor: move
   height: 100%
@@ -125,10 +124,8 @@
     white-space: nowrap
     overflow: hidden
     text-overflow: ellipsis
-    font-size: 1rem
     font-variant: small-caps
     font-weight: normal
-    line-height: 1.5
     margin: 0 5px 0 8px
     min-width: 0    // needed in order to make text-overflow: ellipsis work
 
@@ -145,32 +142,93 @@
   touch-action: none
   margin: 3px
 
-  div
-
   .jsPanel-btn
     cursor: pointer
     touch-action: none
     border-radius: 3px
 
-    span
+    svg.jsPanel-icon, span, i
       vertical-align: middle
-      padding: 0 4px 0 2px
 
     span.glyphicon
       padding: 0 2px
 
-    svg.jsPanel-icon
-      vertical-align: middle
-      width: 32px
-      height: 32px
-      padding: 5px
-
     svg.svg-inline--fa
-      font-size: 20px
       margin: 4px 4px 0 4px
 
   .jsPanel-btn-normalize, .jsPanel-btn-smallifyrev
     display: none
+
+  .jsPanel-btn.jsPanel-btn-xl
+    svg:not(.svg-inline--fa), span:not(.material-icons)
+      width: 2.4rem
+      height: 2.4rem // these are the values for the built-in SVGs
+      padding: 3px
+    .svg-inline--fa
+      font-size: 2rem
+    span.material-icons
+      font-size: 2.2rem
+    span[class^=fa]
+      width: auto
+      height: auto    // font awesome webfont values
+      font-size: 2rem
+      margin: 0 4px
+
+  .jsPanel-btn.jsPanel-btn-lg
+    svg:not(.svg-inline--fa), span:not(.material-icons)
+      width: 2.2rem
+      height: 2.2rem
+      padding: 5px
+    .svg-inline--fa
+      font-size: 1.75rem
+    span.material-icons
+      font-size: 1.9rem
+    span[class^=fa]
+      width: auto
+      height: auto
+      font-size: 1.75rem
+
+  .jsPanel-btn.jsPanel-btn-md
+    svg:not(.svg-inline--fa), span:not(.material-icons)
+      width: 2rem
+      height: 2rem
+      padding: 5px
+    .svg-inline--fa
+      font-size: 1.5rem
+    span.material-icons
+      font-size: 1.6rem
+    span[class^=fa]
+      width: auto
+      height: auto
+      font-size: 1.5rem
+
+  .jsPanel-btn.jsPanel-btn-sm
+    svg:not(.svg-inline--fa), span:not(.material-icons)
+      width: 1.7rem
+      height: 1.7rem
+      padding: 5px
+    .svg-inline--fa
+      font-size: 1.25rem
+    span.material-icons
+      font-size: 1.3rem
+    span[class^=fa]
+      width: auto
+      height: auto
+      font-size: 1.25rem
+
+  .jsPanel-btn.jsPanel-btn-xs
+    svg:not(.svg-inline--fa), span:not(.material-icons)
+      width: 1.4rem
+      height: 1.4rem
+      padding: 3px 5px 5px
+    .svg-inline--fa
+      font-size: 1rem
+    span.material-icons
+      font-size: 1rem
+    span[class^=fa]
+      width: auto
+      height: auto
+      font-size: 1rem
 
 .jsPanel-hdr-toolbar
   display: none
@@ -220,7 +278,7 @@
     display: flex
     align-items: center
     width: 200px
-    height: 40px
+    height: 36px
     margin: 1px 1px 0 0
     z-index: 9999
 

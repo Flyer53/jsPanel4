@@ -1,5 +1,17 @@
 ## CHANGELOG
 
+### Version 4.6.0 *released 2019-03-27*
+
++ **bugfix** in `option.dragit.snap` concerning use of `trigger: 'pointer'`
++ **bugfix** concerning `jspaneldragstop/jspanelresizestop` events
++ **bugfix** in method `front()`
++ **bugfix** in tooltip extension
++ **added** theme modifier `'filleddark'`
++ **added** parameter `size` to option `headerControls` in order to set size of controls
++ **added** some more return values to method `overlaps()`
++ **added** `jsPanel.errorReporting` to turn off/on error jsPanel reporting
++ various minor fixes and improvements
+
 ### Version 4.5.0 *released 2019-02-12*
 
 + jsPanel now uses **pointer events** if supported

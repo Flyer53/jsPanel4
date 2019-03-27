@@ -1,4 +1,4 @@
-/* jspanel.sass: 2019-02-12 09:32 */
+/* jspanel.sass: 2019-02-17 11:18 */
 .default-bg, .secondary-bg {
   background-color: #b0bec5; }
 
@@ -42,7 +42,6 @@
     vertical-align: baseline;
     font-family: Roboto,"Open Sans",Lato,"Helvetica Neue",Arial,sans-serif;
     font-weight: normal;
-    font-size: 1rem;
     display: flex;
     flex-direction: column;
     flex-shrink: 0; }
@@ -90,7 +89,7 @@
 .jsPanel-hdr.jsPanel-hdr-light .jsPanel-btn:hover {
   background-color: rgba(0, 0, 0, 0.15); }
 
-.jsPanel-headerbar, .jsPanel-hdr-toolbar {
+.jsPanel-hdr-toolbar {
   font-size: 1rem; }
 
 .jsPanel-headerbar {
@@ -106,6 +105,7 @@
 .jsPanel-titlebar {
   display: flex;
   align-items: center;
+  font-size: 1rem;
   flex: 1 1 0px;
   cursor: move;
   height: 100%;
@@ -114,10 +114,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 1rem;
     font-variant: small-caps;
     font-weight: normal;
-    line-height: 1.5;
     margin: 0 5px 0 8px;
     min-width: 0; }
     .jsPanel-titlebar .jsPanel-title small {
@@ -136,21 +134,75 @@
     cursor: pointer;
     touch-action: none;
     border-radius: 3px; }
-    .jsPanel-controlbar .jsPanel-btn span {
-      vertical-align: middle;
-      padding: 0 4px 0 2px; }
+    .jsPanel-controlbar .jsPanel-btn svg.jsPanel-icon, .jsPanel-controlbar .jsPanel-btn span, .jsPanel-controlbar .jsPanel-btn i {
+      vertical-align: middle; }
     .jsPanel-controlbar .jsPanel-btn span.glyphicon {
       padding: 0 2px; }
-    .jsPanel-controlbar .jsPanel-btn svg.jsPanel-icon {
-      vertical-align: middle;
-      width: 32px;
-      height: 32px;
-      padding: 5px; }
     .jsPanel-controlbar .jsPanel-btn svg.svg-inline--fa {
-      font-size: 20px;
       margin: 4px 4px 0 4px; }
   .jsPanel-controlbar .jsPanel-btn-normalize, .jsPanel-controlbar .jsPanel-btn-smallifyrev {
     display: none; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-xl svg:not(.svg-inline--fa), .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-xl span:not(.material-icons) {
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 3px; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-xl .svg-inline--fa {
+    font-size: 2rem; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-xl span.material-icons {
+    font-size: 2.2rem; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-xl span[class^=fa] {
+    width: auto;
+    height: auto;
+    font-size: 2rem;
+    margin: 0 4px; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-lg svg:not(.svg-inline--fa), .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-lg span:not(.material-icons) {
+    width: 2.2rem;
+    height: 2.2rem;
+    padding: 5px; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-lg .svg-inline--fa {
+    font-size: 1.75rem; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-lg span.material-icons {
+    font-size: 1.9rem; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-lg span[class^=fa] {
+    width: auto;
+    height: auto;
+    font-size: 1.75rem; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-md svg:not(.svg-inline--fa), .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-md span:not(.material-icons) {
+    width: 2rem;
+    height: 2rem;
+    padding: 5px; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-md .svg-inline--fa {
+    font-size: 1.5rem; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-md span.material-icons {
+    font-size: 1.6rem; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-md span[class^=fa] {
+    width: auto;
+    height: auto;
+    font-size: 1.5rem; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-sm svg:not(.svg-inline--fa), .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-sm span:not(.material-icons) {
+    width: 1.7rem;
+    height: 1.7rem;
+    padding: 5px; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-sm .svg-inline--fa {
+    font-size: 1.25rem; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-sm span.material-icons {
+    font-size: 1.3rem; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-sm span[class^=fa] {
+    width: auto;
+    height: auto;
+    font-size: 1.25rem; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-xs svg:not(.svg-inline--fa), .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-xs span:not(.material-icons) {
+    width: 1.4rem;
+    height: 1.4rem;
+    padding: 3px 5px 5px; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-xs .svg-inline--fa {
+    font-size: 1rem; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-xs span.material-icons {
+    font-size: 1rem; }
+  .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-xs span[class^=fa] {
+    width: auto;
+    height: auto;
+    font-size: 1rem; }
 
 .jsPanel-hdr-toolbar {
   display: none;
@@ -197,7 +249,7 @@
     display: flex;
     align-items: center;
     width: 200px;
-    height: 40px;
+    height: 36px;
     margin: 1px 1px 0 0;
     z-index: 9999; }
     #jsPanel-replacement-container .jsPanel-replacement .jsPanel-hdr, .jsPanel-minimized-box .jsPanel-replacement .jsPanel-hdr, .jsPanel-minimized-container .jsPanel-replacement .jsPanel-hdr {

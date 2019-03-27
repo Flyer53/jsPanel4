@@ -28,11 +28,11 @@ if (!jsPanel.tooltip) {
 
     jsPanel.tooltip = {
 
-        version: '1.2.1',
-        date: '2019-02-09 12:07',
+        version: '1.2.2',
+        date: '2019-03-19 17:23',
 
         defaults: {
-            //position: is set in jsPanel.tooltip.create()
+            //tip.options.position: is set in jsPanel.tooltip.create()
             border: '1px solid',
             dragit: false,
             resizeit: false,
@@ -59,13 +59,8 @@ if (!jsPanel.tooltip) {
             }
 
             if (!target) {
-                const error = new window.jsPanelError('TOOLTIP SETUP FAILED!\nEither option target is missing in the tooltip configuration or the target does nor exist in the document!');
-                try {
-                    throw error;
-                } catch (e) {
-                    if (callback) {callback.call(e, e);}
-                }
-                console.error(error.name+':', error.message);
+                try {throw new jsPanel.jsPanelError('TOOLTIP SETUP FAILED!<br>Either option target is missing in the tooltip configuration or the target does nor exist in the document!');}
+                catch (e) {jsPanel.error(e);}
                 return false;
             }
 
@@ -81,7 +76,7 @@ if (!jsPanel.tooltip) {
                 opts = Object.assign({}, options.config, options);
                 delete opts.config;
             }
-            opts = Object.assign({}, this.defaults, opts);
+            opts = Object.assign({}, jsPanel.tooltip.defaults, opts);
             opts.position = Object.assign({}, options.position);
             opts.position.of = options.position.of || target;
 
@@ -116,7 +111,7 @@ if (!jsPanel.tooltip) {
                         panel.header.style.cursor = 'default';
                         panel.footer.style.cursor = 'default';
 
-                        // check whether contextmenu is triggered from within a modal panel or panel and if so update z-index
+                        // check whether tooltip is triggered from within a modal panel or panel and if so update z-index
                         if (target.closest('.jsPanel-modal')) {
                             panel.style.zIndex = target.closest('.jsPanel-modal').style.zIndex;
                         } else {
@@ -126,16 +121,16 @@ if (!jsPanel.tooltip) {
                             panel.style.zIndex = jsPanel.zi.next();
                         }
 
-                        // do not use 'click' instead of jsPanel.evtStart
+                        // do not use 'click' instead of jsPanel.pointerdown
                         jsPanel.pointerdown.forEach(function (evt) {
-                            panel.addEventListener(evt, e => {
+                            panel.addEventListener(evt, (e) => {
                                 e.stopPropagation();
                             }, false);
                         });
 
                         // add tooltip connector
                         if (opts.connector) {
-                            let tipPos = jsPanel.tooltip.relativeTipPos(panel);
+                            let tipPos = jsPanel.tooltip.relativeTipPos(panel.options.position);
                             if (tipPos !== 'over') {
                                 panel.append(jsPanel.tooltip.addConnector(panel, tipPos));
                             }
@@ -162,60 +157,46 @@ if (!jsPanel.tooltip) {
 
         },
 
-        relativeTipPos(tip) {
-            // returns the basic position of the tooltip relative to option.position.of (top, right, right-bottom etc.)
-            let relativePosition,
-                target = tip.options.position.of || tip.options.target;
-            if (typeof target === 'string') {
-                target = document.querySelector(target);
-            }
-            let tipRect = tip.getBoundingClientRect(),
-                targetRect = target.getBoundingClientRect();
+        relativeTipPos(position) {
+            // returns the basic tip.options.position of the tooltip relative to option.tip.options.position.of (top, right, right-bottom etc.)
+            let relPos;
 
-            if (parseInt(tipRect.right) <= parseInt(targetRect.left)) {
-                if (parseInt(tipRect.bottom) <= parseInt(targetRect.top)) {
-                    relativePosition = 'left-top-corner';
-                } else if (parseInt(tipRect.top) >= parseInt(targetRect.bottom)) {
-                    relativePosition = 'left-bottom-corner';
-                } else if (parseInt(tipRect.top) === parseInt(targetRect.top)) {
-                    relativePosition = 'lefttop';
-                } else if (parseInt(tipRect.bottom) === parseInt(targetRect.bottom)) {
-                    relativePosition = 'leftbottom';
-                } else {
-                    relativePosition = 'left';
-                }
-            } else if (parseInt(tipRect.left) >= parseInt(targetRect.right)) {
-                if (parseInt(tipRect.bottom) <= parseInt(targetRect.top)) {
-                    relativePosition = 'right-top-corner';
-                } else if (parseInt(tipRect.top) >= parseInt(targetRect.bottom)) {
-                    relativePosition = 'right-bottom-corner';
-                } else if (parseInt(tipRect.top) === parseInt(targetRect.top)) {
-                    relativePosition = 'righttop';
-                } else if (parseInt(tipRect.bottom) === parseInt(targetRect.bottom)) {
-                    relativePosition = 'rightbottom';
-                } else {
-                    relativePosition = 'right';
-                }
-            } else if (parseInt(tipRect.bottom) <= parseInt(targetRect.top)) {
-                if (parseInt(tipRect.left) === parseInt(targetRect.left)) {
-                    relativePosition = 'topleft';
-                } else if (parseInt(tipRect.right) === parseInt(targetRect.right)) {
-                    relativePosition = 'topright';
-                } else {
-                    relativePosition = 'top';
-                }
-            } else if (parseInt(tipRect.top) >= parseInt(targetRect.bottom)) {
-                if (parseInt(tipRect.left) === parseInt(targetRect.left)) {
-                    relativePosition = 'bottomleft';
-                } else if (parseInt(tipRect.right) === parseInt(targetRect.right)) {
-                    relativePosition = 'bottomright';
-                } else {
-                    relativePosition = 'bottom';
-                }
-            } else {relativePosition = 'over';}
+            if (position.my === 'center-bottom' && position.at === 'center-top') {
+                relPos = 'top';
+            } else if (position.my === 'left-center' && position.at === 'right-center') {
+                relPos = 'right';
+            } else if (position.my === 'center-top' && position.at === 'center-bottom') {
+                relPos = 'bottom';
+            } else if (position.my === 'right-center' && position.at === 'left-center') {
+                relPos = 'left';
+            } else if (position.my === 'right-bottom' && position.at === 'left-top') {
+                relPos = 'left-top-corner';
+            } else if (position.my === 'left-bottom' && position.at === 'right-right') {
+                relPos = 'right-top-corner';
+            } else if (position.my === 'left-top' && position.at === 'right-bottom') {
+                relPos = 'right-bottom-corner';
+            } else if (position.my === 'right-top' && position.at === 'left-bottom') {
+                relPos = 'left-bottom-corner';
+            } else if (position.my === 'left-bottom' && position.at === 'left-top') {
+                relPos = 'topleft';
+            } else if (position.my === 'right-bottom' && position.at === 'right-top') {
+                relPos = 'topright';
+            } else if (position.my === 'left-top' && position.at === 'right-top') {
+                relPos = 'righttop';
+            } else if (position.my === 'left-bottom' && position.at === 'right-bottom') {
+                relPos = 'rightbottom';
+            } else if (position.my === 'right-top' && position.at === 'right-bottom') {
+                relPos = 'bottomright';
+            } else if (position.my === 'left-top' && position.at === 'left-bottom') {
+                relPos = 'bottomleft';
+            } else if (position.my === 'right-bottom' && position.at === 'left-bottom') {
+                relPos = 'leftbottom';
+            } else if (position.my === 'right-top' && position.at === 'left-top') {
+                relPos = 'lefttop';
+            } else {relPos = 'over';}
 
-            return relativePosition;
-        },
+            return relPos;
+        },        
 
         addConnector(tip, relposition) {
             let left, top, connCSS, connBg,
@@ -281,7 +262,6 @@ if (!jsPanel.tooltip) {
                     }
                     relposition = 'right';
                 }
-
                 connCSS = {
                     left: left,
                     top: top,
@@ -291,40 +271,29 @@ if (!jsPanel.tooltip) {
 
             jsPanel.setStyle(conn, connCSS);
 
-            tip.classList.add(`jsPanel-tooltip-${relposition}`);
-
             return conn;
         },
 
         // reposition is still experimental
         reposition(tip, newposition, cb) {
-            // newposition must be an object
-            // first save connector setting and then remove connector
-            let connector = tip.querySelector('.jsPanel-connector'),
-                hasConnector;
-            if (connector) {
-                hasConnector = tip.options.connector;
-                tip.removeChild(connector);
-            }
-
-            // get option.position.of
-            newposition.of = tip.options.position.of;
-
-            // reposition tooltip
-            tip.reposition(newposition);
-
-            // ... and add connector again
-            if (hasConnector) {
-                let tipPos = this.relativeTipPos(tip);
-                if (tipPos !== 'over') {
-                    tip.append(this.addConnector(tip, tipPos));
+            setTimeout(function () { // switch of connector doesn't work properly without timeout
+                // newposition must be an object
+                // get option.tip.position.of
+                newposition.of = tip.options.position.of;
+                // reposition tooltip
+                tip.reposition(newposition);
+                // ... and add connector again
+                if (tip.options.connector) {
+                    let connector = tip.querySelector('div.jsPanel-connector');
+                    tip.removeChild(connector);
+                    let tipPos = jsPanel.tooltip.relativeTipPos(newposition);
+                    if (tipPos !== 'over') {
+                        tip.append(jsPanel.tooltip.addConnector(tip, tipPos));
+                    }
                 }
-            }
-
-            if (cb) {cb.call(tip, tip);}
-
-            return tip;
-
+                if (cb) {cb.call(tip, tip);}
+                return tip;
+            },200);
         },
 
     };
