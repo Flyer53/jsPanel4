@@ -8,12 +8,13 @@ if (!jsPanel.layout) {
 
     jsPanel.layout = {
 
-        version: '1.1.0',
-        date: '2018-11-30 10:30',
+        version: '1.2.0',
+        date: '2019-04-22 09:15',
+        storage: localStorage,
 
         save(saveConfig = {}) {
             let selector = saveConfig.selector ? saveConfig.selector : '.jsPanel-standard';
-            let storage  = saveConfig.storagename ? saveConfig.storagename : 'jspanels';
+            let storageName  = saveConfig.storagename ? saveConfig.storagename : 'jspanels';
 
             const collection = document.querySelectorAll(selector);
             let panels = [];
@@ -28,22 +29,22 @@ if (!jsPanel.layout) {
                 return a.zIndex - b.zIndex;
             });
 
-            window.localStorage.removeItem(storage);
+            this.storage.removeItem(storageName);
             let storedData = JSON.stringify(panels);
-            window.localStorage.setItem(storage, storedData);
+            this.storage.setItem(storageName, storedData);
             return storedData;
         },
 
         getAll(storagename = 'jspanels') {
-            if (localStorage[storagename]) {
-                return JSON.parse(localStorage[storagename]);
+            if (this.storage[storagename]) {
+                return JSON.parse(this.storage[storagename]);
             } else {
                 return false;
             }
         },
 
         getId(id, storagename = 'jspanels') {
-            if (localStorage[storagename]) {
+            if (this.storage[storagename]) {
                 let panels = this.getAll(storagename),
                     panel;
                 panels.forEach(item => {
@@ -62,45 +63,51 @@ if (!jsPanel.layout) {
         },
 
         restoreId(restoreConfig = {}) {
-            let id, config, storage;
+            let id, config, storageName;
             if (!restoreConfig.id || !restoreConfig.config) {
                 console.error('Id or predefined panel configuration is missing!');
                 return false;
             } else {
                 id = restoreConfig.id;
                 config = restoreConfig.config;
-                storage = restoreConfig.storagename ? restoreConfig.storagename : 'jspanels';
+                storageName = restoreConfig.storagename ? restoreConfig.storagename : 'jspanels';
             }
 
-            let storedpanel = this.getId(id, storage);
+            let storedpanel = this.getId(id, storageName);
             if (storedpanel) {
                 let savedConfig = {
                     id: storedpanel.id,
                     setStatus: storedpanel.status,
                     panelSize: {width: storedpanel.width, height: storedpanel.height},
-                    position: {my: 'left-top', at: 'left-top', offsetX: storedpanel.left, offsetY: storedpanel.top},
+                    //position: {my: 'left-top', at: 'left-top', offsetX: storedpanel.left, offsetY: storedpanel.top},
+                    // for some reason I didn't find out yet position results in doubled offsets????
+                    // therefore simply apply left and top as below
                     zIndex: storedpanel.zIndex
                 };
                 let useConfig = Object.assign({}, config, savedConfig);
                 let restoredPanel = jsPanel.create(useConfig);
                 restoredPanel.style.zIndex = savedConfig.zIndex;
+
+                restoredPanel.style.left = storedpanel.left;
+                restoredPanel.style.top = storedpanel.top;
+
                 return restoredPanel;
             }
         },
 
         restore(restoreConfig = {}) {
-            let predefinedConfigs, storage;
+            let predefinedConfigs, storageName;
             if (!restoreConfig.configs) {
                 console.error('Object with predefined panel configurations is missing!');
                 return false;
             } else {
                 predefinedConfigs = restoreConfig.configs;
-                storage = restoreConfig.storagename ? restoreConfig.storagename : 'jspanels';
+                storageName = restoreConfig.storagename ? restoreConfig.storagename : 'jspanels';
             }
 
-            if (localStorage[storage]) {
-                let storedPanels = this.getAll(storage);
-                // loop over all panels in storage
+            if (this.storage[storageName]) {
+                let storedPanels = this.getAll(storageName);
+                // loop over all panels in storageName
                 storedPanels.forEach(function (item) {
                     let pId = item.id;
                     // loop over predefined configs to find config with pId
@@ -108,8 +115,7 @@ if (!jsPanel.layout) {
                     for (let conf in predefinedConfigs) {
                         if (predefinedConfigs.hasOwnProperty(conf)) {
                             if (predefinedConfigs[conf].id === pId) {
-                                //jsPanel.layout.restoreId(pId, predefinedConfigs[conf], storage);
-                                jsPanel.layout.restoreId({id: pId, config: predefinedConfigs[conf], storagename: storage});
+                                jsPanel.layout.restoreId({id: pId, config: predefinedConfigs[conf], storagename: storageName});
                             }
                         }
                     }

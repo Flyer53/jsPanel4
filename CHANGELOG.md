@@ -1,5 +1,34 @@
 ## CHANGELOG
 
+### Version 4.7.0 *released 2019-06-18*
+
++ **bugfix** in option `dragit`
++ **bugfix** in option `resizeit`
++ **bugfix** in method `normalize()`
++ **bugfix** in method `resize()`
++ **bugfix** in `jsPanel.addScript()`
++ **bugfix** in the `contextmenu` extension
++ **bugfix** in the `dock` extension
++ **completely recoded** methods handling option `position`
++ **completely recoded** options `onwindowresize` and `onparentresize`
++ **added** option `addCloseControl` to add an additional close control to the
+panel (might be handy if the header section is removed)
++ **added** a customizable progressbar to option `autoclose`
++ **added** method `addControl()` to add custom controls to the controlbar of existing panels
++ **added** tooltip method `remove()` in order to remove a handler triggering a specific tooltip
++ **added** polyfill `Number.isInteger()` to support IE11
++ **updated** option `headerControls` in order to add custom controls
++ **option theme:** when `theme: "none"` or the method `setTheme()` is used 
+properties assigned via options `border` and/or `borderRadius` remain untouched
++ reworked SVG icons for the controls
++ **updated** methods `setBorder()` and `setBorderRadius()` are now available to
+existing panels in order to set/change CSS border/borderRadius
++ **updated** options `border` and `borderRadius`
++ **updated tooltip extension:** due to new positioning methods
++ **updated layout extension:** added optional use of `sessionStorage` instead of `localStorage`
++ **updated hint extension:** due to updated header controls
++ various internal bugfixes
+
 ### Version 4.6.0 *released 2019-03-27*
 
 + **bugfix** in `option.dragit.snap` concerning use of `trigger: 'pointer'`

@@ -1,5 +1,5 @@
 @charset "UTF-8"
-/* jspanel.sass: 2019-02-17 11:18 */
+/* jspanel.sass: 2019-06-18 08:55 */
 
 .default-bg, .secondary-bg
   background-color: #b0bec5 // Marerial Design bluegray200
@@ -56,6 +56,7 @@
     display: flex
     flex-direction: column
     flex-shrink: 0
+    line-height: 1.1
 
   .jsPanel-content
     +basic-mixin
@@ -75,7 +76,6 @@
     justify-content: flex-end
     flex-wrap: nowrap
     align-items: center
-    border-top: 1px solid #e0e0e0
     display: none
     box-sizing: border-box
     font-size: 1rem
@@ -89,11 +89,7 @@
     display: flex
     flex-shrink: 0
     margin: 0
-    padding: 0 8px
-
-    > p, span, strong, i
-      margin: 0
-      padding: 3px 0
+    padding: 3px 8px
 
 .jsPanel-hdr.jsPanel-hdr-dark .jsPanel-btn:hover
   background-color: rgba(255,255,255,0.4)
@@ -146,6 +142,10 @@
     cursor: pointer
     touch-action: none
     border-radius: 3px
+    border: 0
+    padding: 0
+    margin: 0
+    background-color: transparent
 
     svg.jsPanel-icon, span, i
       vertical-align: middle
@@ -156,14 +156,14 @@
     svg.svg-inline--fa
       margin: 4px 4px 0 4px
 
-  .jsPanel-btn-normalize, .jsPanel-btn-smallifyrev
+  .jsPanel-btn-normalize
     display: none
 
   .jsPanel-btn.jsPanel-btn-xl
     svg:not(.svg-inline--fa), span:not(.material-icons)
-      width: 2.4rem
-      height: 2.4rem // these are the values for the built-in SVGs
-      padding: 3px
+      width: 2rem
+      height: 2rem
+      margin: 2px 3px
     .svg-inline--fa
       font-size: 2rem
     span.material-icons
@@ -176,9 +176,9 @@
 
   .jsPanel-btn.jsPanel-btn-lg
     svg:not(.svg-inline--fa), span:not(.material-icons)
-      width: 2.2rem
-      height: 2.2rem
-      padding: 5px
+      width: 1.75rem
+      height: 1.75rem
+      margin: 2px 3px
     .svg-inline--fa
       font-size: 1.75rem
     span.material-icons
@@ -190,9 +190,9 @@
 
   .jsPanel-btn.jsPanel-btn-md
     svg:not(.svg-inline--fa), span:not(.material-icons)
-      width: 2rem
-      height: 2rem
-      padding: 5px
+      width: 1.5rem
+      height: 1.5rem
+      margin: 2px 3px
     .svg-inline--fa
       font-size: 1.5rem
     span.material-icons
@@ -204,9 +204,9 @@
 
   .jsPanel-btn.jsPanel-btn-sm
     svg:not(.svg-inline--fa), span:not(.material-icons)
-      width: 1.7rem
-      height: 1.7rem
-      padding: 5px
+      width: 1.25rem
+      height: 1.25rem
+      margin: 2px 3px
     .svg-inline--fa
       font-size: 1.25rem
     span.material-icons
@@ -218,9 +218,9 @@
 
   .jsPanel-btn.jsPanel-btn-xs
     svg:not(.svg-inline--fa), span:not(.material-icons)
-      width: 1.4rem
-      height: 1.4rem
-      padding: 3px 5px 5px
+      width: 1rem
+      height: 1rem
+      margin: 1px 3px
     .svg-inline--fa
       font-size: 1rem
     span.material-icons
@@ -237,11 +237,7 @@
 
 .jsPanel-hdr-toolbar.active
   +header-mixin
-  padding: 0 8px
-
-  > p, span, strong, i
-    margin: 0
-    padding: 3px 0
+  padding: 3px 8px
 
 
 
@@ -278,7 +274,7 @@
     display: flex
     align-items: center
     width: 200px
-    height: 36px
+    height: 34px
     margin: 1px 1px 0 0
     z-index: 9999
 
@@ -388,41 +384,28 @@
 
 
 /* Error panel ----------------- */
-.jsPanel-error-content
-  display: flex
+.jsPanel-error
 
-  .jsPanel-error-content-left
-    display: flex
-    justify-content: center
-    align-items: center
-    padding: 10px
-    margin: 5px
-
-  .jsPanel-error-content-right
-    flex-grow: 1
-    font-size: 1.25rem
-    padding: 10px 10px 10px 0
-    margin: 5px 5px 5px 0
+  .jsPanel-content
+    border: 0 !important
+    padding-top: 0 !important
+    font-size: .9rem
+    text-align: center
 
     p
-      padding: 0
       margin: 0
-      text-align: center
 
-      code
-        background: red
-        color: #fff
-        padding: 2px 5px
-        border-radius: .25rem
+    mark
+      background: lavender
+      border-radius: .33rem
+      padding: 0 8px
+      font-family: monospace
 
-.jsPanel-error-close
-  position: absolute
-  right: 3px
-  top: 0
-  cursor: pointer
-
-  svg
-    height: 18px
+    .jsPanel-error-content-separator
+      width: 100%
+      height: 1px
+      background-image: linear-gradient(90deg, rgba(255,255,255,1) 0%, rebeccapurple 50%, rgba(255,255,255,1) 100%)
+      margin-bottom: 10px
 
 
 
@@ -657,6 +640,48 @@
   height: 100%
   background: transparent
 
+
+// styles for the additional close control
+.jsPanel-addCloseCtrl
+  position: absolute
+  top: 0
+  right: 2px
+  cursor: pointer
+  line-height: 1
+  padding: 0
+  z-index: 100
+  border: 0
+  margin: 0
+  background-color: transparent
+
+  svg
+    width: .8rem
+    height: .8rem
+
+.jsPanel-addCloseCtrl.rtl
+  right: unset
+  left: -2px
+
+
+// styles for the autoclose progressbar
+.jsPanel-autoclose-progressbar
+  position: relative
+  width: 100%
+  height: 0
+  overflow: hidden
+
+  .jsPanel-autoclose-progressbar-slider
+    position: absolute
+    width: 0
+    height: 3px
+    background: lightgray
+    right: 0
+
+@keyframes progressbar
+  from
+    width: 0
+  to
+    width: 100%
 
 
 // these styles need to be after the themes

@@ -1,4 +1,4 @@
-/* jspanel.hint.js v1.1.0 (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
+/* jspanel.hint.js v1.2.3 (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
 /* global jsPanel */
 'use strict';
 
@@ -8,14 +8,14 @@ if (!jsPanel.hint) {
 
     jsPanel.hint = {
 
-        version: '1.1.0',
-        date: '2018-11-30 10:30',
+        version: '1.2.3',
+        date: '2019-05-18 10:50',
 
         defaults: {
-            autoclose: 8000,
+            autoclose: true,
             dragit: false,
             resizeit: false,
-            headerControls: 'none'
+            headerControls: 'closeonly xs'
         },
 
         create(options = {}) {

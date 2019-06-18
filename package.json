@@ -1,6 +1,6 @@
 {
   "name": "jspanel4",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "description": "A javascript tool to create highly configurable multifunctional floating panels for use in backend solutions and other web applications. Also usable as modal, tooltip, hint or contextmenu. With built in support for bootstrap (3 & 4), right-to-left text direction and a lot more ...",
   "files": "dist/",
   "main": "./es6module/jspanel.min.js",
@@ -34,20 +34,22 @@
     "email": "info@jspanel.de"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "eslint": "^5.0.0",
-    "eslint-config-standard": "^11.0.0-beta.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-node": "^7.0.0",
-    "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^7.0.1",
-    "gulp-babel-minify": "^0.4.0",
-    "gulp-clean-css": "^3.9.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^4.0.0",
-    "node-sass": "^4.7.2"
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "gulp": "^4.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-babel-minify": "^0.5.0",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-minify": "^3.1.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "node-sass": "^4.12.0"
   }
 }

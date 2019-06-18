@@ -8,8 +8,8 @@ if (!jsPanel.contextmenu) {
 
     jsPanel.contextmenu = {
 
-        version: '1.1.0',
-        date: '2018-11-30 10:30',
+        version: '1.1.1',
+        date: '2019-05-18 10:15',
 
         defaults: {
             //position: is set in jsPanel.contextmenu.create()
@@ -105,13 +105,15 @@ if (!jsPanel.contextmenu) {
     });
 
     // close tooltips on pointerdown in document
-    document.addEventListener(jsPanel.pointerdown, function (e) {
-        document.querySelectorAll('.jsPanel-contextmenu').forEach(function (item) {
-            if (!e.target.closest('.jsPanel-contextmenu')) {
-                item.close();
-            }
-        });
-    },false);
+    jsPanel.pointerdown.forEach(function (evt) {
+        document.addEventListener(evt, function (e) {
+            document.querySelectorAll('.jsPanel-contextmenu').forEach(function (item) {
+                if (!e.target.closest('.jsPanel-contextmenu')) {
+                    item.close();
+                }
+            });
+        },false);
+    });
 
 }
 

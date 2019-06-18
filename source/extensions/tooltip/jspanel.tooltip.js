@@ -28,17 +28,18 @@ if (!jsPanel.tooltip) {
 
     jsPanel.tooltip = {
 
-        version: '1.2.2',
-        date: '2019-03-19 17:23',
+        version: '1.3.0',
+        date: '2019-06-02 16:15',
 
         defaults: {
             //tip.options.position: is set in jsPanel.tooltip.create()
-            border: '1px solid',
+            border: '1px',
             dragit: false,
             resizeit: false,
             headerControls: 'none',
             delay: 400,
-            ttipEvent: 'mouseenter'
+            ttipEvent: 'mouseenter',
+            ttipName: 'default'
         },
 
         create(options = {}, callback) {
@@ -80,7 +81,7 @@ if (!jsPanel.tooltip) {
             opts.position = Object.assign({}, options.position);
             opts.position.of = options.position.of || target;
 
-            target.addEventListener(opts.ttipEvent, () => {
+            target[opts.ttipName] = () => {
 
                 timer = window.setTimeout(function () {
 
@@ -142,7 +143,9 @@ if (!jsPanel.tooltip) {
 
                 }, opts.delay);
 
-            }, false);
+            };
+
+            target.addEventListener(opts.ttipEvent, target[opts.ttipName], false);
 
             // immediately show tooltip
             if (opts.autoshow) {
@@ -194,7 +197,6 @@ if (!jsPanel.tooltip) {
             } else if (position.my === 'right-top' && position.at === 'left-top') {
                 relPos = 'lefttop';
             } else {relPos = 'over';}
-
             return relPos;
         },        
 
@@ -202,16 +204,15 @@ if (!jsPanel.tooltip) {
             let left, top, connCSS, connBg,
                 conn = document.createElement('div');
             conn.className = `jsPanel-connector jsPanel-connector-${relposition}`;
-
             // rest of tooltip positioning is in jspanel.sass
             if (relposition === 'top' || relposition === 'topleft' || relposition === 'topright') {
-                tip.style.top = (parseFloat(tip.style.top) - 12) + 'px';
+                tip.style.top = `calc(${tip.style.top} - 12px)`;
             } else if (relposition === 'right' || relposition === 'righttop' || relposition === 'rightbottom') {
-                tip.style.left = (parseFloat(tip.style.left) + 12) + 'px';
+                tip.style.left = `calc(${tip.style.left} + 12px)`;
             } else if (relposition === 'bottom' || relposition === 'bottomleft' || relposition === 'bottomright') {
-                tip.style.top = (parseFloat(tip.style.top) + 12) + 'px';
+                tip.style.top = `calc(${tip.style.top} + 12px)`;
             } else if (relposition === 'left' || relposition === 'lefttop' || relposition === 'leftbottom') {
-                tip.style.left = (parseFloat(tip.style.left) - 12) + 'px';
+                tip.style.left = `calc(${tip.style.left} - 12px)`;
             }
 
             if (typeof tip.options.connector === 'string') {
@@ -295,6 +296,12 @@ if (!jsPanel.tooltip) {
                 return tip;
             },200);
         },
+
+        // removes specific tooltip from target
+        remove(tgt, evt = 'mouseenter', tip = 'default') {
+            let tooltipToRemove = tgt[tip];
+            tgt.removeEventListener(evt, tooltipToRemove);
+        }
 
     };
 

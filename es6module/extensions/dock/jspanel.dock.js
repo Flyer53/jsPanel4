@@ -1,5 +1,5 @@
-/* jspanel.dock.js v1.1.0 - 2018-11-30 10:30, (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-/* global jsPanel jsPanelError */
+/* jspanel.dock.js v1.1.1 - 2019-05-18 09:40, (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
+/* global jsPanel */
 'use strict';
 
 import {jsPanel} from '../../jspanel.js';
@@ -14,28 +14,30 @@ function dockPanel (config, cb) {
     };
     let conf = Object.assign({}, configDefault, config);
     let master;
+    let slave = document.getElementById(this.id);
     if (conf.master && conf.master.nodeType === 1) {
         master = conf.master;
     } else {
         master = document.querySelector(conf.master);
     }
     if (!master) {
-        const id = this.id;
-        const error = new jsPanelError('Could not dock panel with id <' + id + '> because the panel to dock to does not exist in the document!');
-        try {
-            throw error;
-        } catch (e) {
-            if (cb) {cb.call(e, e);}
+        // if master does not exist show error panel return false
+        if (jsPanel.errorReporting) {
+            try {
+                throw new jsPanel.jsPanelError('&#9664; COULD NOT DOCK PANEL &#9658;<br>The master panel does not exist in the document.');
+            } catch (e) {
+                jsPanel.error(e);
+                if (cb) {cb.call(slave, slave);}
+            }
         }
-        return console.error(error.name+':', error.message);
+        return false;
     }
 
-    let slave = document.getElementById(this.id);
     let position = Object.assign({}, conf.position, {of: master, minLeft: false, minTop: false, maxLeft: false, maxTop: false, autoposition: false});
     if (!position.my) {position.my = configDefault.position.my;}
     if (!position.at) {position.at = configDefault.position.at;}
     slave.options.position = position;
-    ['smallify', 'smallifyrev', 'minimize', 'normalize', 'maximize'].forEach(function (ctrl) {
+    ['smallify', 'minimize', 'normalize', 'maximize'].forEach(function (ctrl) {
         slave.setControlStatus(ctrl, 'remove');
     });
     if (conf.linkSlaveHeight) {
@@ -171,7 +173,7 @@ function dockPanel (config, cb) {
 
 }
 
-dockPanel.getVersion = function () { return '1.1.0'; };
-dockPanel.getDate    = function () { return '2018-11-30 10:30'; };
+dockPanel.getVersion = function () { return '1.1.1'; };
+dockPanel.getDate    = function () { return '2019-05-18 09:40'; };
 
 jsPanel.extend({ dock: dockPanel });
