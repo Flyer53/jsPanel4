@@ -1,4 +1,4 @@
-/* jspanel.sass: 2019-06-18 18:58 */
+/* jspanel.sass: 2019-06-18 08:55 */
 .default-bg, .secondary-bg {
   background-color: #b0bec5; }
 
@@ -134,8 +134,7 @@
     border: 0;
     padding: 0;
     margin: 0;
-    background-color: transparent;
-    box-shadow: none; }
+    background-color: transparent; }
     .jsPanel-controlbar .jsPanel-btn svg.jsPanel-icon, .jsPanel-controlbar .jsPanel-btn span, .jsPanel-controlbar .jsPanel-btn i {
       vertical-align: middle; }
     .jsPanel-controlbar .jsPanel-btn span.glyphicon {
