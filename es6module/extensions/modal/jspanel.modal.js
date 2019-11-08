@@ -14,8 +14,8 @@ if (!jsPanel.modal) {
 
     jsPanel.modal = {
 
-        version: '1.2.0',
-        date: '2019-01-17 13:54',
+        version: '1.2.1',
+        date: '2019-07-25 14:54',
 
         defaults: {
             closeOnEscape:  true,
@@ -95,7 +95,7 @@ if (!jsPanel.modal) {
     };
 
     jsPanel.modal.ziModal = (() => {
-        let val = 10000;
+        let val = jsPanel.ziBase + 10000;
         return {
             next: function() {
                 return val++;

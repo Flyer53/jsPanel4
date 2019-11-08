@@ -1,5 +1,20 @@
 ## CHANGELOG
 
+### Version 4.8.0 *released 2019-11-08*
+
++ **bugfix** in option `resizeit` and panel method `resize()`
++ **bugfix** in method `jsPanel.close()`
++ **added** setting `"content"` to parameter `aspectRatio` of option `resizeit` in order to maintain
+the aspect ratio of the content section while resizing a panel
++ **added** support for Font Awesome duotone icons to option `iconfont`
++ **added** modifier keys to the `resizeit` feature
++ **updated** z-index handling in `modal extension`
++ **updated** handling of `iframes` in the content section while dragging/resizing a panel
++ **updated** event sequence: `jspanelcloseduser` is now fired before `jspanelclosed`
++ **updated** option `onclosed` callback receives a second argument `closedByUser` set to `true` if the panel is closed by user action
++ **updated** option `onbeforeclose` callback receives a third argument `closedByUser` set to `true` if the panel is closed by user action
++ **updated** modal extension due to the updated method `jsPanel.close()`
+
 ### Version 4.7.0 *released 2019-06-18*
 
 + **bugfix** in option `dragit`

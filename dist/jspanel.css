@@ -1,4 +1,4 @@
-/* jspanel.sass: 2019-06-18 18:58 */
+/* jspanel.sass: 2019-08-02 12:46 */
 .default-bg, .secondary-bg {
   background-color: #b0bec5; }
 
@@ -141,7 +141,7 @@
     .jsPanel-controlbar .jsPanel-btn span.glyphicon {
       padding: 0 2px; }
     .jsPanel-controlbar .jsPanel-btn svg.svg-inline--fa {
-      margin: 4px 4px 0 4px; }
+      margin: 2px 3px; }
   .jsPanel-controlbar .jsPanel-btn-normalize {
     display: none; }
   .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-xl svg:not(.svg-inline--fa), .jsPanel-controlbar .jsPanel-btn.jsPanel-btn-xl span:not(.material-icons) {
@@ -277,7 +277,7 @@
   display: flex;
   flex-flow: row wrap; }
 
-/* css for resizeit handles ------------------------- */
+/* css for resizeit handles -------------- */
 .jsPanel-resizeit-handle {
   display: block;
   font-size: 0.1px;
@@ -366,7 +366,7 @@
     background-image: linear-gradient(90deg, white 0%, rebeccapurple 50%, white 100%);
     margin-bottom: 10px; }
 
-/* box-shadows --------------------------------------------------------------------- */
+/* box-shadows -------------------------------------------------------- */
 .jsPanel-depth-1 {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23); }
 
@@ -382,7 +382,7 @@
 .jsPanel-depth-5 {
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3), 0 20px 14px rgba(0, 0, 0, 0.22); }
 
-/* snap sensitive areas ------------------------------------------------------------------------------ */
+/* snap sensitive areas ------------------------------------------------ */
 .jsPanel-snap-area {
   position: fixed;
   background: black;

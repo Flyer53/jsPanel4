@@ -14,8 +14,8 @@ if (!jsPanel.modal) {
 
     jsPanel.modal = {
 
-        version: '1.2.0',
-        date: '2019-01-17 13:54',
+        version: '1.2.2',
+        date: '2019-10-21 09:33',
 
         defaults: {
             closeOnEscape:  true,
@@ -84,7 +84,7 @@ if (!jsPanel.modal) {
                 if (opts.closeOnBackdrop) {
                     jsPanel.pointerup.forEach(function (evt) {
                         document.getElementById(`jsPanel-modal-backdrop-${opts.id}`).addEventListener(evt, function () {
-                            modal.close();
+                            jsPanel.close(modal, null, true);
                         });
                     });
                 }
@@ -95,7 +95,7 @@ if (!jsPanel.modal) {
     };
 
     jsPanel.modal.ziModal = (() => {
-        let val = 10000;
+        let val = jsPanel.ziBase + 10000;
         return {
             next: function() {
                 return val++;
