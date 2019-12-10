@@ -1,5 +1,4 @@
 /* jspanel.hint.js v1.2.3 (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-/* global jsPanel */
 'use strict';
 
 import {jsPanel} from '../../jspanel.js';
@@ -39,4 +38,10 @@ if (!jsPanel.hint) {
 
     };
 
+}
+
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') {
+    module.exports = jsPanel;
 }

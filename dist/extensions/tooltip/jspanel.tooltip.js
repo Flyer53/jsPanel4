@@ -1,6 +1,4 @@
 /* jspanel.tooltip.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-
-/* global jsPanel */
 'use strict'; //import {jsPanel} from '../../jspanel.js';
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent#Polyfill - needed for IE11
 

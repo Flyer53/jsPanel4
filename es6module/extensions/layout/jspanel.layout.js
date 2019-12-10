@@ -1,5 +1,4 @@
 /* jspanel.layout.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-/* global jsPanel */
 'use strict';
 
 import {jsPanel} from '../../jspanel.js';
@@ -8,8 +7,8 @@ if (!jsPanel.layout) {
 
     jsPanel.layout = {
 
-        version: '1.2.0',
-        date: '2019-04-22 09:15',
+        version: '1.3.0',
+        date: '2019-11-26 20:30',
         storage: localStorage,
 
         save(saveConfig = {}) {
@@ -77,21 +76,31 @@ if (!jsPanel.layout) {
             if (storedpanel) {
                 let savedConfig = {
                     id: storedpanel.id,
-                    setStatus: storedpanel.status,
                     panelSize: {width: storedpanel.width, height: storedpanel.height},
-                    //position: {my: 'left-top', at: 'left-top', offsetX: storedpanel.left, offsetY: storedpanel.top},
-                    // for some reason I didn't find out yet position results in doubled offsets????
-                    // therefore simply apply left and top as below
+                    position: `left-top ${storedpanel.left} ${storedpanel.top}`,
                     zIndex: storedpanel.zIndex
                 };
                 let useConfig = Object.assign({}, config, savedConfig);
-                let restoredPanel = jsPanel.create(useConfig);
-                restoredPanel.style.zIndex = savedConfig.zIndex;
 
-                restoredPanel.style.left = storedpanel.left;
-                restoredPanel.style.top = storedpanel.top;
+                jsPanel.create(useConfig, (panel) => {
+                    panel.style.zIndex = savedConfig.zIndex;
+                    panel.saveCurrentDimensions();
+                    panel.saveCurrentPosition();
+                    panel.calcSizeFactors();
+                    // don't put code below in savedConfig.setStatus
+                    if (storedpanel.status !== 'normalized') {
+                        if (storedpanel.status === 'minimized') {
+                            panel.minimize();
+                        } else if (storedpanel.status === 'maximized') {
+                            panel.maximize();
+                        } else if (storedpanel.status === 'smallified') {
+                            panel.smallify();
+                        } else if (storedpanel.status === 'smallifiedmax') {
+                            panel.maximize().smallify();
+                        }
+                    }
+                });
 
-                return restoredPanel;
             }
         },
 
@@ -127,4 +136,10 @@ if (!jsPanel.layout) {
 
     };
 
+}
+
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') {
+    module.exports = jsPanel;
 }

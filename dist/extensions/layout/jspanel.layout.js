@@ -1,12 +1,10 @@
 /* jspanel.layout.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-
-/* global jsPanel */
 'use strict'; //import {jsPanel} from '../../jspanel.js';
 
 if (!jsPanel.layout) {
   jsPanel.layout = {
-    version: '1.2.0',
-    date: '2019-04-22 09:15',
+    version: '1.3.0',
+    date: '2019-11-26 20:30',
     storage: localStorage,
     save: function save() {
       var saveConfig = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -77,22 +75,32 @@ if (!jsPanel.layout) {
       if (storedpanel) {
         var savedConfig = {
           id: storedpanel.id,
-          setStatus: storedpanel.status,
           panelSize: {
             width: storedpanel.width,
             height: storedpanel.height
           },
-          //position: {my: 'left-top', at: 'left-top', offsetX: storedpanel.left, offsetY: storedpanel.top},
-          // for some reason I didn't find out yet position results in doubled offsets????
-          // therefore simply apply left and top as below
+          position: "left-top ".concat(storedpanel.left, " ").concat(storedpanel.top),
           zIndex: storedpanel.zIndex
         };
         var useConfig = Object.assign({}, config, savedConfig);
-        var restoredPanel = jsPanel.create(useConfig);
-        restoredPanel.style.zIndex = savedConfig.zIndex;
-        restoredPanel.style.left = storedpanel.left;
-        restoredPanel.style.top = storedpanel.top;
-        return restoredPanel;
+        jsPanel.create(useConfig, function (panel) {
+          panel.style.zIndex = savedConfig.zIndex;
+          panel.saveCurrentDimensions();
+          panel.saveCurrentPosition();
+          panel.calcSizeFactors(); // don't put code below in savedConfig.setStatus
+
+          if (storedpanel.status !== 'normalized') {
+            if (storedpanel.status === 'minimized') {
+              panel.minimize();
+            } else if (storedpanel.status === 'maximized') {
+              panel.maximize();
+            } else if (storedpanel.status === 'smallified') {
+              panel.smallify();
+            } else if (storedpanel.status === 'smallifiedmax') {
+              panel.maximize().smallify();
+            }
+          }
+        });
       }
     },
     restore: function restore() {

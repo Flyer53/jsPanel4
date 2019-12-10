@@ -1,5 +1,5 @@
 @charset "UTF-8"
-/* jspanel.sass: 2019-08-02 12:46 */
+/* jspanel.sass: 2019-12-05 10:15 */
 
 .default-bg, .secondary-bg
   background-color: #b0bec5 // Material Design bluegray200
@@ -646,22 +646,20 @@
 .jsPanel-addCloseCtrl
   position: absolute
   top: 0
-  right: 2px
+  right: 0
+  width: .8rem
+  height: .8rem
+  margin: 2px
   cursor: pointer
-  line-height: 1
+  line-height: .8rem
   padding: 0
   z-index: 100
   border: 0
-  margin: 0
   background-color: transparent
-
-  svg
-    width: .8rem
-    height: .8rem
 
 .jsPanel-addCloseCtrl.rtl
   right: unset
-  left: -2px
+  left: 0
 
 
 // styles for the autoclose progressbar

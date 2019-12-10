@@ -1,5 +1,4 @@
 /* jspanel.dock.js v1.1.1 - 2019-05-18 09:40, (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-/* global jsPanel */
 'use strict';
 
 //import {jsPanel} from '../../jspanel.js';

@@ -1,6 +1,4 @@
 /* jspanel.contextmenu.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-
-/* global jsPanel */
 'use strict'; //import {jsPanel} from '../../jspanel.js';
 
 if (!jsPanel.contextmenu) {

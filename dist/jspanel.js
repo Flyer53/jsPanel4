@@ -1,6 +1,4 @@
 /* jspanel.js - License MIT, copyright 2013 - 2019 Stefan Straesser <info@jspanel.de> (https://jspanel.de) */
-
-/* global module */
 'use strict';
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -14,8 +12,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 var jsPanel = {
-  version: '4.8.0',
-  date: '2019-11-08 08:35',
+  version: '4.9.0',
+  date: '2019-12-10 11:00',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
@@ -25,7 +23,7 @@ var jsPanel = {
           return this.classList.contains('jsPanel');
         }).some(function (item) {
           if (item.options.closeOnEscape) {
-            jsPanel.close(item, null, true);
+            item.close(null, true);
             return true;
           }
 
@@ -77,7 +75,8 @@ var jsPanel = {
   },
   defaultSnapConfig: {
     sensitivity: 70,
-    trigger: 'panel'
+    trigger: 'panel',
+    active: 'both'
   },
   extensions: {},
   globalCallbacks: false,
@@ -233,7 +232,56 @@ var jsPanel = {
 
     Number.isInteger = Number.isInteger || function (value) {
       return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
-    };
+    }; // Array.prototype.includes() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes
+
+
+    if (!Array.prototype.includes) {
+      Object.defineProperty(Array.prototype, 'includes', {
+        value: function value(searchElement, fromIndex) {
+          if (this == null) {
+            throw new TypeError('"this" is null or not defined');
+          } // 1. Let O be ? ToObject(this value).
+
+
+          var o = Object(this); // 2. Let len be ? ToLength(? Get(O, "length")).
+
+          var len = o.length >>> 0; // 3. If len is 0, return false.
+
+          if (len === 0) {
+            return false;
+          } // 4. Let n be ? ToInteger(fromIndex).
+          //    (If fromIndex is undefined, this step produces the value 0.)
+
+
+          var n = fromIndex | 0; // 5. If n ≥ 0, then
+          //  a. Let k be n.
+          // 6. Else n < 0,
+          //  a. Let k be len + n.
+          //  b. If k < 0, let k be 0.
+
+          var k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+
+          function sameValueZero(x, y) {
+            return x === y || typeof x === 'number' && typeof y === 'number' && isNaN(x) && isNaN(y);
+          } // 7. Repeat, while k < len
+
+
+          while (k < len) {
+            // a. Let elementK be the result of ? Get(O, ! ToString(k)).
+            // b. If SameValueZero(searchElement, elementK) is true, return true.
+            if (sameValueZero(o[k], searchElement)) {
+              return true;
+            } // c. Increase k by 1.
+
+
+            k++;
+          } // 8. Return false
+
+
+          return false;
+        }
+      });
+    }
   }(),
   themes: ['default', 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark'],
   ziBase: 100,
@@ -669,17 +717,17 @@ var jsPanel = {
     brown900: '3E2723'
   },
   errorReporting: 1,
-  modifier: null,
+  modifier: false,
   // stores event.code (e.g. 'ControlLeft') while a key is pressed
   helper: function () {
     document.addEventListener('keydown', function (e) {
       jsPanel.modifier = e.code;
     });
     document.addEventListener('keyup', function () {
-      jsPanel.modifier = null;
+      jsPanel.modifier = false;
     });
   }(),
-  // color methods ----------------
+  // color methods ---------------
   color: function color(val) {
     var color = val.toLowerCase(),
         r,
@@ -1213,7 +1261,6 @@ var jsPanel = {
     if (_position.autoposition && _position.my === _position.at && ['left-top', 'center-top', 'right-top', 'left-bottom', 'center-bottom', 'right-bottom'].indexOf(_position.my) >= 0) {
       pos = this.applyPositionAutopos(panel, pos, _position); //console.log('let pos after applying autoposition:', pos);
     } // apply position.offsetX and position.offsetY
-    // offsetX and offsetY must be set in defaults (jsPanel.defaults.position)
 
 
     if (_position.offsetX || _position.offsetY) {
@@ -1295,7 +1342,7 @@ var jsPanel = {
           position[offset] = position[offset].call(pos, pos, position);
         }
 
-        if (Number.isInteger(position[offset]) || position[offset].match(/^\d+$/)) {
+        if (isNaN(position[offset]) === false) {
           // if an offset's value type is integer it's interpreted as pixel value
           position[offset] = "".concat(position[offset], "px");
         } // else it's assumed offsets are strings with valid css length values
@@ -1588,90 +1635,6 @@ var jsPanel = {
 
     return obj;
   },
-  close: function close(panel, cb, closedByUser) {
-    if (panel.closetimer) {
-      window.clearInterval(panel.closetimer);
-    }
-
-    var id = panel.id,
-        parent = panel.parentElement,
-        jspanelbeforeclose = new CustomEvent('jspanelbeforeclose', {
-      'detail': id
-    }),
-        jspanelclosed = new CustomEvent('jspanelclosed', {
-      'detail': id
-    }),
-        jspanelcloseduser = new CustomEvent('jspanelcloseduser', {
-      'detail': id
-    });
-    document.dispatchEvent(jspanelbeforeclose);
-
-    if (panel.options.onbeforeclose && panel.options.onbeforeclose.length > 0 && !jsPanel.processCallbacks(panel, panel.options.onbeforeclose, 'some', panel.status, closedByUser)) {
-      return panel;
-    }
-
-    if (panel.options.animateOut) {
-      if (panel.options.animateIn) {
-        jsPanel.remClass(panel, panel.options.animateIn);
-      }
-
-      jsPanel.setClass(panel, panel.options.animateOut);
-      panel.addEventListener('animationend', function (e) {
-        e.stopPropagation();
-        parent.removeChild(panel);
-
-        if (!document.getElementById(id)) {
-          jsPanel.removeMinimizedReplacement(panel);
-
-          if (closedByUser) {
-            document.dispatchEvent(jspanelcloseduser);
-          }
-
-          document.dispatchEvent(jspanelclosed);
-
-          if (panel.options.onclosed) {
-            jsPanel.processCallbacks(panel, panel.options.onclosed, 'every', closedByUser);
-          }
-
-          jsPanel.autopositionRemaining(panel);
-
-          if (cb) {
-            cb.call(id, id);
-          }
-        } else {
-          if (cb) {
-            cb.call(panel, id, panel);
-          }
-        }
-      });
-    } else {
-      parent.removeChild(panel);
-
-      if (!document.getElementById(id)) {
-        jsPanel.removeMinimizedReplacement(panel);
-
-        if (closedByUser) {
-          document.dispatchEvent(jspanelcloseduser);
-        }
-
-        document.dispatchEvent(jspanelclosed);
-
-        if (panel.options.onclosed) {
-          jsPanel.processCallbacks(panel, panel.options.onclosed, 'every', closedByUser);
-        }
-
-        jsPanel.autopositionRemaining(panel);
-
-        if (cb) {
-          cb.call(id, id);
-        }
-      } else {
-        if (cb) {
-          cb.call(panel, id, panel);
-        }
-      }
-    }
-  },
   createPanelTemplate: function createPanelTemplate() {
     var dataAttr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
     var panel = document.createElement('div');
@@ -1716,7 +1679,7 @@ var jsPanel = {
   },
   dragit: function dragit(elmt) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var dragstarted, dragElmt;
+    var dragstarted, dragElmt, opts;
     var jspaneldragstart = new CustomEvent('jspaneldragstart', {
       detail: elmt.id
     }),
@@ -1725,9 +1688,11 @@ var jsPanel = {
     }),
         jspaneldragstop = new CustomEvent('jspaneldragstop', {
       detail: elmt.id
-    }),
-        opts = Object.assign({}, this.defaults.dragit, options),
-        containment = this.pOcontainment(opts.containment);
+    }); // make panel available as event object property 'panel'
+
+    [jspaneldragstart, jspaneldrag, jspaneldragstop].forEach(function (evt) {
+      evt.panel = elmt;
+    });
 
     var camelcase = function camelcase(string) {
       // 'left-top' converted to 'snapLeftTop'
@@ -1736,24 +1701,46 @@ var jsPanel = {
         str[index] = word.charAt(0).toUpperCase() + word.slice(1);
       });
       return 'snap' + str.join('');
-    }; // normalize grid config
+    }; // attach handler to each drag handle
 
 
-    if (opts.grid && Array.isArray(opts.grid)) {
-      if (opts.grid.length === 1) {
-        opts.grid[1] = opts.grid[0];
-      }
-    } // attach handler to each drag handle
-
-
-    elmt.querySelectorAll(opts.handles).forEach(function (handle) {
+    var handles = options.handles || this.defaults.dragit.handles;
+    var cursor = options.cursor || this.defaults.dragit.cursor;
+    elmt.querySelectorAll(handles).forEach(function (handle) {
       handle.style.touchAction = 'none';
-      handle.style.cursor = opts.cursor;
+      handle.style.cursor = cursor;
       jsPanel.pointerdown.forEach(function (evt) {
         handle.addEventListener(evt, function (e) {
           // disable dragging for all mouse buttons but left
           if (e.button && e.button > 0) {
             return false;
+          } // setup and normalize dragit options
+
+
+          opts = Object.assign({}, jsPanel.defaults.dragit, options);
+
+          if (opts.disableOnMaximized && elmt.status === 'maximized') {
+            return false;
+          }
+
+          if (opts.containment || opts.containment === 0) {
+            opts.containment = jsPanel.pOcontainment(opts.containment);
+          }
+
+          if (opts.grid) {
+            if (Array.isArray(opts.grid)) {
+              if (opts.grid.length === 1) {
+                opts.grid[1] = opts.grid[0];
+              }
+            }
+          }
+
+          if (opts.snap) {
+            if (_typeof(opts.snap) === 'object') {
+              opts.snap = Object.assign({}, jsPanel.defaultSnapConfig, opts.snap);
+            } else {
+              opts.snap = jsPanel.defaultSnapConfig;
+            }
           } // footer elmts with the class "jsPanel-ftr-btn" don't drag a panel
           // do not compare e.target with e.currentTarget because there might be footer elmts supposed to drag the panel
           // noinspection JSUnresolvedFunction
@@ -1773,6 +1760,8 @@ var jsPanel = {
           var startStyles = window.getComputedStyle(elmt),
               startLeft = parseFloat(startStyles.left),
               startTop = parseFloat(startStyles.top),
+              startWidth = parseFloat(startStyles.width),
+              startHeight = parseFloat(startStyles.height),
               psx = e.touches ? e.touches[0].clientX : e.clientX,
               // pointer x on mousedown (don't use pageX, doesn't work on FF for Android)
           psy = e.touches ? e.touches[0].clientY : e.clientY,
@@ -1792,6 +1781,7 @@ var jsPanel = {
 
               if (elmt.snapped && opts.snap.resizeToPreSnap && elmt.currentData.beforeSnap) {
                 elmt.resize(elmt.currentData.beforeSnap.width + ' ' + elmt.currentData.beforeSnap.height);
+                elmt.setControls(['.jsPanel-btn-normalize']);
                 var intermediateStyles = elmt.getBoundingClientRect(),
                     delta = psx - (intermediateStyles.left + intermediateStyles.width),
                     wHalf = intermediateStyles.width / 2;
@@ -1799,33 +1789,62 @@ var jsPanel = {
                 if (delta > -wHalf) {
                   startLeftCorrection = delta + wHalf;
                 }
+              }
+
+              elmt.front();
+              elmt.snapped = false; // panel is maximized on dragstart
+
+              if (elmt.status === 'maximized') {
+                elmt.setControls(['.jsPanel-btn-normalize']);
+                elmt.status = 'normalized';
+              } // opts.drop
+
+
+              if (opts.drop && opts.drop.dropZones) {
+                //opts.drop.dropZones = opts.drop.dropZones.map(zone => jsPanel.pOcontainer(zone));
+                var dropzones = opts.drop.dropZones.map(function (zone) {
+                  return jsPanel.pOcontainer(zone);
+                }); // -> array where each item is a NodeList
+
+                var dropzonelist = [];
+                dropzones.forEach(function (nodelist) {
+                  if (nodelist.length) {
+                    // an element node does not have a length property
+                    nodelist.forEach(function (node) {
+                      dropzonelist.push(node);
+                    });
+                  } else {
+                    dropzonelist.push(nodelist);
+                  }
+                }); // filter list to have only unique values
+
+                dropzonelist = dropzonelist.filter(function (value, index, self) {
+                  return self.indexOf(value) === index;
+                });
+                opts.drop.dropZones = dropzonelist;
               } // dragstart callback
 
 
               if (opts.start.length) {
                 jsPanel.processCallbacks(elmt, opts.start, false, {
                   left: startLeft,
-                  top: startTop
+                  top: startTop,
+                  width: startWidth,
+                  height: startHeight
                 }, e);
               }
-
-              jsPanel.front(elmt);
-              elmt.snapped = false;
             }
 
             dragstarted = 1;
-
-            if (opts.disableOnMaximized && elmt.status === 'maximized') {
-              return false;
-            }
-
             var elmtL, elmtL2, elmtT, elmtT2, elmtR, elmtR2, elmtB, elmtB2, right, bottom;
             var pmx = e.touches ? e.touches[0].clientX : e.clientX,
                 // current pointer x while pointer moves (don't use pageX, doesn't work on FF for Android)
             pmy = e.touches ? e.touches[0].clientY : e.clientY,
                 // current pointer y while pointer moves (don't use pageY, doesn't work on FF for Android)
-            dragStyles = window.getComputedStyle(elmt); // get current styles while dragging
-            // EDGE reports "auto" instead of pixel value using getComputedStyle(), so some values need to be calculated different
+            dragStyles = window.getComputedStyle(elmt),
+                // get current styles while dragging
+            overlaps; // EDGE reports "auto" instead of pixel value using getComputedStyle(), so some values need to be calculated different
+            // this whole block of code could be removed if EDGE not based on Chromium doesn't need to be supported
 
             if (parent === document.body) {
               var elmtRect = elmt.getBoundingClientRect();
@@ -1839,9 +1858,9 @@ var jsPanel = {
 
             elmtL = parseFloat(dragStyles.left);
             elmtT = parseFloat(dragStyles.top);
-            elmtR = right; // instead of parseFloat(dragStyles.right);
+            elmtR = right; // replace line with parseFloat(dragStyles.right); if EDGE code block above is removed
 
-            elmtB = bottom; // instead of parseFloat(dragStyles.bottom);
+            elmtB = bottom; // replace line with parseFloat(dragStyles.bottom); if EDGE code block above is removed
 
             if (opts.snap) {
               if (opts.snap.trigger === 'panel') {
@@ -1860,7 +1879,7 @@ var jsPanel = {
                   elmtR2 = Math.pow(elmtR, 2);
                   elmtB2 = Math.pow(elmtB, 2);
                 } else {
-                  var overlaps = jsPanel.overlaps(elmt, parent, 'paddingbox', e);
+                  overlaps = elmt.overlaps(parent, 'paddingbox', e);
                   elmtL = overlaps.pointer.left;
                   elmtT = overlaps.pointer.top;
                   elmtR = overlaps.pointer.right;
@@ -1886,7 +1905,7 @@ var jsPanel = {
 
             window.getSelection().removeAllRanges(); // trigger drag permanently while dragging
 
-            document.dispatchEvent(jspaneldrag); // move elmt
+            document.dispatchEvent(jspaneldrag); // move elmt and apply axis option
 
             if (!opts.axis || opts.axis === 'x') {
               elmt.style.left = startLeft + (pmx - psx) / scaleFactor.x + startLeftCorrection + 'px'; // set new css left of elmt depending on opts.axis
@@ -1898,22 +1917,25 @@ var jsPanel = {
 
 
             if (opts.grid) {
-              // formula rounds to nearest multiple of grid
+              var grid = opts.grid,
+                  axis = opts.axis; // formula rounds to nearest multiple of grid
               // https://www.webveteran.com/blog/web-coding/javascript-round-to-any-multiple-of-a-specific-number/
-              var x = opts.grid[0] * Math.round((startLeft + (pmx - psx)) / opts.grid[0]),
-                  y = opts.grid[1] * Math.round((startTop + (pmy - psy)) / opts.grid[1]);
 
-              if (!opts.axis || opts.axis === 'x') {
+              var x = grid[0] * Math.round((startLeft + (pmx - psx)) / grid[0]),
+                  y = grid[1] * Math.round((startTop + (pmy - psy)) / grid[1]);
+
+              if (!axis || axis === 'x') {
                 elmt.style.left = "".concat(x, "px");
               }
 
-              if (!opts.axis || opts.axis === 'y') {
+              if (!axis || axis === 'y') {
                 elmt.style.top = "".concat(y, "px");
               }
             } // apply containment option
 
 
             if (opts.containment || opts.containment === 0) {
+              var containment = opts.containment;
               var maxLeft, maxTop; // calc maxLeft and maxTop (minLeft and MinTop is equal to containment setting)
 
               if (elmt.options.container === document.body) {
@@ -1945,12 +1967,15 @@ var jsPanel = {
 
 
             if (opts.drag.length) {
-              jsPanel.processCallbacks(elmt, opts.drag, false, {
+              var paneldata = {
                 left: elmtL,
                 top: elmtT,
                 right: elmtR,
-                bottom: elmtB
-              }, e);
+                bottom: elmtB,
+                width: parseFloat(dragStyles.width),
+                height: parseFloat(dragStyles.height)
+              };
+              jsPanel.processCallbacks(elmt, opts.drag, false, paneldata, e);
             } // apply snap options
 
 
@@ -1963,51 +1988,153 @@ var jsPanel = {
 
               if (lefttopVectorDrag < snapSens) {
                 if (opts.snap.snapLeftTop !== false) {
-                  elmt.snappableTo = 'left-top';
-                  jsPanel.createSnapArea(elmt, 'lt', snapSens);
+                  if (!opts.snap.active || opts.snap.active === 'both') {
+                    elmt.snappableTo = 'left-top';
+                    jsPanel.createSnapArea(elmt, 'lt', snapSens);
+                  } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                    if (overlaps.pointer.left > 0 && overlaps.pointer.top > 0) {
+                      elmt.snappableTo = 'left-top';
+                      jsPanel.createSnapArea(elmt, 'lt', snapSens);
+                    } else {
+                      elmt.snappableTo = false;
+                      jsPanel.removeSnapAreas();
+                    }
+                  }
                 }
               } else if (leftbottomVectorDrag < snapSens) {
                 if (opts.snap.snapLeftBottom !== false) {
-                  elmt.snappableTo = 'left-bottom';
-                  jsPanel.createSnapArea(elmt, 'lb', snapSens);
+                  if (!opts.snap.active || opts.snap.active === 'both') {
+                    elmt.snappableTo = 'left-bottom';
+                    jsPanel.createSnapArea(elmt, 'lb', snapSens);
+                  } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                    if (overlaps.pointer.left > 0 && overlaps.pointer.bottom > 0) {
+                      elmt.snappableTo = 'left-bottom';
+                      jsPanel.createSnapArea(elmt, 'lb', snapSens);
+                    } else {
+                      elmt.snappableTo = false;
+                      jsPanel.removeSnapAreas();
+                    }
+                  }
                 }
               } else if (righttopVectorDrag < snapSens) {
                 if (opts.snap.snapRightTop !== false) {
-                  elmt.snappableTo = 'right-top';
-                  jsPanel.createSnapArea(elmt, 'rt', snapSens);
+                  if (!opts.snap.active || opts.snap.active === 'both') {
+                    elmt.snappableTo = 'right-top';
+                    jsPanel.createSnapArea(elmt, 'rt', snapSens);
+                  } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                    if (overlaps.pointer.right > 0 && overlaps.pointer.top > 0) {
+                      elmt.snappableTo = 'right-top';
+                      jsPanel.createSnapArea(elmt, 'rt', snapSens);
+                    } else {
+                      elmt.snappableTo = false;
+                      jsPanel.removeSnapAreas();
+                    }
+                  }
                 }
               } else if (rightbottomVectorDrag < snapSens) {
                 if (opts.snap.snapRightBottom !== false) {
-                  elmt.snappableTo = 'right-bottom';
-                  jsPanel.createSnapArea(elmt, 'rb', snapSens);
+                  if (!opts.snap.active || opts.snap.active === 'both') {
+                    elmt.snappableTo = 'right-bottom';
+                    jsPanel.createSnapArea(elmt, 'rb', snapSens);
+                  } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                    if (overlaps.pointer.right > 0 && overlaps.pointer.bottom > 0) {
+                      elmt.snappableTo = 'right-bottom';
+                      jsPanel.createSnapArea(elmt, 'rb', snapSens);
+                    } else {
+                      elmt.snappableTo = false;
+                      jsPanel.removeSnapAreas();
+                    }
+                  }
                 }
               } else if (elmtT < snapSens && topVectorDrag < topSensAreaLength) {
                 if (opts.snap.snapCenterTop !== false) {
-                  elmt.snappableTo = 'center-top';
-                  jsPanel.createSnapArea(elmt, 'ct', snapSens);
+                  if (!opts.snap.active || opts.snap.active === 'both') {
+                    elmt.snappableTo = 'center-top';
+                    jsPanel.createSnapArea(elmt, 'ct', snapSens);
+                  } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                    if (overlaps.pointer.top > 0) {
+                      elmt.snappableTo = 'center-top';
+                      jsPanel.createSnapArea(elmt, 'ct', snapSens);
+                    } else {
+                      elmt.snappableTo = false;
+                      jsPanel.removeSnapAreas();
+                    }
+                  }
                 }
               } else if (elmtL < snapSens && leftVectorDrag < sideSensAreaLength) {
                 if (opts.snap.snapLeftCenter !== false) {
-                  elmt.snappableTo = 'left-center';
-                  jsPanel.createSnapArea(elmt, 'lc', snapSens);
+                  if (!opts.snap.active || opts.snap.active === 'both') {
+                    elmt.snappableTo = 'left-center';
+                    jsPanel.createSnapArea(elmt, 'lc', snapSens);
+                  } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                    if (overlaps.pointer.left > 0) {
+                      elmt.snappableTo = 'left-center';
+                      jsPanel.createSnapArea(elmt, 'lc', snapSens);
+                    } else {
+                      elmt.snappableTo = false;
+                      jsPanel.removeSnapAreas();
+                    }
+                  }
                 }
               } else if (elmtR < snapSens && rightVectorDrag < sideSensAreaLength) {
                 if (opts.snap.snapRightCenter !== false) {
-                  elmt.snappableTo = 'right-center';
-                  jsPanel.createSnapArea(elmt, 'rc', snapSens);
+                  if (!opts.snap.active || opts.snap.active === 'both') {
+                    elmt.snappableTo = 'right-center';
+                    jsPanel.createSnapArea(elmt, 'rc', snapSens);
+                  } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                    if (overlaps.pointer.right > 0) {
+                      elmt.snappableTo = 'right-center';
+                      jsPanel.createSnapArea(elmt, 'rc', snapSens);
+                    } else {
+                      elmt.snappableTo = false;
+                      jsPanel.removeSnapAreas();
+                    }
+                  }
                 }
               } else if (elmtB < snapSens && bottomVectorDrag < topSensAreaLength) {
                 if (opts.snap.snapCenterBottom !== false) {
-                  elmt.snappableTo = 'center-bottom';
-                  jsPanel.createSnapArea(elmt, 'cb', snapSens);
+                  if (!opts.snap.active || opts.snap.active === 'both') {
+                    elmt.snappableTo = 'center-bottom';
+                    jsPanel.createSnapArea(elmt, 'cb', snapSens);
+                  } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                    if (overlaps.pointer.bottom > 0) {
+                      elmt.snappableTo = 'center-bottom';
+                      jsPanel.createSnapArea(elmt, 'cb', snapSens);
+                    } else {
+                      elmt.snappableTo = false;
+                      jsPanel.removeSnapAreas();
+                    }
+                  }
                 }
+              }
+            } // opts.drop
+
+
+            if (opts.drop && opts.drop.dropZones) {
+              // IE doesn't offer document.elementsFromPoint() but document.msElementsFromPoint()
+              var elementsFromPoint = jsPanel.isIE ? 'msElementsFromPoint' : 'elementsFromPoint';
+              var elementsFrom = document[elementsFromPoint](e.clientX, e.clientY); // document.msElementsFromPoint() returns a nodeList -> convert to array
+
+              if (!Array.isArray(elementsFrom)) {
+                elementsFrom = Array.prototype.slice.call(elementsFrom);
+              }
+
+              opts.drop.dropZones.forEach(function (zone) {
+                // Array.prototype.includes() needs polyfill in IE
+                if (elementsFrom.includes(zone)) {
+                  elmt.droppableTo = zone;
+                }
+              }); // do not include following if statement in this.options.dragit.drop.dropZones.forEach !!!!
+
+              if (!elementsFrom.includes(elmt.droppableTo)) {
+                elmt.droppableTo = false;
               }
             }
           };
 
           jsPanel.pointermove.forEach(function (e) {
             document.addEventListener(e, dragElmt);
-          }); // remove resize handler when mouse leaves browser window (mouseleave doesn't work)
+          }); // remove drag handler when mouse leaves browser window (mouseleave doesn't work)
 
           window.addEventListener('mouseout', function (e) {
             if (e.relatedTarget === null) {
@@ -2030,44 +2157,39 @@ var jsPanel = {
           if (dragstarted) {
             elmt.style.opacity = 1;
             dragstarted = undefined;
-            elmt.saveCurrentDimensions();
-            elmt.saveCurrentPosition();
-            elmt.calcSizeFactors(); // important for option.onContainerResize
-
-            document.dispatchEvent(jspaneldragstop);
 
             if (opts.snap) {
               switch (elmt.snappableTo) {
                 case 'left-top':
-                  jsPanel.snapPanel(elmt, opts.snap.snapLeftTop);
+                  elmt.snap(opts.snap.snapLeftTop);
                   break;
 
                 case 'center-top':
-                  jsPanel.snapPanel(elmt, opts.snap.snapCenterTop);
+                  elmt.snap(opts.snap.snapCenterTop);
                   break;
 
                 case 'right-top':
-                  jsPanel.snapPanel(elmt, opts.snap.snapRightTop);
+                  elmt.snap(opts.snap.snapRightTop);
                   break;
 
                 case 'right-center':
-                  jsPanel.snapPanel(elmt, opts.snap.snapRightCenter);
+                  elmt.snap(opts.snap.snapRightCenter);
                   break;
 
                 case 'right-bottom':
-                  jsPanel.snapPanel(elmt, opts.snap.snapRightBottom);
+                  elmt.snap(opts.snap.snapRightBottom);
                   break;
 
                 case 'center-bottom':
-                  jsPanel.snapPanel(elmt, opts.snap.snapCenterBottom);
+                  elmt.snap(opts.snap.snapCenterBottom);
                   break;
 
                 case 'left-bottom':
-                  jsPanel.snapPanel(elmt, opts.snap.snapLeftBottom);
+                  elmt.snap(opts.snap.snapLeftBottom);
                   break;
 
                 case 'left-center':
-                  jsPanel.snapPanel(elmt, opts.snap.snapLeftCenter);
+                  elmt.snap(opts.snap.snapLeftCenter);
                   break;
               }
 
@@ -2082,14 +2204,33 @@ var jsPanel = {
               if (elmt.snappableTo && opts.snap.repositionOnSnap && opts.snap[camelcase(elmt.snappableTo)]) {
                 elmt.repositionOnSnap(elmt.snappableTo);
               }
+            } // opts.drop
+
+
+            if (elmt.droppableTo && elmt.droppableTo !== elmt.parentElement) {
+              var sourceContainer = elmt.parentElement;
+              elmt.move(elmt.droppableTo);
+
+              if (opts.drop.callback) {
+                opts.drop.callback.call(elmt, elmt, elmt.droppableTo, sourceContainer);
+              }
             }
 
+            document.dispatchEvent(jspaneldragstop);
+
             if (opts.stop.length) {
-              jsPanel.processCallbacks(elmt, opts.stop, false, {
-                left: parseFloat(elmt.style.left),
-                top: parseFloat(elmt.style.top)
-              }, e);
+              var stopStyles = window.getComputedStyle(elmt),
+                  paneldata = {
+                left: parseFloat(stopStyles.left),
+                top: parseFloat(stopStyles.top),
+                width: parseFloat(stopStyles.width),
+                height: parseFloat(stopStyles.height)
+              };
+              jsPanel.processCallbacks(elmt, opts.stop, false, paneldata, e);
             }
+
+            elmt.saveCurrentPosition();
+            elmt.calcSizeFactors(); // important for options onwindowresize/onparentresize
           }
 
           elmt.controlbar.style.pointerEvents = 'inherit';
@@ -2101,7 +2242,7 @@ var jsPanel = {
         });
       }); // dragit is initialized - now disable if set
 
-      if (opts.disable) {
+      if (options.disable) {
         handle.style.pointerEvents = 'none';
       }
     });
@@ -2222,43 +2363,6 @@ var jsPanel = {
       }
     });
   }),
-  front: function front(obj) {
-    if (obj.status === 'minimized') {
-      if (obj.statusBefore === 'maximized') {
-        obj.maximize();
-      } else {
-        obj.normalize();
-      }
-    } else {
-      var newArr = Array.prototype.slice.call(document.querySelectorAll('.jsPanel-standard')).map(function (panel) {
-        return panel.style.zIndex;
-      });
-
-      if (Math.max.apply(Math, _toConsumableArray(newArr)) > obj.style.zIndex) {
-        obj.style.zIndex = jsPanel.zi.next();
-      }
-
-      this.resetZi();
-    } // iframe extra: panel with an iframe get a content overlay if panel is not the topmost panel -> content section click fronts the panel
-
-    /*
-    this.getPanels().forEach((item, index) => {
-        const overlay = item.content.querySelector('.jsPanel-iframe-overlay');
-        if (index > 0) {
-            if (item.content.querySelector('iframe') && !overlay) {
-                let overlay = document.createElement('div');
-                overlay.className = 'jsPanel-iframe-overlay';
-                item.content.appendChild(overlay);
-            }
-        } else {
-            if (overlay) {
-                item.content.removeChild(overlay);
-            }
-        }
-    });
-    */
-
-  },
   getPanels: function getPanels() {
     var condition = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {
       return this.classList.contains('jsPanel-standard');
@@ -2269,88 +2373,17 @@ var jsPanel = {
       return b.style.zIndex - a.style.zIndex;
     });
   },
-  overlaps: function overlaps(panel, reference, elmtBox, event) {
-    // if elmtBox === 'paddingbox' elmt border-width is subtracted from return values
-    // in other words: overlap is measured against elmt padding-box and not border-box
-    var pane = typeof panel === 'string' ? document.querySelector(panel) : panel,
-        panelRect = pane.getBoundingClientRect(),
-        parentStyle = getComputedStyle(pane.parentElement),
-        scaleFactor = pane.getScaleFactor(),
-        parentBorderWidth = {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0
-    };
-    var referenceRect,
-        evtX = 0,
-        evtY = 0,
-        evtXparent = 0,
-        evtYparent = 0;
-
-    if (pane.options.container !== 'window' && elmtBox === 'paddingbox') {
-      parentBorderWidth.top = parseInt(parentStyle.borderTopWidth, 10) * scaleFactor.y;
-      parentBorderWidth.right = parseInt(parentStyle.borderRightWidth, 10) * scaleFactor.x;
-      parentBorderWidth.bottom = parseInt(parentStyle.borderBottomWidth, 10) * scaleFactor.y;
-      parentBorderWidth.left = parseInt(parentStyle.borderLeftWidth, 10) * scaleFactor.x;
-    }
-
-    if (typeof reference === 'string') {
-      if (reference === 'window') {
-        referenceRect = {
-          left: 0,
-          top: 0,
-          right: window.innerWidth,
-          bottom: window.innerHeight
-        };
-      } else if (reference === 'parent') {
-        referenceRect = pane.parentElement.getBoundingClientRect();
-      } else {
-        referenceRect = document.querySelector(reference).getBoundingClientRect();
-      }
-    } else {
-      referenceRect = reference.getBoundingClientRect();
-    }
-
-    if (event) {
-      evtX = event.touches ? event.touches[0].clientX : event.clientX;
-      evtY = event.touches ? event.touches[0].clientY : event.clientY;
-      evtXparent = evtX - referenceRect.left;
-      evtYparent = evtY - referenceRect.top;
-    }
-
-    var overlapsX = panelRect.left < referenceRect.right && panelRect.right > referenceRect.left,
-        overlapsY = panelRect.top < referenceRect.bottom && panelRect.bottom > referenceRect.top,
-        overlaps = overlapsX && overlapsY;
-    return {
-      overlaps: overlaps,
-      top: panelRect.top - referenceRect.top - parentBorderWidth.top,
-      right: referenceRect.right - panelRect.right - parentBorderWidth.right,
-      bottom: referenceRect.bottom - panelRect.bottom - parentBorderWidth.bottom,
-      left: panelRect.left - referenceRect.left - parentBorderWidth.left,
-      parentBorderWidth: parentBorderWidth,
-      panelRect: panelRect,
-      referenceRect: referenceRect,
-      pointer: {
-        // pointer coords relative to window and reference
-        clientX: evtX,
-        clientY: evtY,
-        left: evtXparent - parentBorderWidth.left,
-        top: evtYparent - parentBorderWidth.top,
-        right: referenceRect.width - evtXparent - parentBorderWidth.right,
-        bottom: referenceRect.height - evtYparent - parentBorderWidth.bottom
-      }
-    };
-  },
   pOcontainer: function pOcontainer(container) {
-    if (container) {
-      if (typeof container === 'string') {
-        return container === 'window' ? document.body : document.querySelector(container);
-      } else if (container.nodeType === 1) {
-        return container;
-      } else if (container.length) {
-        return container[0];
-      }
+    if (container === 'window') {
+      return document.body;
+    } else if (typeof container === 'string') {
+      var list = document.querySelectorAll(container); // a returned list is a NodeList
+
+      return list.length && list.length > 0 ? list : false;
+    } else if (container.nodeType === 1) {
+      return container;
+    } else if (container.length) {
+      return container[0];
     }
 
     return false;
@@ -2522,13 +2555,6 @@ var jsPanel = {
       });
     }
   },
-  removeMinimizedReplacement: function removeMinimizedReplacement(panel) {
-    var elmt = document.getElementById("".concat(panel.id, "-min"));
-
-    if (elmt) {
-      elmt.parentElement.removeChild(elmt);
-    }
-  },
   removeSnapAreas: function removeSnapAreas() {
     document.querySelectorAll('.jsPanel-snap-area').forEach(function (el) {
       el.parentElement.removeChild(el);
@@ -2559,11 +2585,7 @@ var jsPanel = {
   },
   resizeit: function resizeit(elmt) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var opts = Object.assign({}, this.defaults.resizeit, options),
-        elmtParent = elmt.parentElement,
-        elmtParentTagName = elmtParent.tagName.toLowerCase(),
-        containment = this.pOcontainment(opts.containment),
-        jspanelresizestart = new CustomEvent('jspanelresizestart', {
+    var jspanelresizestart = new CustomEvent('jspanelresizestart', {
       detail: elmt.id
     }),
         jspanelresize = new CustomEvent('jspanelresize', {
@@ -2571,15 +2593,17 @@ var jsPanel = {
     }),
         jspanelresizestop = new CustomEvent('jspanelresizestop', {
       detail: elmt.id
+    }); // make panel available as event object property 'panel'
+
+    [jspanelresizestart, jspanelresize, jspanelresizestop].forEach(function (evt) {
+      evt.panel = elmt;
     });
-    var maxWidth = typeof opts.maxWidth === 'function' ? opts.maxWidth() : opts.maxWidth || 10000,
-        maxHeight = typeof opts.maxHeight === 'function' ? opts.maxHeight() : opts.maxHeight || 10000,
-        minWidth = typeof opts.minWidth === 'function' ? opts.minWidth() : opts.minWidth,
-        minHeight = typeof opts.minHeight === 'function' ? opts.minHeight() : opts.minHeight,
+    var opts = {},
         resizePanel,
         resizestarted,
         w,
         h;
+    opts.handles = options.handles || jsPanel.defaults.resizeit.handles;
     opts.handles.split(',').forEach(function (item) {
       var node = document.createElement('DIV');
       node.className = "jsPanel-resizeit-handle jsPanel-resizeit-".concat(item.trim());
@@ -2594,8 +2618,39 @@ var jsPanel = {
 
           if (e.button && e.button > 0) {
             return false;
+          } // factor is needed only for the modifier key Shift feature
+
+
+          var factor = 1; // setup and normalize resizeit options
+
+          opts = Object.assign({}, jsPanel.defaults.resizeit, options);
+
+          if (opts.containment || opts.containment === 0) {
+            opts.containment = jsPanel.pOcontainment(opts.containment);
+          } // legacy line: aspectRatio should be either 'panel' or 'content', not just true
+
+
+          if (opts.aspectRatio && opts.aspectRatio === true) {
+            opts.aspectRatio = 'panel';
+          } // set aspectRatio according to modifier key
+
+
+          if (jsPanel.modifier) {
+            var modifierKey = jsPanel.modifier;
+
+            if (modifierKey === 'AltLeft' || modifierKey === 'AltRight') {
+              opts.aspectRatio = 'content';
+            } else if (modifierKey === 'ControlLeft' || modifierKey === 'ControlRight') {
+              opts.aspectRatio = 'panel';
+            } else if (modifierKey === 'ShiftLeft' || modifierKey === 'ShiftRight') {
+              factor = 2; // does work only with 2 as value
+            }
           }
 
+          var maxWidth = typeof opts.maxWidth === 'function' ? opts.maxWidth() : opts.maxWidth || 10000,
+              maxHeight = typeof opts.maxHeight === 'function' ? opts.maxHeight() : opts.maxHeight || 10000,
+              minWidth = typeof opts.minWidth === 'function' ? opts.minWidth() : opts.minWidth,
+              minHeight = typeof opts.minHeight === 'function' ? opts.minHeight() : opts.minHeight;
           elmt.content.style.pointerEvents = 'none'; // ensure smallify/unsmallify transition is turned off when resizing begins
           //elmt.style.transition = 'unset';
           // prevents iframes in other panel from interfering with resize action of dragged panel
@@ -2604,13 +2659,11 @@ var jsPanel = {
             frame.style.pointerEvents = 'none';
           }); // noinspection JSUnresolvedVariable
 
-          var elmtRect = elmt.getBoundingClientRect(),
-
-          /* needs to be calculated on pointerdown!! */
-          elmtParentRect = elmtParent.getBoundingClientRect(),
-
-          /* needs to be calculated on pointerdown!! */
-          elmtParentStyles = window.getComputedStyle(elmtParent, null),
+          var elmtParent = elmt.parentElement,
+              elmtParentTagName = elmtParent.tagName.toLowerCase(),
+              elmtRect = elmt.getBoundingClientRect(),
+              elmtParentRect = elmtParent.getBoundingClientRect(),
+              elmtParentStyles = window.getComputedStyle(elmtParent, null),
               elmtParentBLW = parseInt(elmtParentStyles.borderLeftWidth, 10),
               elmtParentBTW = parseInt(elmtParentStyles.borderTopWidth, 10),
               elmtParentPosition = elmtParentStyles.getPropertyValue('position'),
@@ -2641,14 +2694,14 @@ var jsPanel = {
           } // calc min/max left/top values if containment is set - code from jsDraggable
 
 
-          if (elmtParentTagName === 'body' && containment) {
+          if (elmtParentTagName === 'body' && opts.containment) {
             maxWidthEast = document.documentElement.clientWidth - elmtRect.left;
             maxHeightSouth = document.documentElement.clientHeight - elmtRect.top;
             maxWidthWest = elmtRect.width + elmtRect.left;
             maxHeightNorth = elmtRect.height + elmtRect.top;
           } else {
             // if panel is NOT in body
-            if (containment) {
+            if (opts.containment) {
               if (elmtParentPosition === 'static') {
                 maxWidthEast = elmtParentRect.width - elmtRect.left + elmtParentBLW;
                 maxHeightSouth = elmtParentRect.height + elmtParentRect.top - elmtRect.top + elmtParentBTW;
@@ -2664,11 +2717,11 @@ var jsPanel = {
           } // if original opts.containment is array
 
 
-          if (containment) {
-            maxWidthWest -= containment[3];
-            maxHeightNorth -= containment[0];
-            maxWidthEast -= containment[1];
-            maxHeightSouth -= containment[2];
+          if (opts.containment) {
+            maxWidthWest -= opts.containment[3];
+            maxHeightNorth -= opts.containment[0];
+            maxWidthEast -= opts.containment[1];
+            maxHeightSouth -= opts.containment[2];
           } // calculate corrections for rotated panels
 
 
@@ -2697,11 +2750,15 @@ var jsPanel = {
               if (opts.start.length) {
                 jsPanel.processCallbacks(elmt, opts.start, false, {
                   width: startWidth,
-                  height: startHeight
+                  height: startHeight,
+                  left: startLeft,
+                  top: startTop
                 }, evt);
               }
 
-              jsPanel.front(elmt);
+              elmt.front();
+              elmt.status = 'normalized';
+              elmt.setControls(['.jsPanel-btn-normalize']);
             }
 
             resizestarted = 1; // trigger resize permanently while resizing
@@ -2713,7 +2770,8 @@ var jsPanel = {
                 overlaps;
 
             if (resizeHandleClassList.contains('jsPanel-resizeit-e')) {
-              w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
+              //w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
+              w = startWidth + (eventX - startX) * factor / scaleFactor.x + wDif; // needs left adjust, for width and height adjust factor may be either 1 (no adjust) or 2
 
               if (w >= maxWidthEast) {
                 w = maxWidthEast;
@@ -2729,33 +2787,39 @@ var jsPanel = {
 
               elmt.style.width = w + 'px';
 
-              if (opts.aspectRatio === 'content' || jsPanel.modifier === 'AltLeft') {
+              if (factor === 2) {
+                // factor works only with value of 2 when adjusting left or top
+                elmt.style.left = startLeft - (eventX - startX) + 'px';
+              }
+
+              if (opts.aspectRatio === 'content') {
                 // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
                 elmt.style.height = (w - borderRightWidth - borderLeftWidth) / aspectRatioContent + hdrHeight + ftrHeight + borderTopWidth + borderBottomWidth + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.bottom <= containment[2]) {
+                  if (overlaps.bottom <= opts.containment[2]) {
                     elmt.style.height = maxHeightSouth + 'px';
                     elmt.style.width = maxHeightSouth * aspectRatioContent + 'px';
                   }
                 }
-              } else if (opts.aspectRatio || jsPanel.modifier === 'ControlLeft' || jsPanel.modifier === 'ControlRight') {
+              } else if (opts.aspectRatio === 'panel') {
                 // otherwise the complete panel maintains its aspect ratio
                 elmt.style.height = w / aspectRatio + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.bottom <= containment[2]) {
+                  if (overlaps.bottom <= opts.containment[2]) {
                     elmt.style.height = maxHeightSouth + 'px';
                     elmt.style.width = maxHeightSouth * aspectRatio + 'px';
                   }
                 }
               }
             } else if (resizeHandleClassList.contains('jsPanel-resizeit-s')) {
-              h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
+              //h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
+              h = startHeight + (eventY - startY) * factor / scaleFactor.y + hDif; // needs top adjust
 
               if (h >= maxHeightSouth) {
                 h = maxHeightSouth;
@@ -2771,33 +2835,38 @@ var jsPanel = {
 
               elmt.style.height = h + 'px';
 
-              if (opts.aspectRatio === 'content' || jsPanel.modifier === 'AltLeft') {
+              if (factor === 2) {
+                elmt.style.top = startTop - (eventY - startY) + 'px';
+              }
+
+              if (opts.aspectRatio === 'content') {
                 // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
                 elmt.style.width = (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent + borderTopWidth + borderBottomWidth + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.right <= containment[1]) {
+                  if (overlaps.right <= opts.containment[1]) {
                     elmt.style.width = maxWidthEast + 'px';
                     elmt.style.height = maxWidthEast / aspectRatioContent + 'px';
                   }
                 }
-              } else if (opts.aspectRatio || jsPanel.modifier === 'ControlLeft' || jsPanel.modifier === 'ControlRight') {
+              } else if (opts.aspectRatio === 'panel') {
                 // otherwise the complete panel maintains its aspect ratio
                 elmt.style.width = h * aspectRatio + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.right <= containment[1]) {
+                  if (overlaps.right <= opts.containment[1]) {
                     elmt.style.width = maxWidthEast + 'px';
                     elmt.style.height = maxWidthEast / aspectRatio + 'px';
                   }
                 }
               }
             } else if (resizeHandleClassList.contains('jsPanel-resizeit-w')) {
-              w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
+              //w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
+              w = startWidth + (startX - eventX) * factor / scaleFactor.x + wDif; // doesn't need left adjust
 
               if (w <= maxWidth && w >= minWidth && w <= maxWidthWest) {
                 elmt.style.left = startLeft + (eventX - startX) / scaleFactor.x + xDif + 'px';
@@ -2817,33 +2886,34 @@ var jsPanel = {
 
               elmt.style.width = w + 'px';
 
-              if (opts.aspectRatio === 'content' || jsPanel.modifier === 'AltLeft') {
+              if (opts.aspectRatio === 'content') {
                 // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
                 elmt.style.height = (w - borderRightWidth - borderLeftWidth) / aspectRatioContent + hdrHeight + ftrHeight + borderTopWidth + borderBottomWidth + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.bottom <= containment[2]) {
+                  if (overlaps.bottom <= opts.containment[2]) {
                     elmt.style.height = maxHeightSouth + 'px';
                     elmt.style.width = maxHeightSouth * aspectRatioContent + 'px';
                   }
                 }
-              } else if (opts.aspectRatio || jsPanel.modifier === 'ControlLeft' || jsPanel.modifier === 'ControlRight') {
+              } else if (opts.aspectRatio === 'panel') {
                 // otherwise the complete panel maintains its aspect ratio
                 elmt.style.height = w / aspectRatio + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.bottom <= containment[2]) {
+                  if (overlaps.bottom <= opts.containment[2]) {
                     elmt.style.height = maxHeightSouth + 'px';
                     elmt.style.width = maxHeightSouth * aspectRatio + 'px';
                   }
                 }
               }
             } else if (resizeHandleClassList.contains('jsPanel-resizeit-n')) {
-              h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
+              //h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
+              h = startHeight + (startY - eventY) * factor / scaleFactor.y + hDif; // doesn't need top adjust
 
               if (h <= maxHeight && h >= minHeight && h <= maxHeightNorth) {
                 elmt.style.top = startTop + (eventY - startY) / scaleFactor.y + yDif + 'px';
@@ -2863,33 +2933,34 @@ var jsPanel = {
 
               elmt.style.height = h + 'px';
 
-              if (opts.aspectRatio === 'content' || jsPanel.modifier === 'AltLeft') {
+              if (opts.aspectRatio === 'content') {
                 // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
                 elmt.style.width = (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent + borderTopWidth + borderBottomWidth + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.right <= containment[1]) {
+                  if (overlaps.right <= opts.containment[1]) {
                     elmt.style.width = maxWidthEast + 'px';
                     elmt.style.height = maxWidthEast / aspectRatioContent + 'px';
                   }
                 }
-              } else if (opts.aspectRatio || jsPanel.modifier === 'ControlLeft' || jsPanel.modifier === 'ControlRight') {
+              } else if (opts.aspectRatio === 'panel') {
                 // otherwise the complete panel maintains its aspect ratio
                 elmt.style.width = h * aspectRatio + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.right <= containment[1]) {
+                  if (overlaps.right <= opts.containment[1]) {
                     elmt.style.width = maxWidthEast + 'px';
                     elmt.style.height = maxWidthEast / aspectRatio + 'px';
                   }
                 }
               }
             } else if (resizeHandleClassList.contains('jsPanel-resizeit-se')) {
-              w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
+              //w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
+              w = startWidth + (eventX - startX) * factor / scaleFactor.x + wDif; // needs left adjust
 
               if (w >= maxWidthEast) {
                 w = maxWidthEast;
@@ -2905,11 +2976,16 @@ var jsPanel = {
 
               elmt.style.width = w + 'px';
 
-              if (opts.aspectRatio) {
-                elmt.style.height = w / aspectRatio + 'px';
+              if (factor === 2) {
+                elmt.style.left = startLeft - (eventX - startX) + 'px';
               }
 
-              h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
+              if (opts.aspectRatio) {
+                elmt.style.height = w / aspectRatio + 'px';
+              } //h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
+
+
+              h = startHeight + (eventY - startY) * factor / scaleFactor.y + hDif; // needs top adjust
 
               if (h >= maxHeightSouth) {
                 h = maxHeightSouth;
@@ -2925,33 +3001,38 @@ var jsPanel = {
 
               elmt.style.height = h + 'px';
 
-              if (opts.aspectRatio === 'content' || jsPanel.modifier === 'AltLeft') {
+              if (factor === 2) {
+                elmt.style.top = startTop - (eventY - startY) + 'px';
+              }
+
+              if (opts.aspectRatio === 'content') {
                 // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
                 elmt.style.width = (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent + borderTopWidth + borderBottomWidth + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.right <= containment[1]) {
+                  if (overlaps.right <= opts.containment[1]) {
                     elmt.style.width = maxWidthEast + 'px';
                     elmt.style.height = maxWidthEast / aspectRatioContent + 'px';
                   }
                 }
-              } else if (opts.aspectRatio || jsPanel.modifier === 'ControlLeft' || jsPanel.modifier === 'ControlRight') {
+              } else if (opts.aspectRatio === 'panel') {
                 // otherwise the complete panel maintains its aspect ratio
                 elmt.style.width = h * aspectRatio + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.right <= containment[1]) {
+                  if (overlaps.right <= opts.containment[1]) {
                     elmt.style.width = maxWidthEast + 'px';
                     elmt.style.height = maxWidthEast / aspectRatio + 'px';
                   }
                 }
               }
             } else if (resizeHandleClassList.contains('jsPanel-resizeit-sw')) {
-              h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
+              //h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
+              h = startHeight + (eventY - startY) * factor / scaleFactor.y + hDif; // needs top adjust
 
               if (h >= maxHeightSouth) {
                 h = maxHeightSouth;
@@ -2967,11 +3048,16 @@ var jsPanel = {
 
               elmt.style.height = h + 'px';
 
-              if (opts.aspectRatio) {
-                elmt.style.width = h * aspectRatio + 'px';
+              if (factor === 2) {
+                elmt.style.top = startTop - (eventY - startY) + 'px';
               }
 
-              w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
+              if (opts.aspectRatio) {
+                elmt.style.width = h * aspectRatio + 'px';
+              } //w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
+
+
+              w = startWidth + (startX - eventX) * factor / scaleFactor.x + wDif; // doesn't need left adjust
 
               if (w <= maxWidth && w >= minWidth && w <= maxWidthWest) {
                 elmt.style.left = startLeft + (eventX - startX) / scaleFactor.x + xDif + 'px';
@@ -2991,33 +3077,34 @@ var jsPanel = {
 
               elmt.style.width = w + 'px';
 
-              if (opts.aspectRatio === 'content' || jsPanel.modifier === 'AltLeft') {
+              if (opts.aspectRatio === 'content') {
                 // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
                 elmt.style.height = (w - borderRightWidth - borderLeftWidth) / aspectRatioContent + hdrHeight + ftrHeight + borderTopWidth + borderBottomWidth + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.bottom <= containment[2]) {
+                  if (overlaps.bottom <= opts.containment[2]) {
                     elmt.style.height = maxHeightSouth + 'px';
                     elmt.style.width = maxHeightSouth * aspectRatioContent + 'px';
                   }
                 }
-              } else if (opts.aspectRatio || jsPanel.modifier === 'ControlLeft' || jsPanel.modifier === 'ControlRight') {
+              } else if (opts.aspectRatio === 'panel') {
                 // otherwise the complete panel maintains its aspect ratio
                 elmt.style.height = w / aspectRatio + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.bottom <= containment[2]) {
+                  if (overlaps.bottom <= opts.containment[2]) {
                     elmt.style.height = maxHeightSouth + 'px';
                     elmt.style.width = maxHeightSouth * aspectRatio + 'px';
                   }
                 }
               }
             } else if (resizeHandleClassList.contains('jsPanel-resizeit-ne')) {
-              w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
+              //w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
+              w = startWidth + (eventX - startX) * factor / scaleFactor.x + wDif; // needs left adjust
 
               if (w >= maxWidthEast) {
                 w = maxWidthEast;
@@ -3033,11 +3120,16 @@ var jsPanel = {
 
               elmt.style.width = w + 'px';
 
-              if (opts.aspectRatio) {
-                elmt.style.height = w / aspectRatio + 'px';
+              if (factor === 2) {
+                elmt.style.left = startLeft - (eventX - startX) + 'px';
               }
 
-              h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
+              if (opts.aspectRatio) {
+                elmt.style.height = w / aspectRatio + 'px';
+              } //h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
+
+
+              h = startHeight + (startY - eventY) * factor / scaleFactor.y + hDif; // doesn't need top adjust
 
               if (h <= maxHeight && h >= minHeight && h <= maxHeightNorth) {
                 elmt.style.top = startTop + (eventY - startY) / scaleFactor.y + yDif + 'px';
@@ -3057,26 +3149,26 @@ var jsPanel = {
 
               elmt.style.height = h + 'px';
 
-              if (opts.aspectRatio === 'content' || jsPanel.modifier === 'AltLeft') {
+              if (opts.aspectRatio === 'content') {
                 // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
                 elmt.style.width = (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent + borderTopWidth + borderBottomWidth + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.right <= containment[1]) {
+                  if (overlaps.right <= opts.containment[1]) {
                     elmt.style.width = maxWidthEast + 'px';
                     elmt.style.height = maxWidthEast / aspectRatioContent + 'px';
                   }
                 }
-              } else if (opts.aspectRatio || jsPanel.modifier === 'ControlLeft' || jsPanel.modifier === 'ControlRight') {
+              } else if (opts.aspectRatio === 'panel') {
                 // otherwise the complete panel maintains its aspect ratio
                 elmt.style.width = h * aspectRatio + 'px';
 
                 if (opts.containment) {
                   overlaps = elmt.overlaps(elmtParent);
 
-                  if (overlaps.right <= containment[1]) {
+                  if (overlaps.right <= opts.containment[1]) {
                     elmt.style.width = maxWidthEast + 'px';
                     elmt.style.height = maxWidthEast / aspectRatio + 'px';
                   }
@@ -3086,9 +3178,10 @@ var jsPanel = {
               if (opts.aspectRatio && resizeHandleClassList.contains('jsPanel-resizeit-nw')) {
                 eventX = eventY * startRatio;
                 eventY = eventX / startRatio;
-              }
+              } //w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
 
-              w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
+
+              w = startWidth + (startX - eventX) * factor / scaleFactor.x + wDif; // doesn't need left adjust
 
               if (w <= maxWidth && w >= minWidth && w <= maxWidthWest) {
                 elmt.style.left = startLeft + (eventX - startX) / scaleFactor.x + xDif + 'px';
@@ -3110,9 +3203,10 @@ var jsPanel = {
 
               if (opts.aspectRatio) {
                 elmt.style.height = w / aspectRatio + 'px';
-              }
+              } //h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
 
-              h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
+
+              h = startHeight + (startY - eventY) * factor / scaleFactor.y + hDif; // doesn't need top adjust
 
               if (h <= maxHeight && h >= minHeight && h <= maxHeightNorth) {
                 elmt.style.top = startTop + (eventY - startY) / scaleFactor.y + yDif + 'px';
@@ -3132,10 +3226,10 @@ var jsPanel = {
 
               elmt.style.height = h + 'px';
 
-              if (opts.aspectRatio === 'content' || jsPanel.modifier === 'AltLeft') {
+              if (opts.aspectRatio === 'content') {
                 // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
                 elmt.style.width = (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent + borderTopWidth + borderBottomWidth + 'px';
-              } else if (opts.aspectRatio || jsPanel.modifier === 'ControlLeft' || jsPanel.modifier === 'ControlRight') {
+              } else if (opts.aspectRatio === 'panel') {
                 // otherwise the complete panel maintains its aspect ratio
                 elmt.style.width = h * aspectRatio + 'px';
               }
@@ -3242,7 +3336,6 @@ var jsPanel = {
           elmt.saveCurrentDimensions();
           elmt.saveCurrentPosition();
           elmt.calcSizeFactors();
-          elmt.status = 'normalized';
           var smallifyBtn = elmt.controlbar.querySelector('.jsPanel-btn-smallify');
 
           if (smallifyBtn) {
@@ -3252,10 +3345,14 @@ var jsPanel = {
           document.dispatchEvent(jspanelresizestop);
 
           if (opts.stop.length) {
-            jsPanel.processCallbacks(elmt, opts.stop, false, {
-              width: parseFloat(elmt.style.width),
-              height: parseFloat(elmt.style.height)
-            }, e);
+            var stopStyles = window.getComputedStyle(elmt),
+                paneldata = {
+              left: parseFloat(stopStyles.left),
+              top: parseFloat(stopStyles.top),
+              width: parseFloat(stopStyles.width),
+              height: parseFloat(stopStyles.height)
+            };
+            jsPanel.processCallbacks(elmt, opts.stop, false, paneldata, e);
           }
         }
 
@@ -3267,7 +3364,7 @@ var jsPanel = {
       }, false);
     }); // resizeit is initialized - now disable if set
 
-    if (opts.disable) {
+    if (options.disable) {
       elmt.querySelectorAll('.jsPanel-resizeit-handle').forEach(function (handle) {
         handle.style.pointerEvents = 'none';
       });
@@ -3298,49 +3395,6 @@ var jsPanel = {
     return this.setStyles.call(elmt, elmt, stylesobject);
   },
   // alias for setStyles()
-  snapPanel: function snapPanel(panel, pos) {
-    var alreadySnapped = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-
-    // store panel size before it snaps, only if not snapped already
-    if (!alreadySnapped) {
-      panel.currentData.beforeSnap = {
-        width: panel.currentData.width,
-        height: panel.currentData.height
-      };
-    } // snap panel
-
-
-    if (pos && typeof pos === 'function' && !alreadySnapped) {
-      pos.call(panel, panel, panel.snappableTo);
-    } else if (pos !== false) {
-      var offsets = [0, 0];
-
-      if (panel.options.dragit.snap.containment) {
-        if (panel.options.dragit.containment) {
-          var containment = this.pOcontainment(panel.options.dragit.containment),
-              position = panel.snappableTo;
-
-          if (position.startsWith('left')) {
-            offsets[0] = containment[3];
-          } else if (position.startsWith('right')) {
-            offsets[0] = -containment[1];
-          }
-
-          if (position.endsWith('top')) {
-            offsets[1] = containment[0];
-          } else if (position.endsWith('bottom')) {
-            offsets[1] = -containment[2];
-          }
-        }
-      }
-
-      panel.reposition("".concat(panel.snappableTo, " ").concat(offsets[0], " ").concat(offsets[1]));
-    }
-
-    if (!alreadySnapped) {
-      panel.snapped = panel.snappableTo;
-    }
-  },
   jsPanelError: function jsPanelError(msg) {
     this.prototype = new Error();
     this.message = msg;
@@ -3420,10 +3474,14 @@ var jsPanel = {
       }
 
       return false;
-    } // check whether container is valid -> if not return and log error
+    } // check whether container is valid -> if not return and throw error
 
 
-    var panelContainer = this.pOcontainer(options.container);
+    var panelContainer = this.pOcontainer(options.container); // panelContainer might be a NodeList, so use only first node in list
+
+    if (_typeof(panelContainer) === 'object' && panelContainer.length && panelContainer.length > 0) {
+      panelContainer = panelContainer[0];
+    }
 
     if (!panelContainer) {
       if (this.errorReporting) {
@@ -3435,43 +3493,8 @@ var jsPanel = {
       }
 
       return false;
-    } // normalize maximizedMargin
-
-
-    options.maximizedMargin = this.pOcontainment(options.maximizedMargin); // normalize drag config
-
-    if (options.dragit) {
-      ['start', 'drag', 'stop'].forEach(function (item) {
-        if (options.dragit[item]) {
-          if (typeof options.dragit[item] === 'function') {
-            options.dragit[item] = [options.dragit[item]];
-          }
-        } else {
-          options.dragit[item] = [];
-        }
-      });
-
-      if (options.dragit.snap) {
-        if (_typeof(options.dragit.snap) === 'object') {
-          options.dragit.snap = Object.assign({}, this.defaultSnapConfig, options.dragit.snap);
-        } else {
-          options.dragit.snap = this.defaultSnapConfig;
-        }
-      }
-    } // normalize resizeit config
-
-
-    if (options.resizeit) {
-      ['start', 'resize', 'stop'].forEach(function (item) {
-        if (options.resizeit[item]) {
-          if (typeof options.resizeit[item] === 'function') {
-            options.resizeit[item] = [options.resizeit[item]];
-          }
-        } else {
-          options.resizeit[item] = [];
-        }
-      });
     } // normalize on... callbacks
+    // callbacks must be array of function(s) in order to be able to dynamically add/remove callbacks (for example in extensions)
 
 
     ['onbeforeclose', 'onbeforemaximize', 'onbeforeminimize', 'onbeforenormalize', 'onbeforesmallify', 'onbeforeunsmallify', 'onclosed', 'onfronted', 'onmaximized', 'onminimized', 'onnormalized', 'onsmallified', 'onstatuschange', 'onunsmallified'].forEach(function (item) {
@@ -3506,6 +3529,7 @@ var jsPanel = {
     self.footer = self.querySelector('.jsPanel-ftr');
     self.snappableTo = false;
     self.snapped = false;
+    self.droppableTo = false;
     self.autocloseProgressbar = self.querySelector('.jsPanel-autoclose-progressbar'); // Events
 
     var jspanelloaded = new CustomEvent('jspanelloaded', {
@@ -3546,6 +3570,10 @@ var jsPanel = {
     }),
         jspanelfronted = new CustomEvent('jspanelfronted', {
       'detail': options.id
+    }); // make panel available as event object property 'panel'
+
+    [jspanelloaded, jspanelstatuschange, jspanelbeforenormalize, jspanelnormalized, jspanelbeforemaximize, jspanelmaximized, jspanelbeforeminimize, jspanelminimized, jspanelbeforesmallify, jspanelsmallified, jspanelsmallifiedmax, jspanelbeforeunsmallify, jspanelfronted].forEach(function (evt) {
+      evt.panel = self;
     }); // controls buttons
 
     var closeBtn = self.querySelector('.jsPanel-btn-close'),
@@ -3572,7 +3600,7 @@ var jsPanel = {
             return false;
           }
 
-          jsPanel.close(self, null, true); // true indicates panel closed by using the close control
+          self.close(null, true); // true indicates panel closed by using the close control
         });
       });
     }
@@ -3580,7 +3608,7 @@ var jsPanel = {
     if (maxBtn) {
       jsPanel.pointerup.forEach(function (item) {
         maxBtn.addEventListener(item, function (e) {
-          e.preventDefault(); // disable maximize for all mouse buttons but left
+          e.preventDefault();
 
           if (e.button && e.button > 0) {
             return false;
@@ -3594,7 +3622,7 @@ var jsPanel = {
     if (normBtn) {
       jsPanel.pointerup.forEach(function (item) {
         normBtn.addEventListener(item, function (e) {
-          e.preventDefault(); // disable normalize for all mouse buttons but left
+          e.preventDefault();
 
           if (e.button && e.button > 0) {
             return false;
@@ -3608,7 +3636,7 @@ var jsPanel = {
     if (smallBtn) {
       jsPanel.pointerup.forEach(function (item) {
         smallBtn.addEventListener(item, function (e) {
-          e.preventDefault(); // disable smallify for all mouse buttons but left
+          e.preventDefault();
 
           if (e.button && e.button > 0) {
             return false;
@@ -3626,7 +3654,7 @@ var jsPanel = {
     if (minBtn) {
       jsPanel.pointerup.forEach(function (item) {
         minBtn.addEventListener(item, function (e) {
-          e.preventDefault(); // disable minimize for all mouse buttons but left
+          e.preventDefault();
 
           if (e.button && e.button > 0) {
             return false;
@@ -3957,11 +3985,94 @@ var jsPanel = {
       return self;
     };
 
-    self.close = function (cb) {
-      jsPanel.close(self, cb);
+    self.close = function (cb, closedByUser) {
+      if (self.closetimer) {
+        window.clearInterval(self.closetimer);
+      }
+
+      var id = self.id,
+          parent = self.parentElement,
+          jspanelbeforeclose = new CustomEvent('jspanelbeforeclose', {
+        'detail': id
+      }),
+          jspanelclosed = new CustomEvent('jspanelclosed', {
+        'detail': id
+      }),
+          jspanelcloseduser = new CustomEvent('jspanelcloseduser', {
+        'detail': id
+      }); // make self available as event object property 'self'
+
+      jspanelbeforeclose.self = self;
+      document.dispatchEvent(jspanelbeforeclose);
+
+      if (self.options.onbeforeclose && self.options.onbeforeclose.length > 0 && !jsPanel.processCallbacks(self, self.options.onbeforeclose, 'some', self.status, closedByUser)) {
+        return self;
+      }
+
+      if (self.options.animateOut) {
+        if (self.options.animateIn) {
+          jsPanel.remClass(self, self.options.animateIn);
+        }
+
+        jsPanel.setClass(self, self.options.animateOut);
+        self.addEventListener('animationend', function (e) {
+          e.stopPropagation();
+          parent.removeChild(self);
+
+          if (!document.getElementById(id)) {
+            self.removeMinimizedReplacement();
+
+            if (closedByUser) {
+              document.dispatchEvent(jspanelcloseduser);
+            }
+
+            document.dispatchEvent(jspanelclosed);
+
+            if (self.options.onclosed) {
+              jsPanel.processCallbacks(self, self.options.onclosed, 'every', closedByUser);
+            }
+
+            jsPanel.autopositionRemaining(self);
+
+            if (cb) {
+              cb.call(id, id);
+            }
+          } else {
+            if (cb) {
+              cb.call(self, id, self);
+            }
+          }
+        });
+      } else {
+        parent.removeChild(self);
+
+        if (!document.getElementById(id)) {
+          self.removeMinimizedReplacement();
+
+          if (closedByUser) {
+            document.dispatchEvent(jspanelcloseduser);
+          }
+
+          document.dispatchEvent(jspanelclosed);
+
+          if (self.options.onclosed) {
+            jsPanel.processCallbacks(self, self.options.onclosed, 'every', closedByUser);
+          }
+
+          jsPanel.autopositionRemaining(self);
+
+          if (cb) {
+            cb.call(id, id);
+          }
+        } else {
+          if (cb) {
+            cb.call(self, id, self);
+          }
+        }
+      }
     };
 
-    self.maximize = function (cb) {
+    self.maximize = function (cb, donotfront) {
       // Note: do not disable maximize method for already maximized panels -> onContainerResize wouldn't work
       self.statusBefore = self.status; // ensure smallify/unsmallify transition is turned off when resizing begins
       //self.style.transition = 'unset';
@@ -3972,7 +4083,7 @@ var jsPanel = {
 
       document.dispatchEvent(jspanelbeforemaximize);
       var parent = self.parentElement,
-          margins = options.maximizedMargin;
+          margins = jsPanel.pOcontainment(options.maximizedMargin); // normalize maximizedMargin
 
       if (parent === document.body) {
         // maximize within window
@@ -3994,10 +4105,14 @@ var jsPanel = {
       }
 
       smallBtn.style.transform = 'unset';
-      jsPanel.removeMinimizedReplacement(self);
+      self.removeMinimizedReplacement();
       self.status = 'maximized';
       self.setControls(['.jsPanel-btn-maximize']);
-      jsPanel.front(self);
+
+      if (!donotfront) {
+        self.front();
+      }
+
       document.dispatchEvent(jspanelmaximized);
       document.dispatchEvent(jspanelstatuschange);
 
@@ -4110,17 +4225,17 @@ var jsPanel = {
 
       if (self.snapped) {
         // if panel is snapped before minimizing restore snapped position
-        jsPanel.snapPanel(self, self.snapped, true);
+        self.snap(self.snapped, true);
       } else {
         self.style.left = self.currentData.left;
         self.style.top = self.currentData.top;
       }
 
       smallBtn.style.transform = 'unset';
-      jsPanel.removeMinimizedReplacement(self);
+      self.removeMinimizedReplacement();
       self.status = 'normalized';
       self.setControls(['.jsPanel-btn-normalize']);
-      jsPanel.front(self);
+      self.front();
       document.dispatchEvent(jspanelnormalized);
       document.dispatchEvent(jspanelstatuschange);
 
@@ -4151,26 +4266,10 @@ var jsPanel = {
       }
 
       document.dispatchEvent(jspanelbeforesmallify);
-
-      if (self.status === 'normalized') {
-        self.saveCurrentDimensions();
-      }
-
       self.style.overflow = 'hidden';
       var selfStyles = window.getComputedStyle(self),
           selfHeaderHeight = parseFloat(window.getComputedStyle(self.headerbar).height);
       self.style.height = parseFloat(selfStyles.borderTopWidth) + parseFloat(selfStyles.borderBottomWidth) + selfHeaderHeight + 'px';
-      /*
-      const height = (parseFloat(selfStyles.borderTopWidth) + parseFloat(selfStyles.borderBottomWidth) + selfHeaderHeight) + 'px';
-      const setNewHeight = function() {
-          jsPanel.setStyles(self, {
-              transition: 'height 400ms ease-out',
-              height: height
-          });
-      };
-      setNewHeight();
-      */
-
       smallBtn.style.transform = 'rotate(180deg)';
 
       if (self.status === 'normalized') {
@@ -4217,7 +4316,7 @@ var jsPanel = {
 
         document.dispatchEvent(jspanelbeforeunsmallify);
         self.style.overflow = 'visible';
-        jsPanel.front(self);
+        self.front();
 
         if (self.status === 'smallified') {
           self.style.height = self.currentData.height;
@@ -4253,7 +4352,21 @@ var jsPanel = {
 
     self.front = function (callback) {
       var execOnFrontedCallbacks = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-      jsPanel.front(self);
+
+      if (self.status === 'minimized') {
+        self.statusBefore === 'maximized' ? self.maximize() : self.normalize();
+      } else {
+        var newArr = Array.prototype.slice.call(document.querySelectorAll('.jsPanel-standard')).map(function (panel) {
+          return panel.style.zIndex;
+        });
+
+        if (Math.max.apply(Math, _toConsumableArray(newArr)) > self.style.zIndex) {
+          self.style.zIndex = jsPanel.zi.next();
+        }
+
+        jsPanel.resetZi();
+      }
+
       document.dispatchEvent(jspanelfronted);
 
       if (callback) {
@@ -4267,9 +4380,71 @@ var jsPanel = {
       return self;
     };
 
+    self.snap = function (pos) {
+      var alreadySnapped = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+      // store panel size before it snaps, only if not snapped already
+      if (!alreadySnapped) {
+        self.currentData.beforeSnap = {
+          width: self.currentData.width,
+          height: self.currentData.height
+        };
+      } // snap panel
+
+
+      if (pos && typeof pos === 'function' && !alreadySnapped) {
+        pos.call(self, self, self.snappableTo);
+      } else if (pos !== false) {
+        var offsets = [0, 0];
+
+        if (self.options.dragit.snap.containment) {
+          if (self.options.dragit.containment) {
+            var containment = jsPanel.pOcontainment(self.options.dragit.containment),
+                position = self.snappableTo;
+
+            if (position.startsWith('left')) {
+              offsets[0] = containment[3];
+            } else if (position.startsWith('right')) {
+              offsets[0] = -containment[1];
+            }
+
+            if (position.endsWith('top')) {
+              offsets[1] = containment[0];
+            } else if (position.endsWith('bottom')) {
+              offsets[1] = -containment[2];
+            }
+          }
+        }
+
+        self.reposition("".concat(self.snappableTo, " ").concat(offsets[0], " ").concat(offsets[1]));
+      }
+
+      if (!alreadySnapped) {
+        self.snapped = self.snappableTo;
+      }
+    };
+
+    self.move = function (target, cb) {
+      var overlaps = self.overlaps(target, 'paddingbox'),
+          source = self.parentElement;
+      target.appendChild(self);
+      self.options.container = target;
+      self.style.left = overlaps.left + 'px';
+      self.style.top = overlaps.top + 'px';
+      self.saveCurrentDimensions();
+      self.saveCurrentPosition();
+      self.calcSizeFactors(); // important for option.onContainerResize
+
+      if (cb) {
+        cb.call(self, self, target, source);
+      }
+
+      return self;
+    };
+
     self.closeChildpanels = function (cb) {
       self.getChildpanels().forEach(function (item) {
-        return jsPanel.close(item);
+        return item.close();
       });
 
       if (cb) {
@@ -4385,7 +4560,7 @@ var jsPanel = {
       if (self.dataset.btnclose === 'enabled') {
         jsPanel.pointerup.forEach(function (evt) {
           tpl.querySelector('.jsPanel-btn-close').addEventListener(evt, function () {
-            jsPanel.close(self, null, true);
+            self.close(null, true);
           });
         });
       } else {
@@ -4393,6 +4568,14 @@ var jsPanel = {
       }
 
       return tpl;
+    };
+
+    self.removeMinimizedReplacement = function () {
+      var elmt = document.getElementById("".concat(self.id, "-min"));
+
+      if (elmt) {
+        elmt.parentElement.removeChild(elmt);
+      }
     };
 
     self.dragit = function (string) {
@@ -4564,7 +4747,74 @@ var jsPanel = {
     };
 
     self.overlaps = function (reference, elmtBox, event) {
-      return jsPanel.overlaps(self, reference, elmtBox, event);
+      var panelRect = self.getBoundingClientRect(),
+          parentStyle = getComputedStyle(self.parentElement),
+          scaleFactor = self.getScaleFactor(),
+          parentBorderWidth = {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0
+      },
+          referenceRect,
+          evtX = 0,
+          evtY = 0,
+          evtXparent = 0,
+          evtYparent = 0;
+
+      if (self.options.container !== 'window' && elmtBox === 'paddingbox') {
+        parentBorderWidth.top = parseInt(parentStyle.borderTopWidth, 10) * scaleFactor.y;
+        parentBorderWidth.right = parseInt(parentStyle.borderRightWidth, 10) * scaleFactor.x;
+        parentBorderWidth.bottom = parseInt(parentStyle.borderBottomWidth, 10) * scaleFactor.y;
+        parentBorderWidth.left = parseInt(parentStyle.borderLeftWidth, 10) * scaleFactor.x;
+      }
+
+      if (typeof reference === 'string') {
+        if (reference === 'window') {
+          referenceRect = {
+            left: 0,
+            top: 0,
+            right: window.innerWidth,
+            bottom: window.innerHeight
+          };
+        } else if (reference === 'parent') {
+          referenceRect = self.parentElement.getBoundingClientRect();
+        } else {
+          referenceRect = document.querySelector(reference).getBoundingClientRect();
+        }
+      } else {
+        referenceRect = reference.getBoundingClientRect();
+      }
+
+      if (event) {
+        evtX = event.touches ? event.touches[0].clientX : event.clientX;
+        evtY = event.touches ? event.touches[0].clientY : event.clientY;
+        evtXparent = evtX - referenceRect.left;
+        evtYparent = evtY - referenceRect.top;
+      }
+
+      var overlapsX = panelRect.left < referenceRect.right && panelRect.right > referenceRect.left,
+          overlapsY = panelRect.top < referenceRect.bottom && panelRect.bottom > referenceRect.top,
+          overlaps = overlapsX && overlapsY;
+      return {
+        overlaps: overlaps,
+        top: panelRect.top - referenceRect.top - parentBorderWidth.top,
+        right: referenceRect.right - panelRect.right - parentBorderWidth.right,
+        bottom: referenceRect.bottom - panelRect.bottom - parentBorderWidth.bottom,
+        left: panelRect.left - referenceRect.left - parentBorderWidth.left,
+        parentBorderWidth: parentBorderWidth,
+        panelRect: panelRect,
+        referenceRect: referenceRect,
+        pointer: {
+          // pointer coords relative to window and reference
+          clientX: evtX,
+          clientY: evtY,
+          left: evtXparent - parentBorderWidth.left,
+          top: evtYparent - parentBorderWidth.top,
+          right: referenceRect.width - evtXparent - parentBorderWidth.right,
+          bottom: referenceRect.height - evtYparent - parentBorderWidth.bottom
+        }
+      };
     };
 
     self.setSize = function () {
@@ -4608,9 +4858,7 @@ var jsPanel = {
         } else if (typeof value === 'function') {
           callback = value;
         }
-      }); // do not use a transition to resize panel (only for smallify/unsmallify)
-      //self.style.transition = 'unset';
-
+      });
       var values = jsPanel.pOsize(self, size);
       self.style.width = values.width;
       self.style.height = values.height;
@@ -4814,7 +5062,14 @@ var jsPanel = {
           jsPanel.emptyNode(item);
           item.append(logo);
         });
-      }
+      } // images must not be draggable, otherwise dragit interactions locks
+
+
+      self.headerlogo.childNodes.forEach(function (logo) {
+        if (logo.nodeName && logo.nodeName === 'IMG') {
+          logo.setAttribute('draggable', 'false');
+        }
+      });
 
       if (cb) {
         cb.call(self, self);
@@ -4967,7 +5222,7 @@ var jsPanel = {
             return false;
           }
 
-          jsPanel.close(self, null, true);
+          self.close(null, true);
         });
       }); // pointerdown handler needed to prevent side effect with resize handles
 
@@ -5051,7 +5306,7 @@ var jsPanel = {
 
 
     panelContainer.append(self);
-    self.front(false, false); // just to ensure iframe code in jsPanel.front() works for very first panel as well, second false prevents onfronted callbacks to be executed
+    self.front(false, false); // just to ensure iframe code in self.front() works for very first panel as well, second false prevents onfronted callbacks to be executed
     // option.theme
 
     self.setTheme(options.theme); // option.boxShadow
@@ -5185,106 +5440,7 @@ var jsPanel = {
         self.content.style.overflowX = value[0];
         self.content.style.overflowY = value[1];
       }
-    } // option.rtl
-
-
-    if (options.rtl) {
-      self.setRtl();
-    } // option.size -- should be after option.theme
-
-
-    self.setSize(); // option.position
-
-    self.status = 'normalized'; // if option.position evaluates to false panel will not be positioned at all
-
-    if (options.position) {
-      this.position(self, options.position);
-    } else {
-      self.style.opacity = 1;
-    }
-
-    document.dispatchEvent(jspanelnormalized);
-    self.calcSizeFactors(); // option.animateIn
-
-    if (options.animateIn) {
-      // remove class again on animationend, otherwise opacity doesn't change when panel is dragged
-      self.addEventListener('animationend', function () {
-        _this.remClass(self, options.animateIn);
-      });
-      this.setClass(self, options.animateIn);
-    } // option.dragit AND option.resizeit AND option.syncMargins
-
-
-    if (options.syncMargins) {
-      var containment = this.pOcontainment(options.maximizedMargin);
-
-      if (options.dragit) {
-        options.dragit.containment = containment;
-
-        if (options.dragit.snap) {
-          options.dragit.snap.containment = true;
-        }
-      }
-
-      if (options.resizeit) {
-        options.resizeit.containment = containment;
-      }
-    }
-
-    if (options.dragit) {
-      this.dragit(self, options.dragit); // do not use self.options.dragit.stop.push() !!!
-
-      self.addEventListener('jspaneldragstop', function (e) {
-        if (e.detail === self.id) {
-          self.calcSizeFactors();
-        }
-      }, false);
-    } else {
-      self.titlebar.style.cursor = 'default';
-    }
-
-    if (options.resizeit) {
-      this.resizeit(self, options.resizeit);
-      var startstatus = void 0; // do not use self.options.resizeit.start.push() !!!
-
-      self.addEventListener('jspanelresizestart', function (e) {
-        if (e.detail === self.id) {
-          startstatus = self.status;
-        }
-      }, false); // do not use self.options.resizeit.stop.push() !!!
-
-      self.addEventListener('jspanelresizestop', function (e) {
-        if (e.detail === self.id) {
-          if ((startstatus === 'smallified' || startstatus === 'smallifiedmax' || startstatus === 'maximized') && parseFloat(self.style.height) > parseFloat(window.getComputedStyle(self.header).height)) {
-            self.setControls(['.jsPanel-btn-normalize']);
-            self.status = 'normalized';
-            document.dispatchEvent(jspanelnormalized);
-            document.dispatchEvent(jspanelstatuschange);
-
-            if (options.onstatuschange) {
-              jsPanel.processCallbacks(self, options.onstatuschange, 'every');
-            }
-
-            self.calcSizeFactors();
-          }
-        }
-      }, false);
-    } // initialize self.currentData - must be after options position & size
-
-
-    self.saveCurrentDimensions(true);
-    self.saveCurrentPosition(); // option.setStatus
-
-    if (options.setStatus) {
-      if (options.setStatus === 'smallifiedmax') {
-        self.maximize().smallify();
-      } else if (options.setStatus === 'smallified') {
-        self.smallify();
-      } else {
-        // remove the char 'd' from end of string to get function name to call
-        self[options.setStatus.substr(0, options.setStatus.length - 1)]();
-      }
-    } // option.autoclose
+    } // option.autoclose -- should be before option.size
 
 
     if (options.autoclose) {
@@ -5327,6 +5483,129 @@ var jsPanel = {
       }
 
       slider.style.animation = "".concat(autoclose.time, " progressbar");
+    } // option.rtl
+
+
+    if (options.rtl) {
+      self.setRtl();
+    } // option.size -- should be after option.theme
+
+
+    self.setSize(); // option.position
+
+    self.status = 'normalized'; // if option.position evaluates to false panel will not be positioned at all
+
+    if (options.position) {
+      this.position(self, options.position);
+    } else {
+      self.style.opacity = 1;
+    }
+
+    document.dispatchEvent(jspanelnormalized);
+    self.calcSizeFactors(); // option.animateIn
+
+    if (options.animateIn) {
+      // remove class again on animationend, otherwise opacity doesn't change when panel is dragged
+      self.addEventListener('animationend', function () {
+        _this.remClass(self, options.animateIn);
+      });
+      this.setClass(self, options.animateIn);
+    } // option.dragit AND option.resizeit AND option.syncMargins
+
+
+    if (options.syncMargins) {
+      var containment = this.pOcontainment(options.maximizedMargin);
+
+      if (options.dragit) {
+        options.dragit.containment = containment;
+
+        if (options.dragit.snap === true) {
+          // options.dragit.snap must be object in order to set options.dragit.snap.containment = true;
+          options.dragit.snap = jsPanel.defaultSnapConfig;
+          options.dragit.snap.containment = true;
+        } else if (options.dragit.snap) {
+          options.dragit.snap.containment = true;
+        }
+      }
+
+      if (options.resizeit) {
+        options.resizeit.containment = containment;
+      }
+    }
+
+    if (options.dragit) {
+      // callbacks must be array of function(s) in order to be able to dynamically add/remove callbacks (for example in extensions)
+      ['start', 'drag', 'stop'].forEach(function (item) {
+        if (options.dragit[item]) {
+          if (typeof options.dragit[item] === 'function') {
+            options.dragit[item] = [options.dragit[item]];
+          }
+        } else {
+          options.dragit[item] = [];
+        }
+      });
+      this.dragit(self, options.dragit); // do not use self.options.dragit.stop.push() !!!
+
+      self.addEventListener('jspaneldragstop', function (e) {
+        if (e.detail === self.id) {
+          self.calcSizeFactors();
+        }
+      }, false);
+    } else {
+      self.titlebar.style.cursor = 'default';
+    }
+
+    if (options.resizeit) {
+      // callbacks must be array of function(s) in order to be able to dynamically add/remove callbacks (for example in extensions)
+      ['start', 'resize', 'stop'].forEach(function (item) {
+        if (options.resizeit[item]) {
+          if (typeof options.resizeit[item] === 'function') {
+            options.resizeit[item] = [options.resizeit[item]];
+          }
+        } else {
+          options.resizeit[item] = [];
+        }
+      });
+      this.resizeit(self, options.resizeit);
+      var startstatus = void 0; // do not use self.options.resizeit.start.push() !!!
+
+      self.addEventListener('jspanelresizestart', function (e) {
+        if (e.detail === self.id) {
+          startstatus = self.status;
+        }
+      }, false); // do not use self.options.resizeit.stop.push() !!!
+
+      self.addEventListener('jspanelresizestop', function (e) {
+        if (e.detail === self.id) {
+          if ((startstatus === 'smallified' || startstatus === 'smallifiedmax' || startstatus === 'maximized') && parseFloat(self.style.height) > parseFloat(window.getComputedStyle(self.header).height)) {
+            self.setControls(['.jsPanel-btn-normalize']);
+            self.status = 'normalized';
+            document.dispatchEvent(jspanelnormalized);
+            document.dispatchEvent(jspanelstatuschange);
+
+            if (options.onstatuschange) {
+              jsPanel.processCallbacks(self, options.onstatuschange, 'every');
+            }
+
+            self.calcSizeFactors();
+          }
+        }
+      }, false);
+    } // initialize self.currentData - must be after options position & size
+
+
+    self.saveCurrentDimensions(true);
+    self.saveCurrentPosition(); // option.setStatus
+
+    if (options.setStatus) {
+      if (options.setStatus === 'smallifiedmax') {
+        self.maximize().smallify();
+      } else if (options.setStatus === 'smallified') {
+        self.smallify();
+      } else {
+        // remove the char 'd' from end of string to get function name to call
+        self[options.setStatus.substr(0, options.setStatus.length - 1)]();
+      }
     } // front panel on mousedown
 
 
@@ -5350,9 +5629,9 @@ var jsPanel = {
                 top;
 
             if (status === 'maximized' && onResize) {
-              self.maximize();
+              self.maximize(false, true);
             } else if (self.snapped && status !== 'minimized') {
-              jsPanel.snapPanel(self, self.snapped, true);
+              self.snap(self.snapped, true);
             } else if (status === 'normalized' || status === 'smallified' || status === 'maximized') {
               if (typeof onResize === 'function') {
                 onResize.call(self, e, self);
@@ -5363,7 +5642,7 @@ var jsPanel = {
                 self.style.top = top <= 0 ? 0 : top + 'px';
               }
             } else if (status === 'smallifiedmax' && onResize) {
-              self.maximize().smallify();
+              self.maximize(false, true).smallify();
             }
           }
         }, false);
@@ -5391,7 +5670,7 @@ var jsPanel = {
             if (status === 'maximized' && _onResize) {
               self.maximize();
             } else if (self.snapped && status !== 'minimized') {
-              jsPanel.snapPanel(self, self.snapped, true);
+              self.snap(self.snapped, true);
             } else if (status === 'normalized' || status === 'smallified' || status === 'maximized') {
               if (typeof _onResize === 'function') {
                 _onResize.call(self, self, {

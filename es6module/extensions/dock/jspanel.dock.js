@@ -1,5 +1,4 @@
 /* jspanel.dock.js v1.1.1 - 2019-05-18 09:40, (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-/* global jsPanel */
 'use strict';
 
 import {jsPanel} from '../../jspanel.js';
@@ -177,3 +176,9 @@ dockPanel.getVersion = function () { return '1.1.1'; };
 dockPanel.getDate    = function () { return '2019-05-18 09:40'; };
 
 jsPanel.extend({ dock: dockPanel });
+
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') {
+    module.exports = jsPanel;
+}

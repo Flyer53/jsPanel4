@@ -1,6 +1,4 @@
 /* jspanel.modal.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-
-/* global jsPanel, module */
 'use strict'; //import {jsPanel} from '../../jspanel.js';
 
 /*
@@ -11,8 +9,8 @@ Workaround: Set option.dragit.containment to a suitable value on the modal.
 
 if (!jsPanel.modal) {
   jsPanel.modal = {
-    version: '1.2.2',
-    date: '2019-10-21 09:33',
+    version: '1.2.3',
+    date: '2019-12-02 10:52',
     defaults: {
       closeOnEscape: true,
       closeOnBackdrop: true,
@@ -84,7 +82,7 @@ if (!jsPanel.modal) {
         if (opts.closeOnBackdrop) {
           jsPanel.pointerup.forEach(function (evt) {
             document.getElementById("jsPanel-modal-backdrop-".concat(opts.id)).addEventListener(evt, function () {
-              jsPanel.close(modal, null, true);
+              modal.close(null, true);
             });
           });
         }

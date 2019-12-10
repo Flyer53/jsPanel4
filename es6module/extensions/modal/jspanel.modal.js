@@ -1,5 +1,4 @@
 /* jspanel.modal.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-/* global jsPanel, module */
 'use strict';
 
 import {jsPanel} from '../../jspanel.js';
@@ -14,8 +13,8 @@ if (!jsPanel.modal) {
 
     jsPanel.modal = {
 
-        version: '1.2.1',
-        date: '2019-07-25 14:54',
+        version: '1.2.3',
+        date: '2019-12-02 10:52',
 
         defaults: {
             closeOnEscape:  true,
@@ -84,7 +83,7 @@ if (!jsPanel.modal) {
                 if (opts.closeOnBackdrop) {
                     jsPanel.pointerup.forEach(function (evt) {
                         document.getElementById(`jsPanel-modal-backdrop-${opts.id}`).addEventListener(evt, function () {
-                            modal.close();
+                            modal.close(null, true);
                         });
                     });
                 }
@@ -103,4 +102,10 @@ if (!jsPanel.modal) {
         };
     })();
 
+}
+
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') {
+    module.exports = jsPanel;
 }

@@ -1,5 +1,25 @@
 ## CHANGELOG
 
+### Version 4.9.0 *released 2019-12-10*
+
++ **bugfix** in option `onwindowresize`
++ **bugfix** in `dragit.disableOnMaximized`
++ **bugfix** in `dragit.snap` feature
++ **bugfix** in option `resizeit`
++ **bugfix** in option `syncMargins`
++ **bugfix** in and updated `layout extension`
++ **bugfix** in method `.setHeaderLogo()`
++ **added** jsPanel events: implemented _event_ property `panel` referring to the panel firing the _event_
++ **added** `dragit.snap` parameter `active`
++ **added** almost all option `dragit` and `resizeit` parameters are now editable for already existing panels
++ **added** option `maximizedMargin` is now editable for existing panels
++ **added** first implementation of `dragit.drop` allowing to move a panel from its current parent element to another one
++ **added** <kbd>SHIFT</kbd> modifier key action to the resizeit interaction
++ **updated** option `resizeit` _modifier key_ functionality
++ **updated** options `dragit` and `resizeit`: the start, drag/resize and stop callbacks now receive the same
+argument _paneldata_ (instead of args position/size) with css **left**, **top**, **width** and **height** data
++ **improved** handling of `contentSize:"auto"` / `panelSize:"auto"` when combined with `autoclose`
+
 ### Version 4.8.0 *released 2019-11-08*
 
 + **bugfix** in option `resizeit` and panel method `resize()`
