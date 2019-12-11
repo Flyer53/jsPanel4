@@ -176,9 +176,3 @@ dockPanel.getVersion = function () { return '1.1.1'; };
 dockPanel.getDate    = function () { return '2019-05-18 09:40'; };
 
 jsPanel.extend({ dock: dockPanel });
-
-// Add CommonJS module exports, so it can be imported using require() in Node.js
-// https://nodejs.org/docs/latest/api/modules.html
-if (typeof module !== 'undefined') {
-    module.exports = jsPanel;
-}

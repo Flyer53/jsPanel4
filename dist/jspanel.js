@@ -12,8 +12,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 var jsPanel = {
-  version: '4.9.0',
-  date: '2019-12-10 11:00',
+  version: '4.9.1',
+  date: '2019-12-11 17:13',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {

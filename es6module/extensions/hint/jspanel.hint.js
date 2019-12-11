@@ -39,9 +39,3 @@ if (!jsPanel.hint) {
     };
 
 }
-
-// Add CommonJS module exports, so it can be imported using require() in Node.js
-// https://nodejs.org/docs/latest/api/modules.html
-if (typeof module !== 'undefined') {
-    module.exports = jsPanel;
-}

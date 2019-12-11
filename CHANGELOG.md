@@ -1,5 +1,9 @@
 ## CHANGELOG
 
+### Version 4.9. *released 2019-12-11*
+
+This release fixes a typo in the js files of folder `es6module`. Other files are not affected.
+
 ### Version 4.9.0 *released 2019-12-10*
 
 + **bugfix** in option `onwindowresize`
