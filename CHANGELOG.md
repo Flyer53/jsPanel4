@@ -1,10 +1,17 @@
-## CHANGELOG
+## <span style='color:#563D7C;'>CHANGELOG</span>
 
-### Version 4.9. *released 2019-12-11*
+### <span style='color:#563D7C;'>Version 4.9.2 *2020-01-15*</span>
+
++ **updated** events `jspanelclosed` and `jspanelcloseduser`
++ **updated** `dock` extension: master AND slave panels get the same z-index value if either
+panel is fronted. Recoded event handling within the extension.
++ **updated** panel template to fix an issue with IE11
+
+### <span style='color:#563D7C;'>Version 4.9.1 *2019-12-11*</span>
 
 This release fixes a typo in the js files of folder `es6module`. Other files are not affected.
 
-### Version 4.9.0 *released 2019-12-10*
+### <span style='color:#563D7C;'>Version 4.9.0 *2019-12-10*</span>
 
 + **bugfix** in option `onwindowresize`
 + **bugfix** in `dragit.disableOnMaximized`
@@ -24,7 +31,7 @@ This release fixes a typo in the js files of folder `es6module`. Other files are
 argument _paneldata_ (instead of args position/size) with css **left**, **top**, **width** and **height** data
 + **improved** handling of `contentSize:"auto"` / `panelSize:"auto"` when combined with `autoclose`
 
-### Version 4.8.0 *released 2019-11-08*
+### <span style='color:#563D7C;'>Version 4.8.0 *2019-11-08*</span>
 
 + **bugfix** in option `resizeit` and panel method `resize()`
 + **bugfix** in method `jsPanel.close()`
@@ -39,7 +46,7 @@ the aspect ratio of the content section while resizing a panel
 + **updated** option `onbeforeclose` callback receives a third argument `closedByUser` set to `true` if the panel is closed by user action
 + **updated** modal extension due to the updated method `jsPanel.close()`
 
-### Version 4.7.0 *released 2019-06-18*
+### <span style='color:#563D7C;'>Version 4.7.0 *2019-06-18*</span>
 
 + **bugfix** in option `dragit`
 + **bugfix** in option `resizeit`
@@ -68,7 +75,7 @@ existing panels in order to set/change CSS border/borderRadius
 + **updated hint extension:** due to updated header controls
 + various internal bugfixes
 
-### Version 4.6.0 *released 2019-03-27*
+### <span style='color:#563D7C;'>Version 4.6.0 *2019-03-27*</span>
 
 + **bugfix** in `option.dragit.snap` concerning use of `trigger: 'pointer'`
 + **bugfix** concerning `jspaneldragstop/jspanelresizestop` events
@@ -80,7 +87,7 @@ existing panels in order to set/change CSS border/borderRadius
 + **added** `jsPanel.errorReporting` to turn off/on error jsPanel reporting
 + various minor fixes and improvements
 
-### Version 4.5.0 *released 2019-02-12*
+### <span style='color:#563D7C;'>Version 4.5.0 *released 2019-02-12*</span>
 
 + jsPanel now uses **pointer events** if supported
 + **bugfix** - recoded the complete `close()` function to fix a long standing bug
@@ -106,7 +113,7 @@ existing panels in order to set/change CSS border/borderRadius
 #####Note:
 The numerous updates in theming might require an update of your code in case you used some kind of custom theme since there no more are theme specific css classes applied to a jsPanel.
 
-### Version 4.4.0 *released 2018-11-30*
+### <span style='color:#563D7C;'>Version 4.4.0 *released 2018-11-30*
 
 + **added** theme modifier `fillcolor` to specify a custom background color for the content section
 + **updated** option `border` accepts all color names usable with option `theme`
@@ -118,7 +125,7 @@ The numerous updates in theming might require an update of your code in case you
 + **added** polyfill for `String.prototype.includes()`
 + **added** CommonJS module exports
 
-### Version 4.3.0 *released 2018-11-10*
+### <span style='color:#563D7C;'>Version 4.3.0 *released 2018-11-10*</span>
 
 + **added** event `jspanelcloseduser` which is fired when a panel is closed using the header control
 + **added** panel method `.overlaps()`
@@ -139,45 +146,45 @@ The numerous updates in theming might require an update of your code in case you
     + tooltip extension will load a `MouseEvent()` polyfill for IE11
 + various tweaks in css and js
 
-### Version 4.2.1 *released 2018-09-14*
+### <span style='color:#563D7C;'>Version 4.2.1 *released 2018-09-14*</span>
 
 + **fix** in methods `setHeaderLogo()` and `setHeaderTitle()` - logo and title are now updated in minimized replacement as well
 + **fix** in css concerning only IE11 when using very long title texts (controls were pushed out of panel boundaries)
 + **fix** in options `dragit` and `resizeit` - see https://github.com/Flyer53/jsPanel4/issues/53
 + **added:** All parameters of option `position` now accept a function as value
 
-### Version 4.1.2 *released 2018-08-13*
+### <span style='color:#563D7C;'>Version 4.1.2 *released 2018-08-13*</span>
 
 + **fix** in options `dragit` and `resizeit` - handler was not unbound when mouse cursor came over a `<object>` tag in content section of a jsPanel
 + **added** click on modal backdrop will close a modal jsPanel
 + **changed** `option.closeOnEscape` is set to `true` by default for a modal jPanel
 
-### Version 4.1.1 *released 2018-07-25*
+### <span style='color:#563D7C;'>Version 4.1.1 *released 2018-07-25*</span>
 
 + **fixed** `jspanel.min.js` to make it work with IE11
 + **fixed** CSS and JS to improve compatibility with Bootstrap > 4.1.2
 + **fix** in the internal function applying a arbitrary theme
 + **replaced** some wrong files in the folder `es6module`
 
-### Version 4.1.0 *released 2018-07-20*
+### <span style='color:#563D7C;'>Version 4.1.0 *released 2018-07-20*</span>
 
 + **improved** method `.smallify()`
 + **added** method `jsPanel.addScript()` in order to add a script to the document
 + **added** option `borderRadius` applies a css border-radius to the panel
 + when using a mouse **draging/resizing** and **all controls** of a panel are now limited to the left mouse button
 
-### Version 4.0.0 *released 2018-05-23*
+### <span style='color:#563D7C;'>Version 4.0.0 *released 2018-05-23*</span>
 
 + **bugfix** in the dock extensions
 + **bugfix** in the function creating the minimized replacement
 + **option resizeit** defaults of `minWidth` and `minHeight` set to `128`
 + various tweaks in css and js
 
-### Version 4.0.0-beta.5.1 *released 2018-04-19*
+### <span style='color:#563D7C;'>Version 4.0.0-beta.5.1 *released 2018-04-19*</span>
 
 + **fixes** a typo disabling option `onwindowresize`
 
-### Version 4.0.0-beta.5 *released 2018-04-19*
+### <span style='color:#563D7C;'>Version 4.0.0-beta.5 *released 2018-04-19*</span>
 
 + **new** events `jspaneldragstart`, `jspaneldrag`, `jspaneldragstop`, `jspanelresizestart`, `jspanelresize`, `jspanelresizestop`
 + **new** extension **`dock`** extending a jsPanel with the method `.dock()`. This method allows to _dock_ one or more _slave_ panels to a _master_ panel. Basically that means a _slave_ panel is dragged, maximized, normalized, minimized, closed and optionally resized together with the _master_ panel it's docked to.
@@ -187,11 +194,11 @@ The numerous updates in theming might require an update of your code in case you
 + **bugfix** in CSS for Right-To-Left panels
 + **removed** CSS `border-radius` settings from themes
 
-### Version 4.0.0-beta.4.1 *released 2018-04-04*
+### <span style='color:#563D7C;'>Version 4.0.0-beta.4.1 *released 2018-04-04*</span>
 
 + **bugfix** in jspanel.css
 
-### Version 4.0.0-beta.4 *released 2018-03-30*
+### <span style='color:#563D7C;'>Version 4.0.0-beta.4 *released 2018-03-30*</span>
 
 + **fix** in method **resizeit()**
 + **fix** in method **jsPanel.ajax()**
@@ -203,7 +210,7 @@ The numerous updates in theming might require an update of your code in case you
 + **replaced** option **headerRemove** with option **header**
 + various tweaks in css and js
 
-### Version 4.0.0-beta.3 *released 2018-02-17*
+### <span style='color:#563D7C;'>Version 4.0.0-beta.3 *released 2018-02-17*</span>
 
 + **added** property **globalCallbacks** to the global object **jsPanel** lets you add callback functions to all or a limited set of jsPanels at once
 + **change:** as of version 4.0.0-beta.3 jsPanel uses built-in SVGs for the controls icons. SVGs are stored in the new property **icons** of the global object jsPanel. So the directory **fonts** with all the _jsglyph_ icontfont files is obsolete
@@ -214,7 +221,7 @@ The numerous updates in theming might require an update of your code in case you
 + **various bugfixes and improvements in js and css**
 + **ADDED** folder **es6module** with all necessary files to run jsPanel as native ES6 module
 
-### Version 4.0.0-beta.2 *released 2018-01-08*
+###<span style='color:#563D7C;'> Version 4.0.0-beta.2 *released 2018-01-08*</span>
 
 + **new** setting **trigger** for option.dragit.snap
 + **new** setting **containment** for option.dragit.snap
@@ -228,6 +235,6 @@ The numerous updates in theming might require an update of your code in case you
 + **added** polyfills to improve compatibility with IE11
 + **various bugfixes and internal improvements**
 
-### Version 4.0.0-beta.1 *released 2017-12-07*
+### <span style='color:#563D7C;'>Version 4.0.0-beta.1 *released 2017-12-07*</span>
 
 First public beta version of jsPanel version 4

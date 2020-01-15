@@ -1,4 +1,4 @@
-/* jspanel.dock.js v1.1.1 - 2019-05-18 09:40, (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
+/* jspanel.dock.js v1.1.2 - (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
 'use strict'; //import {jsPanel} from '../../jspanel.js';
 
 function dockPanel(config, cb) {
@@ -10,15 +10,15 @@ function dockPanel(config, cb) {
     linkSlaveHeight: false,
     linkSlaveWidth: false,
     callback: false
-  };
-  var conf = Object.assign({}, configDefault, config);
-  var master;
-  var slave = document.getElementById(this.id);
+  },
+      master,
+      slave = document.getElementById(this.id);
+  this.slaveconfig = Object.assign({}, configDefault, config);
 
-  if (conf.master && conf.master.nodeType === 1) {
-    master = conf.master;
+  if (this.slaveconfig.master && this.slaveconfig.master.nodeType === 1) {
+    master = this.slaveconfig.master;
   } else {
-    master = document.querySelector(conf.master);
+    master = document.querySelector(this.slaveconfig.master);
   }
 
   if (!master) {
@@ -36,9 +36,121 @@ function dockPanel(config, cb) {
     }
 
     return false;
+  } else {
+    if (!master.slaves) {
+      master.slaves = new Set();
+    }
+
+    if (!master.handlers) {
+      master.handlers = {};
+    } // set interactions between master and slaves
+
+
+    if (!master.handlers.fronted) {
+      master.options.onfronted.push(function () {
+        var zI = master.style.zIndex;
+        master.slaves.forEach(function (sl) {
+          sl.style.zIndex = zI;
+        });
+        return true;
+      });
+      master.handlers.fronted = true;
+    }
+
+    if (!master.handlers.smallified) {
+      master.options.onsmallified.push(function () {
+        master.slaves.forEach(function (sl) {
+          sl.smallify().reposition();
+        });
+        return true;
+      });
+      master.handlers.smallified = true;
+    }
+
+    if (!master.handlers.unsmallified) {
+      master.options.onunsmallified.push(function () {
+        master.slaves.forEach(function (sl) {
+          sl.unsmallify().reposition();
+        });
+        return true;
+      });
+      master.handlers.unsmallified = true;
+    }
+
+    if (!master.handlers.closed) {
+      master.options.onclosed.push(function () {
+        master.slaves.forEach(function (sl) {
+          sl.close();
+        });
+        return true;
+      });
+      master.handlers.closed = true;
+    }
+
+    if (!master.handlers.minimized) {
+      master.options.onminimized.push(function () {
+        master.slaves.forEach(function (sl) {
+          sl.minimize();
+        });
+        return true;
+      });
+      master.handlers.minimized = true;
+    }
+
+    if (!master.handlers.maximized) {
+      master.options.onmaximized.push(function () {
+        master.slaves.forEach(function (sl) {
+          sl.normalize();
+
+          if (sl.slaveconfig.linkSlaveHeight) {
+            var height = window.getComputedStyle(master).height;
+            sl.resize({
+              height: height
+            });
+          }
+
+          if (sl.slaveconfig.linkSlaveWidth) {
+            var width = window.getComputedStyle(master).width;
+            sl.resize({
+              width: width
+            });
+          }
+
+          sl.reposition();
+        });
+        return true;
+      });
+      master.handlers.maximized = true;
+    }
+
+    if (!master.handlers.normalized) {
+      master.options.onnormalized.push(function () {
+        master.slaves.forEach(function (sl) {
+          sl.normalize();
+
+          if (sl.slaveconfig.linkSlaveHeight) {
+            var height = window.getComputedStyle(master).height;
+            sl.resize({
+              height: height
+            });
+          }
+
+          if (sl.slaveconfig.linkSlaveWidth) {
+            var width = window.getComputedStyle(master).width;
+            sl.resize({
+              width: width
+            });
+          }
+
+          sl.reposition();
+        });
+        return true;
+      });
+      master.handlers.normalized = true;
+    }
   }
 
-  var position = Object.assign({}, conf.position, {
+  var position = Object.assign({}, this.slaveconfig.position, {
     of: master,
     minLeft: false,
     minTop: false,
@@ -60,14 +172,14 @@ function dockPanel(config, cb) {
     slave.setControlStatus(ctrl, 'remove');
   });
 
-  if (conf.linkSlaveHeight) {
+  if (this.slaveconfig.linkSlaveHeight) {
     var height = window.getComputedStyle(master).height;
     slave.resize({
       height: height
     });
   }
 
-  if (conf.linkSlaveWidth) {
+  if (this.slaveconfig.linkSlaveWidth) {
     var width = window.getComputedStyle(master).width;
     slave.resize({
       width: width
@@ -79,7 +191,18 @@ function dockPanel(config, cb) {
 
   slave.dragit('disable');
   slave.resizeit('disable');
-  slave.options.minimizeTo = false; // set necessary master options
+  slave.options.minimizeTo = false; // remove slave from master.slaves Set when slave is closed
+
+  slave.options.onclosed.push(function () {
+    master.slaves.delete(slave);
+  });
+  slave.options.onfronted.push(function (panel) {
+    var zI = panel.style.zIndex;
+    master.style.zIndex = zI;
+    master.slaves.forEach(function (sl) {
+      sl.style.zIndex = zI;
+    });
+  }); // set necessary master options
 
   master.reposSlave = function () {
     if (document.querySelector('#' + slave.id)) {
@@ -95,14 +218,14 @@ function dockPanel(config, cb) {
     if (document.querySelector('#' + slave.id)) {
       slave.reposition();
 
-      if (conf.linkSlaveHeight) {
+      if (slave.slaveconfig.linkSlaveHeight) {
         var h = window.getComputedStyle(master).height;
         slave.resize({
           height: h
         });
       }
 
-      if (conf.linkSlaveWidth) {
+      if (slave.slaveconfig.linkSlaveWidth) {
         var w = window.getComputedStyle(master).width;
         slave.resize({
           width: w
@@ -113,110 +236,24 @@ function dockPanel(config, cb) {
 
   if (master.options.resizeit) {
     master.options.resizeit.resize.push(master.resizeSlave);
-  } // do not replace following event handlers with master.on.... callbacks
-  // remove drag/resize callbacks from master before master is closed, otherwise callbacks build up in arrays when master is recreated again after it was closed
+  }
 
-
-  document.addEventListener('jspanelbeforeclose', function (evt) {
-    if (evt.detail === master.id) {
-      if (master.options.dragit) {
-        master.options.dragit.drag = [];
-      }
-
-      if (master.options.resizeit) {
-        master.options.resizeit.resize = [];
-      }
-
-      return true;
-    }
-  }, false); // close slave when master is closed
-
-  document.addEventListener('jspanelclosed', function (evt) {
-    if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
-      slave.close();
-    }
-  }, false); // maximize slave when master is maximized
-
-  document.addEventListener('jspanelmaximized', function (evt) {
-    if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
-      slave.normalize();
-
-      if (conf.linkSlaveHeight) {
-        var _height = window.getComputedStyle(master).height;
-        slave.resize({
-          height: _height
-        });
-      }
-
-      if (conf.linkSlaveWidth) {
-        var _width = window.getComputedStyle(master).width;
-        slave.resize({
-          width: _width
-        });
-      }
-
-      slave.reposition();
-    }
-  }, false); // minimize slave when master is minimized
-
-  document.addEventListener('jspanelminimized', function (evt) {
-    if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
-      slave.minimize();
-    }
-  }, false); // normalize slave when master is normalized
-
-  document.addEventListener('jspanelnormalized', function (evt) {
-    if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
-      slave.normalize();
-
-      if (conf.linkSlaveHeight) {
-        var _height2 = window.getComputedStyle(master).height;
-        slave.resize({
-          height: _height2
-        });
-      }
-
-      if (conf.linkSlaveWidth) {
-        var _width2 = window.getComputedStyle(master).width;
-        slave.resize({
-          width: _width2
-        });
-      }
-
-      slave.reposition();
-    }
-  }, false); // smallify/unsmallify slave when master is smallified/unsmallified
-
-  document.addEventListener('jspanelsmallifiedmax', function (evt) {
-    if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
-      slave.smallify().reposition();
-    }
-  }, false);
-  document.addEventListener('jspanelsmallified', function (evt) {
-    if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
-      slave.smallify().reposition();
-    }
-  }, false);
-  document.addEventListener('jspanelunsmallified', function (evt) {
-    if (evt.detail === master.id && document.querySelector('#' + slave.id)) {
-      slave.unsmallify().reposition();
-    }
-  }, false);
+  master.slaves.add(slave);
   slave.dockedTo = master.id;
 
-  if (conf.callback) {
-    conf.callback.call(slave, master, slave);
+  if (this.slaveconfig.callback) {
+    this.slaveconfig.callback.call(slave, master, slave);
   }
 
   return slave;
 }
 
 dockPanel.getVersion = function () {
-  return '1.1.1';
+  return '1.1.2';
 };
 
 dockPanel.getDate = function () {
-  return '2019-05-18 09:40';
+  return '2020-01-14 14:00';
 };
 
 jsPanel.extend({

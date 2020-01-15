@@ -1,4 +1,4 @@
-/* jspanel.js - License MIT, copyright 2013 - 2019 Stefan Straesser <info@jspanel.de> (https://jspanel.de) */
+/* jspanel.js - License MIT, copyright 2013 - 2020 Stefan Straesser <info@jspanel.de> (https://jspanel.de) */
 'use strict';
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -12,8 +12,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 var jsPanel = {
-  version: '4.9.1',
-  date: '2019-12-11 17:13',
+  version: '4.9.2',
+  date: '2020-01-14 14:00',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
@@ -1639,6 +1639,8 @@ var jsPanel = {
     var dataAttr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
     var panel = document.createElement('div');
     panel.className = 'jsPanel';
+    panel.style.left = '0';
+    panel.style.top = '0';
 
     if (dataAttr) {
       ['close', 'maximize', 'normalize', 'minimize', 'smallify'].forEach(function (item) {
@@ -3570,9 +3572,18 @@ var jsPanel = {
     }),
         jspanelfronted = new CustomEvent('jspanelfronted', {
       'detail': options.id
+    }),
+        jspanelbeforeclose = new CustomEvent('jspanelbeforeclose', {
+      'detail': options.id
+    }),
+        jspanelclosed = new CustomEvent('jspanelclosed', {
+      'detail': options.id
+    }),
+        jspanelcloseduser = new CustomEvent('jspanelcloseduser', {
+      'detail': options.id
     }); // make panel available as event object property 'panel'
 
-    [jspanelloaded, jspanelstatuschange, jspanelbeforenormalize, jspanelnormalized, jspanelbeforemaximize, jspanelmaximized, jspanelbeforeminimize, jspanelminimized, jspanelbeforesmallify, jspanelsmallified, jspanelsmallifiedmax, jspanelbeforeunsmallify, jspanelfronted].forEach(function (evt) {
+    [jspanelloaded, jspanelstatuschange, jspanelbeforenormalize, jspanelnormalized, jspanelbeforemaximize, jspanelmaximized, jspanelbeforeminimize, jspanelminimized, jspanelbeforesmallify, jspanelsmallified, jspanelsmallifiedmax, jspanelbeforeunsmallify, jspanelfronted, jspanelbeforeclose, jspanelclosed, jspanelcloseduser].forEach(function (evt) {
       evt.panel = self;
     }); // controls buttons
 
@@ -3991,18 +4002,7 @@ var jsPanel = {
       }
 
       var id = self.id,
-          parent = self.parentElement,
-          jspanelbeforeclose = new CustomEvent('jspanelbeforeclose', {
-        'detail': id
-      }),
-          jspanelclosed = new CustomEvent('jspanelclosed', {
-        'detail': id
-      }),
-          jspanelcloseduser = new CustomEvent('jspanelcloseduser', {
-        'detail': id
-      }); // make self available as event object property 'self'
-
-      jspanelbeforeclose.self = self;
+          parent = self.parentElement;
       document.dispatchEvent(jspanelbeforeclose);
 
       if (self.options.onbeforeclose && self.options.onbeforeclose.length > 0 && !jsPanel.processCallbacks(self, self.options.onbeforeclose, 'some', self.status, closedByUser)) {
@@ -5547,7 +5547,7 @@ var jsPanel = {
       this.dragit(self, options.dragit); // do not use self.options.dragit.stop.push() !!!
 
       self.addEventListener('jspaneldragstop', function (e) {
-        if (e.detail === self.id) {
+        if (e.panel === self) {
           self.calcSizeFactors();
         }
       }, false);
@@ -5570,13 +5570,13 @@ var jsPanel = {
       var startstatus = void 0; // do not use self.options.resizeit.start.push() !!!
 
       self.addEventListener('jspanelresizestart', function (e) {
-        if (e.detail === self.id) {
+        if (e.panel === self) {
           startstatus = self.status;
         }
       }, false); // do not use self.options.resizeit.stop.push() !!!
 
       self.addEventListener('jspanelresizestop', function (e) {
-        if (e.detail === self.id) {
+        if (e.panel === self) {
           if ((startstatus === 'smallified' || startstatus === 'smallifiedmax' || startstatus === 'maximized') && parseFloat(self.style.height) > parseFloat(window.getComputedStyle(self.header).height)) {
             self.setControls(['.jsPanel-btn-normalize']);
             self.status = 'normalized';
@@ -5659,7 +5659,7 @@ var jsPanel = {
         var parentContainerSize = [];
         document.addEventListener('jspanelresize', function (e) {
           // if resized panel is the parent panel of the one whose option onContentResize is set to true
-          if (e.detail === parentPanel.id) {
+          if (e.panel === parentPanel) {
             // get dimensions of parent panel's content section
             parentContainerSize[0] = parentContainer.offsetWidth;
             parentContainerSize[1] = parentContainer.offsetHeight;
