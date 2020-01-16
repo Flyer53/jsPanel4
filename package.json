@@ -1,6 +1,6 @@
 {
   "name": "jspanel4",
-  "version": "4.9.3",
+  "version": "4.9.4",
   "description": "A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu",
   "keywords": [
     "jsPanel",
