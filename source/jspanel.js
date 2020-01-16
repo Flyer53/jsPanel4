@@ -1,8 +1,8 @@
 /* jspanel.js - License MIT, copyright 2013 - 2020 Stefan Straesser <info@jspanel.de> (https://jspanel.de) */
 'use strict';
 const jsPanel = {
-    version: '4.9.3',
-    date: '2020-01-14 14:00',
+    version: '4.9.4',
+    date: '2020-01-16 10:00',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {

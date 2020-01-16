@@ -1,8 +1,8 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
-### <span style='color:#563D7C;'>Version 4.9.3 *2020-01-16*</span>
+### <span style='color:#563D7C;'>Versions 4.9.3/4.9.4 *2020-01-16*</span>
 
-+ this release only fixes a missing entry in `package.json`
++ this releases only fix an issue with `package.json`
 
 ### <span style='color:#563D7C;'>Version 4.9.2 *2020-01-15*</span>
 

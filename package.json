@@ -22,7 +22,7 @@
   "homepage": "http://jspanel.de/",
   "license": "MIT",
   "files": [
-    "dist"
+    "dist/"
   ],
   "main": "./es6module/jspanel.min.js",
   "repository": {
