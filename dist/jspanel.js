@@ -12,7 +12,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 var jsPanel = {
-  version: '4.9.2',
+  version: '4.9.3',
   date: '2020-01-14 14:00',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
