@@ -1,5 +1,11 @@
-/* jspanel.tooltip.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-'use strict';
+/**
+ * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
+ * @version v4.9.5
+ * @homepage https://jspanel.de/
+ * @license MIT
+ * @author Stefan Sträßer - info@jspanel.de
+ * @github https://github.com/Flyer53/jsPanel4.git
+ */
 
 import {jsPanel} from '../../jspanel.js';
 
@@ -92,11 +98,11 @@ if (!jsPanel.tooltip) {
                     jsPanel.create(opts, function (panel) {
 
                         const tipToClose = panel,
-                            closeTip = () => {
-                                tipToClose.close();
-                                target.removeEventListener('mouseleave', closeTip);
-                                panel.removeEventListener('mouseleave', closeTip);
-                            };
+                              closeTip = () => {
+                                  tipToClose.close();
+                                  target.removeEventListener('mouseleave', closeTip);
+                                  panel.removeEventListener('mouseleave', closeTip);
+                              };
 
                         // by default tooltip will close when mouse leaves trigger
                         if (mode === 'default') {

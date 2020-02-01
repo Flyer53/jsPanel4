@@ -1,16 +1,22 @@
-/* jspanel.modal.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-'use strict'; //import {jsPanel} from '../../jspanel.js';
-
-/*
-If option.dragit is enabled on a modal AND an already open panel has option.syncMargins set to true the modal somehow inherits
-the option.dragit.containment setting of the already open panel. Reason unknown!
-Workaround: Set option.dragit.containment to a suitable value on the modal.
+/**
+ * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
+ * @version v4.9.5
+ * @homepage https://jspanel.de/
+ * @license MIT
+ * @author Stefan Sträßer - info@jspanel.de
+ * @github https://github.com/Flyer53/jsPanel4.git
  */
 
+'use strict';
+/**
+ * If option.dragit is enabled on a modal AND an already open panel has option.syncMargins set to true the modal somehow inherits
+ * the option.dragit.containment setting of the already open panel. Reason unknown!
+ * Workaround: Set option.dragit.containment to a suitable value on the modal.
+ */
 if (!jsPanel.modal) {
   jsPanel.modal = {
-    version: '1.2.3',
-    date: '2019-12-02 10:52',
+    version: '1.2.4',
+    date: '2020-01-17 09:24',
     defaults: {
       closeOnEscape: true,
       closeOnBackdrop: true,
@@ -63,17 +69,6 @@ if (!jsPanel.modal) {
         container: 'window'
       });
       document.body.append(backdrop);
-
-      var remBackdrop = function remBackdrop(e) {
-        var id = e.detail;
-
-        if (id === opts.id) {
-          jsPanel.modal.removeBackdrop(id);
-          document.removeEventListener('jspanelclosed', remBackdrop, false);
-        }
-      };
-
-      document.addEventListener('jspanelclosed', remBackdrop, false);
       return jsPanel.create(opts, function (modal) {
         modal.style.zIndex = jsPanel.modal.ziModal.next();
         modal.header.style.cursor = 'default';
@@ -85,7 +80,12 @@ if (!jsPanel.modal) {
               modal.close(null, true);
             });
           });
-        }
+        } // remove modal backdrop when modal is closed
+
+
+        modal.options.onclosed.push(function () {
+          jsPanel.modal.removeBackdrop(opts.id);
+        });
       });
     }
   };
@@ -98,10 +98,8 @@ if (!jsPanel.modal) {
       }
     };
   }();
-} // Add CommonJS module exports, so it can be imported using require() in Node.js
-// https://nodejs.org/docs/latest/api/modules.html
-
-
-if (typeof module !== 'undefined') {
-  module.exports = jsPanel;
 }
+
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') { module.exports = jsPanel; }

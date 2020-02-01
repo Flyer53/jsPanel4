@@ -1,60 +1,71 @@
 {
-  "name": "jspanel4",
-  "version": "4.9.4",
-  "description": "A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu",
-  "keywords": [
-    "jsPanel",
-    "panel",
-    "ui",
-    "layout",
-    "popup",
-    "widget",
-    "window",
-    "modal",
-    "tooltip",
-    "hint",
-    "notifier",
-    "alert",
-    "contextmenu",
-    "bootstrap"
-  ],
-  "author": "Stefan Straesser <info@jspanel.de> (http://jspanel.de/)",
-  "homepage": "http://jspanel.de/",
-  "license": "MIT",
-  "files": [
-    "dist/",
-	"es6module/"
-  ],
-  "main": "./es6module/jspanel.min.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Flyer53/jsPanel4.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Flyer53/jsPanel4/issues",
-    "email": "info@jspanel.de"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.8.3",
-    "@babel/core": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
-    "eslint": "^6.8.0",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.20.0",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
-    "gulp-babel-minify": "^0.5.1",
-    "gulp-clean-css": "^4.2.0",
-    "gulp-minify": "^3.1.0",
-    "gulp-rename": "^2.0.0",
-    "gulp-sass": "^4.0.2",
-    "node-sass": "^4.13.0"
-  },
-  "dependencies": {
-    "@babel/polyfill": "^7.8.3",
-    "npm": "^6.13.6"
-  }
+    "name": "jspanel4",
+    "version": "4.9.5",
+    "description": "A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu",
+    "keywords": [
+        "jsPanel",
+        "panel",
+        "ui",
+        "layout",
+        "popup",
+        "widget",
+        "window",
+        "modal",
+        "tooltip",
+        "hint",
+        "notifier",
+        "alert",
+        "contextmenu",
+        "bootstrap"
+    ],
+    "author": {
+        "name": "Stefan Sträßer",
+        "email": "info@jspanel.de",
+        "url": "https://jspanel.de"
+    },
+    "homepage": "https://jspanel.de/",
+    "license": "MIT",
+    "files": [
+        "dist/",
+        "es6module/"
+    ],
+    "main": "./es6module/jspanel.min.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Flyer53/jsPanel4.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Flyer53/jsPanel4/issues",
+        "email": "info@jspanel.de"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.8.4",
+        "@babel/core": "^7.8.4",
+        "@babel/preset-env": "^7.8.4",
+        "eslint": "^6.8.0",
+        "eslint-config-standard": "^14.1.0",
+        "eslint-plugin-import": "^2.20.0",
+        "eslint-plugin-node": "^11.0.0",
+        "eslint-plugin-promise": "^4.2.1",
+        "eslint-plugin-standard": "^4.0.1",
+        "gulp": "^4.0.2",
+        "gulp-babel": "^8.0.0",
+        "gulp-babel-minify": "^0.5.1",
+        "gulp-clean-css": "^4.2.0",
+        "gulp-footer": "^2.0.2",
+        "gulp-header": "^2.0.9",
+        "gulp-minify": "^3.1.0",
+        "gulp-rename": "^2.0.0",
+        "gulp-sass": "^4.0.2",
+        "node-sass": "^4.13.1",
+        "npm": "^6.13.7",
+        "prettier": "^1.19.1"
+    },
+    "prettier": {
+        "printWidth": 120,
+        "tabWidth": 4,
+        "singleQuote": true,
+        "quoteProps": "consistent",
+        "endOfLine": "crlf"
+    }
 }

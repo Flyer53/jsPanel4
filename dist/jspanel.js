@@ -1,6 +1,13 @@
-/* jspanel.js - License MIT, copyright 2013 - 2020 Stefan Straesser <info@jspanel.de> (https://jspanel.de) */
-'use strict';
+/**
+ * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
+ * @version v4.9.5
+ * @homepage https://jspanel.de/
+ * @license MIT
+ * @author Stefan Sträßer - info@jspanel.de
+ * @github https://github.com/Flyer53/jsPanel4.git
+ */
 
+'use strict';
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -9,11 +16,12 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+// eslint-disable-next-line no-redeclare
 var jsPanel = {
-  version: '4.9.4',
-  date: '2020-01-16 10:00',
+  version: '4.9.5',
+  date: '2020-02-01 21:39',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
@@ -95,7 +103,8 @@ var jsPanel = {
   pointermove: 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
   pointerup: 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
   polyfills: function () {
-    // Object.assign Polyfill needed for Android Webview - https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+    // Polyfills for IE11 only
+    // Object.assign polyfill - https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
     if (!Object.assign) {
       Object.defineProperty(Object, 'assign', {
         enumerable: false,
@@ -131,8 +140,7 @@ var jsPanel = {
           return to;
         }
       });
-    } // Polyfills for IE11 only
-    // NodeList.prototype.forEach() polyfill needed for IE11 and Android mobile - https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach
+    } // NodeList.prototype.forEach() polyfill - https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach
 
 
     if (window.NodeList && !NodeList.prototype.forEach) {
@@ -143,7 +151,7 @@ var jsPanel = {
           callback.call(thisArg, this[i], i, this);
         }
       };
-    } // .append() polyfill needed for IE - https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/append
+    } // .append() polyfill - https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/append
 
 
     (function (arr) {
@@ -158,7 +166,7 @@ var jsPanel = {
           this.appendChild(docFrag);
         };
       });
-    })([Element.prototype, Document.prototype, DocumentFragment.prototype]); // Element.closest() polyfill needed for IE - https://developer.mozilla.org/en-US/docs/Web/API/Element/closest
+    })([Element.prototype, Document.prototype, DocumentFragment.prototype]); // Element.closest() polyfill - https://developer.mozilla.org/en-US/docs/Web/API/Element/closest
 
 
     if (window.Element && !Element.prototype.closest) {
@@ -718,10 +726,9 @@ var jsPanel = {
   },
   errorReporting: 1,
   modifier: false,
-  // stores event.code (e.g. 'ControlLeft') while a key is pressed
   helper: function () {
     document.addEventListener('keydown', function (e) {
-      jsPanel.modifier = e.code;
+      jsPanel.modifier = e;
     });
     document.addEventListener('keyup', function () {
       jsPanel.modifier = false;
@@ -973,7 +980,8 @@ var jsPanel = {
   pOposition: function pOposition(positionString) {
     var pos = positionString.trim();
     var settings = {},
-        regexMyAt = /(^|\s)((left-|right-)(top|center|bottom){1})|((center-){1}(top|bottom){1})|(center)/gi,
+        // regexMyAt = /(^|\s)((left-|right-)(top|center|bottom){1})|((center-){1}(top|bottom){1})|(center)/gi,
+    regexMyAt = /(^|\s)((left-|right-)(top|center|bottom))|((center-)(top|bottom))|(center)/gi,
         regexAutopos = /(^|\s)(right|down|left|up)/gi,
         regexOffset = /(^|\s)-?(\d*\.?\d+)([a-zA-Z%]{0,4})/gi; // find my and at
 
@@ -1068,10 +1076,10 @@ var jsPanel = {
       width: document.documentElement.clientWidth,
       height: window.innerHeight
     } // fake window.getBoundingClientRect() return value
-    //: panel.parentElement.getBoundingClientRect(); // using 'container' instead of 'panel.parentElement' produces an error
+    : //: panel.parentElement.getBoundingClientRect(); // using 'container' instead of 'panel.parentElement' produces an error
     // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect#Notes
     // due to the infos from above link IE and EDGE (old version not based on Chromium) report an error in strict mode -> line of code above replaced with line below
-    : {
+    {
       width: containerDomRect.width,
       height: containerDomRect.height,
       left: containerDomRect.left,
@@ -1528,11 +1536,8 @@ var jsPanel = {
       }
     } else {
       if (this.errorReporting) {
-        try {
-          throw new jsPanel.jsPanelError('XMLHttpRequest seems to miss the <mark>url</mark> parameter!');
-        } catch (e) {
-          jsPanel.error(e);
-        }
+        var err = 'An XMLHttpRequest seems to miss the <mark>url</mark> parameter!';
+        jsPanel.errorpanel(err);
       }
 
       return obj;
@@ -2261,7 +2266,7 @@ var jsPanel = {
     // obj needs to be a plain object (to extend the individual panel, not the global object)
     if (Object.prototype.toString.call(obj) === '[object Object]') {
       for (var ext in obj) {
-        if (obj.hasOwnProperty(ext)) {
+        if (Object.prototype.hasOwnProperty.call(obj, ext)) {
           this.extensions[ext] = obj[ext];
         }
       }
@@ -2294,11 +2299,8 @@ var jsPanel = {
 
     if (!conf.resource) {
       if (this.errorReporting) {
-        try {
-          throw new jsPanel.jsPanelError('The Fetch request seems to miss the <mark>resource</mark> parameter');
-        } catch (e) {
-          jsPanel.error(e);
-        }
+        var err = 'A Fetch request seems to miss the <mark>resource</mark> parameter';
+        jsPanel.errorpanel(err);
       }
 
       return obj;
@@ -2611,7 +2613,9 @@ var jsPanel = {
       node.className = "jsPanel-resizeit-handle jsPanel-resizeit-".concat(item.trim());
       node.style.zIndex = 90;
       elmt.append(node);
-    });
+    }); // cache option aspectRatio of original resizeit configuration (is restored on pointerup)
+
+    var cachedOptionAspectRatio = options.aspectRatio ? options.aspectRatio : false;
     elmt.querySelectorAll('.jsPanel-resizeit-handle').forEach(function (handle) {
       jsPanel.pointerdown.forEach(function (item) {
         handle.addEventListener(item, function (e) {
@@ -2638,13 +2642,14 @@ var jsPanel = {
 
 
           if (jsPanel.modifier) {
-            var modifierKey = jsPanel.modifier;
+            var modifier = jsPanel.modifier;
 
-            if (modifierKey === 'AltLeft' || modifierKey === 'AltRight') {
+            if (modifier.altKey) {
               opts.aspectRatio = 'content';
-            } else if (modifierKey === 'ControlLeft' || modifierKey === 'ControlRight') {
+            } else if (modifier.ctrlKey) {
               opts.aspectRatio = 'panel';
-            } else if (modifierKey === 'ShiftLeft' || modifierKey === 'ShiftRight') {
+            } else if (modifier.shiftKey) {
+              opts.aspectRatio = false;
               factor = 2; // does work only with 2 as value
             }
           }
@@ -3362,7 +3367,9 @@ var jsPanel = {
 
         document.querySelectorAll('iframe').forEach(function (frame) {
           frame.style.pointerEvents = 'auto';
-        });
+        }); // restore option aspectRatio to original configuration
+
+        opts.aspectRatio = cachedOptionAspectRatio;
       }, false);
     }); // resizeit is initialized - now disable if set
 
@@ -3397,12 +3404,7 @@ var jsPanel = {
     return this.setStyles.call(elmt, elmt, stylesobject);
   },
   // alias for setStyles()
-  jsPanelError: function jsPanelError(msg) {
-    this.prototype = new Error();
-    this.message = msg;
-    this.name = 'jsPanel Error';
-  },
-  error: function error(e) {
+  errorpanel: function errorpanel(e) {
     this.create({
       paneltype: 'error',
       dragit: false,
@@ -3423,7 +3425,8 @@ var jsPanel = {
       },
       position: 'center-top 0 5 down',
       animateIn: 'jsPanelFadeIn',
-      content: "<div class=\"jsPanel-error-content-separator\"></div><p>".concat(e.message, "</p>")
+      //content: `<div class="jsPanel-error-content-separator"></div><p>${e.message}</p>`
+      content: "<div class=\"jsPanel-error-content-separator\"></div><p>".concat(e, "</p>")
     });
   },
   // METHOD CREATING THE PANEL ---------------------------------------------
@@ -3468,11 +3471,8 @@ var jsPanel = {
       }
 
       if (this.errorReporting) {
-        try {
-          throw new jsPanel.jsPanelError('&#9664; COULD NOT CREATE NEW JSPANEL &#9658;<br>An element with the ID <mark>' + options.id + '</mark> already exists in the document.');
-        } catch (e) {
-          jsPanel.error(e);
-        }
+        var err = "&#9664; COULD NOT CREATE NEW JSPANEL &#9658;<br>An element with the ID <mark>".concat(options.id, "</mark> already exists in the document.");
+        jsPanel.errorpanel(err);
       }
 
       return false;
@@ -3487,11 +3487,8 @@ var jsPanel = {
 
     if (!panelContainer) {
       if (this.errorReporting) {
-        try {
-          throw new jsPanel.jsPanelError('&#9664; COULD NOT CREATE NEW JSPANEL &#9658;<br>The container to append the panel to does not exist');
-        } catch (e) {
-          jsPanel.error(e);
-        }
+        var _err = '&#9664; COULD NOT CREATE NEW JSPANEL &#9658;<br>The container to append the panel to does not exist';
+        jsPanel.errorpanel(_err);
       }
 
       return false;
@@ -3535,52 +3532,52 @@ var jsPanel = {
     self.autocloseProgressbar = self.querySelector('.jsPanel-autoclose-progressbar'); // Events
 
     var jspanelloaded = new CustomEvent('jspanelloaded', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelstatuschange = new CustomEvent('jspanelstatuschange', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelbeforenormalize = new CustomEvent('jspanelbeforenormalize', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelnormalized = new CustomEvent('jspanelnormalized', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelbeforemaximize = new CustomEvent('jspanelbeforemaximize', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelmaximized = new CustomEvent('jspanelmaximized', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelbeforeminimize = new CustomEvent('jspanelbeforeminimize', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelminimized = new CustomEvent('jspanelminimized', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelbeforesmallify = new CustomEvent('jspanelbeforesmallify', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelsmallified = new CustomEvent('jspanelsmallified', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelsmallifiedmax = new CustomEvent('jspanelsmallifiedmax', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelbeforeunsmallify = new CustomEvent('jspanelbeforeunsmallify', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelfronted = new CustomEvent('jspanelfronted', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelbeforeclose = new CustomEvent('jspanelbeforeclose', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelclosed = new CustomEvent('jspanelclosed', {
-      'detail': options.id
+      detail: options.id
     }),
         jspanelcloseduser = new CustomEvent('jspanelcloseduser', {
-      'detail': options.id
+      detail: options.id
     }); // make panel available as event object property 'panel'
 
     [jspanelloaded, jspanelstatuschange, jspanelbeforenormalize, jspanelnormalized, jspanelbeforemaximize, jspanelmaximized, jspanelbeforeminimize, jspanelminimized, jspanelbeforesmallify, jspanelsmallified, jspanelsmallifiedmax, jspanelbeforeunsmallify, jspanelfronted, jspanelbeforeclose, jspanelclosed, jspanelcloseduser].forEach(function (evt) {
@@ -3680,7 +3677,7 @@ var jsPanel = {
     var extensions = jsPanel.extensions;
 
     for (var ext in extensions) {
-      if (extensions.hasOwnProperty(ext)) {
+      if (Object.prototype.hasOwnProperty.call(extensions, ext)) {
         self[ext] = extensions[ext];
       }
     } // Methods
@@ -3994,6 +3991,35 @@ var jsPanel = {
       }
 
       return self;
+    }; // self.remove() is just a helper func used in self.close()
+
+
+    self.remove = function (id, closedBy, cb) {
+      self.parentElement.removeChild(self);
+
+      if (!document.getElementById(id)) {
+        self.removeMinimizedReplacement();
+
+        if (closedBy) {
+          document.dispatchEvent(jspanelcloseduser);
+        }
+
+        document.dispatchEvent(jspanelclosed);
+
+        if (self.options.onclosed) {
+          jsPanel.processCallbacks(self, self.options.onclosed, 'every', closedBy);
+        }
+
+        jsPanel.autopositionRemaining(self);
+
+        if (cb) {
+          cb.call(id, id);
+        }
+      } else {
+        if (cb) {
+          cb.call(self, id, self);
+        }
+      }
     };
 
     self.close = function (cb, closedByUser) {
@@ -4001,8 +4027,6 @@ var jsPanel = {
         window.clearInterval(self.closetimer);
       }
 
-      var id = self.id,
-          parent = self.parentElement;
       document.dispatchEvent(jspanelbeforeclose);
 
       if (self.options.onbeforeclose && self.options.onbeforeclose.length > 0 && !jsPanel.processCallbacks(self, self.options.onbeforeclose, 'some', self.status, closedByUser)) {
@@ -4017,58 +4041,10 @@ var jsPanel = {
         jsPanel.setClass(self, self.options.animateOut);
         self.addEventListener('animationend', function (e) {
           e.stopPropagation();
-          parent.removeChild(self);
-
-          if (!document.getElementById(id)) {
-            self.removeMinimizedReplacement();
-
-            if (closedByUser) {
-              document.dispatchEvent(jspanelcloseduser);
-            }
-
-            document.dispatchEvent(jspanelclosed);
-
-            if (self.options.onclosed) {
-              jsPanel.processCallbacks(self, self.options.onclosed, 'every', closedByUser);
-            }
-
-            jsPanel.autopositionRemaining(self);
-
-            if (cb) {
-              cb.call(id, id);
-            }
-          } else {
-            if (cb) {
-              cb.call(self, id, self);
-            }
-          }
+          self.remove(self.id, closedByUser, cb);
         });
       } else {
-        parent.removeChild(self);
-
-        if (!document.getElementById(id)) {
-          self.removeMinimizedReplacement();
-
-          if (closedByUser) {
-            document.dispatchEvent(jspanelcloseduser);
-          }
-
-          document.dispatchEvent(jspanelclosed);
-
-          if (self.options.onclosed) {
-            jsPanel.processCallbacks(self, self.options.onclosed, 'every', closedByUser);
-          }
-
-          jsPanel.autopositionRemaining(self);
-
-          if (cb) {
-            cb.call(id, id);
-          }
-        } else {
-          if (cb) {
-            cb.call(self, id, self);
-          }
-        }
+        self.remove(self.id, closedByUser, cb);
       }
     };
 
@@ -5124,12 +5100,11 @@ var jsPanel = {
       return self;
     };
 
-    self.setIconfont = function () {
-      var font = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+    self.setIconfont = function (font) {
       var panel = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : self;
       var cb = arguments.length > 2 ? arguments[2] : undefined;
 
-      if (font !== false) {
+      if (font) {
         var classArray, textArray;
 
         if (font === 'fa' || font === 'far' || font === 'fal' || font === 'fas' || font === 'fad') {
@@ -5721,9 +5696,8 @@ var jsPanel = {
     document.dispatchEvent(jspanelloaded);
     return self;
   }
-}; // Add CommonJS module exports, so it can be imported using require() in Node.js
-// https://nodejs.org/docs/latest/api/modules.html
+};
 
-if (typeof module !== 'undefined') {
-  module.exports = jsPanel;
-}
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') { module.exports = jsPanel; }

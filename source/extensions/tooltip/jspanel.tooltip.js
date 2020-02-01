@@ -1,8 +1,3 @@
-/* jspanel.tooltip.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-'use strict';
-
-//import {jsPanel} from '../../jspanel.js';
-
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent#Polyfill - needed for IE11
 (function (window) {
     try {
@@ -92,11 +87,11 @@ if (!jsPanel.tooltip) {
                     jsPanel.create(opts, function (panel) {
 
                         const tipToClose = panel,
-                            closeTip = () => {
-                                tipToClose.close();
-                                target.removeEventListener('mouseleave', closeTip);
-                                panel.removeEventListener('mouseleave', closeTip);
-                            };
+                              closeTip = () => {
+                                  tipToClose.close();
+                                  target.removeEventListener('mouseleave', closeTip);
+                                  panel.removeEventListener('mouseleave', closeTip);
+                              };
 
                         // by default tooltip will close when mouse leaves trigger
                         if (mode === 'default') {
@@ -317,10 +312,4 @@ if (!jsPanel.tooltip) {
         },false);
     });
 
-}
-
-// Add CommonJS module exports, so it can be imported using require() in Node.js
-// https://nodejs.org/docs/latest/api/modules.html
-if (typeof module !== 'undefined') {
-    module.exports = jsPanel;
 }

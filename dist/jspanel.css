@@ -1,4 +1,11 @@
-/* jspanel.sass: 2020-01-11 09:07 */
+/**
+ * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
+ * @version v4.9.5
+ * @homepage https://jspanel.de/
+ * @license MIT
+ * @author Stefan Sträßer - info@jspanel.de
+ * @github https://github.com/Flyer53/jsPanel4.git
+ */
 .default-bg, .secondary-bg {
   background-color: #b0bec5; }
 

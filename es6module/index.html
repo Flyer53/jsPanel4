@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jsPanel</title>
+    <!-- loading jsPanel css -->
+    <link rel="stylesheet" href="jspanel.css">
+</head>
+<body>
+
+<!-- Your HTML goes here -->
+
+<script type="module">
+    // import main js
+    import { jsPanel } from './jspanel.min.js';
+
+    // import extensions as needed
+    import './extensions/hint/jspanel.hint.min.js';
+    import './extensions/modal/jspanel.modal.min.js';
+    import './extensions/contextmenu/jspanel.contextmenu.min.js';
+    import './extensions/tooltip/jspanel.tooltip.min.js';
+    import './extensions/layout/jspanel.layout.min.js';
+    import './extensions/dock/jspanel.dock.min.js';
+
+    // create a demo jsPanel
+    jsPanel.create({
+        headerTitle: 'demo panel',
+        theme: 'dark',
+        content: '<p>A simple demo panel.</p>',
+        callback: function() {
+            this.content.style.padding = '10px';
+        }
+    });
+</script>
+</body>
+</html>

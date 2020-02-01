@@ -1,5 +1,10 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.9.5 *2020-02-01*</span>
+
++ **bugfix** in option resizeit parameter `aspectRatio` when using modifier keys
++ **fixed/improved** some minor code issues
+
 ### <span style='color:#563D7C;'>Versions 4.9.3/4.9.4 *2020-01-16*</span>
 
 + this releases only fix an issue with `package.json`

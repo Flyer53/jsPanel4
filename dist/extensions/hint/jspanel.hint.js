@@ -1,6 +1,13 @@
-/* jspanel.hint.js v1.2.3 (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-'use strict'; //import {jsPanel} from '../../jspanel.js';
+/**
+ * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
+ * @version v4.9.5
+ * @homepage https://jspanel.de/
+ * @license MIT
+ * @author Stefan Sträßer - info@jspanel.de
+ * @github https://github.com/Flyer53/jsPanel4.git
+ */
 
+'use strict';
 if (!jsPanel.hint) {
   jsPanel.hint = {
     version: '1.2.3',
@@ -29,10 +36,8 @@ if (!jsPanel.hint) {
       });
     }
   };
-} // Add CommonJS module exports, so it can be imported using require() in Node.js
-// https://nodejs.org/docs/latest/api/modules.html
-
-
-if (typeof module !== 'undefined') {
-  module.exports = jsPanel;
 }
+
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') { module.exports = jsPanel; }

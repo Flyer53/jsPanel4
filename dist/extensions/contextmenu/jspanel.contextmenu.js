@@ -1,10 +1,17 @@
-/* jspanel.contextmenu.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-'use strict'; //import {jsPanel} from '../../jspanel.js';
+/**
+ * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
+ * @version v4.9.5
+ * @homepage https://jspanel.de/
+ * @license MIT
+ * @author Stefan Sträßer - info@jspanel.de
+ * @github https://github.com/Flyer53/jsPanel4.git
+ */
 
+'use strict';
 if (!jsPanel.contextmenu) {
   jsPanel.contextmenu = {
-    version: '1.1.1',
-    date: '2019-05-18 10:15',
+    version: '1.1.2',
+    date: '2020-01-18 15:00',
     defaults: {
       //position: is set in jsPanel.contextmenu.create()
       //container: is set in jsPanel.contextmenu.create()
@@ -91,11 +98,13 @@ if (!jsPanel.contextmenu) {
           jsPanel.contextmenu.cmOverflow(cm);
           cm.addEventListener('mouseleave', function () {
             cm.close();
-          }, false); // don't close contextmenu on mousedown in target
+          }, false); // don't close contextmenu on mousedown in contextmenu
 
-          cm.addEventListener(jsPanel.evtStart, function (e) {
-            e.stopPropagation();
-          }, false);
+          jsPanel.pointerdown.forEach(function (evt) {
+            cm.addEventListener(evt, function (e) {
+              e.stopPropagation();
+            });
+          });
         });
       }, false);
     }
@@ -116,10 +125,8 @@ if (!jsPanel.contextmenu) {
       });
     }, false);
   });
-} // Add CommonJS module exports, so it can be imported using require() in Node.js
-// https://nodejs.org/docs/latest/api/modules.html
-
-
-if (typeof module !== 'undefined') {
-  module.exports = jsPanel;
 }
+
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') { module.exports = jsPanel; }

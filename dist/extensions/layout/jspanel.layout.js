@@ -1,10 +1,17 @@
-/* jspanel.layout.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-'use strict'; //import {jsPanel} from '../../jspanel.js';
+/**
+ * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
+ * @version v4.9.5
+ * @homepage https://jspanel.de/
+ * @license MIT
+ * @author Stefan Sträßer - info@jspanel.de
+ * @github https://github.com/Flyer53/jsPanel4.git
+ */
 
+'use strict';
 if (!jsPanel.layout) {
   jsPanel.layout = {
-    version: '1.3.0',
-    date: '2019-11-26 20:30',
+    version: '1.3.1',
+    date: '2020-01-18 14:53',
     storage: localStorage,
     save: function save() {
       var saveConfig = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -62,6 +69,7 @@ if (!jsPanel.layout) {
       var id, config, storageName;
 
       if (!restoreConfig.id || !restoreConfig.config) {
+        // eslint-disable-next-line no-console
         console.error('Id or predefined panel configuration is missing!');
         return false;
       } else {
@@ -108,6 +116,7 @@ if (!jsPanel.layout) {
       var predefinedConfigs, storageName;
 
       if (!restoreConfig.configs) {
+        // eslint-disable-next-line no-console
         console.error('Object with predefined panel configurations is missing!');
         return false;
       } else {
@@ -123,7 +132,7 @@ if (!jsPanel.layout) {
           // this makes it unnecessary that identifiers for a certain config is the same as id in config
 
           for (var conf in predefinedConfigs) {
-            if (predefinedConfigs.hasOwnProperty(conf)) {
+            if (Object.prototype.hasOwnProperty.call(predefinedConfigs, conf)) {
               if (predefinedConfigs[conf].id === pId) {
                 jsPanel.layout.restoreId({
                   id: pId,
@@ -139,10 +148,8 @@ if (!jsPanel.layout) {
       }
     }
   };
-} // Add CommonJS module exports, so it can be imported using require() in Node.js
-// https://nodejs.org/docs/latest/api/modules.html
-
-
-if (typeof module !== 'undefined') {
-  module.exports = jsPanel;
 }
+
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') { module.exports = jsPanel; }

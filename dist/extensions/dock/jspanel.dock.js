@@ -1,6 +1,13 @@
-/* jspanel.dock.js v1.1.2 - (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-'use strict'; //import {jsPanel} from '../../jspanel.js';
+/**
+ * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
+ * @version v4.9.5
+ * @homepage https://jspanel.de/
+ * @license MIT
+ * @author Stefan Sträßer - info@jspanel.de
+ * @github https://github.com/Flyer53/jsPanel4.git
+ */
 
+'use strict';
 function dockPanel(config, cb) {
   var configDefault = {
     position: {
@@ -194,7 +201,7 @@ function dockPanel(config, cb) {
   slave.options.minimizeTo = false; // remove slave from master.slaves Set when slave is closed
 
   slave.options.onclosed.push(function () {
-    master.slaves.delete(slave);
+    master.slaves["delete"](slave);
   });
   slave.options.onfronted.push(function (panel) {
     var zI = panel.style.zIndex;
@@ -258,9 +265,8 @@ dockPanel.getDate = function () {
 
 jsPanel.extend({
   dock: dockPanel
-}); // Add CommonJS module exports, so it can be imported using require() in Node.js
-// https://nodejs.org/docs/latest/api/modules.html
+});
 
-if (typeof module !== 'undefined') {
-  module.exports = jsPanel;
-}
+// Add CommonJS module exports, so it can be imported using require() in Node.js
+// https://nodejs.org/docs/latest/api/modules.html
+if (typeof module !== 'undefined') { module.exports = jsPanel; }

@@ -1,20 +1,15 @@
-/* jspanel.modal.js (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-'use strict';
-
-//import {jsPanel} from '../../jspanel.js';
-
-/*
-If option.dragit is enabled on a modal AND an already open panel has option.syncMargins set to true the modal somehow inherits
-the option.dragit.containment setting of the already open panel. Reason unknown!
-Workaround: Set option.dragit.containment to a suitable value on the modal.
+/**
+ * If option.dragit is enabled on a modal AND an already open panel has option.syncMargins set to true the modal somehow inherits
+ * the option.dragit.containment setting of the already open panel. Reason unknown!
+ * Workaround: Set option.dragit.containment to a suitable value on the modal.
  */
 
 if (!jsPanel.modal) {
 
     jsPanel.modal = {
 
-        version: '1.2.3',
-        date: '2019-12-02 10:52',
+        version: '1.2.4',
+        date: '2020-01-17 09:24',
 
         defaults: {
             closeOnEscape:  true,
@@ -65,16 +60,6 @@ if (!jsPanel.modal) {
 
             document.body.append(backdrop);
 
-            let remBackdrop = function (e) {
-                let id = e.detail;
-                if (id === opts.id) {
-                    jsPanel.modal.removeBackdrop(id);
-                    document.removeEventListener('jspanelclosed', remBackdrop, false);
-                }
-            };
-
-            document.addEventListener('jspanelclosed', remBackdrop, false);
-
             return jsPanel.create(opts, modal => {
                 modal.style.zIndex = jsPanel.modal.ziModal.next();
                 modal.header.style.cursor = 'default';
@@ -87,6 +72,10 @@ if (!jsPanel.modal) {
                         });
                     });
                 }
+                // remove modal backdrop when modal is closed
+                modal.options.onclosed.push(() => {
+                    jsPanel.modal.removeBackdrop(opts.id);
+                });
             });
 
         }
@@ -102,10 +91,4 @@ if (!jsPanel.modal) {
         };
     })();
 
-}
-
-// Add CommonJS module exports, so it can be imported using require() in Node.js
-// https://nodejs.org/docs/latest/api/modules.html
-if (typeof module !== 'undefined') {
-    module.exports = jsPanel;
 }

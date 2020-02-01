@@ -1,12 +1,6 @@
-/* jspanel.dock.js v1.1.2 - (c) Stefan Sträßer(Flyer53) <info@jspanel.de> license: MIT */
-'use strict';
-
-//import {jsPanel} from '../../jspanel.js';
-
-function dockPanel (config, cb) {
-
+function dockPanel(config, cb) {
     let configDefault = {
-            position: {my: 'left-top', at: 'right-top'},
+            position: { my: 'left-top', at: 'right-top' },
             linkSlaveHeight: false,
             linkSlaveWidth: false,
             callback: false
@@ -23,21 +17,29 @@ function dockPanel (config, cb) {
         // if master does not exist show error panel return false
         if (jsPanel.errorReporting) {
             try {
-                throw new jsPanel.jsPanelError('&#9664; COULD NOT DOCK PANEL &#9658;<br>The master panel does not exist in the document.');
+                throw new jsPanel.jsPanelError(
+                    '&#9664; COULD NOT DOCK PANEL &#9658;<br>The master panel does not exist in the document.'
+                );
             } catch (e) {
                 jsPanel.error(e);
-                if (cb) {cb.call(slave, slave);}
+                if (cb) {
+                    cb.call(slave, slave);
+                }
             }
         }
         return false;
     } else {
-        if (!master.slaves) { master.slaves = new Set(); }
-        if (!master.handlers) { master.handlers = {}; }
+        if (!master.slaves) {
+            master.slaves = new Set();
+        }
+        if (!master.handlers) {
+            master.handlers = {};
+        }
         // set interactions between master and slaves
         if (!master.handlers.fronted) {
             master.options.onfronted.push(() => {
                 let zI = master.style.zIndex;
-                master.slaves.forEach((sl) => {
+                master.slaves.forEach(sl => {
                     sl.style.zIndex = zI;
                 });
                 return true;
@@ -46,7 +48,7 @@ function dockPanel (config, cb) {
         }
         if (!master.handlers.smallified) {
             master.options.onsmallified.push(() => {
-                master.slaves.forEach((sl) => {
+                master.slaves.forEach(sl => {
                     sl.smallify().reposition();
                 });
                 return true;
@@ -55,7 +57,7 @@ function dockPanel (config, cb) {
         }
         if (!master.handlers.unsmallified) {
             master.options.onunsmallified.push(() => {
-                master.slaves.forEach((sl) => {
+                master.slaves.forEach(sl => {
                     sl.unsmallify().reposition();
                 });
                 return true;
@@ -64,7 +66,7 @@ function dockPanel (config, cb) {
         }
         if (!master.handlers.closed) {
             master.options.onclosed.push(() => {
-                master.slaves.forEach((sl) => {
+                master.slaves.forEach(sl => {
                     sl.close();
                 });
                 return true;
@@ -73,7 +75,7 @@ function dockPanel (config, cb) {
         }
         if (!master.handlers.minimized) {
             master.options.onminimized.push(() => {
-                master.slaves.forEach((sl) => {
+                master.slaves.forEach(sl => {
                     sl.minimize();
                 });
                 return true;
@@ -82,15 +84,15 @@ function dockPanel (config, cb) {
         }
         if (!master.handlers.maximized) {
             master.options.onmaximized.push(() => {
-                master.slaves.forEach((sl) => {
+                master.slaves.forEach(sl => {
                     sl.normalize();
                     if (sl.slaveconfig.linkSlaveHeight) {
                         let height = window.getComputedStyle(master).height;
-                        sl.resize({height: height});
+                        sl.resize({ height: height });
                     }
                     if (sl.slaveconfig.linkSlaveWidth) {
                         let width = window.getComputedStyle(master).width;
-                        sl.resize({width: width});
+                        sl.resize({ width: width });
                     }
                     sl.reposition();
                 });
@@ -100,15 +102,15 @@ function dockPanel (config, cb) {
         }
         if (!master.handlers.normalized) {
             master.options.onnormalized.push(() => {
-                master.slaves.forEach((sl) => {
+                master.slaves.forEach(sl => {
                     sl.normalize();
                     if (sl.slaveconfig.linkSlaveHeight) {
                         let height = window.getComputedStyle(master).height;
-                        sl.resize({height: height});
+                        sl.resize({ height: height });
                     }
                     if (sl.slaveconfig.linkSlaveWidth) {
                         let width = window.getComputedStyle(master).width;
-                        sl.resize({width: width});
+                        sl.resize({ width: width });
                     }
                     sl.reposition();
                 });
@@ -118,20 +120,31 @@ function dockPanel (config, cb) {
         }
     }
 
-    let position = Object.assign({}, this.slaveconfig.position, {of: master, minLeft: false, minTop: false, maxLeft: false, maxTop: false, autoposition: false});
-    if (!position.my) {position.my = configDefault.position.my;}
-    if (!position.at) {position.at = configDefault.position.at;}
+    let position = Object.assign({}, this.slaveconfig.position, {
+        of: master,
+        minLeft: false,
+        minTop: false,
+        maxLeft: false,
+        maxTop: false,
+        autoposition: false
+    });
+    if (!position.my) {
+        position.my = configDefault.position.my;
+    }
+    if (!position.at) {
+        position.at = configDefault.position.at;
+    }
     slave.options.position = position;
-    ['smallify', 'minimize', 'normalize', 'maximize'].forEach(function (ctrl) {
+    ['smallify', 'minimize', 'normalize', 'maximize'].forEach(function(ctrl) {
         slave.setControlStatus(ctrl, 'remove');
     });
     if (this.slaveconfig.linkSlaveHeight) {
         let height = window.getComputedStyle(master).height;
-        slave.resize({height: height});
+        slave.resize({ height: height });
     }
     if (this.slaveconfig.linkSlaveWidth) {
         let width = window.getComputedStyle(master).width;
-        slave.resize({width: width});
+        slave.resize({ width: width });
     }
     // position slave
     slave.reposition(position);
@@ -144,17 +157,17 @@ function dockPanel (config, cb) {
         master.slaves.delete(slave);
     });
 
-    slave.options.onfronted.push((panel) => {
+    slave.options.onfronted.push(panel => {
         let zI = panel.style.zIndex;
         master.style.zIndex = zI;
-        master.slaves.forEach((sl) =>{
+        master.slaves.forEach(sl => {
             sl.style.zIndex = zI;
         });
     });
 
     // set necessary master options
-    master.reposSlave = function () {
-        if (document.querySelector('#'+slave.id)) {
+    master.reposSlave = function() {
+        if (document.querySelector('#' + slave.id)) {
             slave.reposition();
         }
     };
@@ -162,8 +175,8 @@ function dockPanel (config, cb) {
         master.options.dragit.drag.push(master.reposSlave);
     }
 
-    master.resizeSlave = function () {
-        if (document.querySelector('#'+slave.id)) {
+    master.resizeSlave = function() {
+        if (document.querySelector('#' + slave.id)) {
             slave.reposition();
             if (slave.slaveconfig.linkSlaveHeight) {
                 let h = window.getComputedStyle(master).height;
@@ -187,19 +200,14 @@ function dockPanel (config, cb) {
 
     slave.dockedTo = master.id;
 
-    if (this.slaveconfig.callback) { this.slaveconfig.callback.call(slave, master, slave); }
+    if (this.slaveconfig.callback) {
+        this.slaveconfig.callback.call(slave, master, slave);
+    }
 
     return slave;
-
 }
 
 dockPanel.getVersion = function () { return '1.1.2'; };
 dockPanel.getDate    = function () { return '2020-01-14 14:00'; };
 
 jsPanel.extend({ dock: dockPanel });
-
-// Add CommonJS module exports, so it can be imported using require() in Node.js
-// https://nodejs.org/docs/latest/api/modules.html
-if (typeof module !== 'undefined') {
-    module.exports = jsPanel;
-}
