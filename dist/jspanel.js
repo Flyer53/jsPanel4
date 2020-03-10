@@ -20,8 +20,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 // eslint-disable-next-line no-redeclare
 var jsPanel = {
-  version: '4.9.5',
-  date: '2020-02-01 21:39',
+  version: '4.10.0',
+  date: '2020-03-10 10:05',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
@@ -977,53 +977,109 @@ var jsPanel = {
     return rgb.r / 255 * 0.2126 + rgb.g / 255 * 0.7152 + rgb.b / 255 * 0.0722;
   },
   // positioning methods ---------------
-  pOposition: function pOposition(positionString) {
-    var pos = positionString.trim();
-    var settings = {},
-        // regexMyAt = /(^|\s)((left-|right-)(top|center|bottom){1})|((center-){1}(top|bottom){1})|(center)/gi,
-    regexMyAt = /(^|\s)((left-|right-)(top|center|bottom))|((center-)(top|bottom))|(center)/gi,
-        regexAutopos = /(^|\s)(right|down|left|up)/gi,
-        regexOffset = /(^|\s)-?(\d*\.?\d+)([a-zA-Z%]{0,4})/gi; // find my and at
 
-    var my_at = pos.match(regexMyAt);
+  /*
+  pOposition(positionString) {
+      let pos = positionString.trim();
+      const settings = {},
+          regexMyAt = /(^|\s)((left-|right-)(top|center|bottom))|((center-)(top|bottom))|(center)/gi,
+          //regexMyAt = /(left-|right-)(top|center|bottom)|(center-)(top|bottom)|(\s+center\s+|\s+center$|^center\s+|^center$)/gi,
+          regexAutopos = /(^|\s)(right|down|left|up)/gi,
+          regexOffset = /(^|\s)[+-]?(\d*\.?\d+)([a-zA-Z%]{0,4})/gi;
+        // find my and at
+      const my_at = pos.match(regexMyAt);
+      if (my_at) {
+          settings.my = my_at[0].trim();
+          settings.at = my_at[1] ? my_at[1].trim() : settings.my;
+      }
+      pos = pos.replace(regexMyAt, '').trim();
+        // find autoposition
+      const autopos = pos.match(regexAutopos); // do not move up in code
+      if (autopos) {
+          settings.autoposition = autopos[0].trim();
+      }
+      pos = pos.replace(regexAutopos, '').trim();
+        // find offsets
+      const offsets = pos.match(regexOffset); // do not move up in code
+      if (offsets) {
+          offsets.forEach((item, index) => {
+              item = item.trim();
+              if (item.match(/^[+-]?[0-9]*\.?[0-9]+$/)) {
+                  offsets[index] = `${offsets[index]}px`.trim();
+              }
+          });
+          settings.offsetX = offsets[0].trim();
+          settings.offsetY = offsets[1] ? offsets[1].trim() : settings.offsetX;
+      }
+      pos = pos.replace(regexOffset, '').trim();
+        // find of
+      if (pos.length) {
+          // assumed to be a selector string
+          settings.of = pos;
+      }
+      //console.log(settings);
+      return settings;
+  },
+  */
+  pOposition: function pOposition(positionshorthand) {
+    var result = {}; // remove leading and trailing whitespace and split position shorthand string into array
 
-    if (my_at) {
-      settings.my = my_at[0].trim();
-      settings.at = my_at[1] ? my_at[1].trim() : my_at[0].trim();
-    }
+    var pos = positionshorthand.trim().split(/\s+/); // find autoposition value and assign to result, must be the first item to find and remove
 
-    pos = pos.replace(regexMyAt, ' ').trim(); // find autoposition
+    var auto = pos.filter(function (item) {
+      return item.match(/^(down|right|up|left)$/i);
+    });
 
-    var autopos = pos.match(regexAutopos); // do not move up in code
+    if (auto.length) {
+      result.autoposition = auto[0];
+      pos.splice(pos.indexOf(auto[0]), 1);
+    } // find my and at values and assign to result
 
-    if (autopos) {
-      settings.autoposition = autopos[0].trim();
-    }
 
-    pos = pos.replace(regexAutopos, ' ').trim(); // find offsets
+    var my_at = pos.filter(function (item) {
+      return item.match(/^(left-|right-)(top|center|bottom)$|(^center-)(top|bottom)$|(^center$)/i);
+    });
 
-    var offsets = pos.match(regexOffset); // do not move up in code
+    if (my_at.length) {
+      result.my = my_at[0];
+      result.at = my_at[1] || my_at[0];
+      pos.splice(pos.indexOf(my_at[0]), 1);
 
-    if (offsets) {
-      offsets.forEach(function (item, index) {
-        item = item.trim();
+      if (my_at[1]) {
+        pos.splice(pos.indexOf(my_at[1]), 1);
+      }
+    } else {
+      result.my = 'center';
+      result.at = 'center';
+    } // find offset and assign to result
 
-        if (item.match(/(^|\s)(-?[0-9]*\.?[0-9]+)(\s|$)/)) {
-          offsets[index] = "".concat(offsets[index], "px").trim();
-        }
-      });
-      settings.offsetX = offsets[0].trim();
-      settings.offsetY = offsets[1] ? offsets[1].trim() : offsets[0].trim();
-    }
 
-    pos = pos.replace(regexOffset, ' ').trim(); // find of
+    var offsets = pos.filter(function (item) {
+      return item.match(/^[+-]?\d*\.?\d+[a-z%]*$/i);
+    });
+
+    if (offsets.length) {
+      result.offsetX = offsets[0].match(/^[+-]?\d*\.?\d+$/i) ? "".concat(offsets[0], "px") : offsets[0];
+
+      if (offsets[1]) {
+        result.offsetY = offsets[1].match(/^[+-]?\d*\.?\d+$/i) ? "".concat(offsets[1], "px") : offsets[1];
+      } else {
+        result.offsetY = result.offsetX;
+      }
+
+      pos.splice(pos.indexOf(offsets[0]), 1);
+
+      if (offsets[1]) {
+        pos.splice(pos.indexOf(offsets[1]), 1);
+      }
+    } // last to find and assign is of value and must be all the rest (if there is a rest)
+
 
     if (pos.length) {
-      // assumed to be a selector string
-      settings.of = pos;
+      result.of = pos.join(' ');
     }
 
-    return settings;
+    return result;
   },
   position: function position(panel, _position) {
     // @panel:     selector string | Element | jQuery object
@@ -1653,13 +1709,13 @@ var jsPanel = {
       });
     }
 
-    panel.innerHTML = "<div class=\"jsPanel-hdr\">\n                                <div class=\"jsPanel-headerbar\">\n                                    <div class=\"jsPanel-headerlogo\"></div>\n                                    <div class=\"jsPanel-titlebar\">\n                                        <span class=\"jsPanel-title\"></span>\n                                    </div>\n                                    <div class=\"jsPanel-controlbar\">\n                                        <button class=\"jsPanel-btn jsPanel-btn-smallify\" aria-label=\"Smallify\">".concat(this.icons.smallify, "</button>\n                                        <button class=\"jsPanel-btn jsPanel-btn-minimize\" aria-label=\"Minimize\">").concat(this.icons.minimize, "</button>\n                                        <button class=\"jsPanel-btn jsPanel-btn-normalize\" aria-label=\"Normalize\">").concat(this.icons.normalize, "</button>\n                                        <button class=\"jsPanel-btn jsPanel-btn-maximize\" aria-label=\"Maximize\">").concat(this.icons.maximize, "</button>\n                                        <button class=\"jsPanel-btn jsPanel-btn-close\" aria-label=\"Close\">").concat(this.icons.close, "</button>\n                                    </div>\n                                </div>\n                                <div class=\"jsPanel-hdr-toolbar\"></div>\n                            </div>\n                            <div class=\"jsPanel-autoclose-progressbar\">\n                                <div class=\"jsPanel-autoclose-progressbar-slider\"></div>\n                            </div>\n                            <div class=\"jsPanel-content\"></div>\n                            <div class=\"jsPanel-minimized-box\"></div>\n                            <div class=\"jsPanel-ftr\"></div>");
+    panel.innerHTML = "<div class=\"jsPanel-hdr\">\n                                <div class=\"jsPanel-headerbar\">\n                                    <div class=\"jsPanel-headerlogo\"></div>\n                                    <div class=\"jsPanel-titlebar\">\n                                        <span class=\"jsPanel-title\"></span>\n                                    </div>\n                                    <div class=\"jsPanel-controlbar\">\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-smallify\"  aria-label=\"Smallify\">".concat(this.icons.smallify, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-minimize\"  aria-label=\"Minimize\">").concat(this.icons.minimize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-normalize\" aria-label=\"Normalize\">").concat(this.icons.normalize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-maximize\"  aria-label=\"Maximize\">").concat(this.icons.maximize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-close\"     aria-label=\"Close\">").concat(this.icons.close, "</button>\n                                    </div>\n                                </div>\n                                <div class=\"jsPanel-hdr-toolbar\"></div>\n                            </div>\n                            <div class=\"jsPanel-autoclose-progressbar\">\n                                <div class=\"jsPanel-autoclose-progressbar-slider\"></div>\n                            </div>\n                            <div class=\"jsPanel-content\"></div>\n                            <div class=\"jsPanel-minimized-box\"></div>\n                            <div class=\"jsPanel-ftr\"></div>");
     return panel;
   },
   createMinimizedTemplate: function createMinimizedTemplate() {
     var panel = document.createElement('div');
     panel.className = 'jsPanel-replacement';
-    panel.innerHTML = "<div class=\"jsPanel-hdr\">\n                                <div class=\"jsPanel-headerbar\">\n                                    <div class=\"jsPanel-headerlogo\"></div>\n                                    <div class=\"jsPanel-titlebar\">\n                                        <span class=\"jsPanel-title\"></span>\n                                    </div>\n                                    <div class=\"jsPanel-controlbar\">\n                                        <button class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-normalize\" aria-label=\"Normalize\">".concat(this.icons.normalize, "</button>\n                                        <button class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-maximize\" aria-label=\"Maximize\">").concat(this.icons.maximize, "</button>\n                                        <button class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-close\" aria-label=\"Close\">").concat(this.icons.close, "</button>\n                                    </div>\n                                </div>\n                            </div>");
+    panel.innerHTML = "<div class=\"jsPanel-hdr\">\n                                <div class=\"jsPanel-headerbar\">\n                                    <div class=\"jsPanel-headerlogo\"></div>\n                                    <div class=\"jsPanel-titlebar\">\n                                        <span class=\"jsPanel-title\"></span>\n                                    </div>\n                                    <div class=\"jsPanel-controlbar\">\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-normalize\" aria-label=\"Normalize\">".concat(this.icons.normalize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-maximize\"  aria-label=\"Maximize\">").concat(this.icons.maximize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-close\"     aria-label=\"Close\">").concat(this.icons.close, "</button>\n                                    </div>\n                                </div>\n                            </div>");
     return panel;
   },
   createSnapArea: function createSnapArea(panel, pos, snapsens) {
@@ -2564,12 +2620,6 @@ var jsPanel = {
       el.parentElement.removeChild(el);
     });
   },
-  remClass: function remClass(elmt, classnames) {
-    classnames.split(' ').forEach(function (item) {
-      return elmt.classList.remove(item);
-    });
-    return elmt;
-  },
   resetZi: function resetZi() {
     this.zi = function () {
       var startValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : jsPanel.ziBase;
@@ -2606,7 +2656,9 @@ var jsPanel = {
         resizePanel,
         resizestarted,
         w,
-        h;
+        h,
+        startWidth,
+        startHeight;
     opts.handles = options.handles || jsPanel.defaults.resizeit.handles;
     opts.handles.split(',').forEach(function (item) {
       var node = document.createElement('DIV');
@@ -2677,12 +2729,10 @@ var jsPanel = {
               startX = e.clientX || e.touches[0].clientX,
               startY = e.clientY || e.touches[0].clientY,
               startRatio = startX / startY,
-              startWidth = elmtRect.width,
-              startHeight = elmtRect.height,
               resizeHandleClassList = e.target.classList,
               scaleFactor = elmt.getScaleFactor(),
-              aspectRatio = elmtRect.width / elmtRect.height;
-          var elmtContentRect = elmt.content.getBoundingClientRect(),
+              aspectRatio = elmtRect.width / elmtRect.height,
+              elmtContentRect = elmt.content.getBoundingClientRect(),
               aspectRatioContent = elmtContentRect.width / elmtContentRect.height,
               hdrHeight = elmt.header.getBoundingClientRect().height,
               // needed in aspectRatio
@@ -2694,6 +2744,8 @@ var jsPanel = {
               maxWidthWest = 10000,
               maxHeightSouth = 10000,
               maxHeightNorth = 10000;
+          startWidth = elmtRect.width;
+          startHeight = elmtRect.height;
 
           if (elmtParentTagName !== 'body') {
             startLeft = elmtRect.left - elmtParentRect.left + elmtParent.scrollLeft;
@@ -2764,8 +2816,11 @@ var jsPanel = {
               }
 
               elmt.front();
-              elmt.status = 'normalized';
-              elmt.setControls(['.jsPanel-btn-normalize']);
+
+              if (elmtRect.height > startHeight + 5) {
+                elmt.status = 'normalized';
+                elmt.setControls(['.jsPanel-btn-normalize']);
+              }
             }
 
             resizestarted = 1; // trigger resize permanently while resizing
@@ -3344,8 +3399,9 @@ var jsPanel = {
           elmt.saveCurrentPosition();
           elmt.calcSizeFactors();
           var smallifyBtn = elmt.controlbar.querySelector('.jsPanel-btn-smallify');
+          var elmtRect = elmt.getBoundingClientRect();
 
-          if (smallifyBtn) {
+          if (smallifyBtn && elmtRect.height > startHeight + 5) {
             smallifyBtn.style.transform = 'rotate(0deg)';
           }
 
@@ -3382,8 +3438,21 @@ var jsPanel = {
     return elmt;
   },
   setClass: function setClass(elmt, classnames) {
-    classnames.split(' ').forEach(function (item) {
+    classnames.trim().split(/\s+/).forEach(function (item) {
       return elmt.classList.add(item);
+    });
+    return elmt;
+  },
+  remClass: function remClass(elmt, classnames) {
+    classnames.trim().split(/\s+/).forEach(function (item) {
+      return elmt.classList.remove(item);
+    });
+    return elmt;
+  },
+  toggleClass: function toggleClass(elmt, classnames) {
+    // IE11 doesn't support https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList/toggle
+    classnames.trim().split(/\s+/).forEach(function (classname) {
+      elmt.classList.contains(classname) ? elmt.classList.remove(classname) : elmt.classList.add(classname);
     });
     return elmt;
   },
@@ -3532,52 +3601,68 @@ var jsPanel = {
     self.autocloseProgressbar = self.querySelector('.jsPanel-autoclose-progressbar'); // Events
 
     var jspanelloaded = new CustomEvent('jspanelloaded', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelstatuschange = new CustomEvent('jspanelstatuschange', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelbeforenormalize = new CustomEvent('jspanelbeforenormalize', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelnormalized = new CustomEvent('jspanelnormalized', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelbeforemaximize = new CustomEvent('jspanelbeforemaximize', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelmaximized = new CustomEvent('jspanelmaximized', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelbeforeminimize = new CustomEvent('jspanelbeforeminimize', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelminimized = new CustomEvent('jspanelminimized', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelbeforesmallify = new CustomEvent('jspanelbeforesmallify', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelsmallified = new CustomEvent('jspanelsmallified', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelsmallifiedmax = new CustomEvent('jspanelsmallifiedmax', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelbeforeunsmallify = new CustomEvent('jspanelbeforeunsmallify', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelfronted = new CustomEvent('jspanelfronted', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelbeforeclose = new CustomEvent('jspanelbeforeclose', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelclosed = new CustomEvent('jspanelclosed', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }),
         jspanelcloseduser = new CustomEvent('jspanelcloseduser', {
-      detail: options.id
+      detail: options.id,
+      cancelable: true
     }); // make panel available as event object property 'panel'
 
     [jspanelloaded, jspanelstatuschange, jspanelbeforenormalize, jspanelnormalized, jspanelbeforemaximize, jspanelmaximized, jspanelbeforeminimize, jspanelminimized, jspanelbeforesmallify, jspanelsmallified, jspanelsmallifiedmax, jspanelbeforeunsmallify, jspanelfronted, jspanelbeforeclose, jspanelclosed, jspanelcloseduser].forEach(function (evt) {

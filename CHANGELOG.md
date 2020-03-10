@@ -1,5 +1,14 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.10.0 *2020-03-10*</span>
+
++ **bugfix** in the resizeit functionality, issue https://github.com/Flyer53/jsPanel4/issues/117
++ **fixed** CSS issue concerning header logo in minimized panel
++ **added** method `jsPanel.toggleClass()`
++ **added** option `data`
++ **updated** `layout` extension
++ **updated** all jsPanel events (`jspanelloaded`, `jspanelclosed`, etc.) are now cancelable
+
 ### <span style='color:#563D7C;'>Version 4.9.5 *2020-02-01*</span>
 
 + **bugfix** in option resizeit parameter `aspectRatio` when using modifier keys

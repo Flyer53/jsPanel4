@@ -1,6 +1,6 @@
 {
     "name": "jspanel4",
-    "version": "4.9.5",
+    "version": "4.10.0",
     "description": "A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu",
     "keywords": [
         "jsPanel",
@@ -40,11 +40,11 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.8.4",
-        "@babel/core": "^7.8.4",
-        "@babel/preset-env": "^7.8.4",
+        "@babel/core": "^7.8.7",
+        "@babel/preset-env": "^7.8.7",
         "eslint": "^6.8.0",
         "eslint-config-standard": "^14.1.0",
-        "eslint-plugin-import": "^2.20.0",
+        "eslint-plugin-import": "^2.20.1",
         "eslint-plugin-node": "^11.0.0",
         "eslint-plugin-promise": "^4.2.1",
         "eslint-plugin-standard": "^4.0.1",
@@ -58,7 +58,7 @@
         "gulp-rename": "^2.0.0",
         "gulp-sass": "^4.0.2",
         "node-sass": "^4.13.1",
-        "npm": "^6.13.7",
+        "npm": "^6.14.2",
         "prettier": "^1.19.1"
     },
     "prettier": {

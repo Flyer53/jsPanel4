@@ -11,17 +11,13 @@ import {jsPanel} from '../../jspanel.js';
 
 if (!jsPanel.layout) {
     jsPanel.layout = {
-        version: '1.3.1',
-        date: '2020-01-18 14:53',
+        version: '1.4.0',
+        date: '2020-03-09 13:54',
         storage: localStorage,
 
         save(saveConfig = {}) {
-            let selector = saveConfig.selector
-                ? saveConfig.selector
-                : '.jsPanel-standard';
-            let storageName = saveConfig.storagename
-                ? saveConfig.storagename
-                : 'jspanels';
+            let selector = saveConfig.selector ? saveConfig.selector : '.jsPanel-standard';
+            let storageName = saveConfig.storagename ? saveConfig.storagename : 'jspanels';
 
             const collection = document.querySelectorAll(selector);
             let panels = [];
@@ -30,12 +26,12 @@ if (!jsPanel.layout) {
                 panelData.status = item.status;
                 panelData.zIndex = item.style.zIndex;
                 panelData.id = item.id;
+                panelData.data = item.options.data || undefined;
                 panels.push(panelData);
             });
             panels.sort(function(a, b) {
                 return a.zIndex - b.zIndex;
             });
-
             this.storage.removeItem(storageName);
             let storedData = JSON.stringify(panels);
             this.storage.setItem(storageName, storedData);
@@ -50,20 +46,46 @@ if (!jsPanel.layout) {
             }
         },
 
-        getId(id, storagename = 'jspanels') {
+        getDataset(value, attr = 'id', storagename = 'jspanels', findall = false) {
             if (this.storage[storagename]) {
-                let panels = this.getAll(storagename),
-                    panel;
-                panels.forEach(item => {
-                    if (item.id === id) {
-                        panel = item;
+                let datasets = this.getAll(storagename),
+                    set;
+                // findall true will return an array with all matches or at least an empty array
+                if (findall) {
+                    set = [];
+                }
+                datasets.forEach(item => {
+                    let type = typeof item[attr];
+                    if (type === 'string' || type === 'number') {
+                        if (item[attr] === value) {
+                            if (!set) {
+                                set = item;
+                            } else {
+                                set.push(item);
+                            }
+                        }
+                    } else if (Array.isArray(item[attr])) {
+                        if (item[attr].includes(value)) {
+                            if (!set) {
+                                set = item;
+                            } else {
+                                set.push(item);
+                            }
+                        }
+                    } else if (typeof item[attr] === 'object') {
+                        for (const prop in item[attr]) {
+                            if (item[attr][prop] === value) {
+                                if (!set) {
+                                    set = item;
+                                    break;
+                                }  else {
+                                    set.push(item);
+                                }
+                            }
+                        }
                     }
                 });
-                if (panel) {
-                    return panel;
-                } else {
-                    return false;
-                }
+                return set ? set : false;
             } else {
                 return false;
             }
@@ -73,19 +95,15 @@ if (!jsPanel.layout) {
             let id, config, storageName;
             if (!restoreConfig.id || !restoreConfig.config) {
                 // eslint-disable-next-line no-console
-                console.error(
-                    'Id or predefined panel configuration is missing!'
-                );
+                console.error('Id or predefined panel configuration is missing!');
                 return false;
             } else {
                 id = restoreConfig.id;
                 config = restoreConfig.config;
-                storageName = restoreConfig.storagename
-                    ? restoreConfig.storagename
-                    : 'jspanels';
+                storageName = restoreConfig.storagename ? restoreConfig.storagename : 'jspanels';
             }
 
-            let storedpanel = this.getId(id, storageName);
+            let storedpanel = this.getDataset(id, 'id', storageName);
             if (storedpanel) {
                 let savedConfig = {
                     id: storedpanel.id,
@@ -123,15 +141,11 @@ if (!jsPanel.layout) {
             let predefinedConfigs, storageName;
             if (!restoreConfig.configs) {
                 // eslint-disable-next-line no-console
-                console.error(
-                    'Object with predefined panel configurations is missing!'
-                );
+                console.error('Object with predefined panel configurations is missing!');
                 return false;
             } else {
                 predefinedConfigs = restoreConfig.configs;
-                storageName = restoreConfig.storagename
-                    ? restoreConfig.storagename
-                    : 'jspanels';
+                storageName = restoreConfig.storagename ? restoreConfig.storagename : 'jspanels';
             }
 
             if (this.storage[storageName]) {
@@ -142,12 +156,7 @@ if (!jsPanel.layout) {
                     // loop over predefined configs to find config with pId
                     // this makes it unnecessary that identifiers for a certain config is the same as id in config
                     for (let conf in predefinedConfigs) {
-                        if (
-                            Object.prototype.hasOwnProperty.call(
-                                predefinedConfigs,
-                                conf
-                            )
-                        ) {
+                        if (Object.prototype.hasOwnProperty.call(predefinedConfigs, conf)) {
                             if (predefinedConfigs[conf].id === pId) {
                                 jsPanel.layout.restoreId({
                                     id: pId,

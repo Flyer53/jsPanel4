@@ -8,9 +8,9 @@
  */
 
 export // eslint-disable-next-line no-redeclare
-const jsPanel = {
-    version: '4.9.5',
-    date: '2020-02-01 21:39',
+let jsPanel = {
+    version: '4.10.0',
+    date: '2020-03-10 10:05',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -699,7 +699,6 @@ const jsPanel = {
         });
     })(),
 
-
     // color methods ---------------
     color(val) {
         let color = val.toLowerCase(),
@@ -925,50 +924,106 @@ const jsPanel = {
     },
 
     // positioning methods ---------------
+    /*
     pOposition(positionString) {
         let pos = positionString.trim();
         const settings = {},
-            // regexMyAt = /(^|\s)((left-|right-)(top|center|bottom){1})|((center-){1}(top|bottom){1})|(center)/gi,
             regexMyAt = /(^|\s)((left-|right-)(top|center|bottom))|((center-)(top|bottom))|(center)/gi,
+            //regexMyAt = /(left-|right-)(top|center|bottom)|(center-)(top|bottom)|(\s+center\s+|\s+center$|^center\s+|^center$)/gi,
             regexAutopos = /(^|\s)(right|down|left|up)/gi,
-            regexOffset = /(^|\s)-?(\d*\.?\d+)([a-zA-Z%]{0,4})/gi;
+            regexOffset = /(^|\s)[+-]?(\d*\.?\d+)([a-zA-Z%]{0,4})/gi;
 
         // find my and at
         const my_at = pos.match(regexMyAt);
         if (my_at) {
             settings.my = my_at[0].trim();
-            settings.at = my_at[1] ? my_at[1].trim() : my_at[0].trim();
+            settings.at = my_at[1] ? my_at[1].trim() : settings.my;
         }
-        pos = pos.replace(regexMyAt, ' ').trim();
+        pos = pos.replace(regexMyAt, '').trim();
 
         // find autoposition
         const autopos = pos.match(regexAutopos); // do not move up in code
         if (autopos) {
             settings.autoposition = autopos[0].trim();
         }
-        pos = pos.replace(regexAutopos, ' ').trim();
+        pos = pos.replace(regexAutopos, '').trim();
 
         // find offsets
         const offsets = pos.match(regexOffset); // do not move up in code
         if (offsets) {
             offsets.forEach((item, index) => {
                 item = item.trim();
-                if (item.match(/(^|\s)(-?[0-9]*\.?[0-9]+)(\s|$)/)) {
+                if (item.match(/^[+-]?[0-9]*\.?[0-9]+$/)) {
                     offsets[index] = `${offsets[index]}px`.trim();
                 }
             });
             settings.offsetX = offsets[0].trim();
-            settings.offsetY = offsets[1] ? offsets[1].trim() : offsets[0].trim();
+            settings.offsetY = offsets[1] ? offsets[1].trim() : settings.offsetX;
         }
-        pos = pos.replace(regexOffset, ' ').trim();
+        pos = pos.replace(regexOffset, '').trim();
 
         // find of
         if (pos.length) {
             // assumed to be a selector string
             settings.of = pos;
         }
-
+        //console.log(settings);
         return settings;
+    },
+*/
+    pOposition(positionshorthand) {
+        let result = {};
+        // remove leading and trailing whitespace and split position shorthand string into array
+        let pos = positionshorthand.trim().split(/\s+/);
+
+        // find autoposition value and assign to result, must be the first item to find and remove
+        let auto = pos.filter(item => {
+            return item.match(/^(down|right|up|left)$/i);
+        });
+        if (auto.length) {
+            result.autoposition = auto[0];
+            pos.splice(pos.indexOf(auto[0]), 1);
+        }
+
+        // find my and at values and assign to result
+        let my_at = pos.filter(item => {
+            return item.match(/^(left-|right-)(top|center|bottom)$|(^center-)(top|bottom)$|(^center$)/i);
+        });
+        if (my_at.length) {
+            result.my = my_at[0];
+            result.at = my_at[1] || my_at[0];
+            pos.splice(pos.indexOf(my_at[0]), 1);
+            if (my_at[1]) {
+                pos.splice(pos.indexOf(my_at[1]), 1);
+            }
+        } else {
+            result.my = 'center';
+            result.at = 'center';
+        }
+
+        // find offset and assign to result
+        let offsets = pos.filter(item => {
+            return item.match(/^[+-]?\d*\.?\d+[a-z%]*$/i);
+        });
+        if (offsets.length) {
+            result.offsetX = offsets[0].match(/^[+-]?\d*\.?\d+$/i) ? `${offsets[0]}px` : offsets[0];
+            if (offsets[1]) {
+                result.offsetY = offsets[1].match(/^[+-]?\d*\.?\d+$/i) ? `${offsets[1]}px` : offsets[1];
+            } else {
+                result.offsetY = result.offsetX;
+            }
+            pos.splice(pos.indexOf(offsets[0]), 1);
+            if (offsets[1]) {
+                pos.splice(pos.indexOf(offsets[1]), 1);
+            }
+        }
+
+        // last to find and assign is of value and must be all the rest (if there is a rest)
+        if (pos.length) {
+            result.of = pos.join(' ');
+        }
+
+        return result;
     },
     position(panel, position) {
         // @panel:     selector string | Element | jQuery object
@@ -1697,11 +1752,11 @@ const jsPanel = {
                                         <span class="jsPanel-title"></span>
                                     </div>
                                     <div class="jsPanel-controlbar">
-                                        <button class="jsPanel-btn jsPanel-btn-smallify" aria-label="Smallify">${this.icons.smallify}</button>
-                                        <button class="jsPanel-btn jsPanel-btn-minimize" aria-label="Minimize">${this.icons.minimize}</button>
-                                        <button class="jsPanel-btn jsPanel-btn-normalize" aria-label="Normalize">${this.icons.normalize}</button>
-                                        <button class="jsPanel-btn jsPanel-btn-maximize" aria-label="Maximize">${this.icons.maximize}</button>
-                                        <button class="jsPanel-btn jsPanel-btn-close" aria-label="Close">${this.icons.close}</button>
+                                        <button type="button" class="jsPanel-btn jsPanel-btn-smallify"  aria-label="Smallify">${this.icons.smallify}</button>
+                                        <button type="button" class="jsPanel-btn jsPanel-btn-minimize"  aria-label="Minimize">${this.icons.minimize}</button>
+                                        <button type="button" class="jsPanel-btn jsPanel-btn-normalize" aria-label="Normalize">${this.icons.normalize}</button>
+                                        <button type="button" class="jsPanel-btn jsPanel-btn-maximize"  aria-label="Maximize">${this.icons.maximize}</button>
+                                        <button type="button" class="jsPanel-btn jsPanel-btn-close"     aria-label="Close">${this.icons.close}</button>
                                     </div>
                                 </div>
                                 <div class="jsPanel-hdr-toolbar"></div>
@@ -1724,9 +1779,9 @@ const jsPanel = {
                                         <span class="jsPanel-title"></span>
                                     </div>
                                     <div class="jsPanel-controlbar">
-                                        <button class="jsPanel-btn jsPanel-btn-sm jsPanel-btn-normalize" aria-label="Normalize">${this.icons.normalize}</button>
-                                        <button class="jsPanel-btn jsPanel-btn-sm jsPanel-btn-maximize" aria-label="Maximize">${this.icons.maximize}</button>
-                                        <button class="jsPanel-btn jsPanel-btn-sm jsPanel-btn-close" aria-label="Close">${this.icons.close}</button>
+                                        <button type="button" class="jsPanel-btn jsPanel-btn-sm jsPanel-btn-normalize" aria-label="Normalize">${this.icons.normalize}</button>
+                                        <button type="button" class="jsPanel-btn jsPanel-btn-sm jsPanel-btn-maximize"  aria-label="Maximize">${this.icons.maximize}</button>
+                                        <button type="button" class="jsPanel-btn jsPanel-btn-sm jsPanel-btn-close"     aria-label="Close">${this.icons.close}</button>
                                     </div>
                                 </div>
                             </div>`;
@@ -2666,11 +2721,6 @@ const jsPanel = {
         });
     },
 
-    remClass(elmt, classnames) {
-        classnames.split(' ').forEach(item => elmt.classList.remove(item));
-        return elmt;
-    },
-
     resetZi() {
         this.zi = ((startValue = jsPanel.ziBase) => {
             let val = startValue;
@@ -2708,7 +2758,9 @@ const jsPanel = {
             resizePanel,
             resizestarted,
             w,
-            h;
+            h,
+            startWidth,
+            startHeight;
 
         opts.handles = options.handles || jsPanel.defaults.resizeit.handles;
         opts.handles.split(',').forEach(item => {
@@ -2778,12 +2830,10 @@ const jsPanel = {
                         startX = e.clientX || e.touches[0].clientX,
                         startY = e.clientY || e.touches[0].clientY,
                         startRatio = startX / startY,
-                        startWidth = elmtRect.width,
-                        startHeight = elmtRect.height,
                         resizeHandleClassList = e.target.classList,
                         scaleFactor = elmt.getScaleFactor(),
-                        aspectRatio = elmtRect.width / elmtRect.height;
-                    const elmtContentRect = elmt.content.getBoundingClientRect(),
+                        aspectRatio = elmtRect.width / elmtRect.height,
+                        elmtContentRect = elmt.content.getBoundingClientRect(),
                         aspectRatioContent = elmtContentRect.width / elmtContentRect.height,
                         hdrHeight = elmt.header.getBoundingClientRect().height, // needed in aspectRatio
                         ftrHeight = elmt.footer.getBoundingClientRect().height || 0; // needed in aspectRatio
@@ -2793,6 +2843,9 @@ const jsPanel = {
                         maxWidthWest = 10000,
                         maxHeightSouth = 10000,
                         maxHeightNorth = 10000;
+
+                    startWidth = elmtRect.width;
+                    startHeight = elmtRect.height;
 
                     if (elmtParentTagName !== 'body') {
                         startLeft = elmtRect.left - elmtParentRect.left + elmtParent.scrollLeft;
@@ -2876,8 +2929,10 @@ const jsPanel = {
                                 );
                             }
                             elmt.front();
-                            elmt.status = 'normalized';
-                            elmt.setControls(['.jsPanel-btn-normalize']);
+                            if (elmtRect.height > startHeight+5) {
+                                elmt.status = 'normalized';
+                                elmt.setControls(['.jsPanel-btn-normalize']);
+                            }
                         }
                         resizestarted = 1;
                         // trigger resize permanently while resizing
@@ -3403,7 +3458,8 @@ const jsPanel = {
                         elmt.saveCurrentPosition();
                         elmt.calcSizeFactors();
                         let smallifyBtn = elmt.controlbar.querySelector('.jsPanel-btn-smallify');
-                        if (smallifyBtn) {
+                        let elmtRect = elmt.getBoundingClientRect();
+                        if (smallifyBtn && elmtRect.height > startHeight+5) {
                             smallifyBtn.style.transform = 'rotate(0deg)';
                         }
                         document.dispatchEvent(jspanelresizestop);
@@ -3443,9 +3499,30 @@ const jsPanel = {
     },
 
     setClass(elmt, classnames) {
-        classnames.split(' ').forEach(item => elmt.classList.add(item));
+        classnames
+            .trim()
+            .split(/\s+/)
+            .forEach(item => elmt.classList.add(item));
         return elmt;
     },
+    remClass(elmt, classnames) {
+        classnames
+            .trim()
+            .split(/\s+/)
+            .forEach(item => elmt.classList.remove(item));
+        return elmt;
+    },
+    toggleClass(elmt, classnames) {
+        // IE11 doesn't support https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList/toggle
+        classnames
+            .trim()
+            .split(/\s+/)
+            .forEach(classname => {
+                elmt.classList.contains(classname) ? elmt.classList.remove(classname) : elmt.classList.add(classname);
+            });
+        return elmt;
+    },
+
     setStyles(elmt, stylesobject) {
         // code taken from https://blissfuljs.com/docs.html#fn-style
         for (let prop in stylesobject) {
@@ -3588,50 +3665,68 @@ const jsPanel = {
 
         // Events
         const jspanelloaded = new CustomEvent('jspanelloaded', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
             jspanelstatuschange = new CustomEvent('jspanelstatuschange', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
             jspanelbeforenormalize = new CustomEvent('jspanelbeforenormalize', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
             jspanelnormalized = new CustomEvent('jspanelnormalized', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
             jspanelbeforemaximize = new CustomEvent('jspanelbeforemaximize', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
             jspanelmaximized = new CustomEvent('jspanelmaximized', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
             jspanelbeforeminimize = new CustomEvent('jspanelbeforeminimize', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
             jspanelminimized = new CustomEvent('jspanelminimized', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
             jspanelbeforesmallify = new CustomEvent('jspanelbeforesmallify', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
             jspanelsmallified = new CustomEvent('jspanelsmallified', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
             jspanelsmallifiedmax = new CustomEvent('jspanelsmallifiedmax', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
-            jspanelbeforeunsmallify = new CustomEvent('jspanelbeforeunsmallify', { detail: options.id }),
+            jspanelbeforeunsmallify = new CustomEvent('jspanelbeforeunsmallify', {
+                detail: options.id,
+                cancelable: true
+            }),
             jspanelfronted = new CustomEvent('jspanelfronted', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
             jspanelbeforeclose = new CustomEvent('jspanelbeforeclose', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
             jspanelclosed = new CustomEvent('jspanelclosed', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             }),
             jspanelcloseduser = new CustomEvent('jspanelcloseduser', {
-                detail: options.id
+                detail: options.id,
+                cancelable: true
             });
         // make panel available as event object property 'panel'
         [

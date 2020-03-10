@@ -8,10 +8,12 @@
  */
 
 'use strict';
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 if (!jsPanel.layout) {
   jsPanel.layout = {
-    version: '1.3.1',
-    date: '2020-01-18 14:53',
+    version: '1.4.0',
+    date: '2020-03-09 13:54',
     storage: localStorage,
     save: function save() {
       var saveConfig = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -24,6 +26,7 @@ if (!jsPanel.layout) {
         panelData.status = item.status;
         panelData.zIndex = item.style.zIndex;
         panelData.id = item.id;
+        panelData.data = item.options.data || undefined;
         panels.push(panelData);
       });
       panels.sort(function (a, b) {
@@ -43,23 +46,52 @@ if (!jsPanel.layout) {
         return false;
       }
     },
-    getId: function getId(id) {
-      var storagename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'jspanels';
+    getDataset: function getDataset(value) {
+      var attr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'id';
+      var storagename = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'jspanels';
+      var findall = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
       if (this.storage[storagename]) {
-        var panels = this.getAll(storagename),
-            panel;
-        panels.forEach(function (item) {
-          if (item.id === id) {
-            panel = item;
+        var datasets = this.getAll(storagename),
+            set; // findall true will return an array with all matches or at least an empty array
+
+        if (findall) {
+          set = [];
+        }
+
+        datasets.forEach(function (item) {
+          var type = _typeof(item[attr]);
+
+          if (type === 'string' || type === 'number') {
+            if (item[attr] === value) {
+              if (!set) {
+                set = item;
+              } else {
+                set.push(item);
+              }
+            }
+          } else if (Array.isArray(item[attr])) {
+            if (item[attr].includes(value)) {
+              if (!set) {
+                set = item;
+              } else {
+                set.push(item);
+              }
+            }
+          } else if (_typeof(item[attr]) === 'object') {
+            for (var prop in item[attr]) {
+              if (item[attr][prop] === value) {
+                if (!set) {
+                  set = item;
+                  break;
+                } else {
+                  set.push(item);
+                }
+              }
+            }
           }
         });
-
-        if (panel) {
-          return panel;
-        } else {
-          return false;
-        }
+        return set ? set : false;
       } else {
         return false;
       }
@@ -78,7 +110,7 @@ if (!jsPanel.layout) {
         storageName = restoreConfig.storagename ? restoreConfig.storagename : 'jspanels';
       }
 
-      var storedpanel = this.getId(id, storageName);
+      var storedpanel = this.getDataset(id, 'id', storageName);
 
       if (storedpanel) {
         var savedConfig = {
