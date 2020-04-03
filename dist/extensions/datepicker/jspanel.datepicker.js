@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.9.5
+ * @version v4.10.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -8,6 +8,12 @@
  */
 
 'use strict';
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /**
  * requires moment.js < https://momentjs.com/ > to be loaded prior this extension
  */
@@ -16,9 +22,14 @@
 //       - make dates not selectable and mark them accordingly ??
 //       - load list of days to highlight somehow (e.g. holidays)
 if (!jsPanel.datepicker) {
+  // add some icons for the datepicker controls
+  jsPanel.icons.chevronLeft = "<svg focusable=\"false\" class=\"jsPanel-icon\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 22 22\"><g transform=\"matrix(6.12323e-17,-1,1,6.12323e-17,0.0375,22.0375)\"><path fill=\"currentColor\" d=\"M2.1,15.2L2.9,16C3.1,16.2 3.4,16.2 3.6,16L11,8.7L18.4,16C18.6,16.2 18.9,16.2 19.1,16L19.9,15.2C20.1,15 20.1,14.7 19.9,14.5L11.3,6C11.1,5.8 10.8,5.8 10.6,6L2.1,14.5C2,14.7 2,15 2.1,15.2Z\"/></g></svg>";
+  jsPanel.icons.chevronRight = "<svg focusable=\"false\" class=\"jsPanel-icon\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 22 22\"><g transform=\"matrix(6.12323e-17,1,-1,6.12323e-17,22.0375,-0.0375)\"><path fill=\"currentColor\" d=\"M2.1,15.2L2.9,16C3.1,16.2 3.4,16.2 3.6,16L11,8.7L18.4,16C18.6,16.2 18.9,16.2 19.1,16L19.9,15.2C20.1,15 20.1,14.7 19.9,14.5L11.3,6C11.1,5.8 10.8,5.8 10.6,6L2.1,14.5C2,14.7 2,15 2.1,15.2Z\"/></g></svg>";
+  jsPanel.icons.square = "<svg focusable=\"false\" class=\"jsPanel-icon\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 22 22\"><g transform=\"matrix(0.0401786,0,0,0.0401786,2,0.714286)\"><path fill=\"currentColor\" d=\"M400,32L48,32C21.5,32 0,53.5 0,80L0,432C0,458.5 21.5,480 48,480L400,480C426.5,480 448,458.5 448,432L448,80C448,53.5 426.5,32 400,32ZM394,432L54,432C50.7,432 48,429.3 48,426L48,86C48,82.7 50.7,80 54,80L394,80C397.3,80 400,82.7 400,86L400,426C400,429.3 397.3,432 394,432Z\"/></g></svg>";
+  jsPanel.icons.undo = "<svg focusable=\"false\" class=\"jsPanel-icon\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 22 22\"><g transform=\"matrix(2.18687e-18,0.0357143,-0.0357143,2.18687e-18,20.1429,2)\"><path fill=\"currentColor\" d=\"M12,8L39.711,8C46.45,8 51.868,13.548 51.708,20.286L49.361,118.854C93.925,51.834 170.212,7.73 256.793,8.001C393.18,8.428 504.213,120.009 504,256.396C503.786,393.181 392.835,504 256,504C192.074,504 133.798,479.813 89.822,440.092C84.709,435.474 84.468,427.531 89.34,422.659L109.078,402.921C113.576,398.423 120.831,398.136 125.579,402.369C160.213,433.246 205.895,452 256,452C364.322,452 452,364.338 452,256C452,147.678 364.338,60 256,60C176.455,60 108.059,107.282 77.325,175.302L203.714,172.293C210.451,172.133 216,177.55 216,184.29L216,212C216,218.627 210.627,224 204,224L12,224C5.373,224 0,218.627 0,212L0,20C0,13.373 5.373,8 12,8Z\"/></g></svg>";
   jsPanel.datepicker = {
-    version: '0.3.0',
-    date: '2020-02-16 19:32',
+    version: '0.3.1',
+    date: '2020-03-22 11:00',
     defaults: {
       locale: 'en',
       startdate: undefined,
@@ -33,7 +44,7 @@ if (!jsPanel.datepicker) {
     generateHTML: function generateHTML() {
       var wrapper = document.createElement('div');
       wrapper.className = 'jsPanel-cal-wrapper';
-      wrapper.innerHTML = "<div class=\"jsPanel-cal-sub jsPanel-cal-clear\">&#9723;</div>\n                <div class=\"jsPanel-cal-sub jsPanel-cal-back\">&#9204;</div>\n                <div class=\"jsPanel-cal-sub jsPanel-cal-month\"></div>\n                <div class=\"jsPanel-cal-sub jsPanel-cal-forward\">&#9205;</div>\n                <div class=\"jsPanel-cal-sub jsPanel-cal-reset\">&#8634;</div>\n                <div class=\"jsPanel-cal-sub jsPanel-cal-blank3\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-0\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-1\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-2\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-3\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-4\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-5\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-6\"></div>";
+      wrapper.innerHTML = "<div class=\"jsPanel-cal-sub jsPanel-cal-clear\" title=\"Clear all selections\">".concat(jsPanel.icons.square, "</div>\n                <div class=\"jsPanel-cal-sub jsPanel-cal-back\" title=\"Go back one month\">").concat(jsPanel.icons.chevronLeft, "</div>\n                <div class=\"jsPanel-cal-sub jsPanel-cal-month\"></div>\n                <div class=\"jsPanel-cal-sub jsPanel-cal-forward\" title=\"Go forward one month\">").concat(jsPanel.icons.chevronRight, "</div>\n                <div class=\"jsPanel-cal-sub jsPanel-cal-reset\" title=\"Reset to current month\">").concat(jsPanel.icons.undo, "</div>\n                <div class=\"jsPanel-cal-sub jsPanel-cal-blank3\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-0\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-1\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-2\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-3\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-4\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-5\"></div>\n                <div class=\"jsPanel-cal-sub day-name day-name-6\"></div>");
 
       for (var i = 0; i < 6; i++) {
         wrapper.innerHTML += "<div class=\"jsPanel-cal-sub week week-".concat(i, "\"></div>");
@@ -86,12 +97,12 @@ if (!jsPanel.datepicker) {
 
       var firstEntry = now.subtract(++firstDay, 'days');
       var days = datepicker.querySelectorAll('.jsPanel-cal-sub.day');
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+
+      var _iterator = _createForOfIteratorHelper(days),
+          _step;
 
       try {
-        for (var _iterator = days[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var day = _step.value;
           day.classList.remove('today', 'notInMonth', 'selected', 'range', 'remove-border-radius-right', 'remove-border-radius-left');
           var value = firstEntry.add(1, 'days');
@@ -106,18 +117,9 @@ if (!jsPanel.datepicker) {
         } // fill week numbers
 
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _iterator.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-            _iterator["return"]();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+        _iterator.f();
       }
 
       if (datepicker.options.showWeekNumbers) {
@@ -129,40 +131,30 @@ if (!jsPanel.datepicker) {
     // deselect all days (remove .selected class; does not empty selectedDays/selectedRange)
     // do not empty selectedDays/selectedRange -> selection would be lost when clicking forward/back buttons
     deselectAllDays: function deselectAllDays(container) {
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iterator2 = _createForOfIteratorHelper(container.querySelectorAll('.jsPanel-cal-sub.day')),
+          _step2;
 
       try {
-        for (var _iterator2 = container.querySelectorAll('.jsPanel-cal-sub.day')[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var day = _step2.value;
           day.classList.remove('selected', 'range', 'remove-border-radius-right', 'remove-border-radius-left');
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _iterator2.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-            _iterator2["return"]();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
+        _iterator2.f();
       }
     },
     // method to restore selected dates or range
     restoreSelections: function restoreSelections(container) {
       // restore selections of days
       var days = container.querySelectorAll('.jsPanel-cal-sub.day');
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
+
+      var _iterator3 = _createForOfIteratorHelper(days),
+          _step3;
 
       try {
-        for (var _iterator3 = days[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
           var _day = _step3.value;
 
           if (container.selectedDays.has(_day.dataset.date)) {
@@ -171,29 +163,20 @@ if (!jsPanel.datepicker) {
         } // restore selection of a range
 
       } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
+        _iterator3.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-            _iterator3["return"]();
-          }
-        } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
-          }
-        }
+        _iterator3.f();
       }
 
       if (container.selectedRange.size) {
         var rangeIterator = container.selectedRange.values();
         var rangeArray = rangeIterator.next().value.split('/');
-        var _iteratorNormalCompletion4 = true;
-        var _didIteratorError4 = false;
-        var _iteratorError4 = undefined;
+
+        var _iterator4 = _createForOfIteratorHelper(days),
+            _step4;
 
         try {
-          for (var _iterator4 = days[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
             var day = _step4.value;
             var date = day.dataset.date;
 
@@ -210,18 +193,9 @@ if (!jsPanel.datepicker) {
             }
           }
         } catch (err) {
-          _didIteratorError4 = true;
-          _iteratorError4 = err;
+          _iterator4.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
-              _iterator4["return"]();
-            }
-          } finally {
-            if (_didIteratorError4) {
-              throw _iteratorError4;
-            }
-          }
+          _iterator4.f();
         }
       }
     },
@@ -245,20 +219,20 @@ if (!jsPanel.datepicker) {
 
 
       var pickers = container.querySelectorAll('.jsPanel-cal-wrapper');
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
+
+      var _iterator5 = _createForOfIteratorHelper(pickers),
+          _step5;
 
       try {
-        for (var _iterator5 = pickers[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
           var picker = _step5.value;
+
           // clear buttons
-          var _iteratorNormalCompletion8 = true;
-          var _didIteratorError8 = false;
-          var _iteratorError8 = undefined;
+          var _iterator8 = _createForOfIteratorHelper(picker.querySelectorAll('.jsPanel-cal-clear')),
+              _step8;
 
           try {
-            for (var _iterator8 = picker.querySelectorAll('.jsPanel-cal-clear')[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
               var clearbtn = _step8.value;
               clearbtn.addEventListener('click', function (e) {
                 if (opts.onselectionclear && typeof opts.onselectionclear === 'function') {
@@ -274,35 +248,24 @@ if (!jsPanel.datepicker) {
             } // back buttons
 
           } catch (err) {
-            _didIteratorError8 = true;
-            _iteratorError8 = err;
+            _iterator8.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion8 && _iterator8["return"] != null) {
-                _iterator8["return"]();
-              }
-            } finally {
-              if (_didIteratorError8) {
-                throw _iteratorError8;
-              }
-            }
+            _iterator8.f();
           }
 
-          var _iteratorNormalCompletion9 = true;
-          var _didIteratorError9 = false;
-          var _iteratorError9 = undefined;
+          var _iterator9 = _createForOfIteratorHelper(picker.querySelectorAll('.jsPanel-cal-back')),
+              _step9;
 
           try {
-            for (var _iterator9 = picker.querySelectorAll('.jsPanel-cal-back')[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+            for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {
               var backbtn = _step9.value;
               backbtn.addEventListener('click', function () {
                 // get all wrappers and decrease their date
-                var _iteratorNormalCompletion12 = true;
-                var _didIteratorError12 = false;
-                var _iteratorError12 = undefined;
+                var _iterator12 = _createForOfIteratorHelper(pickers),
+                    _step12;
 
                 try {
-                  for (var _iterator12 = pickers[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+                  for (_iterator12.s(); !(_step12 = _iterator12.n()).done;) {
                     var _picker = _step12.value;
 
                     var monthshown = _picker.querySelector('.jsPanel-cal-month').dataset.date,
@@ -312,18 +275,9 @@ if (!jsPanel.datepicker) {
                     jsPanel.datepicker.fillMonth(_picker, monthwanted);
                   }
                 } catch (err) {
-                  _didIteratorError12 = true;
-                  _iteratorError12 = err;
+                  _iterator12.e(err);
                 } finally {
-                  try {
-                    if (!_iteratorNormalCompletion12 && _iterator12["return"] != null) {
-                      _iterator12["return"]();
-                    }
-                  } finally {
-                    if (_didIteratorError12) {
-                      throw _iteratorError12;
-                    }
-                  }
+                  _iterator12.f();
                 }
 
                 jsPanel.datepicker.deselectAllDays(container);
@@ -332,35 +286,24 @@ if (!jsPanel.datepicker) {
             } // forward buttons
 
           } catch (err) {
-            _didIteratorError9 = true;
-            _iteratorError9 = err;
+            _iterator9.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion9 && _iterator9["return"] != null) {
-                _iterator9["return"]();
-              }
-            } finally {
-              if (_didIteratorError9) {
-                throw _iteratorError9;
-              }
-            }
+            _iterator9.f();
           }
 
-          var _iteratorNormalCompletion10 = true;
-          var _didIteratorError10 = false;
-          var _iteratorError10 = undefined;
+          var _iterator10 = _createForOfIteratorHelper(picker.querySelectorAll('.jsPanel-cal-forward')),
+              _step10;
 
           try {
-            for (var _iterator10 = picker.querySelectorAll('.jsPanel-cal-forward')[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+            for (_iterator10.s(); !(_step10 = _iterator10.n()).done;) {
               var fwdbtn = _step10.value;
               fwdbtn.addEventListener('click', function () {
                 // get all wrappers and increase their date
-                var _iteratorNormalCompletion13 = true;
-                var _didIteratorError13 = false;
-                var _iteratorError13 = undefined;
+                var _iterator13 = _createForOfIteratorHelper(pickers),
+                    _step13;
 
                 try {
-                  for (var _iterator13 = pickers[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+                  for (_iterator13.s(); !(_step13 = _iterator13.n()).done;) {
                     var _picker2 = _step13.value;
 
                     var monthshown = _picker2.querySelector('.jsPanel-cal-month').dataset.date,
@@ -370,18 +313,9 @@ if (!jsPanel.datepicker) {
                     jsPanel.datepicker.fillMonth(_picker2, monthwanted);
                   }
                 } catch (err) {
-                  _didIteratorError13 = true;
-                  _iteratorError13 = err;
+                  _iterator13.e(err);
                 } finally {
-                  try {
-                    if (!_iteratorNormalCompletion13 && _iterator13["return"] != null) {
-                      _iterator13["return"]();
-                    }
-                  } finally {
-                    if (_didIteratorError13) {
-                      throw _iteratorError13;
-                    }
-                  }
+                  _iterator13.f();
                 }
 
                 jsPanel.datepicker.deselectAllDays(container);
@@ -390,26 +324,16 @@ if (!jsPanel.datepicker) {
             } // reset buttons
 
           } catch (err) {
-            _didIteratorError10 = true;
-            _iteratorError10 = err;
+            _iterator10.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion10 && _iterator10["return"] != null) {
-                _iterator10["return"]();
-              }
-            } finally {
-              if (_didIteratorError10) {
-                throw _iteratorError10;
-              }
-            }
+            _iterator10.f();
           }
 
-          var _iteratorNormalCompletion11 = true;
-          var _didIteratorError11 = false;
-          var _iteratorError11 = undefined;
+          var _iterator11 = _createForOfIteratorHelper(picker.querySelectorAll('.jsPanel-cal-reset')),
+              _step11;
 
           try {
-            for (var _iterator11 = picker.querySelectorAll('.jsPanel-cal-reset')[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+            for (_iterator11.s(); !(_step11 = _iterator11.n()).done;) {
               var resetbtn = _step11.value;
               resetbtn.addEventListener('click', function (e) {
                 // get month shown of clicked picker
@@ -425,29 +349,19 @@ if (!jsPanel.datepicker) {
 
                 var month = moment().subtract(counter, 'months'); // reset each pickers month
 
-                var _iteratorNormalCompletion14 = true;
-                var _didIteratorError14 = false;
-                var _iteratorError14 = undefined;
+                var _iterator14 = _createForOfIteratorHelper(pickers),
+                    _step14;
 
                 try {
-                  for (var _iterator14 = pickers[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+                  for (_iterator14.s(); !(_step14 = _iterator14.n()).done;) {
                     var _picker3 = _step14.value;
                     jsPanel.datepicker.fillMonth(_picker3, month);
                     month = moment(month).add(1, 'months');
                   }
                 } catch (err) {
-                  _didIteratorError14 = true;
-                  _iteratorError14 = err;
+                  _iterator14.e(err);
                 } finally {
-                  try {
-                    if (!_iteratorNormalCompletion14 && _iterator14["return"] != null) {
-                      _iterator14["return"]();
-                    }
-                  } finally {
-                    if (_didIteratorError14) {
-                      throw _iteratorError14;
-                    }
-                  }
+                  _iterator14.f();
                 }
 
                 jsPanel.datepicker.deselectAllDays(container);
@@ -455,18 +369,9 @@ if (!jsPanel.datepicker) {
               });
             }
           } catch (err) {
-            _didIteratorError11 = true;
-            _iteratorError11 = err;
+            _iterator11.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion11 && _iterator11["return"] != null) {
-                _iterator11["return"]();
-              }
-            } finally {
-              if (_didIteratorError11) {
-                throw _iteratorError11;
-              }
-            }
+            _iterator11.f();
           }
         }
         /**
@@ -475,18 +380,9 @@ if (!jsPanel.datepicker) {
          */
 
       } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
+        _iterator5.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
-            _iterator5["return"]();
-          }
-        } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
-          }
-        }
+        _iterator5.f();
       }
 
       container.addEventListener('click', function (e) {
@@ -521,12 +417,12 @@ if (!jsPanel.datepicker) {
              * IF CTRL KEY IS PRESSED
              */
             container.selectedRange.clear();
-            var _iteratorNormalCompletion6 = true;
-            var _didIteratorError6 = false;
-            var _iteratorError6 = undefined;
+
+            var _iterator6 = _createForOfIteratorHelper(container.querySelectorAll('.day')),
+                _step6;
 
             try {
-              for (var _iterator6 = container.querySelectorAll('.day')[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+              for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
                 var day = _step6.value;
 
                 if (day.classList.contains('selected') && day.classList.contains('range')) {
@@ -535,18 +431,9 @@ if (!jsPanel.datepicker) {
               } // select/unselect day depending on let selected
 
             } catch (err) {
-              _didIteratorError6 = true;
-              _iteratorError6 = err;
+              _iterator6.e(err);
             } finally {
-              try {
-                if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
-                  _iterator6["return"]();
-                }
-              } finally {
-                if (_didIteratorError6) {
-                  throw _iteratorError6;
-                }
-              }
+              _iterator6.f();
             }
 
             if (selected) {
@@ -598,12 +485,11 @@ if (!jsPanel.datepicker) {
           } // add needed classes to selected range
 
 
-          var _iteratorNormalCompletion7 = true;
-          var _didIteratorError7 = false;
-          var _iteratorError7 = undefined;
+          var _iterator7 = _createForOfIteratorHelper(container.querySelectorAll('.day')),
+              _step7;
 
           try {
-            for (var _iterator7 = container.querySelectorAll('.day')[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
               var day = _step7.value;
               var date = day.dataset.date;
               day.classList.remove('remove-border-radius-right', 'remove-border-radius-left');
@@ -624,18 +510,9 @@ if (!jsPanel.datepicker) {
             } // build range string for selectedRange
 
           } catch (err) {
-            _didIteratorError7 = true;
-            _iteratorError7 = err;
+            _iterator7.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion7 && _iterator7["return"] != null) {
-                _iterator7["return"]();
-              }
-            } finally {
-              if (_didIteratorError7) {
-                throw _iteratorError7;
-              }
-            }
+            _iterator7.f();
           }
 
           container.selectedRange.clear();

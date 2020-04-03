@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.9.5
+ * @version v4.10.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -64,10 +64,14 @@
 .jsPanel-cal-sub.jsPanel-cal-back {
   grid-area: back;
   cursor: pointer; }
+  .jsPanel-cal-sub.jsPanel-cal-back svg {
+    width: 50%; }
 
 .jsPanel-cal-sub.jsPanel-cal-forward {
   grid-area: forward;
   cursor: pointer; }
+  .jsPanel-cal-sub.jsPanel-cal-forward svg {
+    width: 50%; }
 
 .jsPanel-cal-sub.jsPanel-cal-month {
   grid-area: month;
@@ -80,6 +84,8 @@
 .jsPanel-cal-sub.jsPanel-cal-reset {
   grid-area: reset;
   cursor: pointer; }
+  .jsPanel-cal-sub.jsPanel-cal-reset svg {
+    width: 50%; }
 
 .jsPanel-cal-sub.jsPanel-cal-blank3 {
   grid-area: blank3;

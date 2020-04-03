@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.9.5
+ * @version v4.10.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -19,9 +19,15 @@ import {jsPanel} from '../../jspanel.js';
 //       - load list of days to highlight somehow (e.g. holidays)
 
 if (!jsPanel.datepicker) {
-    jsPanel.datepicker = {
-        version: '0.3.0',
-        date: '2020-02-16 19:32',
+    // add some icons for the datepicker controls
+    jsPanel.icons.chevronLeft =  `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><g transform="matrix(6.12323e-17,-1,1,6.12323e-17,0.0375,22.0375)"><path fill="currentColor" d="M2.1,15.2L2.9,16C3.1,16.2 3.4,16.2 3.6,16L11,8.7L18.4,16C18.6,16.2 18.9,16.2 19.1,16L19.9,15.2C20.1,15 20.1,14.7 19.9,14.5L11.3,6C11.1,5.8 10.8,5.8 10.6,6L2.1,14.5C2,14.7 2,15 2.1,15.2Z"/></g></svg>`;
+    jsPanel.icons.chevronRight = `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><g transform="matrix(6.12323e-17,1,-1,6.12323e-17,22.0375,-0.0375)"><path fill="currentColor" d="M2.1,15.2L2.9,16C3.1,16.2 3.4,16.2 3.6,16L11,8.7L18.4,16C18.6,16.2 18.9,16.2 19.1,16L19.9,15.2C20.1,15 20.1,14.7 19.9,14.5L11.3,6C11.1,5.8 10.8,5.8 10.6,6L2.1,14.5C2,14.7 2,15 2.1,15.2Z"/></g></svg>`;
+    jsPanel.icons.square =       `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><g transform="matrix(0.0401786,0,0,0.0401786,2,0.714286)"><path fill="currentColor" d="M400,32L48,32C21.5,32 0,53.5 0,80L0,432C0,458.5 21.5,480 48,480L400,480C426.5,480 448,458.5 448,432L448,80C448,53.5 426.5,32 400,32ZM394,432L54,432C50.7,432 48,429.3 48,426L48,86C48,82.7 50.7,80 54,80L394,80C397.3,80 400,82.7 400,86L400,426C400,429.3 397.3,432 394,432Z"/></g></svg>`;
+    jsPanel.icons.undo =         `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><g transform="matrix(2.18687e-18,0.0357143,-0.0357143,2.18687e-18,20.1429,2)"><path fill="currentColor" d="M12,8L39.711,8C46.45,8 51.868,13.548 51.708,20.286L49.361,118.854C93.925,51.834 170.212,7.73 256.793,8.001C393.18,8.428 504.213,120.009 504,256.396C503.786,393.181 392.835,504 256,504C192.074,504 133.798,479.813 89.822,440.092C84.709,435.474 84.468,427.531 89.34,422.659L109.078,402.921C113.576,398.423 120.831,398.136 125.579,402.369C160.213,433.246 205.895,452 256,452C364.322,452 452,364.338 452,256C452,147.678 364.338,60 256,60C176.455,60 108.059,107.282 77.325,175.302L203.714,172.293C210.451,172.133 216,177.55 216,184.29L216,212C216,218.627 210.627,224 204,224L12,224C5.373,224 0,218.627 0,212L0,20C0,13.373 5.373,8 12,8Z"/></g></svg>`;
+
+        jsPanel.datepicker = {
+        version: '0.3.1',
+        date: '2020-03-22 11:00',
         defaults: {
             locale: 'en',
             startdate: undefined,
@@ -37,11 +43,11 @@ if (!jsPanel.datepicker) {
         generateHTML() {
             let wrapper = document.createElement('div');
             wrapper.className = 'jsPanel-cal-wrapper';
-            wrapper.innerHTML = `<div class="jsPanel-cal-sub jsPanel-cal-clear">&#9723;</div>
-                <div class="jsPanel-cal-sub jsPanel-cal-back">&#9204;</div>
+            wrapper.innerHTML = `<div class="jsPanel-cal-sub jsPanel-cal-clear" title="Clear all selections">${jsPanel.icons.square}</div>
+                <div class="jsPanel-cal-sub jsPanel-cal-back" title="Go back one month">${jsPanel.icons.chevronLeft}</div>
                 <div class="jsPanel-cal-sub jsPanel-cal-month"></div>
-                <div class="jsPanel-cal-sub jsPanel-cal-forward">&#9205;</div>
-                <div class="jsPanel-cal-sub jsPanel-cal-reset">&#8634;</div>
+                <div class="jsPanel-cal-sub jsPanel-cal-forward" title="Go forward one month">${jsPanel.icons.chevronRight}</div>
+                <div class="jsPanel-cal-sub jsPanel-cal-reset" title="Reset to current month">${jsPanel.icons.undo}</div>
                 <div class="jsPanel-cal-sub jsPanel-cal-blank3"></div>
                 <div class="jsPanel-cal-sub day-name day-name-0"></div>
                 <div class="jsPanel-cal-sub day-name day-name-1"></div>

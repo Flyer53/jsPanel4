@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.9.5
+ * @version v4.10.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -8,13 +8,17 @@
  */
 
 'use strict';
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -977,50 +981,6 @@ var jsPanel = {
     return rgb.r / 255 * 0.2126 + rgb.g / 255 * 0.7152 + rgb.b / 255 * 0.0722;
   },
   // positioning methods ---------------
-
-  /*
-  pOposition(positionString) {
-      let pos = positionString.trim();
-      const settings = {},
-          regexMyAt = /(^|\s)((left-|right-)(top|center|bottom))|((center-)(top|bottom))|(center)/gi,
-          //regexMyAt = /(left-|right-)(top|center|bottom)|(center-)(top|bottom)|(\s+center\s+|\s+center$|^center\s+|^center$)/gi,
-          regexAutopos = /(^|\s)(right|down|left|up)/gi,
-          regexOffset = /(^|\s)[+-]?(\d*\.?\d+)([a-zA-Z%]{0,4})/gi;
-        // find my and at
-      const my_at = pos.match(regexMyAt);
-      if (my_at) {
-          settings.my = my_at[0].trim();
-          settings.at = my_at[1] ? my_at[1].trim() : settings.my;
-      }
-      pos = pos.replace(regexMyAt, '').trim();
-        // find autoposition
-      const autopos = pos.match(regexAutopos); // do not move up in code
-      if (autopos) {
-          settings.autoposition = autopos[0].trim();
-      }
-      pos = pos.replace(regexAutopos, '').trim();
-        // find offsets
-      const offsets = pos.match(regexOffset); // do not move up in code
-      if (offsets) {
-          offsets.forEach((item, index) => {
-              item = item.trim();
-              if (item.match(/^[+-]?[0-9]*\.?[0-9]+$/)) {
-                  offsets[index] = `${offsets[index]}px`.trim();
-              }
-          });
-          settings.offsetX = offsets[0].trim();
-          settings.offsetY = offsets[1] ? offsets[1].trim() : settings.offsetX;
-      }
-      pos = pos.replace(regexOffset, '').trim();
-        // find of
-      if (pos.length) {
-          // assumed to be a selector string
-          settings.of = pos;
-      }
-      //console.log(settings);
-      return settings;
-  },
-  */
   pOposition: function pOposition(positionshorthand) {
     var result = {}; // remove leading and trailing whitespace and split position shorthand string into array
 
