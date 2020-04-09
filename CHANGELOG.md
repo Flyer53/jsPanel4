@@ -1,5 +1,10 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.10.1 *2020-04-09*</span>
+
++ **bugfix** in `autoposition` feature of `option.position`
++ **updated** `datepicker` extension (which is still experimental)
+
 ### <span style='color:#563D7C;'>Version 4.10.0 *2020-03-10*</span>
 
 + **bugfix** in the resizeit functionality, issue https://github.com/Flyer53/jsPanel4/issues/117

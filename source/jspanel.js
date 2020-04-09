@@ -1,19 +1,19 @@
 // eslint-disable-next-line no-redeclare
 let jsPanel = {
-    version: '4.10.0',
-    date: '2020-03-10 10:05',
+    version: '4.10.1',
+    date: '2020-04-09 08:30',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
         document.addEventListener(
             'keydown',
-            e => {
+            (e) => {
                 if (e.key === 'Escape' || e.code === 'Escape' || e.key === 'Esc') {
                     jsPanel
-                        .getPanels(function() {
+                        .getPanels(function () {
                             return this.classList.contains('jsPanel');
                         })
-                        .some(item => {
+                        .some((item) => {
                             if (item.options.closeOnEscape) {
                                 item.close(null, true);
                                 return true;
@@ -33,7 +33,7 @@ let jsPanel = {
             cursor: 'move',
             handles: '.jsPanel-headerlogo, .jsPanel-titlebar, .jsPanel-ftr', // do not use .jsPanel-headerbar
             opacity: 0.8,
-            disableOnMaximized: true
+            disableOnMaximized: true,
         },
         header: true,
         headerTitle: 'jsPanel',
@@ -46,41 +46,31 @@ let jsPanel = {
         resizeit: {
             handles: 'n, e, s, w, ne, se, sw, nw',
             minWidth: 128,
-            minHeight: 38
+            minHeight: 38,
         },
-        theme: 'default'
+        theme: 'default',
     },
     defaultAutocloseConfig: { time: '8s', progressbar: true },
     defaultSnapConfig: {
         sensitivity: 70,
         trigger: 'panel',
-        active: 'both'
+        active: 'both',
     },
     extensions: {},
     globalCallbacks: false,
     icons: {
-        close:     `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M13.7,11l6.1-6.1c0.4-0.4,0.4-0.9,0-1.3l-1.4-1.4c-0.4-0.4-0.9-0.4-1.3,0L11,8.3L4.9,2.3C4.6,1.9,4,1.9,3.7,2.3L2.3,3.7 C1.9,4,1.9,4.6,2.3,4.9L8.3,11l-6.1,6.1c-0.4,0.4-0.4,0.9,0,1.3l1.4,1.4c0.4,0.4,0.9,0.4,1.3,0l6.1-6.1l6.1,6.1 c0.4,0.4,0.9,0.4,1.3,0l1.4-1.4c0.4-0.4,0.4-0.9,0-1.3L13.7,11z"/></svg>`,
-        maximize:  `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M18.3,2H3.7C2.8,2,2,2.9,2,3.9v14.1C2,19.1,2.8,20,3.7,20h14.6c0.9,0,1.7-0.9,1.7-1.9V3.9C20,2.9,19.2,2,18.3,2z M18.3,17.8 c0,0.1-0.1,0.2-0.2,0.2H3.9c-0.1,0-0.2-0.1-0.2-0.2V8.4h14.6V17.8z"/></svg>`,
+        close: `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M13.7,11l6.1-6.1c0.4-0.4,0.4-0.9,0-1.3l-1.4-1.4c-0.4-0.4-0.9-0.4-1.3,0L11,8.3L4.9,2.3C4.6,1.9,4,1.9,3.7,2.3L2.3,3.7 C1.9,4,1.9,4.6,2.3,4.9L8.3,11l-6.1,6.1c-0.4,0.4-0.4,0.9,0,1.3l1.4,1.4c0.4,0.4,0.9,0.4,1.3,0l6.1-6.1l6.1,6.1 c0.4,0.4,0.9,0.4,1.3,0l1.4-1.4c0.4-0.4,0.4-0.9,0-1.3L13.7,11z"/></svg>`,
+        maximize: `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M18.3,2H3.7C2.8,2,2,2.9,2,3.9v14.1C2,19.1,2.8,20,3.7,20h14.6c0.9,0,1.7-0.9,1.7-1.9V3.9C20,2.9,19.2,2,18.3,2z M18.3,17.8 c0,0.1-0.1,0.2-0.2,0.2H3.9c-0.1,0-0.2-0.1-0.2-0.2V8.4h14.6V17.8z"/></svg>`,
         normalize: `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M18.3,2H7.1C6.1,2,5.4,2.8,5.4,3.7v1.7H3.7C2.8,5.4,2,6.1,2,7.1v11.3C2,19.2,2.8,20,3.7,20h11.3c0.9,0,1.7-0.8,1.7-1.7v-1.7 h1.7c0.9,0,1.7-0.8,1.7-1.7V3.7C20,2.8,19.2,2,18.3,2z M14.9,18.3H3.7V11h11.3V18.3z M18.3,14.9h-1.7V7.1c0-0.9-0.8-1.7-1.7-1.7H7.1 V3.7h11.3V14.9z"/></svg>`,
-        minimize:  `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M18.9,19.8H3.1c-0.6,0-1.1-0.5-1.1-1.1s0.5-1.1,1.1-1.1h15.8c0.6,0,1.1,0.5,1.1,1.1S19.5,19.8,18.9,19.8z"/></svg>`,
-        smallify:  `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M2.1,15.2L2.9,16c0.2,0.2,0.5,0.2,0.7,0L11,8.7l7.4,7.3c0.2,0.2,0.5,0.2,0.7,0l0.8-0.8c0.2-0.2,0.2-0.5,0-0.7L11.3,6 c-0.2-0.2-0.5-0.2-0.7,0l-8.5,8.5C2,14.7,2,15,2.1,15.2z"/></svg>`
+        minimize: `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M18.9,19.8H3.1c-0.6,0-1.1-0.5-1.1-1.1s0.5-1.1,1.1-1.1h15.8c0.6,0,1.1,0.5,1.1,1.1S19.5,19.8,18.9,19.8z"/></svg>`,
+        smallify: `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M2.1,15.2L2.9,16c0.2,0.2,0.5,0.2,0.7,0L11,8.7l7.4,7.3c0.2,0.2,0.5,0.2,0.7,0l0.8-0.8c0.2-0.2,0.2-0.5,0-0.7L11.3,6 c-0.2-0.2-0.5-0.2-0.7,0l-8.5,8.5C2,14.7,2,15,2.1,15.2z"/></svg>`,
     },
     idCounter: 0,
     isIE: (() => {
         return navigator.appVersion.match(/Trident/);
     })(),
-    pointerdown:
-        'onpointerdown' in window
-            ? ['pointerdown']
-            : 'ontouchend' in window
-            ? ['touchstart', 'mousedown']
-            : ['mousedown'],
-    pointermove:
-        'onpointermove' in window
-            ? ['pointermove']
-            : 'ontouchend' in window
-            ? ['touchmove', 'mousemove']
-            : ['mousemove'],
+    pointerdown: 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
+    pointermove: 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
     pointerup: 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
     polyfills: (() => {
         // Polyfills for IE11 only
@@ -90,7 +80,7 @@ let jsPanel = {
                 enumerable: false,
                 configurable: true,
                 writable: true,
-                value: function(target) {
+                value: function (target) {
                     if (target === undefined || target === null) {
                         throw new TypeError('Cannot convert first argument to object');
                     }
@@ -111,12 +101,12 @@ let jsPanel = {
                         }
                     }
                     return to;
-                }
+                },
             });
         }
         // NodeList.prototype.forEach() polyfill - https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach
         if (window.NodeList && !NodeList.prototype.forEach) {
-            NodeList.prototype.forEach = function(callback, thisArg) {
+            NodeList.prototype.forEach = function (callback, thisArg) {
                 thisArg = thisArg || window;
                 for (let i = 0; i < this.length; i++) {
                     callback.call(thisArg, this[i], i, this);
@@ -124,14 +114,14 @@ let jsPanel = {
             };
         }
         // .append() polyfill - https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/append
-        (function(arr) {
-            arr.forEach(function(item) {
+        (function (arr) {
+            arr.forEach(function (item) {
                 item.append =
                     item.append ||
-                    function() {
+                    function () {
                         let argArr = Array.prototype.slice.call(arguments),
                             docFrag = document.createDocumentFragment();
-                        argArr.forEach(function(argItem) {
+                        argArr.forEach(function (argItem) {
                             let isNode = argItem instanceof Node;
                             docFrag.appendChild(isNode ? argItem : document.createTextNode(String(argItem)));
                         });
@@ -141,7 +131,7 @@ let jsPanel = {
         })([Element.prototype, Document.prototype, DocumentFragment.prototype]);
         // Element.closest() polyfill - https://developer.mozilla.org/en-US/docs/Web/API/Element/closest
         if (window.Element && !Element.prototype.closest) {
-            Element.prototype.closest = function(s) {
+            Element.prototype.closest = function (s) {
                 let matches = (this.document || this.ownerDocument).querySelectorAll(s),
                     i,
                     el = this;
@@ -154,13 +144,13 @@ let jsPanel = {
             };
         }
         // CustomEvent - https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
-        (function() {
+        (function () {
             if (typeof window.CustomEvent === 'function') return false;
             function CustomEvent(event, params) {
                 params = params || {
                     bubbles: false,
                     cancelable: false,
-                    detail: undefined
+                    detail: undefined,
                 };
                 let evt = document.createEvent('CustomEvent');
                 evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
@@ -171,7 +161,7 @@ let jsPanel = {
         })();
         // String.prototype.endsWith() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
         if (!String.prototype.endsWith) {
-            String.prototype.endsWith = function(searchStr, Position) {
+            String.prototype.endsWith = function (searchStr, Position) {
                 // This works much better than >= because
                 // it compensates for NaN:
                 if (!(Position < this.length)) Position = this.length;
@@ -181,13 +171,13 @@ let jsPanel = {
         }
         // String.prototype.startsWith() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
         if (!String.prototype.startsWith) {
-            String.prototype.startsWith = function(searchString, position) {
+            String.prototype.startsWith = function (searchString, position) {
                 return this.substr(position || 0, searchString.length) === searchString;
             };
         }
         // String.prototype.includes() - https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/String/includes
         if (!String.prototype.includes) {
-            String.prototype.includes = function(search, start) {
+            String.prototype.includes = function (search, start) {
                 if (typeof start !== 'number') {
                     start = 0;
                 }
@@ -201,13 +191,13 @@ let jsPanel = {
         // Number.isInteger() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isInteger
         Number.isInteger =
             Number.isInteger ||
-            function(value) {
+            function (value) {
                 return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
             };
         // Array.prototype.includes() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes
         if (!Array.prototype.includes) {
             Object.defineProperty(Array.prototype, 'includes', {
-                value: function(searchElement, fromIndex) {
+                value: function (searchElement, fromIndex) {
                     if (this == null) {
                         throw new TypeError('"this" is null or not defined');
                     }
@@ -243,7 +233,7 @@ let jsPanel = {
                     }
                     // 8. Return false
                     return false;
-                }
+                },
             });
         }
     })(),
@@ -677,15 +667,15 @@ let jsPanel = {
         brown600: '6D4C41',
         brown700: '5D4037',
         brown800: '4E342E',
-        brown900: '3E2723'
+        brown900: '3E2723',
     },
     errorReporting: 1,
     modifier: false,
     helper: (() => {
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', (e) => {
             jsPanel.modifier = e;
         });
-        document.addEventListener('keyup', function() {
+        document.addEventListener('keyup', () => {
             jsPanel.modifier = false;
         });
     })(),
@@ -730,7 +720,7 @@ let jsPanel = {
                 result.rgb = {
                     r: parseInt(r, 16),
                     g: parseInt(g, 16),
-                    b: parseInt(b, 16)
+                    b: parseInt(b, 16),
                 };
 
                 result.hex = `#${r}${g}${b}`;
@@ -739,7 +729,7 @@ let jsPanel = {
                 result.rgb = {
                     r: parseInt(color.substr(0, 2), 16),
                     g: parseInt(color.substr(2, 2), 16),
-                    b: parseInt(color.substr(4, 2), 16)
+                    b: parseInt(color.substr(4, 2), 16),
                 };
 
                 result.hex = `#${color}`;
@@ -771,14 +761,14 @@ let jsPanel = {
                 css: `rgb(${channels[0]},${channels[1]},${channels[2]})`,
                 r: channels[0],
                 g: channels[1],
-                b: channels[2]
+                b: channels[2],
             };
             result.hex = this.rgbToHex(result.rgb.r, result.rgb.g, result.rgb.b);
             result.hsl = {
                 css: `hsl(${match[1]},${match[2]},${match[3]})`,
                 h: match[1],
                 s: match[2],
-                l: match[3]
+                l: match[3],
             };
         }
 
@@ -809,7 +799,7 @@ let jsPanel = {
             fontColorFilledlight,
             fontColorFilled,
             filleddarkColor,
-            fontColorFilleddark
+            fontColorFilleddark,
         ];
     },
     darken(val, amount) {
@@ -921,7 +911,7 @@ let jsPanel = {
         let pos = positionshorthand.trim().split(/\s+/);
 
         // find autoposition value and assign to result, must be the first item to find and remove
-        let auto = pos.filter(item => {
+        let auto = pos.filter((item) => {
             return item.match(/^(down|right|up|left)$/i);
         });
         if (auto.length) {
@@ -930,7 +920,7 @@ let jsPanel = {
         }
 
         // find my and at values and assign to result
-        let my_at = pos.filter(item => {
+        let my_at = pos.filter((item) => {
             return item.match(/^(left-|right-)(top|center|bottom)$|(^center-)(top|bottom)$|(^center$)/i);
         });
         if (my_at.length) {
@@ -946,7 +936,7 @@ let jsPanel = {
         }
 
         // find offset and assign to result
-        let offsets = pos.filter(item => {
+        let offsets = pos.filter((item) => {
             return item.match(/^[+-]?\d*\.?\d+[a-z%]*$/i);
         });
         if (offsets.length) {
@@ -991,7 +981,7 @@ let jsPanel = {
 
         // process parameter functions for 'my', 'at', 'of'
         // 'offsetX', 'offsetY', 'minLeft', 'maxLeft', 'minTop', 'maxTop' are processed when params are applied
-        ['my', 'at', 'of'].forEach(item => {
+        ['my', 'at', 'of'].forEach((item) => {
             if (typeof position[item] === 'function') {
                 position[item] = position[item].call(panel, panel);
             }
@@ -1022,7 +1012,7 @@ let jsPanel = {
                           left: 0,
                           top: 0,
                           width: document.documentElement.clientWidth,
-                          height: window.innerHeight
+                          height: window.innerHeight,
                       } // fake window.getBoundingClientRect() return value
                     : //: panel.parentElement.getBoundingClientRect(); // using 'container' instead of 'panel.parentElement' produces an error
                       // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect#Notes
@@ -1031,7 +1021,7 @@ let jsPanel = {
                           width: containerDomRect.width,
                           height: containerDomRect.height,
                           left: containerDomRect.left,
-                          top: containerDomRect.top
+                          top: containerDomRect.top,
                       };
 
         // calculate scale factors, needed for correct positioning if container is scaled - transform: scale()
@@ -1041,7 +1031,7 @@ let jsPanel = {
                 ? { x: 1, y: 1 }
                 : {
                       x: containerRect.width / container.offsetWidth,
-                      y: containerRect.height / container.offsetHeight
+                      y: containerRect.height / container.offsetHeight,
                   };
 
         // get and apply border width values of container - needed for positioning corrections due to positioning with %-values
@@ -1051,14 +1041,12 @@ let jsPanel = {
                       borderTopWidth: '0px',
                       borderRightWidth: '0px',
                       borderBottomWidth: '0px',
-                      borderLeftWidth: '0px'
+                      borderLeftWidth: '0px',
                   } // fake getComputedStyle(window) return value
                 : window.getComputedStyle(container);
 
-        containerRect.width -=
-            (parseFloat(containerStyle.borderLeftWidth) + parseFloat(containerStyle.borderRightWidth)) * scaleFactor.x;
-        containerRect.height -=
-            (parseFloat(containerStyle.borderTopWidth) + parseFloat(containerStyle.borderBottomWidth)) * scaleFactor.y;
+        containerRect.width -= (parseFloat(containerStyle.borderLeftWidth) + parseFloat(containerStyle.borderRightWidth)) * scaleFactor.x;
+        containerRect.height -= (parseFloat(containerStyle.borderTopWidth) + parseFloat(containerStyle.borderBottomWidth)) * scaleFactor.y;
 
         // calculate @position.of rect if @position.of is set
         let positionOfRect;
@@ -1072,7 +1060,7 @@ let jsPanel = {
                               borderTopWidth: '0px',
                               borderRightWidth: '0px',
                               borderBottomWidth: '0px',
-                              borderLeftWidth: '0px'
+                              borderLeftWidth: '0px',
                           } // fake getComputedStyle(window) return value
                         : document.querySelector(position.of).getBoundingClientRect();
             } else if (Object.getPrototypeOf(position.of).jquery) {
@@ -1093,23 +1081,13 @@ let jsPanel = {
                 }
             } else if (position.at.startsWith('center')) {
                 if (position.of) {
-                    left =
-                        positionOfRect.left -
-                        containerRect.left -
-                        parseFloat(containerStyle.borderLeftWidth) +
-                        positionOfRect.width / 2 +
-                        'px';
+                    left = positionOfRect.left - containerRect.left - parseFloat(containerStyle.borderLeftWidth) + positionOfRect.width / 2 + 'px';
                 } else {
                     left = containerRect.width / 2 + 'px';
                 }
             } else if (position.at.startsWith('right-')) {
                 if (position.of) {
-                    left =
-                        positionOfRect.left -
-                        containerRect.left -
-                        parseFloat(containerStyle.borderLeftWidth) +
-                        positionOfRect.width +
-                        'px';
+                    left = positionOfRect.left - containerRect.left - parseFloat(containerStyle.borderLeftWidth) + positionOfRect.width + 'px';
                 } else {
                     left = containerRect.width + 'px';
                 }
@@ -1117,12 +1095,7 @@ let jsPanel = {
         } else if (position.my.startsWith('center')) {
             if (position.at.startsWith('left-')) {
                 if (position.of) {
-                    left =
-                        positionOfRect.left -
-                        containerRect.left -
-                        parseFloat(containerStyle.borderLeftWidth) -
-                        panelRect.width / 2 +
-                        'px';
+                    left = positionOfRect.left - containerRect.left - parseFloat(containerStyle.borderLeftWidth) - panelRect.width / 2 + 'px';
                 } else {
                     left = -panelRect.width / 2 + 'px';
                 }
@@ -1152,12 +1125,7 @@ let jsPanel = {
         } else if (position.my.startsWith('right-')) {
             if (position.at.startsWith('left-')) {
                 if (position.of) {
-                    left =
-                        positionOfRect.left -
-                        containerRect.left -
-                        parseFloat(containerStyle.borderLeftWidth) -
-                        panelRect.width +
-                        'px';
+                    left = positionOfRect.left - containerRect.left - parseFloat(containerStyle.borderLeftWidth) - panelRect.width + 'px';
                 } else {
                     left = -panelRect.width + 'px';
                 }
@@ -1199,23 +1167,13 @@ let jsPanel = {
                 }
             } else if (position.at.endsWith('center')) {
                 if (position.of) {
-                    top =
-                        positionOfRect.top -
-                        containerRect.top -
-                        parseFloat(containerStyle.borderTopWidth) +
-                        positionOfRect.height / 2 +
-                        'px';
+                    top = positionOfRect.top - containerRect.top - parseFloat(containerStyle.borderTopWidth) + positionOfRect.height / 2 + 'px';
                 } else {
                     top = containerRect.height / 2 + 'px';
                 }
             } else if (position.at.endsWith('-bottom')) {
                 if (position.of) {
-                    top =
-                        positionOfRect.top -
-                        containerRect.top -
-                        parseFloat(containerStyle.borderTopWidth) +
-                        positionOfRect.height +
-                        'px';
+                    top = positionOfRect.top - containerRect.top - parseFloat(containerStyle.borderTopWidth) + positionOfRect.height + 'px';
                 } else {
                     top = containerRect.height + 'px';
                 }
@@ -1223,12 +1181,7 @@ let jsPanel = {
         } else if (position.my.endsWith('center')) {
             if (position.at.endsWith('-top')) {
                 if (position.of) {
-                    top =
-                        positionOfRect.top -
-                        containerRect.top -
-                        parseFloat(containerStyle.borderTopWidth) -
-                        panelRect.height / 2 +
-                        'px';
+                    top = positionOfRect.top - containerRect.top - parseFloat(containerStyle.borderTopWidth) - panelRect.height / 2 + 'px';
                 } else {
                     top = -panelRect.height / 2 + 'px';
                 }
@@ -1260,12 +1213,7 @@ let jsPanel = {
         } else if (position.my.endsWith('-bottom')) {
             if (position.at.endsWith('-top')) {
                 if (position.of) {
-                    top =
-                        positionOfRect.top -
-                        containerRect.top -
-                        parseFloat(containerStyle.borderTopWidth) -
-                        panelRect.height +
-                        'px';
+                    top = positionOfRect.top - containerRect.top - parseFloat(containerStyle.borderTopWidth) - panelRect.height + 'px';
                 } else {
                     top = -panelRect.height + 'px';
                 }
@@ -1308,9 +1256,7 @@ let jsPanel = {
         if (
             position.autoposition &&
             position.my === position.at &&
-            ['left-top', 'center-top', 'right-top', 'left-bottom', 'center-bottom', 'right-bottom'].indexOf(
-                position.my
-            ) >= 0
+            ['left-top', 'center-top', 'right-top', 'left-bottom', 'center-bottom', 'right-bottom'].indexOf(position.my) >= 0
         ) {
             pos = this.applyPositionAutopos(panel, pos, position);
             //console.log('let pos after applying autoposition:', pos);
@@ -1354,22 +1300,14 @@ let jsPanel = {
                     // collect heights of all elmts to calc new top position
                     newClassAll.forEach((item, index) => {
                         if (index > 0 && index <= ownIndex) {
-                            pos.top =
-                                parseFloat(pos.top) +
-                                newClassAll[--index].getBoundingClientRect().height +
-                                jsPanel.autopositionSpacing +
-                                'px';
+                            pos.top = parseFloat(pos.top) + newClassAll[--index].getBoundingClientRect().height + jsPanel.autopositionSpacing + 'px';
                         }
                     });
                     break;
                 case 'up':
                     newClassAll.forEach((item, index) => {
                         if (index > 0 && index <= ownIndex) {
-                            pos.top =
-                                parseFloat(pos.top) +
-                                newClassAll[--index].getBoundingClientRect().height +
-                                jsPanel.autopositionSpacing +
-                                'px';
+                            pos.top = parseFloat(pos.top) - newClassAll[--index].getBoundingClientRect().height - jsPanel.autopositionSpacing + 'px';
                         }
                     });
                     break;
@@ -1377,22 +1315,14 @@ let jsPanel = {
                     // collect widths of all elmts to calc new left position
                     newClassAll.forEach((item, index) => {
                         if (index > 0 && index <= ownIndex) {
-                            pos.left =
-                                parseFloat(pos.left) +
-                                newClassAll[--index].getBoundingClientRect().width +
-                                jsPanel.autopositionSpacing +
-                                'px';
+                            pos.left = parseFloat(pos.left) + newClassAll[--index].getBoundingClientRect().width + jsPanel.autopositionSpacing + 'px';
                         }
                     });
                     break;
                 case 'left':
                     newClassAll.forEach((item, index) => {
                         if (index > 0 && index <= ownIndex) {
-                            pos.left =
-                                parseFloat(pos.left) -
-                                newClassAll[--index].getBoundingClientRect().width +
-                                jsPanel.autopositionSpacing +
-                                'px';
+                            pos.left = parseFloat(pos.left) - newClassAll[--index].getBoundingClientRect().width - jsPanel.autopositionSpacing + 'px';
                         }
                     });
                     break;
@@ -1403,7 +1333,7 @@ let jsPanel = {
         return { left: pos.left, top: pos.top };
     },
     applyPositionOffset(panel, pos, position) {
-        ['offsetX', 'offsetY'].forEach(offset => {
+        ['offsetX', 'offsetY'].forEach((offset) => {
             if (position[offset]) {
                 if (typeof position[offset] === 'function') {
                     position[offset] = position[offset].call(pos, pos, position);
@@ -1422,7 +1352,7 @@ let jsPanel = {
         return { left: panelStyle.left, top: panelStyle.top };
     },
     applyPositionMinMax(panel, pos, position) {
-        ['minLeft', 'minTop', 'maxLeft', 'maxTop'].forEach(val => {
+        ['minLeft', 'minTop', 'maxLeft', 'maxTop'].forEach((val) => {
             if (position[val]) {
                 if (typeof position[val] === 'function') {
                     position[val] = position[val].call(pos, pos, position);
@@ -1489,9 +1419,7 @@ let jsPanel = {
                     ? `${modifiedPosition.left}px`
                     : modifiedPosition.left;
             panel.style.top =
-                Number.isInteger(modifiedPosition.top) || modifiedPosition.top.match(/^\d+$/)
-                    ? `${modifiedPosition.top}px`
-                    : modifiedPosition.top;
+                Number.isInteger(modifiedPosition.top) || modifiedPosition.top.match(/^\d+$/) ? `${modifiedPosition.top}px` : modifiedPosition.top;
         }
         const panelStyle = getComputedStyle(panel);
         return { left: panelStyle.left, top: panelStyle.top };
@@ -1508,15 +1436,15 @@ let jsPanel = {
             'left-bottom-right',
             'center-bottom-up',
             'right-bottom-up',
-            'right-bottom-left'
-        ].forEach(item => {
+            'right-bottom-left',
+        ].forEach((item) => {
             if (panel.classList.contains(item)) {
                 autoPos = item;
             }
         });
         if (autoPos) {
             const box = panel.options.container === 'window' ? document.body : panel.options.container;
-            box.querySelectorAll(`.${autoPos}`).forEach(item => {
+            box.querySelectorAll(`.${autoPos}`).forEach((item) => {
                 item.reposition();
             });
         }
@@ -1552,18 +1480,18 @@ let jsPanel = {
             async: true,
             user: '',
             pwd: '',
-            done: function() {
+            done: function () {
                 objIsPanel ? (obj.content.innerHTML = this.responseText) : (obj.innerHTML = this.responseText);
             },
             autoresize: true,
-            autoreposition: true
+            autoreposition: true,
         };
         let config;
 
         if (typeof ajaxConfig === 'string') {
             config = Object.assign({}, configDefaults, {
                 url: encodeURI(ajaxConfig),
-                evalscripttags: true
+                evalscripttags: true,
             });
         } else if (typeof ajaxConfig === 'object' && ajaxConfig.url) {
             config = Object.assign({}, configDefaults, ajaxConfig);
@@ -1598,7 +1526,7 @@ let jsPanel = {
                         // get all script tags within responseText
                         const scripttags = xhr.responseText.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gi);
                         if (scripttags) {
-                            scripttags.forEach(tag => {
+                            scripttags.forEach((tag) => {
                                 // remove tags from string and trim it
                                 const js = tag
                                     .replace(/<script\b[^>]*>/i, '')
@@ -1633,10 +1561,7 @@ let jsPanel = {
                                 obj.reposition();
                             }
                         }
-                    } else if (
-                        typeof oContentSize === 'object' &&
-                        (oContentSize.width === 'auto' || oContentSize.height === 'auto')
-                    ) {
+                    } else if (typeof oContentSize === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
                         const sizes = Object.assign({}, oContentSize);
                         if (config.autoresize) {
                             obj.resize(sizes);
@@ -1651,7 +1576,7 @@ let jsPanel = {
 
                 // allows plugins to add callback functions to the ajax always callback
                 if (jsPanel.ajaxAlwaysCallbacks.length) {
-                    jsPanel.ajaxAlwaysCallbacks.forEach(item => {
+                    jsPanel.ajaxAlwaysCallbacks.forEach((item) => {
                         item.call(obj, obj);
                     });
                 }
@@ -1685,7 +1610,7 @@ let jsPanel = {
         panel.style.left = '0';
         panel.style.top = '0';
         if (dataAttr) {
-            ['close', 'maximize', 'normalize', 'minimize', 'smallify'].forEach(item => {
+            ['close', 'maximize', 'normalize', 'minimize', 'smallify'].forEach((item) => {
                 panel.setAttribute(`data-btn${item}`, 'enabled');
             });
         }
@@ -1754,18 +1679,18 @@ let jsPanel = {
     dragit(elmt, options = {}) {
         let dragstarted, dragElmt, opts;
         const jspaneldragstart = new CustomEvent('jspaneldragstart', {
-                detail: elmt.id
+                detail: elmt.id,
             }),
             jspaneldrag = new CustomEvent('jspaneldrag', { detail: elmt.id }),
             jspaneldragstop = new CustomEvent('jspaneldragstop', {
-                detail: elmt.id
+                detail: elmt.id,
             });
         // make panel available as event object property 'panel'
-        [jspaneldragstart, jspaneldrag, jspaneldragstop].forEach(evt => {
+        [jspaneldragstart, jspaneldrag, jspaneldragstop].forEach((evt) => {
             evt.panel = elmt;
         });
 
-        const camelcase = string => {
+        const camelcase = (string) => {
             // 'left-top' converted to 'snapLeftTop'
             let str = string.split('-');
             str.forEach((word, index) => {
@@ -1774,15 +1699,24 @@ let jsPanel = {
             return 'snap' + str.join('');
         };
 
+        function windowListener(e) {
+            if (e.relatedTarget === null) {
+                jsPanel.pointermove.forEach((evt) => {
+                    document.removeEventListener(evt, dragElmt, false);
+                    elmt.style.opacity = 1;
+                });
+            }
+        }
+
         // attach handler to each drag handle
         let handles = options.handles || this.defaults.dragit.handles;
         let cursor = options.cursor || this.defaults.dragit.cursor;
-        elmt.querySelectorAll(handles).forEach(handle => {
+        elmt.querySelectorAll(handles).forEach((handle) => {
             handle.style.touchAction = 'none';
             handle.style.cursor = cursor;
 
-            jsPanel.pointerdown.forEach(evt => {
-                handle.addEventListener(evt, e => {
+            jsPanel.pointerdown.forEach((evt) => {
+                handle.addEventListener(evt, (e) => {
                     // disable dragging for all mouse buttons but left
                     if (e.button && e.button > 0) {
                         return false;
@@ -1821,7 +1755,7 @@ let jsPanel = {
                     elmt.controlbar.style.pointerEvents = 'none';
                     elmt.content.style.pointerEvents = 'none'; // without this code handler might not be unbound when content has iframe or object tag
                     // prevents iframes in other panel from interfering with drag action of dragged panel
-                    document.querySelectorAll('iframe').forEach(frame => {
+                    document.querySelectorAll('iframe').forEach((frame) => {
                         frame.style.pointerEvents = 'none';
                     });
 
@@ -1839,7 +1773,7 @@ let jsPanel = {
                         startLeftCorrection = 0;
 
                     // function actually dragging the elmt
-                    dragElmt = e => {
+                    dragElmt = (e) => {
                         e.preventDefault();
 
                         if (!dragstarted) {
@@ -1847,9 +1781,7 @@ let jsPanel = {
                             elmt.style.opacity = opts.opacity;
                             // if configured restore panel size to values before snap and reposition reasonable before drag actually starts
                             if (elmt.snapped && opts.snap.resizeToPreSnap && elmt.currentData.beforeSnap) {
-                                elmt.resize(
-                                    elmt.currentData.beforeSnap.width + ' ' + elmt.currentData.beforeSnap.height
-                                );
+                                elmt.resize(elmt.currentData.beforeSnap.width + ' ' + elmt.currentData.beforeSnap.height);
                                 elmt.setControls(['.jsPanel-btn-normalize']);
                                 let intermediateStyles = elmt.getBoundingClientRect(),
                                     delta = psx - (intermediateStyles.left + intermediateStyles.width),
@@ -1871,12 +1803,12 @@ let jsPanel = {
                             // opts.drop
                             if (opts.drop && opts.drop.dropZones) {
                                 //opts.drop.dropZones = opts.drop.dropZones.map(zone => jsPanel.pOcontainer(zone));
-                                let dropzones = opts.drop.dropZones.map(zone => jsPanel.pOcontainer(zone)); // -> array where each item is a NodeList
+                                let dropzones = opts.drop.dropZones.map((zone) => jsPanel.pOcontainer(zone)); // -> array where each item is a NodeList
                                 let dropzonelist = [];
-                                dropzones.forEach(function(nodelist) {
+                                dropzones.forEach(function (nodelist) {
                                     if (nodelist.length) {
                                         // an element node does not have a length property
-                                        nodelist.forEach(function(node) {
+                                        nodelist.forEach(function (node) {
                                             dropzonelist.push(node);
                                         });
                                     } else {
@@ -1884,7 +1816,7 @@ let jsPanel = {
                                     }
                                 });
                                 // filter list to have only unique values
-                                dropzonelist = dropzonelist.filter(function(value, index, self) {
+                                dropzonelist = dropzonelist.filter(function (value, index, self) {
                                     return self.indexOf(value) === index;
                                 });
                                 opts.drop.dropZones = dropzonelist;
@@ -1900,7 +1832,7 @@ let jsPanel = {
                                         left: startLeft,
                                         top: startTop,
                                         width: startWidth,
-                                        height: startHeight
+                                        height: startHeight,
                                     },
                                     e
                                 );
@@ -2027,22 +1959,10 @@ let jsPanel = {
                                 maxLeft = window.innerWidth - parseFloat(dragStyles.width) - containment[1];
                                 maxTop = window.innerHeight - parseFloat(dragStyles.height) - containment[2];
                             } else {
-                                let xCorr =
-                                        parseFloat(parentStyles.borderLeftWidth) +
-                                        parseFloat(parentStyles.borderRightWidth),
-                                    yCorr =
-                                        parseFloat(parentStyles.borderTopWidth) +
-                                        parseFloat(parentStyles.borderBottomWidth);
-                                maxLeft =
-                                    parentRect.width / scaleFactor.x -
-                                    parseFloat(dragStyles.width) -
-                                    containment[1] -
-                                    xCorr;
-                                maxTop =
-                                    parentRect.height / scaleFactor.y -
-                                    parseFloat(dragStyles.height) -
-                                    containment[2] -
-                                    yCorr;
+                                let xCorr = parseFloat(parentStyles.borderLeftWidth) + parseFloat(parentStyles.borderRightWidth),
+                                    yCorr = parseFloat(parentStyles.borderTopWidth) + parseFloat(parentStyles.borderBottomWidth);
+                                maxLeft = parentRect.width / scaleFactor.x - parseFloat(dragStyles.width) - containment[1] - xCorr;
+                                maxTop = parentRect.height / scaleFactor.y - parseFloat(dragStyles.height) - containment[2] - yCorr;
                             }
 
                             if (parseFloat(elmt.style.left) <= containment[3]) {
@@ -2067,7 +1987,7 @@ let jsPanel = {
                                 right: elmtR,
                                 bottom: elmtB,
                                 width: parseFloat(dragStyles.width),
-                                height: parseFloat(dragStyles.height)
+                                height: parseFloat(dragStyles.height),
                             };
                             jsPanel.processCallbacks(elmt, opts.drag, false, paneldata, e);
                         }
@@ -2075,10 +1995,8 @@ let jsPanel = {
                         // apply snap options
                         if (opts.snap) {
                             let snapSens = opts.snap.sensitivity,
-                                topSensAreaLength =
-                                    parent === document.body ? window.innerWidth / 8 : parentRect.width / 8,
-                                sideSensAreaLength =
-                                    parent === document.body ? window.innerHeight / 8 : parentRect.height / 8;
+                                topSensAreaLength = parent === document.body ? window.innerWidth / 8 : parentRect.width / 8,
+                                sideSensAreaLength = parent === document.body ? window.innerHeight / 8 : parentRect.height / 8;
                             elmt.snappableTo = false;
                             jsPanel.removeSnapAreas();
 
@@ -2087,11 +2005,7 @@ let jsPanel = {
                                     if (!opts.snap.active || opts.snap.active === 'both') {
                                         elmt.snappableTo = 'left-top';
                                         jsPanel.createSnapArea(elmt, 'lt', snapSens);
-                                    } else if (
-                                        opts.snap.trigger === 'pointer' &&
-                                        opts.snap.active &&
-                                        opts.snap.active === 'inside'
-                                    ) {
+                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
                                         if (overlaps.pointer.left > 0 && overlaps.pointer.top > 0) {
                                             elmt.snappableTo = 'left-top';
                                             jsPanel.createSnapArea(elmt, 'lt', snapSens);
@@ -2106,11 +2020,7 @@ let jsPanel = {
                                     if (!opts.snap.active || opts.snap.active === 'both') {
                                         elmt.snappableTo = 'left-bottom';
                                         jsPanel.createSnapArea(elmt, 'lb', snapSens);
-                                    } else if (
-                                        opts.snap.trigger === 'pointer' &&
-                                        opts.snap.active &&
-                                        opts.snap.active === 'inside'
-                                    ) {
+                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
                                         if (overlaps.pointer.left > 0 && overlaps.pointer.bottom > 0) {
                                             elmt.snappableTo = 'left-bottom';
                                             jsPanel.createSnapArea(elmt, 'lb', snapSens);
@@ -2125,11 +2035,7 @@ let jsPanel = {
                                     if (!opts.snap.active || opts.snap.active === 'both') {
                                         elmt.snappableTo = 'right-top';
                                         jsPanel.createSnapArea(elmt, 'rt', snapSens);
-                                    } else if (
-                                        opts.snap.trigger === 'pointer' &&
-                                        opts.snap.active &&
-                                        opts.snap.active === 'inside'
-                                    ) {
+                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
                                         if (overlaps.pointer.right > 0 && overlaps.pointer.top > 0) {
                                             elmt.snappableTo = 'right-top';
                                             jsPanel.createSnapArea(elmt, 'rt', snapSens);
@@ -2144,11 +2050,7 @@ let jsPanel = {
                                     if (!opts.snap.active || opts.snap.active === 'both') {
                                         elmt.snappableTo = 'right-bottom';
                                         jsPanel.createSnapArea(elmt, 'rb', snapSens);
-                                    } else if (
-                                        opts.snap.trigger === 'pointer' &&
-                                        opts.snap.active &&
-                                        opts.snap.active === 'inside'
-                                    ) {
+                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
                                         if (overlaps.pointer.right > 0 && overlaps.pointer.bottom > 0) {
                                             elmt.snappableTo = 'right-bottom';
                                             jsPanel.createSnapArea(elmt, 'rb', snapSens);
@@ -2163,11 +2065,7 @@ let jsPanel = {
                                     if (!opts.snap.active || opts.snap.active === 'both') {
                                         elmt.snappableTo = 'center-top';
                                         jsPanel.createSnapArea(elmt, 'ct', snapSens);
-                                    } else if (
-                                        opts.snap.trigger === 'pointer' &&
-                                        opts.snap.active &&
-                                        opts.snap.active === 'inside'
-                                    ) {
+                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
                                         if (overlaps.pointer.top > 0) {
                                             elmt.snappableTo = 'center-top';
                                             jsPanel.createSnapArea(elmt, 'ct', snapSens);
@@ -2182,11 +2080,7 @@ let jsPanel = {
                                     if (!opts.snap.active || opts.snap.active === 'both') {
                                         elmt.snappableTo = 'left-center';
                                         jsPanel.createSnapArea(elmt, 'lc', snapSens);
-                                    } else if (
-                                        opts.snap.trigger === 'pointer' &&
-                                        opts.snap.active &&
-                                        opts.snap.active === 'inside'
-                                    ) {
+                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
                                         if (overlaps.pointer.left > 0) {
                                             elmt.snappableTo = 'left-center';
                                             jsPanel.createSnapArea(elmt, 'lc', snapSens);
@@ -2201,11 +2095,7 @@ let jsPanel = {
                                     if (!opts.snap.active || opts.snap.active === 'both') {
                                         elmt.snappableTo = 'right-center';
                                         jsPanel.createSnapArea(elmt, 'rc', snapSens);
-                                    } else if (
-                                        opts.snap.trigger === 'pointer' &&
-                                        opts.snap.active &&
-                                        opts.snap.active === 'inside'
-                                    ) {
+                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
                                         if (overlaps.pointer.right > 0) {
                                             elmt.snappableTo = 'right-center';
                                             jsPanel.createSnapArea(elmt, 'rc', snapSens);
@@ -2220,11 +2110,7 @@ let jsPanel = {
                                     if (!opts.snap.active || opts.snap.active === 'both') {
                                         elmt.snappableTo = 'center-bottom';
                                         jsPanel.createSnapArea(elmt, 'cb', snapSens);
-                                    } else if (
-                                        opts.snap.trigger === 'pointer' &&
-                                        opts.snap.active &&
-                                        opts.snap.active === 'inside'
-                                    ) {
+                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
                                         if (overlaps.pointer.bottom > 0) {
                                             elmt.snappableTo = 'center-bottom';
                                             jsPanel.createSnapArea(elmt, 'cb', snapSens);
@@ -2246,7 +2132,7 @@ let jsPanel = {
                             if (!Array.isArray(elementsFrom)) {
                                 elementsFrom = Array.prototype.slice.call(elementsFrom);
                             }
-                            opts.drop.dropZones.forEach(zone => {
+                            opts.drop.dropZones.forEach((zone) => {
                                 // Array.prototype.includes() needs polyfill in IE
                                 if (elementsFrom.includes(zone)) {
                                     elmt.droppableTo = zone;
@@ -2259,29 +2145,18 @@ let jsPanel = {
                         }
                     };
 
-                    jsPanel.pointermove.forEach(e => {
+                    jsPanel.pointermove.forEach((e) => {
                         document.addEventListener(e, dragElmt);
                     });
 
                     // remove drag handler when mouse leaves browser window (mouseleave doesn't work)
-                    window.addEventListener(
-                        'mouseout',
-                        e => {
-                            if (e.relatedTarget === null) {
-                                jsPanel.pointermove.forEach(item => {
-                                    document.removeEventListener(item, dragElmt, false);
-                                    elmt.style.opacity = 1;
-                                });
-                            }
-                        },
-                        false
-                    );
+                    window.addEventListener('mouseout', windowListener, false);
                 });
             });
 
-            jsPanel.pointerup.forEach(item => {
-                document.addEventListener(item, e => {
-                    jsPanel.pointermove.forEach(e => {
+            jsPanel.pointerup.forEach((event) => {
+                document.addEventListener(event, (e) => {
+                    jsPanel.pointermove.forEach((e) => {
                         document.removeEventListener(e, dragElmt);
                     });
 
@@ -2327,11 +2202,7 @@ let jsPanel = {
                                 }
                             }
 
-                            if (
-                                elmt.snappableTo &&
-                                opts.snap.repositionOnSnap &&
-                                opts.snap[camelcase(elmt.snappableTo)]
-                            ) {
+                            if (elmt.snappableTo && opts.snap.repositionOnSnap && opts.snap[camelcase(elmt.snappableTo)]) {
                                 elmt.repositionOnSnap(elmt.snappableTo);
                             }
                         }
@@ -2353,7 +2224,7 @@ let jsPanel = {
                                     left: parseFloat(stopStyles.left),
                                     top: parseFloat(stopStyles.top),
                                     width: parseFloat(stopStyles.width),
-                                    height: parseFloat(stopStyles.height)
+                                    height: parseFloat(stopStyles.height),
                                 };
                             jsPanel.processCallbacks(elmt, opts.stop, false, paneldata, e);
                         }
@@ -2365,10 +2236,11 @@ let jsPanel = {
                     elmt.controlbar.style.pointerEvents = 'inherit';
                     elmt.content.style.pointerEvents = 'inherit';
                     // restore other panel's css pointer-events
-                    document.querySelectorAll('iframe').forEach(frame => {
+                    document.querySelectorAll('iframe').forEach((frame) => {
                         frame.style.pointerEvents = 'auto';
                     });
                 });
+                window.removeEventListener('mouseout', windowListener);
             });
 
             // dragit is initialized - now disable if set
@@ -2406,7 +2278,7 @@ let jsPanel = {
                 autoreposition: true,
                 done: (obj, response) => {
                     obj.content.innerHTML = response;
-                }
+                },
             },
             conf =
                 typeof obj.options.contentFetch === 'string'
@@ -2424,19 +2296,19 @@ let jsPanel = {
             conf.beforeSend.call(obj, obj);
         }
         fetch(conf.resource, fetchInit)
-            .then(response => {
+            .then((response) => {
                 if (response.ok) {
                     return response[conf.bodyMethod]();
                 }
             })
-            .then(response => {
+            .then((response) => {
                 conf.done.call(obj, obj, response);
                 // extract and eval content of script tags if "evalscripttags"
                 if (conf.evalscripttags) {
                     // get all script tags within responseText
                     const scripttags = response.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gi);
                     if (scripttags) {
-                        scripttags.forEach(tag => {
+                        scripttags.forEach((tag) => {
                             // remove tags from string and trim it
                             let js = tag
                                 .replace(/<script\b[^>]*>/i, '')
@@ -2461,10 +2333,7 @@ let jsPanel = {
                                 obj.reposition();
                             }
                         }
-                    } else if (
-                        typeof oContentSize === 'object' &&
-                        (oContentSize.width === 'auto' || oContentSize.height === 'auto')
-                    ) {
+                    } else if (typeof oContentSize === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
                         const sizes = Object.assign({}, oContentSize);
                         if (conf.autoresize) {
                             obj.resize(sizes);
@@ -2480,13 +2349,13 @@ let jsPanel = {
     },
 
     getPanels(
-        condition = function() {
+        condition = function () {
             return this.classList.contains('jsPanel-standard');
         }
     ) {
         return Array.prototype.slice
             .call(document.querySelectorAll('.jsPanel'))
-            .filter(value => {
+            .filter((value) => {
                 return condition.call(value, value);
             })
             .sort((a, b) => {
@@ -2627,7 +2496,7 @@ let jsPanel = {
                     maximize: 'remove',
                     normalize: 'remove',
                     minimize: 'remove',
-                    smallify: 'remove'
+                    smallify: 'remove',
                 });
                 if (ctrlMatch[0] === 'none') {
                     setting.close = 'remove';
@@ -2649,18 +2518,18 @@ let jsPanel = {
         // truthy values are: '0' (string with single zero), 'false' (string with text false), [] (empty array), {} (empty object), function(){} ("empty" function)
         // falsy values are: false, 0, '', "", null, undefined, NaN
         if (someOrEvery) {
-            return arg[someOrEvery](cb => {
+            return arg[someOrEvery]((cb) => {
                 return cb.call(panel, panel, param, param2);
             });
         } else {
-            arg.forEach(cb => {
+            arg.forEach((cb) => {
                 cb.call(panel, panel, param, param2);
             });
         }
     },
 
     removeSnapAreas() {
-        document.querySelectorAll('.jsPanel-snap-area').forEach(el => {
+        document.querySelectorAll('.jsPanel-snap-area').forEach((el) => {
             el.parentElement.removeChild(el);
         });
     },
@@ -2671,7 +2540,7 @@ let jsPanel = {
             return {
                 next: () => {
                     return val++;
-                }
+                },
             };
         })();
         Array.prototype.slice
@@ -2679,23 +2548,23 @@ let jsPanel = {
             .sort((a, b) => {
                 return a.style.zIndex - b.style.zIndex;
             })
-            .forEach(panel => {
+            .forEach((panel) => {
                 panel.style.zIndex = jsPanel.zi.next();
             });
     },
 
     resizeit(elmt, options = {}) {
         const jspanelresizestart = new CustomEvent('jspanelresizestart', {
-                detail: elmt.id
+                detail: elmt.id,
             }),
             jspanelresize = new CustomEvent('jspanelresize', {
-                detail: elmt.id
+                detail: elmt.id,
             }),
             jspanelresizestop = new CustomEvent('jspanelresizestop', {
-                detail: elmt.id
+                detail: elmt.id,
             });
         // make panel available as event object property 'panel'
-        [jspanelresizestart, jspanelresize, jspanelresizestop].forEach(evt => {
+        [jspanelresizestart, jspanelresize, jspanelresizestop].forEach((evt) => {
             evt.panel = elmt;
         });
         let opts = {},
@@ -2707,20 +2576,30 @@ let jsPanel = {
             startHeight;
 
         opts.handles = options.handles || jsPanel.defaults.resizeit.handles;
-        opts.handles.split(',').forEach(item => {
+        opts.handles.split(',').forEach((item) => {
             const node = document.createElement('DIV');
             node.className = `jsPanel-resizeit-handle jsPanel-resizeit-${item.trim()}`;
-            node.style.zIndex = 90;
+            //node.style.zIndex = 90;
             elmt.append(node);
         });
         // cache option aspectRatio of original resizeit configuration (is restored on pointerup)
         let cachedOptionAspectRatio = options.aspectRatio ? options.aspectRatio : false;
 
-        elmt.querySelectorAll('.jsPanel-resizeit-handle').forEach(handle => {
-            jsPanel.pointerdown.forEach(function(item) {
-                handle.addEventListener(item, e => {
+        function windowListener(e) {
+            if (e.relatedTarget === null) {
+                jsPanel.pointermove.forEach((evt) => {
+                    document.removeEventListener(evt, resizePanel, false);
+                });
+            }
+        }
+
+        elmt.querySelectorAll('.jsPanel-resizeit-handle').forEach((handle) => {
+            handle.style.touchAction = 'none';
+
+            jsPanel.pointerdown.forEach((event) => {
+                handle.addEventListener(event, (e) => {
                     // prevent window scroll while resizing elmt
-                    e.preventDefault();
+                    //e.preventDefault();
                     // disable resizing for all mouse buttons but left
                     if (e.button && e.button > 0) {
                         return false;
@@ -2755,10 +2634,8 @@ let jsPanel = {
                         minHeight = typeof opts.minHeight === 'function' ? opts.minHeight() : opts.minHeight;
 
                     elmt.content.style.pointerEvents = 'none';
-                    // ensure smallify/unsmallify transition is turned off when resizing begins
-                    //elmt.style.transition = 'unset';
                     // prevents iframes in other panel from interfering with resize action of dragged panel
-                    document.querySelectorAll('iframe').forEach(frame => {
+                    document.querySelectorAll('iframe').forEach((frame) => {
                         frame.style.pointerEvents = 'none';
                     });
 
@@ -2807,26 +2684,14 @@ let jsPanel = {
                         if (opts.containment) {
                             if (elmtParentPosition === 'static') {
                                 maxWidthEast = elmtParentRect.width - elmtRect.left + elmtParentBLW;
-                                maxHeightSouth =
-                                    elmtParentRect.height + elmtParentRect.top - elmtRect.top + elmtParentBTW;
+                                maxHeightSouth = elmtParentRect.height + elmtParentRect.top - elmtRect.top + elmtParentBTW;
                                 maxWidthWest = elmtRect.width + (elmtRect.left - elmtParentRect.left) - elmtParentBLW;
                                 maxHeightNorth = elmtRect.height + (elmtRect.top - elmtParentRect.top) - elmtParentBTW;
                             } else {
-                                maxWidthEast =
-                                    elmtParent.clientWidth -
-                                    (elmtRect.left - elmtParentRect.left) / scaleFactor.x +
-                                    elmtParentBLW;
-                                maxHeightSouth =
-                                    elmtParent.clientHeight -
-                                    (elmtRect.top - elmtParentRect.top) / scaleFactor.y +
-                                    elmtParentBTW;
-                                maxWidthWest =
-                                    (elmtRect.width + elmtRect.left - elmtParentRect.left) / scaleFactor.x -
-                                    elmtParentBLW;
-                                maxHeightNorth =
-                                    elmt.clientHeight +
-                                    (elmtRect.top - elmtParentRect.top) / scaleFactor.y -
-                                    elmtParentBTW;
+                                maxWidthEast = elmtParent.clientWidth - (elmtRect.left - elmtParentRect.left) / scaleFactor.x + elmtParentBLW;
+                                maxHeightSouth = elmtParent.clientHeight - (elmtRect.top - elmtParentRect.top) / scaleFactor.y + elmtParentBTW;
+                                maxWidthWest = (elmtRect.width + elmtRect.left - elmtParentRect.left) / scaleFactor.x - elmtParentBLW;
+                                maxHeightNorth = elmt.clientHeight + (elmtRect.top - elmtParentRect.top) / scaleFactor.y - elmtParentBTW;
                             }
                         }
                     }
@@ -2854,7 +2719,8 @@ let jsPanel = {
                         borderBottomWidth = parseInt(computedStyle.borderBottomWidth, 10),
                         borderLeftWidth = parseInt(computedStyle.borderLeftWidth, 10);
 
-                    resizePanel = evt => {
+                    resizePanel = (evt) => {
+                        evt.preventDefault();
                         // trigger resizestarted only once per resize
                         if (!resizestarted) {
                             document.dispatchEvent(jspanelresizestart);
@@ -2867,13 +2733,13 @@ let jsPanel = {
                                         width: startWidth,
                                         height: startHeight,
                                         left: startLeft,
-                                        top: startTop
+                                        top: startTop,
                                     },
                                     evt
                                 );
                             }
                             elmt.front();
-                            if (elmtRect.height > startHeight+5) {
+                            if (elmtRect.height > startHeight + 5) {
                                 elmt.status = 'normalized';
                                 elmt.setControls(['.jsPanel-btn-normalize']);
                             }
@@ -2950,8 +2816,7 @@ let jsPanel = {
                             if (opts.aspectRatio === 'content') {
                                 // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
                                 elmt.style.width =
-                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) *
-                                        aspectRatioContent +
+                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
                                     borderTopWidth +
                                     borderBottomWidth +
                                     'px';
@@ -3035,8 +2900,7 @@ let jsPanel = {
                             if (opts.aspectRatio === 'content') {
                                 // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
                                 elmt.style.width =
-                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) *
-                                        aspectRatioContent +
+                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
                                     borderTopWidth +
                                     borderBottomWidth +
                                     'px';
@@ -3096,8 +2960,7 @@ let jsPanel = {
                             if (opts.aspectRatio === 'content') {
                                 // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
                                 elmt.style.width =
-                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) *
-                                        aspectRatioContent +
+                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
                                     borderTopWidth +
                                     borderBottomWidth +
                                     'px';
@@ -3219,8 +3082,7 @@ let jsPanel = {
                             if (opts.aspectRatio === 'content') {
                                 // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
                                 elmt.style.width =
-                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) *
-                                        aspectRatioContent +
+                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
                                     borderTopWidth +
                                     borderBottomWidth +
                                     'px';
@@ -3284,8 +3146,7 @@ let jsPanel = {
                             if (opts.aspectRatio === 'content') {
                                 // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
                                 elmt.style.width =
-                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) *
-                                        aspectRatioContent +
+                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
                                     borderTopWidth +
                                     borderBottomWidth +
                                     'px';
@@ -3305,7 +3166,7 @@ let jsPanel = {
                                 right: parseFloat(styles.right),
                                 bottom: parseFloat(styles.bottom),
                                 width: parseFloat(styles.width),
-                                height: parseFloat(styles.height)
+                                height: parseFloat(styles.height),
                             };
 
                         // callback while resizing
@@ -3314,130 +3175,119 @@ let jsPanel = {
                         }
                     };
 
-                    jsPanel.pointermove.forEach(item => {
-                        document.addEventListener(item, resizePanel, false);
+                    jsPanel.pointermove.forEach((event) => {
+                        document.addEventListener(event, resizePanel, false);
                     });
 
                     // remove resize handler when mouse leaves browser window (mouseleave doesn't work)
-                    window.addEventListener(
-                        'mouseout',
-                        e => {
-                            if (e.relatedTarget === null) {
-                                jsPanel.pointermove.forEach(item => {
-                                    document.removeEventListener(item, resizePanel, false);
-                                });
-                            }
-                        },
-                        false
-                    );
+                    window.addEventListener('mouseout', windowListener, false);
                 });
             });
-        });
 
-        jsPanel.pointerup.forEach(function(item) {
-            document.addEventListener(
-                item,
-                e => {
-                    jsPanel.pointermove.forEach(item => {
-                        document.removeEventListener(item, resizePanel, false);
-                    });
+            jsPanel.pointerup.forEach(function (event) {
+                document.addEventListener(
+                    event,
+                    (e) => {
+                        jsPanel.pointermove.forEach((evt) => {
+                            document.removeEventListener(evt, resizePanel, false);
+                        });
 
-                    if (e.target.classList && e.target.classList.contains('jsPanel-resizeit-handle')) {
-                        let isLeftChange,
-                            isTopChange,
-                            cl = e.target.className;
-                        if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-w|jsPanel-resizeit-sw/i)) {
-                            isLeftChange = true;
-                        }
-                        if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-n|jsPanel-resizeit-ne/i)) {
-                            isTopChange = true;
-                        }
-
-                        // snap panel to grid (doesn't work that well if inside function resizePanel)
-                        if (opts.grid && Array.isArray(opts.grid)) {
-                            if (opts.grid.length === 1) {
-                                opts.grid[1] = opts.grid[0];
+                        if (e.target.classList && e.target.classList.contains('jsPanel-resizeit-handle')) {
+                            let isLeftChange,
+                                isTopChange,
+                                cl = e.target.className;
+                            if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-w|jsPanel-resizeit-sw/i)) {
+                                isLeftChange = true;
                             }
-                            const cw = parseFloat(elmt.style.width),
-                                ch = parseFloat(elmt.style.height),
-                                modW = cw % opts.grid[0],
-                                modH = ch % opts.grid[1],
-                                cx = parseFloat(elmt.style.left),
-                                cy = parseFloat(elmt.style.top),
-                                modX = cx % opts.grid[0],
-                                modY = cy % opts.grid[1];
-
-                            if (modW < opts.grid[0] / 2) {
-                                elmt.style.width = cw - modW + 'px';
-                            } else {
-                                elmt.style.width = cw + (opts.grid[0] - modW) + 'px';
-                            }
-                            if (modH < opts.grid[1] / 2) {
-                                elmt.style.height = ch - modH + 'px';
-                            } else {
-                                elmt.style.height = ch + (opts.grid[1] - modH) + 'px';
+                            if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-n|jsPanel-resizeit-ne/i)) {
+                                isTopChange = true;
                             }
 
-                            if (isLeftChange) {
-                                if (modX < opts.grid[0] / 2) {
-                                    elmt.style.left = cx - modX + 'px';
+                            // snap panel to grid (doesn't work that well if inside function resizePanel)
+                            if (opts.grid && Array.isArray(opts.grid)) {
+                                if (opts.grid.length === 1) {
+                                    opts.grid[1] = opts.grid[0];
+                                }
+                                const cw = parseFloat(elmt.style.width),
+                                    ch = parseFloat(elmt.style.height),
+                                    modW = cw % opts.grid[0],
+                                    modH = ch % opts.grid[1],
+                                    cx = parseFloat(elmt.style.left),
+                                    cy = parseFloat(elmt.style.top),
+                                    modX = cx % opts.grid[0],
+                                    modY = cy % opts.grid[1];
+
+                                if (modW < opts.grid[0] / 2) {
+                                    elmt.style.width = cw - modW + 'px';
                                 } else {
-                                    elmt.style.left = cx + (opts.grid[0] - modX) + 'px';
+                                    elmt.style.width = cw + (opts.grid[0] - modW) + 'px';
+                                }
+                                if (modH < opts.grid[1] / 2) {
+                                    elmt.style.height = ch - modH + 'px';
+                                } else {
+                                    elmt.style.height = ch + (opts.grid[1] - modH) + 'px';
+                                }
+
+                                if (isLeftChange) {
+                                    if (modX < opts.grid[0] / 2) {
+                                        elmt.style.left = cx - modX + 'px';
+                                    } else {
+                                        elmt.style.left = cx + (opts.grid[0] - modX) + 'px';
+                                    }
+                                }
+                                if (isTopChange) {
+                                    if (modY < opts.grid[1] / 2) {
+                                        elmt.style.top = cy - modY + 'px';
+                                    } else {
+                                        elmt.style.top = cy + (opts.grid[1] - modY) + 'px';
+                                    }
                                 }
                             }
-                            if (isTopChange) {
-                                if (modY < opts.grid[1] / 2) {
-                                    elmt.style.top = cy - modY + 'px';
-                                } else {
-                                    elmt.style.top = cy + (opts.grid[1] - modY) + 'px';
-                                }
+                        }
+
+                        if (resizestarted) {
+                            elmt.content.style.pointerEvents = 'inherit';
+                            resizestarted = undefined;
+                            elmt.saveCurrentDimensions();
+                            elmt.saveCurrentPosition();
+                            elmt.calcSizeFactors();
+                            let smallifyBtn = elmt.controlbar.querySelector('.jsPanel-btn-smallify');
+                            let elmtRect = elmt.getBoundingClientRect();
+                            if (smallifyBtn && elmtRect.height > startHeight + 5) {
+                                smallifyBtn.style.transform = 'rotate(0deg)';
+                            }
+                            document.dispatchEvent(jspanelresizestop);
+
+                            if (opts.stop.length) {
+                                let stopStyles = window.getComputedStyle(elmt),
+                                    paneldata = {
+                                        left: parseFloat(stopStyles.left),
+                                        top: parseFloat(stopStyles.top),
+                                        width: parseFloat(stopStyles.width),
+                                        height: parseFloat(stopStyles.height),
+                                    };
+                                jsPanel.processCallbacks(elmt, opts.stop, false, paneldata, e);
                             }
                         }
-                    }
 
-                    if (resizestarted) {
                         elmt.content.style.pointerEvents = 'inherit';
-                        resizestarted = undefined;
-                        elmt.saveCurrentDimensions();
-                        elmt.saveCurrentPosition();
-                        elmt.calcSizeFactors();
-                        let smallifyBtn = elmt.controlbar.querySelector('.jsPanel-btn-smallify');
-                        let elmtRect = elmt.getBoundingClientRect();
-                        if (smallifyBtn && elmtRect.height > startHeight+5) {
-                            smallifyBtn.style.transform = 'rotate(0deg)';
-                        }
-                        document.dispatchEvent(jspanelresizestop);
-
-                        if (opts.stop.length) {
-                            let stopStyles = window.getComputedStyle(elmt),
-                                paneldata = {
-                                    left: parseFloat(stopStyles.left),
-                                    top: parseFloat(stopStyles.top),
-                                    width: parseFloat(stopStyles.width),
-                                    height: parseFloat(stopStyles.height)
-                                };
-                            jsPanel.processCallbacks(elmt, opts.stop, false, paneldata, e);
-                        }
-                    }
-
-                    elmt.content.style.pointerEvents = 'inherit';
-                    // restore other panel's css pointer-events
-                    document.querySelectorAll('iframe').forEach(frame => {
-                        frame.style.pointerEvents = 'auto';
-                    });
-                    // restore option aspectRatio to original configuration
-                    opts.aspectRatio = cachedOptionAspectRatio;
-                },
-                false
-            );
-        });
-
-        // resizeit is initialized - now disable if set
-        if (options.disable) {
-            elmt.querySelectorAll('.jsPanel-resizeit-handle').forEach(handle => {
-                handle.style.pointerEvents = 'none';
+                        // restore other panel's css pointer-events
+                        document.querySelectorAll('iframe').forEach((frame) => {
+                            frame.style.pointerEvents = 'auto';
+                        });
+                        // restore option aspectRatio to original configuration
+                        opts.aspectRatio = cachedOptionAspectRatio;
+                    },
+                    false
+                );
+                window.removeEventListener('mouseout', windowListener);
             });
-        }
+
+            // resizeit is initialized - now disable if set
+            if (options.disable) {
+                handle.style.pointerEvents = 'none';
+            }
+        });
 
         return elmt;
     },
@@ -3446,14 +3296,14 @@ let jsPanel = {
         classnames
             .trim()
             .split(/\s+/)
-            .forEach(item => elmt.classList.add(item));
+            .forEach((item) => elmt.classList.add(item));
         return elmt;
     },
     remClass(elmt, classnames) {
         classnames
             .trim()
             .split(/\s+/)
-            .forEach(item => elmt.classList.remove(item));
+            .forEach((item) => elmt.classList.remove(item));
         return elmt;
     },
     toggleClass(elmt, classnames) {
@@ -3461,7 +3311,7 @@ let jsPanel = {
         classnames
             .trim()
             .split(/\s+/)
-            .forEach(classname => {
+            .forEach((classname) => {
                 elmt.classList.contains(classname) ? elmt.classList.remove(classname) : elmt.classList.add(classname);
             });
         return elmt;
@@ -3493,7 +3343,7 @@ let jsPanel = {
                 bgContent: 'white',
                 colorHeader: 'rebeccapurple',
                 colorContent: '#333',
-                border: '2px solid rebeccapurple'
+                border: '2px solid rebeccapurple',
             },
             borderRadius: '.33rem',
             headerControls: 'closeonly xs',
@@ -3501,8 +3351,7 @@ let jsPanel = {
             contentSize: { width: '50%', height: 'auto' },
             position: 'center-top 0 5 down',
             animateIn: 'jsPanelFadeIn',
-            //content: `<div class="jsPanel-error-content-separator"></div><p>${e.message}</p>`
-            content: `<div class="jsPanel-error-content-separator"></div><p>${e}</p>`
+            content: `<div class="jsPanel-error-content-separator"></div><p>${e}</p>`,
         });
     },
 
@@ -3515,7 +3364,7 @@ let jsPanel = {
                 return {
                     next: () => {
                         return val++;
-                    }
+                    },
                 };
             })();
         }
@@ -3552,8 +3401,7 @@ let jsPanel = {
         }
         if (!panelContainer) {
             if (this.errorReporting) {
-                let err =
-                    '&#9664; COULD NOT CREATE NEW JSPANEL &#9658;<br>The container to append the panel to does not exist';
+                let err = '&#9664; COULD NOT CREATE NEW JSPANEL &#9658;<br>The container to append the panel to does not exist';
                 jsPanel.errorpanel(err);
             }
             return false;
@@ -3575,8 +3423,8 @@ let jsPanel = {
             'onnormalized',
             'onsmallified',
             'onstatuschange',
-            'onunsmallified'
-        ].forEach(item => {
+            'onunsmallified',
+        ].forEach((item) => {
             if (options[item]) {
                 if (typeof options[item] === 'function') {
                     options[item] = [options[item]];
@@ -3610,67 +3458,67 @@ let jsPanel = {
         // Events
         const jspanelloaded = new CustomEvent('jspanelloaded', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelstatuschange = new CustomEvent('jspanelstatuschange', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelbeforenormalize = new CustomEvent('jspanelbeforenormalize', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelnormalized = new CustomEvent('jspanelnormalized', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelbeforemaximize = new CustomEvent('jspanelbeforemaximize', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelmaximized = new CustomEvent('jspanelmaximized', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelbeforeminimize = new CustomEvent('jspanelbeforeminimize', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelminimized = new CustomEvent('jspanelminimized', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelbeforesmallify = new CustomEvent('jspanelbeforesmallify', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelsmallified = new CustomEvent('jspanelsmallified', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelsmallifiedmax = new CustomEvent('jspanelsmallifiedmax', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelbeforeunsmallify = new CustomEvent('jspanelbeforeunsmallify', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelfronted = new CustomEvent('jspanelfronted', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelbeforeclose = new CustomEvent('jspanelbeforeclose', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelclosed = new CustomEvent('jspanelclosed', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             }),
             jspanelcloseduser = new CustomEvent('jspanelcloseduser', {
                 detail: options.id,
-                cancelable: true
+                cancelable: true,
             });
         // make panel available as event object property 'panel'
         [
@@ -3689,8 +3537,8 @@ let jsPanel = {
             jspanelfronted,
             jspanelbeforeclose,
             jspanelclosed,
-            jspanelcloseduser
-        ].forEach(evt => {
+            jspanelcloseduser,
+        ].forEach((evt) => {
             evt.panel = self;
         });
 
@@ -3703,10 +3551,10 @@ let jsPanel = {
 
         // needed only to fix an issue with pointer events in Firefox
         if ('onpointerdown' in window) {
-            self.controlbar.querySelectorAll('.jsPanel-btn').forEach(btn => {
+            self.controlbar.querySelectorAll('.jsPanel-btn').forEach((btn) => {
                 btn.addEventListener(
                     'pointerdown',
-                    e => {
+                    (e) => {
                         e.preventDefault();
                     },
                     true
@@ -3716,8 +3564,8 @@ let jsPanel = {
         // ----------------------------------------------------------
 
         if (closeBtn) {
-            jsPanel.pointerup.forEach(item => {
-                closeBtn.addEventListener(item, e => {
+            jsPanel.pointerup.forEach((item) => {
+                closeBtn.addEventListener(item, (e) => {
                     e.preventDefault();
                     // disable close for all mouse buttons but left
                     if (e.button && e.button > 0) {
@@ -3728,8 +3576,8 @@ let jsPanel = {
             });
         }
         if (maxBtn) {
-            jsPanel.pointerup.forEach(item => {
-                maxBtn.addEventListener(item, e => {
+            jsPanel.pointerup.forEach((item) => {
+                maxBtn.addEventListener(item, (e) => {
                     e.preventDefault();
                     if (e.button && e.button > 0) {
                         return false;
@@ -3739,8 +3587,8 @@ let jsPanel = {
             });
         }
         if (normBtn) {
-            jsPanel.pointerup.forEach(item => {
-                normBtn.addEventListener(item, e => {
+            jsPanel.pointerup.forEach((item) => {
+                normBtn.addEventListener(item, (e) => {
                     e.preventDefault();
                     if (e.button && e.button > 0) {
                         return false;
@@ -3750,8 +3598,8 @@ let jsPanel = {
             });
         }
         if (smallBtn) {
-            jsPanel.pointerup.forEach(item => {
-                smallBtn.addEventListener(item, e => {
+            jsPanel.pointerup.forEach((item) => {
+                smallBtn.addEventListener(item, (e) => {
                     e.preventDefault();
                     if (e.button && e.button > 0) {
                         return false;
@@ -3765,8 +3613,8 @@ let jsPanel = {
             });
         }
         if (minBtn) {
-            jsPanel.pointerup.forEach(item => {
-                minBtn.addEventListener(item, e => {
+            jsPanel.pointerup.forEach((item) => {
+                minBtn.addEventListener(item, (e) => {
                     e.preventDefault();
                     if (e.button && e.button > 0) {
                         return false;
@@ -3785,9 +3633,9 @@ let jsPanel = {
         }
 
         // Methods
-        self.clearTheme = cb => {
-            jsPanel.themes.forEach(value => {
-                ['panel', `jsPanel-theme-${value}`, `panel-${value}`, `${value}-color`].forEach(item => {
+        self.clearTheme = (cb) => {
+            jsPanel.themes.forEach((value) => {
+                ['panel', `jsPanel-theme-${value}`, `panel-${value}`, `${value}-color`].forEach((item) => {
                     self.classList.remove(item);
                 });
                 self.header.classList.remove(`jsPanel-theme-${value}`);
@@ -3800,17 +3648,17 @@ let jsPanel = {
                 boxShadow: '',
                 width: '',
                 marginLeft: '',
-                borderTopColor: 'transparent'
+                borderTopColor: 'transparent',
             });
             jsPanel.setStyle(self.content, {
                 background: '',
-                borderTopColor: 'transparent'
+                borderTopColor: 'transparent',
             });
             self.header.style.background = '';
             Array.prototype.slice
                 .call(self.controlbar.querySelectorAll('.jsPanel-icon'))
                 .concat([self.headerlogo, self.headertitle, self.headertoolbar, self.content])
-                .forEach(item => {
+                .forEach((item) => {
                     item.style.color = '';
                 });
             if (cb) {
@@ -3818,7 +3666,7 @@ let jsPanel = {
             }
             return self;
         };
-        self.getThemeDetails = th => {
+        self.getThemeDetails = (th) => {
             const passedTheme = th.toLowerCase(),
                 theme = { color: false, colors: false, filling: false },
                 step1 = passedTheme.split('fill');
@@ -3843,7 +3691,7 @@ let jsPanel = {
                 }
             }
 
-            const builtIn = jsPanel.themes.some(item => {
+            const builtIn = jsPanel.themes.some((item) => {
                 return item === theme.color.split(/\s/i)[0];
             });
             if (builtIn) {
@@ -3886,22 +3734,20 @@ let jsPanel = {
             theme.colors = jsPanel.calcColors(theme.color);
             return theme;
         };
-        self.applyColorTheme = themeDetails => {
+        self.applyColorTheme = (themeDetails) => {
             self.style.backgroundColor = themeDetails.colors[0];
             self.header.style.backgroundColor = themeDetails.colors[0];
             self.header.style.color = themeDetails.colors[3];
-            ['.jsPanel-headerlogo', '.jsPanel-title', '.jsPanel-hdr-toolbar'].forEach(item => {
+            ['.jsPanel-headerlogo', '.jsPanel-title', '.jsPanel-hdr-toolbar'].forEach((item) => {
                 self.querySelector(item).style.color = themeDetails.colors[3];
             });
-            self.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach(item => {
+            self.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach((item) => {
                 item.style.color = themeDetails.colors[3];
             });
             // apply border to content only themes 'filled'
             if (typeof self.options.theme === 'string' && themeDetails.filling === 'filled') {
                 self.content.style.borderTop =
-                    themeDetails.colors[3] === '#000000'
-                        ? '1px solid rgba(0,0,0,0.15)'
-                        : '1px solid rgba(255,255,255,0.15)';
+                    themeDetails.colors[3] === '#000000' ? '1px solid rgba(0,0,0,0.15)' : '1px solid rgba(255,255,255,0.15)';
             }
 
             if (themeDetails.colors[3] === '#000000') {
@@ -3915,7 +3761,7 @@ let jsPanel = {
                     case 'filled':
                         jsPanel.setStyle(self.content, {
                             backgroundColor: themeDetails.colors[2],
-                            color: themeDetails.colors[3]
+                            color: themeDetails.colors[3],
                         });
                         break;
                     case 'filledlight':
@@ -3924,26 +3770,24 @@ let jsPanel = {
                     case 'filleddark':
                         jsPanel.setStyle(self.content, {
                             backgroundColor: themeDetails.colors[6],
-                            color: themeDetails.colors[7]
+                            color: themeDetails.colors[7],
                         });
                         break;
                     default:
                         self.content.style.backgroundColor = themeDetails.filling;
                         self.content.style.color =
-                            jsPanel.perceivedBrightness(themeDetails.filling) <= jsPanel.colorBrightnessThreshold
-                                ? '#fff'
-                                : '#000';
+                            jsPanel.perceivedBrightness(themeDetails.filling) <= jsPanel.colorBrightnessThreshold ? '#fff' : '#000';
                 }
             }
 
             return self;
         };
-        self.applyCustomTheme = theme => {
+        self.applyCustomTheme = (theme) => {
             let defaults = {
                     bgPanel: '#fff',
                     bgContent: '#fff',
                     colorHeader: '#000',
-                    colorContent: '#000'
+                    colorContent: '#000',
                 },
                 passedTheme;
             if (typeof theme === 'object') {
@@ -3957,18 +3801,16 @@ let jsPanel = {
                 colorContent = passedTheme.colorContent;
 
             // set background panel/header
-            jsPanel.colorNames[bgPanel]
-                ? (self.style.background = '#' + jsPanel.colorNames[bgPanel])
-                : (self.style.background = bgPanel);
+            jsPanel.colorNames[bgPanel] ? (self.style.background = '#' + jsPanel.colorNames[bgPanel]) : (self.style.background = bgPanel);
 
             // set font color header
             if (jsPanel.colorNames[colorHeader]) {
                 colorHeader = '#' + jsPanel.colorNames[colorHeader];
             }
-            ['.jsPanel-headerlogo', '.jsPanel-title', '.jsPanel-hdr-toolbar'].forEach(item => {
+            ['.jsPanel-headerlogo', '.jsPanel-title', '.jsPanel-hdr-toolbar'].forEach((item) => {
                 self.querySelector(item).style.color = colorHeader;
             });
-            self.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach(item => {
+            self.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach((item) => {
                 item.style.color = colorHeader;
             });
 
@@ -4009,7 +3851,7 @@ let jsPanel = {
 
             return self;
         };
-        self.setBorder = val => {
+        self.setBorder = (val) => {
             let border = jsPanel.pOborder(val);
             if (!border[2].length) {
                 border[2] = self.style.backgroundColor;
@@ -4021,7 +3863,7 @@ let jsPanel = {
             self.options.border = border;
             return self;
         };
-        self.setBorderRadius = rad => {
+        self.setBorderRadius = (rad) => {
             if (typeof rad === 'number') {
                 rad += 'px';
             }
@@ -4113,7 +3955,7 @@ let jsPanel = {
                     jsPanel.remClass(self, self.options.animateIn);
                 }
                 jsPanel.setClass(self, self.options.animateOut);
-                self.addEventListener('animationend', e => {
+                self.addEventListener('animationend', (e) => {
                     e.stopPropagation();
                     self.remove(self.id, closedByUser, cb);
                 });
@@ -4183,7 +4025,7 @@ let jsPanel = {
 
             return self;
         };
-        self.minimize = cb => {
+        self.minimize = (cb) => {
             if (self.status === 'minimized') {
                 return self;
             }
@@ -4256,7 +4098,7 @@ let jsPanel = {
 
             return self;
         };
-        self.normalize = cb => {
+        self.normalize = (cb) => {
             if (self.status === 'normalized') {
                 return self;
             }
@@ -4304,7 +4146,7 @@ let jsPanel = {
 
             return self;
         };
-        self.smallify = cb => {
+        self.smallify = (cb) => {
             if (self.status === 'smallified' || self.status === 'smallifiedmax') {
                 return self;
             }
@@ -4323,11 +4165,7 @@ let jsPanel = {
             self.style.overflow = 'hidden';
             const selfStyles = window.getComputedStyle(self),
                 selfHeaderHeight = parseFloat(window.getComputedStyle(self.headerbar).height);
-            self.style.height =
-                parseFloat(selfStyles.borderTopWidth) +
-                parseFloat(selfStyles.borderBottomWidth) +
-                selfHeaderHeight +
-                'px';
+            self.style.height = parseFloat(selfStyles.borderTopWidth) + parseFloat(selfStyles.borderBottomWidth) + selfHeaderHeight + 'px';
 
             smallBtn.style.transform = 'rotate(180deg)';
 
@@ -4362,7 +4200,7 @@ let jsPanel = {
 
             return self;
         };
-        self.unsmallify = cb => {
+        self.unsmallify = (cb) => {
             self.statusBefore = self.status;
 
             if (self.status === 'smallified' || self.status === 'smallifiedmax') {
@@ -4412,7 +4250,7 @@ let jsPanel = {
             if (self.status === 'minimized') {
                 self.statusBefore === 'maximized' ? self.maximize() : self.normalize();
             } else {
-                const newArr = Array.prototype.slice.call(document.querySelectorAll('.jsPanel-standard')).map(panel => {
+                const newArr = Array.prototype.slice.call(document.querySelectorAll('.jsPanel-standard')).map((panel) => {
                     return panel.style.zIndex;
                 });
                 if (Math.max(...newArr) > self.style.zIndex) {
@@ -4434,7 +4272,7 @@ let jsPanel = {
             if (!alreadySnapped) {
                 self.currentData.beforeSnap = {
                     width: self.currentData.width,
-                    height: self.currentData.height
+                    height: self.currentData.height,
                 };
             }
             // snap panel
@@ -4480,14 +4318,14 @@ let jsPanel = {
             return self;
         };
 
-        self.closeChildpanels = cb => {
-            self.getChildpanels().forEach(item => item.close());
+        self.closeChildpanels = (cb) => {
+            self.getChildpanels().forEach((item) => item.close());
             if (cb) {
                 cb.call(self, self);
             }
             return self;
         };
-        self.getChildpanels = cb => {
+        self.getChildpanels = (cb) => {
             const childpanels = self.content.querySelectorAll('.jsPanel');
             if (cb) {
                 childpanels.forEach((panel, index, list) => {
@@ -4496,7 +4334,7 @@ let jsPanel = {
             }
             return childpanels;
         };
-        self.isChildpanel = cb => {
+        self.isChildpanel = (cb) => {
             const pp = self.closest('.jsPanel-content'),
                 parentpanel = pp ? pp.parentElement : null;
             if (cb) {
@@ -4505,7 +4343,7 @@ let jsPanel = {
             // if panel is childpanel of another panel returns parentpanel, otherwise false
             return pp ? parentpanel : false;
         };
-        self.contentRemove = cb => {
+        self.contentRemove = (cb) => {
             jsPanel.emptyNode(self.content);
             if (cb) {
                 cb.call(self, self);
@@ -4530,30 +4368,24 @@ let jsPanel = {
                     backgroundImage: selfStyles.backgroundImage,
                     backgroundSize: selfStyles.backgroundSize,
                     backgroundOrigin: selfStyles.backgroundOrigin,
-                    backgroundClip: selfStyles.backgroundClip
+                    backgroundClip: selfStyles.backgroundClip,
                 });
             } else {
                 tpl.style.backgroundColor = window.getComputedStyle(self.header).backgroundColor;
             }
 
             tpl.id = self.id + '-min';
-            tpl.querySelector('.jsPanel-headerbar').replaceChild(
-                self.headerlogo.cloneNode(true),
-                tpl.querySelector('.jsPanel-headerlogo')
-            );
-            tpl.querySelector('.jsPanel-titlebar').replaceChild(
-                self.headertitle.cloneNode(true),
-                tpl.querySelector('.jsPanel-title')
-            );
+            tpl.querySelector('.jsPanel-headerbar').replaceChild(self.headerlogo.cloneNode(true), tpl.querySelector('.jsPanel-headerlogo'));
+            tpl.querySelector('.jsPanel-titlebar').replaceChild(self.headertitle.cloneNode(true), tpl.querySelector('.jsPanel-title'));
             tpl.querySelector('.jsPanel-titlebar').setAttribute('title', self.headertitle.textContent);
             tpl.querySelector('.jsPanel-title').style.color = color;
             controlbar.style.color = color;
 
-            controlbar.querySelectorAll('button').forEach(btn => {
+            controlbar.querySelectorAll('button').forEach((btn) => {
                 btn.style.color = color;
             });
 
-            ['jsPanel-hdr-dark', 'jsPanel-hdr-light'].forEach(item => {
+            ['jsPanel-hdr-dark', 'jsPanel-hdr-light'].forEach((item) => {
                 if (self.header.classList.contains(item)) {
                     tpl.querySelector('.jsPanel-hdr').classList.add(item);
                 }
@@ -4564,10 +4396,10 @@ let jsPanel = {
 
             // needed only to fix an issue with pointer events in Firefox
             if ('onpointerdown' in window) {
-                tpl.querySelectorAll('.jsPanel-btn').forEach(btn => {
+                tpl.querySelectorAll('.jsPanel-btn').forEach((btn) => {
                     btn.addEventListener(
                         'pointerdown',
-                        e => {
+                        (e) => {
                             e.preventDefault();
                         },
                         true
@@ -4577,7 +4409,7 @@ let jsPanel = {
             // ----------------------------------------------------------
 
             if (self.dataset.btnnormalize === 'enabled') {
-                jsPanel.pointerup.forEach(evt => {
+                jsPanel.pointerup.forEach((evt) => {
                     tpl.querySelector('.jsPanel-btn-normalize').addEventListener(evt, () => {
                         self.normalize();
                     });
@@ -4586,7 +4418,7 @@ let jsPanel = {
                 controlbar.querySelector('.jsPanel-btn-normalize').style.display = 'none';
             }
             if (self.dataset.btnmaximize === 'enabled') {
-                jsPanel.pointerup.forEach(evt => {
+                jsPanel.pointerup.forEach((evt) => {
                     tpl.querySelector('.jsPanel-btn-maximize').addEventListener(evt, () => {
                         self.maximize();
                     });
@@ -4595,7 +4427,7 @@ let jsPanel = {
                 controlbar.querySelector('.jsPanel-btn-maximize').style.display = 'none';
             }
             if (self.dataset.btnclose === 'enabled') {
-                jsPanel.pointerup.forEach(evt => {
+                jsPanel.pointerup.forEach((evt) => {
                     tpl.querySelector('.jsPanel-btn-close').addEventListener(evt, () => {
                         self.close(null, true);
                     });
@@ -4612,28 +4444,28 @@ let jsPanel = {
                 elmt.parentElement.removeChild(elmt);
             }
         };
-        self.dragit = string => {
+        self.dragit = (string) => {
             const dragitOptions = Object.assign({}, jsPanel.defaults.dragit, options.dragit),
                 handles = self.querySelectorAll(dragitOptions.handles);
             if (string === 'disable') {
-                handles.forEach(handle => {
+                handles.forEach((handle) => {
                     handle.style.pointerEvents = 'none';
                 });
             } else {
-                handles.forEach(handle => {
+                handles.forEach((handle) => {
                     handle.style.pointerEvents = 'auto';
                 });
             }
             return self;
         };
-        self.resizeit = string => {
+        self.resizeit = (string) => {
             const handles = self.querySelectorAll('.jsPanel-resizeit-handle');
             if (string === 'disable') {
-                handles.forEach(handle => {
+                handles.forEach((handle) => {
                     handle.style.pointerEvents = 'none';
                 });
             } else {
-                handles.forEach(handle => {
+                handles.forEach((handle) => {
                     handle.style.pointerEvents = 'auto';
                 });
             }
@@ -4644,7 +4476,7 @@ let jsPanel = {
             const rect = self.getBoundingClientRect();
             return {
                 x: rect.width / self.offsetWidth,
-                y: rect.height / self.offsetHeight
+                y: rect.height / self.offsetHeight,
             };
         };
         self.calcSizeFactors = () => {
@@ -4679,7 +4511,7 @@ let jsPanel = {
             let pos = options.position,
                 updateCache = true,
                 callback;
-            params.forEach(value => {
+            params.forEach((value) => {
                 if (typeof value === 'string' || typeof value === 'object') {
                     pos = value;
                 } else if (typeof value === 'boolean') {
@@ -4698,7 +4530,7 @@ let jsPanel = {
             }
             return self;
         };
-        self.repositionOnSnap = pos => {
+        self.repositionOnSnap = (pos) => {
             let offsetX = '0',
                 offsetY = '0',
                 margins = jsPanel.pOcontainment(options.dragit.containment);
@@ -4746,7 +4578,7 @@ let jsPanel = {
             jsPanel.position(self, pos);
             jsPanel.setStyle(self, {
                 left: `calc(${self.style.left} + ${offsetX}px)`,
-                top: `calc(${self.style.top} + ${offsetY}px)`
+                top: `calc(${self.style.top} + ${offsetY}px)`,
             });
         };
         self.overlaps = (reference, elmtBox, event) => {
@@ -4773,7 +4605,7 @@ let jsPanel = {
                         left: 0,
                         top: 0,
                         right: window.innerWidth,
-                        bottom: window.innerHeight
+                        bottom: window.innerHeight,
                     };
                 } else if (reference === 'parent') {
                     referenceRect = self.parentElement.getBoundingClientRect();
@@ -4811,8 +4643,8 @@ let jsPanel = {
                     left: evtXparent - parentBorderWidth.left,
                     top: evtYparent - parentBorderWidth.top,
                     right: referenceRect.width - evtXparent - parentBorderWidth.right,
-                    bottom: referenceRect.height - evtYparent - parentBorderWidth.bottom
-                }
+                    bottom: referenceRect.height - evtYparent - parentBorderWidth.bottom,
+                },
             };
         };
         self.setSize = () => {
@@ -4834,7 +4666,7 @@ let jsPanel = {
                 size = { width: dimensions.width, height: dimensions.height },
                 updateCache = true,
                 callback;
-            params.forEach(value => {
+            params.forEach((value) => {
                 if (typeof value === 'string') {
                     size = value;
                 } else if (typeof value === 'object') {
@@ -4865,14 +4697,14 @@ let jsPanel = {
         };
 
         self.setControls = (sel, cb) => {
-            self.header.querySelectorAll('.jsPanel-btn').forEach(item => {
+            self.header.querySelectorAll('.jsPanel-btn').forEach((item) => {
                 const btnClass = item.className.split('-'),
                     btn = btnClass[btnClass.length - 1];
                 if (self.getAttribute(`data-btn${btn}`) !== 'hidden') {
                     item.style.display = 'block';
                 }
             });
-            sel.forEach(item => {
+            sel.forEach((item) => {
                 const btn = self.controlbar.querySelector(item);
                 if (btn) {
                     btn.style.display = 'none';
@@ -4931,16 +4763,14 @@ let jsPanel = {
             }
             return self;
         };
-        self.setControlSize = ctrlSize => {
+        self.setControlSize = (ctrlSize) => {
             // does not work with Font Awesome webfont (only svg/js)
             const size = ctrlSize.toLowerCase(),
                 icons = self.controlbar.querySelectorAll('.jsPanel-btn');
-            icons.forEach(icon => {
-                ['jsPanel-btn-xl', 'jsPanel-btn-lg', 'jsPanel-btn-md', 'jsPanel-btn-sm', 'jsPanel-btn-xs'].forEach(
-                    item => {
-                        icon.classList.remove(item);
-                    }
-                );
+            icons.forEach((icon) => {
+                ['jsPanel-btn-xl', 'jsPanel-btn-lg', 'jsPanel-btn-md', 'jsPanel-btn-sm', 'jsPanel-btn-xs'].forEach((item) => {
+                    icon.classList.remove(item);
+                });
                 icon.classList.add(`jsPanel-btn-${size}`);
             });
             // adjust font-size of title
@@ -4956,7 +4786,7 @@ let jsPanel = {
                 self.titlebar.style.fontSize = '.8rem';
             }
         };
-        self.setHeaderControls = cb => {
+        self.setHeaderControls = (cb) => {
             // add custom controls
             if (self.options.headerControls.add) {
                 let customControls = self.options.headerControls.add;
@@ -4964,14 +4794,14 @@ let jsPanel = {
                     // if options.addControls is not an array make it one
                     customControls = [customControls];
                 }
-                customControls.forEach(ctrl => {
+                customControls.forEach((ctrl) => {
                     self.addControl(ctrl);
                 });
             }
             // get all control names including controls added with option.addControls
             let controls = [],
                 ctrls = self.controlbar.querySelectorAll('.jsPanel-btn');
-            ctrls.forEach(ctrl => {
+            ctrls.forEach((ctrl) => {
                 let match = ctrl.className.match(/jsPanel-btn-[a-z0-9]{3,}/i),
                     ctrlName = match[0].substring(12);
                 controls.push(ctrlName);
@@ -4980,7 +4810,7 @@ let jsPanel = {
             const option = jsPanel.pOheaderControls(options.headerControls);
             options.headerControls = option;
             // set status of controls
-            controls.forEach(item => {
+            controls.forEach((item) => {
                 if (option[item]) {
                     self.setControlStatus(item, option[item]);
                 }
@@ -5002,26 +4832,26 @@ let jsPanel = {
             if (typeof logo === 'string') {
                 if (logo.substr(0, 1) !== '<') {
                     // is assumed to be an img url
-                    logos.forEach(item => {
+                    logos.forEach((item) => {
                         jsPanel.emptyNode(item);
                         let img = document.createElement('img');
                         img.src = logo;
                         item.append(img);
                     });
                 } else {
-                    logos.forEach(item => {
+                    logos.forEach((item) => {
                         item.innerHTML = logo;
                     });
                 }
             } else {
                 // assumed to be a node object
-                logos.forEach(item => {
+                logos.forEach((item) => {
                     jsPanel.emptyNode(item);
                     item.append(logo);
                 });
             }
             // images must not be draggable, otherwise dragit interactions locks
-            self.headerlogo.childNodes.forEach(logo => {
+            self.headerlogo.childNodes.forEach((logo) => {
                 if (logo.nodeName && logo.nodeName === 'IMG') {
                     logo.setAttribute('draggable', 'false');
                 }
@@ -5032,10 +4862,10 @@ let jsPanel = {
             }
             return self;
         };
-        self.setHeaderRemove = cb => {
+        self.setHeaderRemove = (cb) => {
             self.removeChild(self.header);
             self.content.classList.add('jsPanel-content-noheader');
-            ['close', 'maximize', 'normalize', 'minimize', 'smallify'].forEach(item => {
+            ['close', 'maximize', 'normalize', 'minimize', 'smallify'].forEach((item) => {
                 self.setAttribute(`data-btn${item}`, 'removed');
             });
 
@@ -5051,17 +4881,17 @@ let jsPanel = {
                 titles.push(minPanel.querySelector('.jsPanel-title'));
             }
             if (typeof hdrTitle === 'string') {
-                titles.forEach(item => {
+                titles.forEach((item) => {
                     item.innerHTML = hdrTitle;
                 });
             } else if (typeof hdrTitle === 'function') {
-                titles.forEach(item => {
+                titles.forEach((item) => {
                     jsPanel.emptyNode(item);
                     item.innerHTML = hdrTitle();
                 });
             } else {
                 // assumed to be a node object
-                titles.forEach(item => {
+                titles.forEach((item) => {
                     jsPanel.emptyNode(item);
                     item.append(hdrTitle);
                 });
@@ -5081,7 +4911,7 @@ let jsPanel = {
                         `${font} fa-window-maximize`,
                         `${font} fa-window-restore`,
                         `${font} fa-window-minimize`,
-                        `${font} fa-chevron-up`
+                        `${font} fa-chevron-up`,
                     ];
                 } else if (font === 'material-icons') {
                     classArray = [font, font, font, font, font, font];
@@ -5092,7 +4922,7 @@ let jsPanel = {
                         `custom-control-icon ${font[3]}`,
                         `custom-control-icon ${font[2]}`,
                         `custom-control-icon ${font[1]}`,
-                        `custom-control-icon ${font[0]}`
+                        `custom-control-icon ${font[0]}`,
                     ];
                 } else if (font === 'bootstrap' || font === 'glyphicon') {
                     classArray = [
@@ -5100,12 +4930,12 @@ let jsPanel = {
                         'glyphicon glyphicon-fullscreen',
                         'glyphicon glyphicon-resize-full',
                         'glyphicon glyphicon-minus',
-                        'glyphicon glyphicon-chevron-up'
+                        'glyphicon glyphicon-chevron-up',
                     ];
                 } else {
                     return panel;
                 }
-                panel.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach(item => {
+                panel.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach((item) => {
                     jsPanel.emptyNode(item).innerHTML = '<span></span>';
                 });
                 Array.prototype.slice
@@ -5133,7 +4963,7 @@ let jsPanel = {
             if (typeof tb === 'string') {
                 place.innerHTML = tb;
             } else if (Array.isArray(tb)) {
-                tb.forEach(item => {
+                tb.forEach((item) => {
                     if (typeof item === 'string') {
                         place.innerHTML += item;
                     } else {
@@ -5167,8 +4997,8 @@ let jsPanel = {
                 ctrl.classList.add('rtl');
             }
             self.appendChild(ctrl);
-            jsPanel.pointerup.forEach(evt => {
-                ctrl.addEventListener(evt, e => {
+            jsPanel.pointerup.forEach((evt) => {
+                ctrl.addEventListener(evt, (e) => {
                     e.preventDefault();
                     // disable close for all mouse buttons but left
                     if (e.button && e.button > 0) {
@@ -5178,14 +5008,14 @@ let jsPanel = {
                 });
             });
             // pointerdown handler needed to prevent side effect with resize handles
-            jsPanel.pointerdown.forEach(evt => {
-                ctrl.addEventListener(evt, e => {
+            jsPanel.pointerdown.forEach((evt) => {
+                ctrl.addEventListener(evt, (e) => {
                     e.preventDefault();
                 });
             });
             return self;
         };
-        self.addControl = obj => {
+        self.addControl = (obj) => {
             // obj.name - string, the name of the control, results for example in "jsPanel-btn jsPanel-btn-menu"
             // obj.html - string, the html of the control to add, for example "<span class='fa fa-menu'></span>"
             // obj.handler - function(panel, control), the event handler to assign to the new control
@@ -5206,18 +5036,15 @@ let jsPanel = {
                 // new control is the first from right (default ltr text-direction) or the first from left (if option rtl is used)
                 self.controlbar.append(control);
             } else {
-                self.controlbar.insertBefore(
-                    control,
-                    self.querySelector(`.jsPanel-controlbar .jsPanel-btn:nth-child(${obj.position})`)
-                );
+                self.controlbar.insertBefore(control, self.querySelector(`.jsPanel-controlbar .jsPanel-btn:nth-child(${obj.position})`));
             }
             const ariaLabel = obj.ariaLabel || obj.name;
             if (ariaLabel) {
                 control.setAttribute('aria-label', ariaLabel);
             }
 
-            jsPanel.pointerup.forEach(evt => {
-                control.addEventListener(evt, e => {
+            jsPanel.pointerup.forEach((evt) => {
+                control.addEventListener(evt, (e) => {
                     e.preventDefault();
                     if (e.button && e.button > 0) {
                         return false;
@@ -5232,7 +5059,7 @@ let jsPanel = {
         };
 
         self.setRtl = () => {
-            [self.header, self.content, self.footer].forEach(item => {
+            [self.header, self.content, self.footer].forEach((item) => {
                 item.dir = 'rtl';
                 if (options.rtl.lang) {
                     item.lang = options.rtl.lang;
@@ -5274,27 +5101,27 @@ let jsPanel = {
                 let bars = [self.headerbar, self.controlbar];
                 switch (self.options.headerControls.size) {
                     case 'md':
-                        bars.forEach(bar => {
+                        bars.forEach((bar) => {
                             bar.style.height = '34px';
                         });
                         break;
                     case 'xs':
-                        bars.forEach(bar => {
+                        bars.forEach((bar) => {
                             bar.style.height = '26px';
                         });
                         break;
                     case 'sm':
-                        bars.forEach(bar => {
+                        bars.forEach((bar) => {
                             bar.style.height = '30px';
                         });
                         break;
                     case 'lg':
-                        bars.forEach(bar => {
+                        bars.forEach((bar) => {
                             bar.style.height = '38px';
                         });
                         break;
                     case 'xl':
-                        bars.forEach(bar => {
+                        bars.forEach((bar) => {
                             bar.style.height = '42px';
                         });
                         break;
@@ -5388,7 +5215,7 @@ let jsPanel = {
                 autoclose.time += 'ms';
             }
             let slider = self.autocloseProgressbar.querySelector('div');
-            slider.addEventListener('animationend', e => {
+            slider.addEventListener('animationend', (e) => {
                 e.stopPropagation();
                 self.close();
             });
@@ -5456,7 +5283,7 @@ let jsPanel = {
 
         if (options.dragit) {
             // callbacks must be array of function(s) in order to be able to dynamically add/remove callbacks (for example in extensions)
-            ['start', 'drag', 'stop'].forEach(item => {
+            ['start', 'drag', 'stop'].forEach((item) => {
                 if (options.dragit[item]) {
                     if (typeof options.dragit[item] === 'function') {
                         options.dragit[item] = [options.dragit[item]];
@@ -5469,7 +5296,7 @@ let jsPanel = {
             // do not use self.options.dragit.stop.push() !!!
             self.addEventListener(
                 'jspaneldragstop',
-                e => {
+                (e) => {
                     if (e.panel === self) {
                         self.calcSizeFactors();
                     }
@@ -5482,7 +5309,7 @@ let jsPanel = {
 
         if (options.resizeit) {
             // callbacks must be array of function(s) in order to be able to dynamically add/remove callbacks (for example in extensions)
-            ['start', 'resize', 'stop'].forEach(item => {
+            ['start', 'resize', 'stop'].forEach((item) => {
                 if (options.resizeit[item]) {
                     if (typeof options.resizeit[item] === 'function') {
                         options.resizeit[item] = [options.resizeit[item]];
@@ -5496,7 +5323,7 @@ let jsPanel = {
             // do not use self.options.resizeit.start.push() !!!
             self.addEventListener(
                 'jspanelresizestart',
-                e => {
+                (e) => {
                     if (e.panel === self) {
                         startstatus = self.status;
                     }
@@ -5506,12 +5333,10 @@ let jsPanel = {
             // do not use self.options.resizeit.stop.push() !!!
             self.addEventListener(
                 'jspanelresizestop',
-                e => {
+                (e) => {
                     if (e.panel === self) {
                         if (
-                            (startstatus === 'smallified' ||
-                                startstatus === 'smallifiedmax' ||
-                                startstatus === 'maximized') &&
+                            (startstatus === 'smallified' || startstatus === 'smallifiedmax' || startstatus === 'maximized') &&
                             parseFloat(self.style.height) > parseFloat(window.getComputedStyle(self.header).height)
                         ) {
                             self.setControls(['.jsPanel-btn-normalize']);
@@ -5546,15 +5371,11 @@ let jsPanel = {
         }
 
         // front panel on mousedown
-        this.pointerdown.forEach(item => {
+        this.pointerdown.forEach((item) => {
             self.addEventListener(
                 item,
-                e => {
-                    if (
-                        !e.target.closest('.jsPanel-btn-close') &&
-                        !e.target.closest('.jsPanel-btn-minimize') &&
-                        options.paneltype === 'standard'
-                    ) {
+                (e) => {
+                    if (!e.target.closest('.jsPanel-btn-close') && !e.target.closest('.jsPanel-btn-minimize') && options.paneltype === 'standard') {
                         self.front();
                     }
                 },
@@ -5569,7 +5390,7 @@ let jsPanel = {
             if (self.options.container === 'window') {
                 window.addEventListener(
                     'resize',
-                    e => {
+                    (e) => {
                         if (e.target === window) {
                             // see https://bugs.jqueryui.com/ticket/7514
                             let status = self.status,
@@ -5607,7 +5428,7 @@ let jsPanel = {
                 let parentContainerSize = [];
                 document.addEventListener(
                     'jspanelresize',
-                    e => {
+                    (e) => {
                         // if resized panel is the parent panel of the one whose option onContentResize is set to true
                         if (e.panel === parentPanel) {
                             // get dimensions of parent panel's content section
@@ -5624,7 +5445,7 @@ let jsPanel = {
                                 if (typeof onResize === 'function') {
                                     onResize.call(self, self, {
                                         width: parentContainerSize[0],
-                                        height: parentContainerSize[1]
+                                        height: parentContainerSize[1],
                                     });
                                 } else {
                                     left = (parentContainerSize[0] - self.offsetWidth) * self.hf;
@@ -5645,7 +5466,7 @@ let jsPanel = {
         // global callbacks
         if (this.globalCallbacks) {
             if (Array.isArray(this.globalCallbacks)) {
-                this.globalCallbacks.forEach(item => {
+                this.globalCallbacks.forEach((item) => {
                     item.call(self, self);
                 });
             } else {
@@ -5656,7 +5477,7 @@ let jsPanel = {
         // option.callback
         if (options.callback) {
             if (Array.isArray(options.callback)) {
-                options.callback.forEach(item => {
+                options.callback.forEach((item) => {
                     item.call(self, self);
                 });
             } else {
@@ -5671,5 +5492,5 @@ let jsPanel = {
 
         document.dispatchEvent(jspanelloaded);
         return self;
-    }
+    },
 };

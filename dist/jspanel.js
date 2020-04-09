@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.10.0
+ * @version v4.10.1
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -24,8 +24,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 // eslint-disable-next-line no-redeclare
 var jsPanel = {
-  version: '4.10.0',
-  date: '2020-03-10 10:05',
+  version: '4.10.1',
+  date: '2020-04-09 08:30',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
@@ -1327,7 +1327,7 @@ var jsPanel = {
         case 'up':
           newClassAll.forEach(function (item, index) {
             if (index > 0 && index <= ownIndex) {
-              pos.top = parseFloat(pos.top) + newClassAll[--index].getBoundingClientRect().height + jsPanel.autopositionSpacing + 'px';
+              pos.top = parseFloat(pos.top) - newClassAll[--index].getBoundingClientRect().height - jsPanel.autopositionSpacing + 'px';
             }
           });
           break;
@@ -1344,7 +1344,7 @@ var jsPanel = {
         case 'left':
           newClassAll.forEach(function (item, index) {
             if (index > 0 && index <= ownIndex) {
-              pos.left = parseFloat(pos.left) - newClassAll[--index].getBoundingClientRect().width + jsPanel.autopositionSpacing + 'px';
+              pos.left = parseFloat(pos.left) - newClassAll[--index].getBoundingClientRect().width - jsPanel.autopositionSpacing + 'px';
             }
           });
           break;
@@ -1724,7 +1724,16 @@ var jsPanel = {
         str[index] = word.charAt(0).toUpperCase() + word.slice(1);
       });
       return 'snap' + str.join('');
-    }; // attach handler to each drag handle
+    };
+
+    function windowListener(e) {
+      if (e.relatedTarget === null) {
+        jsPanel.pointermove.forEach(function (evt) {
+          document.removeEventListener(evt, dragElmt, false);
+          elmt.style.opacity = 1;
+        });
+      }
+    } // attach handler to each drag handle
 
 
     var handles = options.handles || this.defaults.dragit.handles;
@@ -2159,18 +2168,11 @@ var jsPanel = {
             document.addEventListener(e, dragElmt);
           }); // remove drag handler when mouse leaves browser window (mouseleave doesn't work)
 
-          window.addEventListener('mouseout', function (e) {
-            if (e.relatedTarget === null) {
-              jsPanel.pointermove.forEach(function (item) {
-                document.removeEventListener(item, dragElmt, false);
-                elmt.style.opacity = 1;
-              });
-            }
-          }, false);
+          window.addEventListener('mouseout', windowListener, false);
         });
       });
-      jsPanel.pointerup.forEach(function (item) {
-        document.addEventListener(item, function (e) {
+      jsPanel.pointerup.forEach(function (event) {
+        document.addEventListener(event, function (e) {
           jsPanel.pointermove.forEach(function (e) {
             document.removeEventListener(e, dragElmt);
           }); //document.body.style.overflow = 'inherit';
@@ -2263,6 +2265,7 @@ var jsPanel = {
             frame.style.pointerEvents = 'auto';
           });
         });
+        window.removeEventListener('mouseout', windowListener);
       }); // dragit is initialized - now disable if set
 
       if (options.disable) {
@@ -2622,18 +2625,28 @@ var jsPanel = {
     opts.handles = options.handles || jsPanel.defaults.resizeit.handles;
     opts.handles.split(',').forEach(function (item) {
       var node = document.createElement('DIV');
-      node.className = "jsPanel-resizeit-handle jsPanel-resizeit-".concat(item.trim());
-      node.style.zIndex = 90;
+      node.className = "jsPanel-resizeit-handle jsPanel-resizeit-".concat(item.trim()); //node.style.zIndex = 90;
+
       elmt.append(node);
     }); // cache option aspectRatio of original resizeit configuration (is restored on pointerup)
 
     var cachedOptionAspectRatio = options.aspectRatio ? options.aspectRatio : false;
-    elmt.querySelectorAll('.jsPanel-resizeit-handle').forEach(function (handle) {
-      jsPanel.pointerdown.forEach(function (item) {
-        handle.addEventListener(item, function (e) {
-          // prevent window scroll while resizing elmt
-          e.preventDefault(); // disable resizing for all mouse buttons but left
 
+    function windowListener(e) {
+      if (e.relatedTarget === null) {
+        jsPanel.pointermove.forEach(function (evt) {
+          document.removeEventListener(evt, resizePanel, false);
+        });
+      }
+    }
+
+    elmt.querySelectorAll('.jsPanel-resizeit-handle').forEach(function (handle) {
+      handle.style.touchAction = 'none';
+      jsPanel.pointerdown.forEach(function (event) {
+        handle.addEventListener(event, function (e) {
+          // prevent window scroll while resizing elmt
+          //e.preventDefault();
+          // disable resizing for all mouse buttons but left
           if (e.button && e.button > 0) {
             return false;
           } // factor is needed only for the modifier key Shift feature
@@ -2670,9 +2683,7 @@ var jsPanel = {
               maxHeight = typeof opts.maxHeight === 'function' ? opts.maxHeight() : opts.maxHeight || 10000,
               minWidth = typeof opts.minWidth === 'function' ? opts.minWidth() : opts.minWidth,
               minHeight = typeof opts.minHeight === 'function' ? opts.minHeight() : opts.minHeight;
-          elmt.content.style.pointerEvents = 'none'; // ensure smallify/unsmallify transition is turned off when resizing begins
-          //elmt.style.transition = 'unset';
-          // prevents iframes in other panel from interfering with resize action of dragged panel
+          elmt.content.style.pointerEvents = 'none'; // prevents iframes in other panel from interfering with resize action of dragged panel
 
           document.querySelectorAll('iframe').forEach(function (frame) {
             frame.style.pointerEvents = 'none';
@@ -2762,7 +2773,8 @@ var jsPanel = {
               borderLeftWidth = parseInt(computedStyle.borderLeftWidth, 10);
 
           resizePanel = function resizePanel(evt) {
-            // trigger resizestarted only once per resize
+            evt.preventDefault(); // trigger resizestarted only once per resize
+
             if (!resizestarted) {
               document.dispatchEvent(jspanelresizestart);
 
@@ -3274,127 +3286,119 @@ var jsPanel = {
             }
           };
 
-          jsPanel.pointermove.forEach(function (item) {
-            document.addEventListener(item, resizePanel, false);
+          jsPanel.pointermove.forEach(function (event) {
+            document.addEventListener(event, resizePanel, false);
           }); // remove resize handler when mouse leaves browser window (mouseleave doesn't work)
 
-          window.addEventListener('mouseout', function (e) {
-            if (e.relatedTarget === null) {
-              jsPanel.pointermove.forEach(function (item) {
-                document.removeEventListener(item, resizePanel, false);
-              });
-            }
-          }, false);
+          window.addEventListener('mouseout', windowListener, false);
         });
       });
-    });
-    jsPanel.pointerup.forEach(function (item) {
-      document.addEventListener(item, function (e) {
-        jsPanel.pointermove.forEach(function (item) {
-          document.removeEventListener(item, resizePanel, false);
-        });
+      jsPanel.pointerup.forEach(function (event) {
+        document.addEventListener(event, function (e) {
+          jsPanel.pointermove.forEach(function (evt) {
+            document.removeEventListener(evt, resizePanel, false);
+          });
 
-        if (e.target.classList && e.target.classList.contains('jsPanel-resizeit-handle')) {
-          var isLeftChange,
-              isTopChange,
-              cl = e.target.className;
+          if (e.target.classList && e.target.classList.contains('jsPanel-resizeit-handle')) {
+            var isLeftChange,
+                isTopChange,
+                cl = e.target.className;
 
-          if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-w|jsPanel-resizeit-sw/i)) {
-            isLeftChange = true;
-          }
-
-          if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-n|jsPanel-resizeit-ne/i)) {
-            isTopChange = true;
-          } // snap panel to grid (doesn't work that well if inside function resizePanel)
-
-
-          if (opts.grid && Array.isArray(opts.grid)) {
-            if (opts.grid.length === 1) {
-              opts.grid[1] = opts.grid[0];
+            if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-w|jsPanel-resizeit-sw/i)) {
+              isLeftChange = true;
             }
 
-            var cw = parseFloat(elmt.style.width),
-                ch = parseFloat(elmt.style.height),
-                modW = cw % opts.grid[0],
-                modH = ch % opts.grid[1],
-                cx = parseFloat(elmt.style.left),
-                cy = parseFloat(elmt.style.top),
-                modX = cx % opts.grid[0],
-                modY = cy % opts.grid[1];
+            if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-n|jsPanel-resizeit-ne/i)) {
+              isTopChange = true;
+            } // snap panel to grid (doesn't work that well if inside function resizePanel)
 
-            if (modW < opts.grid[0] / 2) {
-              elmt.style.width = cw - modW + 'px';
-            } else {
-              elmt.style.width = cw + (opts.grid[0] - modW) + 'px';
-            }
 
-            if (modH < opts.grid[1] / 2) {
-              elmt.style.height = ch - modH + 'px';
-            } else {
-              elmt.style.height = ch + (opts.grid[1] - modH) + 'px';
-            }
+            if (opts.grid && Array.isArray(opts.grid)) {
+              if (opts.grid.length === 1) {
+                opts.grid[1] = opts.grid[0];
+              }
 
-            if (isLeftChange) {
-              if (modX < opts.grid[0] / 2) {
-                elmt.style.left = cx - modX + 'px';
+              var cw = parseFloat(elmt.style.width),
+                  ch = parseFloat(elmt.style.height),
+                  modW = cw % opts.grid[0],
+                  modH = ch % opts.grid[1],
+                  cx = parseFloat(elmt.style.left),
+                  cy = parseFloat(elmt.style.top),
+                  modX = cx % opts.grid[0],
+                  modY = cy % opts.grid[1];
+
+              if (modW < opts.grid[0] / 2) {
+                elmt.style.width = cw - modW + 'px';
               } else {
-                elmt.style.left = cx + (opts.grid[0] - modX) + 'px';
+                elmt.style.width = cw + (opts.grid[0] - modW) + 'px';
+              }
+
+              if (modH < opts.grid[1] / 2) {
+                elmt.style.height = ch - modH + 'px';
+              } else {
+                elmt.style.height = ch + (opts.grid[1] - modH) + 'px';
+              }
+
+              if (isLeftChange) {
+                if (modX < opts.grid[0] / 2) {
+                  elmt.style.left = cx - modX + 'px';
+                } else {
+                  elmt.style.left = cx + (opts.grid[0] - modX) + 'px';
+                }
+              }
+
+              if (isTopChange) {
+                if (modY < opts.grid[1] / 2) {
+                  elmt.style.top = cy - modY + 'px';
+                } else {
+                  elmt.style.top = cy + (opts.grid[1] - modY) + 'px';
+                }
               }
             }
+          }
 
-            if (isTopChange) {
-              if (modY < opts.grid[1] / 2) {
-                elmt.style.top = cy - modY + 'px';
-              } else {
-                elmt.style.top = cy + (opts.grid[1] - modY) + 'px';
-              }
+          if (resizestarted) {
+            elmt.content.style.pointerEvents = 'inherit';
+            resizestarted = undefined;
+            elmt.saveCurrentDimensions();
+            elmt.saveCurrentPosition();
+            elmt.calcSizeFactors();
+            var smallifyBtn = elmt.controlbar.querySelector('.jsPanel-btn-smallify');
+            var elmtRect = elmt.getBoundingClientRect();
+
+            if (smallifyBtn && elmtRect.height > startHeight + 5) {
+              smallifyBtn.style.transform = 'rotate(0deg)';
+            }
+
+            document.dispatchEvent(jspanelresizestop);
+
+            if (opts.stop.length) {
+              var stopStyles = window.getComputedStyle(elmt),
+                  paneldata = {
+                left: parseFloat(stopStyles.left),
+                top: parseFloat(stopStyles.top),
+                width: parseFloat(stopStyles.width),
+                height: parseFloat(stopStyles.height)
+              };
+              jsPanel.processCallbacks(elmt, opts.stop, false, paneldata, e);
             }
           }
-        }
 
-        if (resizestarted) {
-          elmt.content.style.pointerEvents = 'inherit';
-          resizestarted = undefined;
-          elmt.saveCurrentDimensions();
-          elmt.saveCurrentPosition();
-          elmt.calcSizeFactors();
-          var smallifyBtn = elmt.controlbar.querySelector('.jsPanel-btn-smallify');
-          var elmtRect = elmt.getBoundingClientRect();
+          elmt.content.style.pointerEvents = 'inherit'; // restore other panel's css pointer-events
 
-          if (smallifyBtn && elmtRect.height > startHeight + 5) {
-            smallifyBtn.style.transform = 'rotate(0deg)';
-          }
+          document.querySelectorAll('iframe').forEach(function (frame) {
+            frame.style.pointerEvents = 'auto';
+          }); // restore option aspectRatio to original configuration
 
-          document.dispatchEvent(jspanelresizestop);
+          opts.aspectRatio = cachedOptionAspectRatio;
+        }, false);
+        window.removeEventListener('mouseout', windowListener);
+      }); // resizeit is initialized - now disable if set
 
-          if (opts.stop.length) {
-            var stopStyles = window.getComputedStyle(elmt),
-                paneldata = {
-              left: parseFloat(stopStyles.left),
-              top: parseFloat(stopStyles.top),
-              width: parseFloat(stopStyles.width),
-              height: parseFloat(stopStyles.height)
-            };
-            jsPanel.processCallbacks(elmt, opts.stop, false, paneldata, e);
-          }
-        }
-
-        elmt.content.style.pointerEvents = 'inherit'; // restore other panel's css pointer-events
-
-        document.querySelectorAll('iframe').forEach(function (frame) {
-          frame.style.pointerEvents = 'auto';
-        }); // restore option aspectRatio to original configuration
-
-        opts.aspectRatio = cachedOptionAspectRatio;
-      }, false);
-    }); // resizeit is initialized - now disable if set
-
-    if (options.disable) {
-      elmt.querySelectorAll('.jsPanel-resizeit-handle').forEach(function (handle) {
+      if (options.disable) {
         handle.style.pointerEvents = 'none';
-      });
-    }
-
+      }
+    });
     return elmt;
   },
   setClass: function setClass(elmt, classnames) {
@@ -3454,7 +3458,6 @@ var jsPanel = {
       },
       position: 'center-top 0 5 down',
       animateIn: 'jsPanelFadeIn',
-      //content: `<div class="jsPanel-error-content-separator"></div><p>${e.message}</p>`
       content: "<div class=\"jsPanel-error-content-separator\"></div><p>".concat(e, "</p>")
     });
   },
