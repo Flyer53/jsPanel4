@@ -1,6 +1,6 @@
 {
     "name": "jspanel4",
-    "version": "4.10.1",
+    "version": "4.10.2",
     "description": "A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu",
     "keywords": [
         "jsPanel",
@@ -59,10 +59,10 @@
         "gulp-sass": "^4.0.2",
         "node-sass": "^4.13.1",
         "npm": "^6.14.4",
-        "prettier": "^2.0.4"
+        "prettier": "^2.0.5"
     },
     "prettier": {
-        "printWidth": 150,
+        "printWidth": 180,
         "tabWidth": 4,
         "singleQuote": true,
         "quoteProps": "consistent",

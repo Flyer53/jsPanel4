@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.10.1
+ * @version v4.10.2
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -12,7 +12,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
@@ -24,8 +24,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 // eslint-disable-next-line no-redeclare
 var jsPanel = {
-  version: '4.10.1',
-  date: '2020-04-09 08:30',
+  version: '4.10.2',
+  date: '2020-05-01 08:07',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
@@ -1472,7 +1472,8 @@ var jsPanel = {
     };
   },
   autopositionRemaining: function autopositionRemaining(panel) {
-    var autoPos;
+    var autoPos,
+        parent = panel.options.container;
     ['left-top-down', 'left-top-right', 'center-top-down', 'right-top-down', 'right-top-left', 'left-bottom-up', 'left-bottom-right', 'center-bottom-up', 'right-bottom-up', 'right-bottom-left'].forEach(function (item) {
       if (panel.classList.contains(item)) {
         autoPos = item;
@@ -1480,7 +1481,7 @@ var jsPanel = {
     });
 
     if (autoPos) {
-      var box = panel.options.container === 'window' ? document.body : panel.options.container;
+      var box = parent === 'window' ? document.body : typeof parent === 'string' ? document.querySelector(parent) : parent;
       box.querySelectorAll(".".concat(autoPos)).forEach(function (item) {
         item.reposition();
       });
@@ -3983,7 +3984,7 @@ var jsPanel = {
       self.style.borderRadius = rad;
       var br = getComputedStyle(self); // set border-radius of either header or content section depending on presence of header
 
-      if (self.querySelector('.jsPanel-hdr')) {
+      if (self.options.header) {
         self.header.style.borderTopLeftRadius = br.borderTopLeftRadius;
         self.header.style.borderTopRightRadius = br.borderTopRightRadius;
       } else {
@@ -3992,7 +3993,7 @@ var jsPanel = {
       } // set border-radius of either footer or content section depending on presence of footer
 
 
-      if (self.querySelector('.jsPanel-ftr.active')) {
+      if (self.options.footerToolbar) {
         self.footer.style.borderBottomRightRadius = br.borderBottomRightRadius;
         self.footer.style.borderBottomLeftRadius = br.borderBottomLeftRadius;
       } else {
@@ -5486,11 +5487,12 @@ var jsPanel = {
       var slider = self.autocloseProgressbar.querySelector('div');
       slider.addEventListener('animationend', function (e) {
         e.stopPropagation();
+        self.autocloseProgressbar.classList.remove('active');
         self.close();
       });
 
       if (autoclose.progressbar) {
-        self.autocloseProgressbar.style.height = '3px';
+        self.autocloseProgressbar.classList.add('active');
 
         if (autoclose.background) {
           if (jsPanel.themes.indexOf(autoclose.background) > -1) {

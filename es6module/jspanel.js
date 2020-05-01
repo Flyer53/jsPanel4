@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.10.1
+ * @version v4.10.2
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -9,8 +9,8 @@
 
 export // eslint-disable-next-line no-redeclare
 let jsPanel = {
-    version: '4.10.1',
-    date: '2020-04-09 08:30',
+    version: '4.10.2',
+    date: '2020-05-01 08:07',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -1434,7 +1434,8 @@ let jsPanel = {
         return { left: panelStyle.left, top: panelStyle.top };
     },
     autopositionRemaining(panel) {
-        let autoPos;
+        let autoPos,
+            parent = panel.options.container;
         [
             'left-top-down',
             'left-top-right',
@@ -1452,7 +1453,7 @@ let jsPanel = {
             }
         });
         if (autoPos) {
-            const box = panel.options.container === 'window' ? document.body : panel.options.container;
+            const box = parent === 'window' ? document.body : typeof parent === 'string' ? document.querySelector(parent) : parent;
             box.querySelectorAll(`.${autoPos}`).forEach((item) => {
                 item.reposition();
             });
@@ -3879,7 +3880,7 @@ let jsPanel = {
             self.style.borderRadius = rad;
             const br = getComputedStyle(self);
             // set border-radius of either header or content section depending on presence of header
-            if (self.querySelector('.jsPanel-hdr')) {
+            if (self.options.header) {
                 self.header.style.borderTopLeftRadius = br.borderTopLeftRadius;
                 self.header.style.borderTopRightRadius = br.borderTopRightRadius;
             } else {
@@ -3887,7 +3888,7 @@ let jsPanel = {
                 self.content.style.borderTopRightRadius = br.borderTopRightRadius;
             }
             // set border-radius of either footer or content section depending on presence of footer
-            if (self.querySelector('.jsPanel-ftr.active')) {
+            if (self.options.footerToolbar) {
                 self.footer.style.borderBottomRightRadius = br.borderBottomRightRadius;
                 self.footer.style.borderBottomLeftRadius = br.borderBottomLeftRadius;
             } else {
@@ -5226,10 +5227,11 @@ let jsPanel = {
             let slider = self.autocloseProgressbar.querySelector('div');
             slider.addEventListener('animationend', (e) => {
                 e.stopPropagation();
+                self.autocloseProgressbar.classList.remove('active');
                 self.close();
             });
             if (autoclose.progressbar) {
-                self.autocloseProgressbar.style.height = '3px';
+                self.autocloseProgressbar.classList.add('active');
                 if (autoclose.background) {
                     if (jsPanel.themes.indexOf(autoclose.background) > -1) {
                         self.autocloseProgressbar.classList.add(autoclose.background + '-bg');

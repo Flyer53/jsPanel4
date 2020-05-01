@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.10.1
+ * @version v4.10.2
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -15,8 +15,8 @@
  */
 if (!jsPanel.modal) {
   jsPanel.modal = {
-    version: '1.2.4',
-    date: '2020-01-17 09:24',
+    version: '1.2.5',
+    date: '2020-04-26 23:23',
     defaults: {
       closeOnEscape: true,
       closeOnBackdrop: true,
@@ -81,10 +81,13 @@ if (!jsPanel.modal) {
             });
           });
         } // remove modal backdrop when modal is closed
+        // callback should be the first item in the onclosed array
 
 
-        modal.options.onclosed.push(function () {
-          jsPanel.modal.removeBackdrop(opts.id);
+        modal.options.onclosed.unshift(function removeModalBackdrop() {
+          jsPanel.modal.removeBackdrop(opts.id); // must return true in order to have the next callbacks (added via modal config) in the array execute as well
+
+          return true;
         });
       });
     }

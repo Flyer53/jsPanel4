@@ -8,8 +8,8 @@ if (!jsPanel.modal) {
 
     jsPanel.modal = {
 
-        version: '1.2.4',
-        date: '2020-01-17 09:24',
+        version: '1.2.5',
+        date: '2020-04-26 23:23',
 
         defaults: {
             closeOnEscape:  true,
@@ -73,8 +73,11 @@ if (!jsPanel.modal) {
                     });
                 }
                 // remove modal backdrop when modal is closed
-                modal.options.onclosed.push(() => {
+                // callback should be the first item in the onclosed array
+                modal.options.onclosed.unshift(function removeModalBackdrop() {
                     jsPanel.modal.removeBackdrop(opts.id);
+                    // must return true in order to have the next callbacks (added via modal config) in the array execute as well
+                    return true;
                 });
             });
 

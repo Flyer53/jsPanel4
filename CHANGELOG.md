@@ -1,5 +1,10 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.10.2 *2020-05-01*</span>
+
++ **bugfix** in _modal_ extension concerning the use of `onclosed` callback
++ **bugfix** in `autoposition` feature of option `position`
+
 ### <span style='color:#563D7C;'>Version 4.10.1 *2020-04-09*</span>
 
 + **bugfix** in `autoposition` feature of `option.position`
