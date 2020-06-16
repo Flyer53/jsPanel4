@@ -69,10 +69,10 @@ jsPanel.create({
     contentSize: "600 350",
     contentAjax: {
     	url:  '../path/to/the/resource',
-        done: function(panel) {
+        done: function(xhr, panel) {
         	// the keyword "this" inside the function refers to the XMLHttpRequest object
         },
-        fail: function(panel) {
+        fail: function(xhr, panel) {
         	//the keyword "this" inside the function refers to the XMLHttpRequest object
         }
     },
