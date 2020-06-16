@@ -1,5 +1,20 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.11.0-beta *2020-06-16*</span>
+
++ **added** method `jsPanel.strToHtml(str)` converting a DOMString to a `DocumentFragment`.
++ **added** option `opacity`
++ **bugfix** in _modal_ extension concerning the use of `onclosed` callback.
++ **bugfix** in `autoposition` parameter of option `position`.
++ **updated** `jsPanel.ajax()` in order to improve its usability as general purpose AJAX tool.<br>**This update might require a change in your code if you use `jsPanel.ajax()` and/or option `contentAjax`.**
++ **updated** `jsPanel.fetch()` in order to improve its usability as general purpose Fetch tool.<br>**This update might require a change in your code if you use `jsPanel.fetch()` and/or option `contentFetch`.**
++ **updated** option `contentAjax` optionally loads only a page fragment.
++ **updated** CSS for controlbar
++ **updated** header title is now wrapped in a `<div>` instead of a `<span>`
++ **updated**  _contextmenu_ extension due to changes in `jsPanel.ajax()`.
++ **updated** dock extension internally. Should not affect existing code.
++ **disabled** the use of the Pointer Events API. So for now only Touch and Mouse events are used by a panels controls and dragit/resizeit interactions.
+
 ### <span style='color:#563D7C;'>Version 4.10.2 *2020-05-01*</span>
 
 + **bugfix** in _modal_ extension concerning the use of `onclosed` callback

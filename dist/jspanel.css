@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.10.2
+ * @version v4.10.1
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -52,7 +52,7 @@
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    line-height: 1.1; }
+    line-height: normal; }
   .jsPanel .jsPanel-content {
     border: 0;
     box-sizing: border-box;
@@ -122,9 +122,6 @@
     font-weight: normal;
     margin: 0 5px 0 8px;
     min-width: 0; }
-    .jsPanel-titlebar .jsPanel-title small {
-      font-size: 70%;
-      color: inherit; }
 
 .jsPanel-titlebar.jsPanel-rtl {
   flex-direction: row-reverse; }
@@ -132,6 +129,7 @@
 .jsPanel-controlbar {
   display: flex;
   align-items: center;
+  align-self: start;
   touch-action: none;
   margin: 3px; }
   .jsPanel-controlbar .jsPanel-btn {
@@ -261,7 +259,9 @@
     #jsPanel-replacement-container .jsPanel-replacement .jsPanel-hdr, .jsPanel-minimized-box .jsPanel-replacement .jsPanel-hdr, .jsPanel-minimized-container .jsPanel-replacement .jsPanel-hdr {
       flex-grow: 1;
       min-width: 0;
-      padding: 0; }
+      padding: 0;
+      height: 34px;
+      overflow: hidden; }
       #jsPanel-replacement-container .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo, .jsPanel-minimized-box .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo, .jsPanel-minimized-container .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo {
         max-width: 50%;
         overflow: hidden; }
@@ -361,7 +361,7 @@
   font-size: .9rem;
   text-align: center; }
   .jsPanel-error .jsPanel-content p {
-    margin: 0; }
+    margin: 0 0 10px 0; }
   .jsPanel-error .jsPanel-content mark {
     background: lavender;
     border-radius: .33rem;

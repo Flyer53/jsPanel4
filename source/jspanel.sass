@@ -53,7 +53,7 @@
     display: flex
     flex-direction: column
     flex-shrink: 0
-    line-height: 1.1
+    line-height: normal
 
   .jsPanel-content
     +basic-mixin
@@ -122,16 +122,13 @@
     margin: 0 5px 0 8px
     min-width: 0    // needed in order to make text-overflow: ellipsis work
 
-    small
-      font-size: 70%
-      color: inherit
-
 .jsPanel-titlebar.jsPanel-rtl
   flex-direction: row-reverse
 
 .jsPanel-controlbar
   display: flex
   align-items: center
+  align-self: start
   touch-action: none
   margin: 3px
 
@@ -280,6 +277,8 @@
       flex-grow: 1
       min-width: 0
       padding: 0
+      height: 34px
+      overflow: hidden
 
       .jsPanel-headerlogo
         max-width: 50%
@@ -391,7 +390,7 @@
     text-align: center
 
     p
-      margin: 0
+      margin: 0 0 10px 0
 
     mark
       background: lavender

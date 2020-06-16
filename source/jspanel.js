@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-redeclare
 let jsPanel = {
-    version: '4.10.2',
-    date: '2020-05-01 08:07',
+    version: '4.11.0-beta',
+    date: '2020-06-16 13:35',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -69,9 +69,12 @@ let jsPanel = {
     isIE: (() => {
         return navigator.appVersion.match(/Trident/);
     })(),
-    pointerdown: 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
-    pointermove: 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
-    pointerup: 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
+    // pointerdown: 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
+    // pointermove: 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
+    // pointerup: 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
+    pointerdown: 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
+    pointermove: 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
+    pointerup: 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
     polyfills: (() => {
         // Polyfills for IE11 only
         // Object.assign polyfill - https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
@@ -1281,7 +1284,8 @@ let jsPanel = {
             //console.log('pos after applying modify():', pos);
         }
 
-        panel.style.opacity = 1;
+        typeof panel.options.opacity === 'number' ? panel.style.opacity = panel.options.opacity : panel.style.opacity = 1;
+
         return panel;
     },
     applyPositionAutopos(panel, pos, position) {
@@ -1452,7 +1456,7 @@ let jsPanel = {
     },
     // ---------------------------------------------------
 
-    addScript(path, type = 'text/javascript', cb) {
+    addScript(path, type = 'application/javascript', cb) {
         if (!document.querySelector(`script[src="${path}"]`)) {
             const script = document.createElement('script');
             if (cb) {
@@ -1464,39 +1468,35 @@ let jsPanel = {
         }
     },
 
-    ajax(obj, ajaxConfig) {
-        // check whether obj is a jsPanel or something else
-        let objIsPanel;
-        if (typeof obj === 'object' && obj.classList.contains('jsPanel')) {
-            objIsPanel = true;
-        } else {
-            objIsPanel = false;
-            if (typeof obj === 'string') {
-                obj = document.querySelector(obj);
-            }
-        }
-
+    ajax(ajaxConfig, panel) {
+        let config, urlParts,
+            xhr = new XMLHttpRequest();
         const configDefaults = {
             method: 'GET',
             async: true,
             user: '',
             pwd: '',
             done: function () {
-                objIsPanel ? (obj.content.innerHTML = this.responseText) : (obj.innerHTML = this.responseText);
+                if (panel) {
+                    let res = jsPanel.strToHtml(this.responseText);
+                    if (config.urlSelector) {
+                        res = res.querySelector(config.urlSelector);
+                    }
+                    panel.contentRemove();
+                    panel.content.append(res);
+                }
             },
             autoresize: true,
             autoreposition: true,
         };
-        let config;
 
-        if (typeof ajaxConfig === 'string') {
+        if (panel && typeof ajaxConfig === 'string') {
             config = Object.assign({}, configDefaults, {
-                url: encodeURI(ajaxConfig),
-                evalscripttags: true,
+                url: ajaxConfig,
             });
         } else if (typeof ajaxConfig === 'object' && ajaxConfig.url) {
             config = Object.assign({}, configDefaults, ajaxConfig);
-            config.url = encodeURI(ajaxConfig.url);
+            config.url = ajaxConfig.url;
             // reset timeout to 0, withCredentials & responseType to false if request is synchronous
             if (config.async === false) {
                 config.timeout = 0;
@@ -1509,76 +1509,44 @@ let jsPanel = {
             }
         } else {
             if (this.errorReporting) {
-                let err = 'An XMLHttpRequest seems to miss the <mark>url</mark> parameter!';
+                let err = 'XMLHttpRequest seems to miss the <mark>url</mark> parameter!';
                 jsPanel.errorpanel(err);
             }
-            return obj;
+            return;
         }
-
-        const xhr = new XMLHttpRequest();
+        // check url for added selector
+        urlParts = config.url.trim().split(/\s+/);
+        config.url = encodeURI(urlParts[0]);
+        if (urlParts.length > 1) {
+            urlParts.shift();
+            config.urlSelector = urlParts.join(' ');
+        }
 
         xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                    config.done.call(xhr, obj);
-
-                    // extract and eval content of script tags if "evalscripttags"
-                    if (config.evalscripttags) {
-                        // get all script tags within responseText
-                        const scripttags = xhr.responseText.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gi);
-                        if (scripttags) {
-                            scripttags.forEach((tag) => {
-                                // remove tags from string and trim it
-                                const js = tag
-                                    .replace(/<script\b[^>]*>/i, '')
-                                    .replace(/<\/script>/i, '')
-                                    .trim();
-                                // execute javascript
-                                eval(js);
-                            });
-                        }
-                    }
+                    panel ? config.done.call(xhr, xhr, panel) : config.done.call(xhr, xhr);
                 } else {
                     if (config.fail) {
-                        config.fail.call(xhr, obj);
+                        panel ? config.fail.call(xhr, xhr, panel) : config.fail.call(xhr, xhr);
                     }
                 }
 
                 if (config.always) {
-                    config.always.call(xhr, obj);
+                    panel ? config.always.call(xhr, xhr, panel) : config.always.call(xhr, xhr);
                 }
 
-                // resize and reposition panel if either width or height is set to 'auto'
-                if (objIsPanel) {
-                    const oContentSize = obj.options.contentSize;
-                    if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
-                        const parts = oContentSize.split(' '),
-                            sizes = Object.assign({}, { width: parts[0], height: parts[1] });
-                        if (config.autoresize) {
-                            obj.resize(sizes);
-                        }
-                        if (!obj.classList.contains('jsPanel-contextmenu')) {
-                            if (config.autoreposition) {
-                                obj.reposition();
-                            }
-                        }
-                    } else if (typeof oContentSize === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
-                        const sizes = Object.assign({}, oContentSize);
-                        if (config.autoresize) {
-                            obj.resize(sizes);
-                        }
-                        if (!obj.classList.contains('jsPanel-contextmenu')) {
-                            if (config.autoreposition) {
-                                obj.reposition();
-                            }
-                        }
+                // resize and/or reposition panel if either width or height is set to 'auto'
+                if (panel) {
+                    if (config.autoresize || config.autoreposition) {
+                        jsPanel.ajaxAutoresizeAutoreposition(panel, config);
                     }
                 }
 
                 // allows plugins to add callback functions to the ajax always callback
                 if (jsPanel.ajaxAlwaysCallbacks.length) {
                     jsPanel.ajaxAlwaysCallbacks.forEach((item) => {
-                        item.call(obj, obj);
+                        panel ? item.call(xhr, xhr, panel) : item.call(xhr, xhr);
                     });
                 }
             }
@@ -1592,17 +1560,35 @@ let jsPanel = {
         if (config.responseType) {
             xhr.responseType = config.responseType;
         }
-
         if (config.beforeSend) {
-            config.beforeSend.call(xhr);
+            panel ? config.beforeSend.call(xhr, xhr, panel) : config.beforeSend.call(xhr, xhr);
         }
-        if (config.data) {
-            xhr.send(config.data);
-        } else {
-            xhr.send(null);
+        config.data ? xhr.send(config.data) : xhr.send(null);
+    },
+    ajaxAutoresizeAutoreposition(panel, ajaxOrFetchConfig) {
+        const oContentSize = panel.options.contentSize;
+        if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
+            const parts = oContentSize.split(' '),
+                sizes = Object.assign({}, { width: parts[0], height: parts[1] });
+            if (ajaxOrFetchConfig.autoresize) {
+                panel.resize(sizes);
+            }
+            if (!panel.classList.contains('jsPanel-contextmenu')) {
+                if (ajaxOrFetchConfig.autoreposition) {
+                    panel.reposition();
+                }
+            }
+        } else if (typeof oContentSize === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
+            const sizes = Object.assign({}, oContentSize);
+            if (ajaxOrFetchConfig.autoresize) {
+                panel.resize(sizes);
+            }
+            if (!panel.classList.contains('jsPanel-contextmenu')) {
+                if (ajaxOrFetchConfig.autoreposition) {
+                    panel.reposition();
+                }
+            }
         }
-
-        return obj;
     },
 
     createPanelTemplate(dataAttr = true) {
@@ -1619,7 +1605,7 @@ let jsPanel = {
                                 <div class="jsPanel-headerbar">
                                     <div class="jsPanel-headerlogo"></div>
                                     <div class="jsPanel-titlebar">
-                                        <span class="jsPanel-title"></span>
+                                        <div class="jsPanel-title"></div>
                                     </div>
                                     <div class="jsPanel-controlbar">
                                         <button type="button" class="jsPanel-btn jsPanel-btn-smallify"  aria-label="Smallify">${this.icons.smallify}</button>
@@ -1646,7 +1632,7 @@ let jsPanel = {
                                 <div class="jsPanel-headerbar">
                                     <div class="jsPanel-headerlogo"></div>
                                     <div class="jsPanel-titlebar">
-                                        <span class="jsPanel-title"></span>
+                                        <div class="jsPanel-title"></div>
                                     </div>
                                     <div class="jsPanel-controlbar">
                                         <button type="button" class="jsPanel-btn jsPanel-btn-sm jsPanel-btn-normalize" aria-label="Normalize">${this.icons.normalize}</button>
@@ -2209,7 +2195,7 @@ let jsPanel = {
                         }
 
                         // opts.drop
-                        if (elmt.droppableTo && elmt.droppableTo !== elmt.parentElement) {
+                        if (elmt.droppableTo && elmt.droppableTo/* !== elmt.parentElement*/) {
                             let sourceContainer = elmt.parentElement;
                             elmt.move(elmt.droppableTo);
                             if (opts.drop.callback) {
@@ -2271,79 +2257,53 @@ let jsPanel = {
         }
     },
 
-    fetch(obj) {
-        const confDefaults = {
-                bodyMethod: 'text',
-                evalscripttags: true,
-                autoresize: true,
-                autoreposition: true,
-                done: (obj, response) => {
-                    obj.content.innerHTML = response;
-                },
-            },
-            conf =
-                typeof obj.options.contentFetch === 'string'
-                    ? Object.assign({ resource: obj.options.contentFetch }, confDefaults)
-                    : Object.assign(confDefaults, obj.options.contentFetch);
-        const fetchInit = conf.fetchInit || {};
-        if (!conf.resource) {
+    fetch(fetchConfig, panel) {
+        let config;
+        const configDefaults = {
+            bodyMethod: 'text',
+            autoresize: true,
+            autoreposition: true,
+            done: function (response, panel) {
+                if (panel) {
+                    var res = jsPanel.strToHtml(response);
+                    panel.contentRemove();
+                    panel.content.append(res);
+                }
+            }
+        };
+        if (panel && typeof fetchConfig === 'string') {
+            config = Object.assign({}, configDefaults, {
+                resource: encodeURI(fetchConfig)
+            });
+        } else if (typeof fetchConfig === 'object' && fetchConfig.resource) {
+            config = Object.assign({}, configDefaults, fetchConfig);
+            config.resource = encodeURI(fetchConfig.resource);
+        } else {
             if (this.errorReporting) {
-                let err = 'A Fetch request seems to miss the <mark>resource</mark> parameter';
+                let err = 'Fetch Request seems to miss the <mark>resource</mark> parameter!';
                 jsPanel.errorpanel(err);
             }
-            return obj;
+            return;
         }
-        if (conf.beforeSend) {
-            conf.beforeSend.call(obj, obj);
+
+        const fetchInit = config.fetchInit || {};
+
+        if (config.beforeSend) {
+            panel ? config.beforeSend.call(fetchConfig, fetchConfig, panel) : config.beforeSend.call(fetchConfig, fetchConfig);
         }
-        fetch(conf.resource, fetchInit)
+
+        fetch(config.resource, fetchInit)
             .then((response) => {
                 if (response.ok) {
-                    return response[conf.bodyMethod]();
+                    return response[config.bodyMethod]();
                 }
             })
             .then((response) => {
-                conf.done.call(obj, obj, response);
-                // extract and eval content of script tags if "evalscripttags"
-                if (conf.evalscripttags) {
-                    // get all script tags within responseText
-                    const scripttags = response.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gi);
-                    if (scripttags) {
-                        scripttags.forEach((tag) => {
-                            // remove tags from string and trim it
-                            let js = tag
-                                .replace(/<script\b[^>]*>/i, '')
-                                .replace(/<\/script>/i, '')
-                                .trim();
-                            // execute javascript
-                            eval(js);
-                        });
-                    }
-                }
-                // resize and reposition panel if either width or height is set to 'auto'
-                const oContentSize = obj.options.contentSize;
-                if (conf.autoresize || conf.autoreposition) {
-                    if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
-                        const parts = oContentSize.split(' '),
-                            sizes = Object.assign({}, { width: parts[0], height: parts[1] });
-                        if (conf.autoresize) {
-                            obj.resize(sizes);
-                        }
-                        if (!obj.classList.contains('jsPanel-contextmenu')) {
-                            if (conf.autoreposition) {
-                                obj.reposition();
-                            }
-                        }
-                    } else if (typeof oContentSize === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
-                        const sizes = Object.assign({}, oContentSize);
-                        if (conf.autoresize) {
-                            obj.resize(sizes);
-                        }
-                        if (!obj.classList.contains('jsPanel-contextmenu')) {
-                            if (conf.autoreposition) {
-                                obj.reposition();
-                            }
-                        }
+                panel ? config.done.call(response, response, panel) : config.done.call(response, response);
+                if (panel) {
+                    // resize and/or reposition panel if either width or height is set to 'auto'
+                    if (config.autoresize || config.autoreposition) {
+                        jsPanel.ajaxAutoresizeAutoreposition(panel, config);
                     }
                 }
             });
@@ -2600,7 +2560,8 @@ let jsPanel = {
             jsPanel.pointerdown.forEach((event) => {
                 handle.addEventListener(event, (e) => {
                     // prevent window scroll while resizing elmt
-                    //e.preventDefault();
+                    e.preventDefault();
+                    e.stopPropagation();
                     // disable resizing for all mouse buttons but left
                     if (e.button && e.button > 0) {
                         return false;
@@ -3317,7 +3278,6 @@ let jsPanel = {
             });
         return elmt;
     },
-
     setStyles(elmt, stylesobject) {
         // code taken from https://blissfuljs.com/docs.html#fn-style
         for (let prop in stylesobject) {
@@ -3333,6 +3293,13 @@ let jsPanel = {
     setStyle(elmt, stylesobject) {
         return this.setStyles.call(elmt, elmt, stylesobject);
     }, // alias for setStyles()
+    strToHtml(str) {
+        // TODO: add param to strip script tags from returned DocumentFragment
+        /* str has to be an HTMLString
+         * returns a DocumentFragment - https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment
+         * after inserting executes inline script and script tags */
+        return document.createRange().createContextualFragment(str);
+    },
 
     errorpanel(e) {
         this.create({
@@ -3444,7 +3411,7 @@ let jsPanel = {
         self.currentData = {};
         self.header = self.querySelector('.jsPanel-hdr'); // complete header section
         self.headerbar = self.header.querySelector('.jsPanel-headerbar'); // log, title and controls
-        self.titlebar = self.header.querySelector('.jsPanel-titlebar'); // div surrounding title h3
+        self.titlebar = self.header.querySelector('.jsPanel-titlebar'); // div surrounding title div
         self.headerlogo = self.headerbar.querySelector('.jsPanel-headerlogo'); // logo only
         self.headertitle = self.headerbar.querySelector('.jsPanel-title'); // title div
         self.controlbar = self.headerbar.querySelector('.jsPanel-controlbar'); // div surrounding all controls
@@ -3536,9 +3503,7 @@ let jsPanel = {
             jspanelsmallifiedmax,
             jspanelbeforeunsmallify,
             jspanelfronted,
-            jspanelbeforeclose,
-            jspanelclosed,
-            jspanelcloseduser,
+            jspanelbeforeclose
         ].forEach((evt) => {
             evt.panel = self;
         });
@@ -3549,20 +3514,6 @@ let jsPanel = {
             normBtn = self.querySelector('.jsPanel-btn-normalize'),
             smallBtn = self.querySelector('.jsPanel-btn-smallify'),
             minBtn = self.querySelector('.jsPanel-btn-minimize');
-
-        // needed only to fix an issue with pointer events in Firefox
-        if ('onpointerdown' in window) {
-            self.controlbar.querySelectorAll('.jsPanel-btn').forEach((btn) => {
-                btn.addEventListener(
-                    'pointerdown',
-                    (e) => {
-                        e.preventDefault();
-                    },
-                    true
-                );
-            });
-        }
-        // ----------------------------------------------------------
 
         if (closeBtn) {
             jsPanel.pointerup.forEach((item) => {
@@ -4395,23 +4346,11 @@ let jsPanel = {
             // set iconfont
             self.setIconfont(font, tpl);
 
-            // needed only to fix an issue with pointer events in Firefox
-            if ('onpointerdown' in window) {
-                tpl.querySelectorAll('.jsPanel-btn').forEach((btn) => {
-                    btn.addEventListener(
-                        'pointerdown',
-                        (e) => {
-                            e.preventDefault();
-                        },
-                        true
-                    );
-                });
-            }
-            // ----------------------------------------------------------
-
             if (self.dataset.btnnormalize === 'enabled') {
                 jsPanel.pointerup.forEach((evt) => {
-                    tpl.querySelector('.jsPanel-btn-normalize').addEventListener(evt, () => {
+                    tpl.querySelector('.jsPanel-btn-normalize').addEventListener(evt, (e) => {
+                        e.preventDefault();
+                        if (e.button && e.button > 0) { return false; }
                         self.normalize();
                     });
                 });
@@ -4420,7 +4359,9 @@ let jsPanel = {
             }
             if (self.dataset.btnmaximize === 'enabled') {
                 jsPanel.pointerup.forEach((evt) => {
-                    tpl.querySelector('.jsPanel-btn-maximize').addEventListener(evt, () => {
+                    tpl.querySelector('.jsPanel-btn-maximize').addEventListener(evt, (e) => {
+                        e.preventDefault();
+                        if (e.button && e.button > 0) { return false; }
                         self.maximize();
                     });
                 });
@@ -4429,7 +4370,9 @@ let jsPanel = {
             }
             if (self.dataset.btnclose === 'enabled') {
                 jsPanel.pointerup.forEach((evt) => {
-                    tpl.querySelector('.jsPanel-btn-close').addEventListener(evt, () => {
+                    tpl.querySelector('.jsPanel-btn-close').addEventListener(evt, (e) => {
+                        e.preventDefault();
+                        if (e.button && e.button > 0) { return false; }
                         self.close(null, true);
                     });
                 });
@@ -4897,7 +4840,6 @@ let jsPanel = {
                     item.append(hdrTitle);
                 });
             }
-
             if (cb) {
                 cb.call(self, self);
             }
@@ -5185,12 +5127,12 @@ let jsPanel = {
 
         // option.contentAjax
         if (options.contentAjax) {
-            this.ajax(self, options.contentAjax);
+            this.ajax(options.contentAjax, self);
         }
 
         // option.contentFetch
         if (options.contentFetch) {
-            this.fetch(self);
+            this.fetch(options.contentFetch, self);
         }
 
         // option.contentOverflow

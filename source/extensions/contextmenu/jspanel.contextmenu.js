@@ -1,7 +1,7 @@
 if (!jsPanel.contextmenu) {
     jsPanel.contextmenu = {
-        version: '1.1.2',
-        date: '2020-01-18 15:00',
+        version: '1.1.3',
+        date: '2020-04-26 08:07',
 
         defaults: {
             //position: is set in jsPanel.contextmenu.create()
@@ -116,8 +116,8 @@ if (!jsPanel.contextmenu) {
     };
 
     // add overflow check to jsPanel.contentAjax always callback
-    jsPanel.ajaxAlwaysCallbacks.push(function(obj) {
-        if (obj.classList.contains('jsPanel-contextmenu')) {
+    jsPanel.ajaxAlwaysCallbacks.push(function(xhr, obj) {
+        if (obj && obj.classList && obj.classList.contains('jsPanel-contextmenu')) {
             jsPanel.contextmenu.cmOverflow(obj);
         }
     });

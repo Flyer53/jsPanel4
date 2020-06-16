@@ -1,6 +1,10 @@
-![license MIT](https://img.shields.io/badge/license-MIT-blue.svg) [![npm version](https://badge.fury.io/js/jspanel4.svg)](https://badge.fury.io/js/jspanel4) [![npm](https://img.shields.io/npm/dt/express.svg)](https://www.npmjs.com/package/jspanel4) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/jsPanel/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
+<img alt="NPM license"   src="https://img.shields.io/npm/l/jspanel4">
+<img alt="npm version"   src="https://img.shields.io/npm/v/jspanel4?color=0677b8">
+<img alt="npm downloads" src="https://img.shields.io/npm/dm/jspanel4?color=0677b8">
+<img alt="Gitter chat"   src="https://img.shields.io/gitter/room/flyer53/jspanel">
 
-## [jsPanel 4.10.2 released 2020-05-01](#)
+
+## [jsPanel 4.11.0-beta released 2020-06-16](#)
 
 <img src="https://res.cloudinary.com/stefanstraesser-eu/image/upload/v1558601426/jsPanel4.7.0-sample-panels-1920_yzobd9.jpg">
 
@@ -62,17 +66,17 @@ jsPanel.create({
     position:    "left-top",
     contentSize: "600 350",
     contentAjax: {
-    	url:  // some url,
-        done: function (panel) {
+    	url:  '../path/to/the/resource',
+        done: function(panel) {
         	// the keyword "this" inside the function refers to the XMLHttpRequest object
         },
-        fail: function (panel) {
+        fail: function(panel) {
         	//the keyword "this" inside the function refers to the XMLHttpRequest object
         }
     },
     headerTitle: "my example jsPanel",
     theme:       "rebeccapurple",
-    callback:    function (panel) {
+    callback:    function(panel) {
     	// do whatever you like
         // the keyword "this" inside the callback function refers to the panel
     }

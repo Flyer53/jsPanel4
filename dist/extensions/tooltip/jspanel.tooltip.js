@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.10.2
+ * @version v4.10.1
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -37,7 +37,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 if (!jsPanel.tooltip) {
   jsPanel.tooltip = {
     version: '1.3.0',
-    date: '2019-06-02 16:15',
+    date: '2019-06-04 11:20',
     defaults: {
       //tip.options.position: is set in jsPanel.tooltip.create()
       border: '1px',
@@ -169,7 +169,7 @@ if (!jsPanel.tooltip) {
     },
     relativeTipPos: function relativeTipPos(position) {
       // returns the basic tip.options.position of the tooltip relative to option.tip.options.position.of (top, right, right-bottom etc.)
-      var relPos;
+      var relPos; // TODO: relative positions leave out a few positions
 
       if (position.my === 'center-bottom' && position.at === 'center-top') {
         relPos = 'top';
@@ -308,6 +308,7 @@ if (!jsPanel.tooltip) {
           var tipPos = jsPanel.tooltip.relativeTipPos(newposition);
 
           if (tipPos !== 'over') {
+            // relative positions leave out a few positions -> connectors are not added for some positions
             tip.append(jsPanel.tooltip.addConnector(tip, tipPos));
           }
         }

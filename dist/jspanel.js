@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.10.2
+ * @version v4.10.1
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -24,8 +24,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 // eslint-disable-next-line no-redeclare
 var jsPanel = {
-  version: '4.10.2',
-  date: '2020-05-01 08:07',
+  version: '4.11.0-beta',
+  date: '2020-06-16 13:35',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
@@ -103,9 +103,12 @@ var jsPanel = {
   isIE: function () {
     return navigator.appVersion.match(/Trident/);
   }(),
-  pointerdown: 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
-  pointermove: 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
-  pointerup: 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
+  // pointerdown: 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
+  // pointermove: 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
+  // pointerup: 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
+  pointerdown: 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
+  pointermove: 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
+  pointerup: 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
   polyfills: function () {
     // Polyfills for IE11 only
     // Object.assign polyfill - https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
@@ -1302,7 +1305,7 @@ var jsPanel = {
       pos = this.applyPositionModify(panel, pos, _position); //console.log('pos after applying modify():', pos);
     }
 
-    panel.style.opacity = 1;
+    typeof panel.options.opacity === 'number' ? panel.style.opacity = panel.options.opacity : panel.style.opacity = 1;
     return panel;
   },
   applyPositionAutopos: function applyPositionAutopos(panel, pos, position) {
@@ -1489,7 +1492,7 @@ var jsPanel = {
   },
   // ---------------------------------------------------
   addScript: function addScript(path) {
-    var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'text/javascript';
+    var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'application/javascript';
     var cb = arguments.length > 2 ? arguments[2] : undefined;
 
     if (!document.querySelector("script[src=\"".concat(path, "\"]"))) {
@@ -1504,41 +1507,38 @@ var jsPanel = {
       document.head.appendChild(script);
     }
   },
-  ajax: function ajax(obj, ajaxConfig) {
-    // check whether obj is a jsPanel or something else
-    var objIsPanel;
-
-    if (_typeof(obj) === 'object' && obj.classList.contains('jsPanel')) {
-      objIsPanel = true;
-    } else {
-      objIsPanel = false;
-
-      if (typeof obj === 'string') {
-        obj = document.querySelector(obj);
-      }
-    }
-
+  ajax: function ajax(ajaxConfig, panel) {
+    var config,
+        urlParts,
+        xhr = new XMLHttpRequest();
     var configDefaults = {
       method: 'GET',
       async: true,
       user: '',
       pwd: '',
       done: function done() {
-        objIsPanel ? obj.content.innerHTML = this.responseText : obj.innerHTML = this.responseText;
+        if (panel) {
+          var res = jsPanel.strToHtml(this.responseText);
+
+          if (config.urlSelector) {
+            res = res.querySelector(config.urlSelector);
+          }
+
+          panel.contentRemove();
+          panel.content.append(res);
+        }
       },
       autoresize: true,
       autoreposition: true
     };
-    var config;
 
-    if (typeof ajaxConfig === 'string') {
+    if (panel && typeof ajaxConfig === 'string') {
       config = Object.assign({}, configDefaults, {
-        url: encodeURI(ajaxConfig),
-        evalscripttags: true
+        url: ajaxConfig
       });
     } else if (_typeof(ajaxConfig) === 'object' && ajaxConfig.url) {
       config = Object.assign({}, configDefaults, ajaxConfig);
-      config.url = encodeURI(ajaxConfig.url); // reset timeout to 0, withCredentials & responseType to false if request is synchronous
+      config.url = ajaxConfig.url; // reset timeout to 0, withCredentials & responseType to false if request is synchronous
 
       if (config.async === false) {
         config.timeout = 0;
@@ -1553,82 +1553,47 @@ var jsPanel = {
       }
     } else {
       if (this.errorReporting) {
-        var err = 'An XMLHttpRequest seems to miss the <mark>url</mark> parameter!';
+        var err = 'XMLHttpRequest seems to miss the <mark>url</mark> parameter!';
         jsPanel.errorpanel(err);
       }
 
-      return obj;
-    }
+      return;
+    } // check url for added selector
 
-    var xhr = new XMLHttpRequest();
+
+    urlParts = config.url.trim().split(/\s+/);
+    config.url = encodeURI(urlParts[0]);
+
+    if (urlParts.length > 1) {
+      urlParts.shift();
+      config.urlSelector = urlParts.join(' ');
+    }
 
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          config.done.call(xhr, obj); // extract and eval content of script tags if "evalscripttags"
-
-          if (config.evalscripttags) {
-            // get all script tags within responseText
-            var scripttags = xhr.responseText.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gi);
-
-            if (scripttags) {
-              scripttags.forEach(function (tag) {
-                // remove tags from string and trim it
-                var js = tag.replace(/<script\b[^>]*>/i, '').replace(/<\/script>/i, '').trim(); // execute javascript
-
-                eval(js);
-              });
-            }
-          }
+          panel ? config.done.call(xhr, xhr, panel) : config.done.call(xhr, xhr);
         } else {
           if (config.fail) {
-            config.fail.call(xhr, obj);
+            panel ? config.fail.call(xhr, xhr, panel) : config.fail.call(xhr, xhr);
           }
         }
 
         if (config.always) {
-          config.always.call(xhr, obj);
-        } // resize and reposition panel if either width or height is set to 'auto'
+          panel ? config.always.call(xhr, xhr, panel) : config.always.call(xhr, xhr);
+        } // resize and/or reposition panel if either width or height is set to 'auto'
 
 
-        if (objIsPanel) {
-          var oContentSize = obj.options.contentSize;
-
-          if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
-            var parts = oContentSize.split(' '),
-                sizes = Object.assign({}, {
-              width: parts[0],
-              height: parts[1]
-            });
-
-            if (config.autoresize) {
-              obj.resize(sizes);
-            }
-
-            if (!obj.classList.contains('jsPanel-contextmenu')) {
-              if (config.autoreposition) {
-                obj.reposition();
-              }
-            }
-          } else if (_typeof(oContentSize) === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
-            var _sizes = Object.assign({}, oContentSize);
-
-            if (config.autoresize) {
-              obj.resize(_sizes);
-            }
-
-            if (!obj.classList.contains('jsPanel-contextmenu')) {
-              if (config.autoreposition) {
-                obj.reposition();
-              }
-            }
+        if (panel) {
+          if (config.autoresize || config.autoreposition) {
+            jsPanel.ajaxAutoresizeAutoreposition(panel, config);
           }
         } // allows plugins to add callback functions to the ajax always callback
 
 
         if (jsPanel.ajaxAlwaysCallbacks.length) {
           jsPanel.ajaxAlwaysCallbacks.forEach(function (item) {
-            item.call(obj, obj);
+            panel ? item.call(xhr, xhr, panel) : item.call(xhr, xhr);
           });
         }
       }
@@ -1646,16 +1611,43 @@ var jsPanel = {
     }
 
     if (config.beforeSend) {
-      config.beforeSend.call(xhr);
+      panel ? config.beforeSend.call(xhr, xhr, panel) : config.beforeSend.call(xhr, xhr);
     }
 
-    if (config.data) {
-      xhr.send(config.data);
-    } else {
-      xhr.send(null);
-    }
+    config.data ? xhr.send(config.data) : xhr.send(null);
+  },
+  ajaxAutoresizeAutoreposition: function ajaxAutoresizeAutoreposition(panel, ajaxOrFetchConfig) {
+    var oContentSize = panel.options.contentSize;
 
-    return obj;
+    if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
+      var parts = oContentSize.split(' '),
+          sizes = Object.assign({}, {
+        width: parts[0],
+        height: parts[1]
+      });
+
+      if (ajaxOrFetchConfig.autoresize) {
+        panel.resize(sizes);
+      }
+
+      if (!panel.classList.contains('jsPanel-contextmenu')) {
+        if (ajaxOrFetchConfig.autoreposition) {
+          panel.reposition();
+        }
+      }
+    } else if (_typeof(oContentSize) === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
+      var _sizes = Object.assign({}, oContentSize);
+
+      if (ajaxOrFetchConfig.autoresize) {
+        panel.resize(_sizes);
+      }
+
+      if (!panel.classList.contains('jsPanel-contextmenu')) {
+        if (ajaxOrFetchConfig.autoreposition) {
+          panel.reposition();
+        }
+      }
+    }
   },
   createPanelTemplate: function createPanelTemplate() {
     var dataAttr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
@@ -1670,13 +1662,13 @@ var jsPanel = {
       });
     }
 
-    panel.innerHTML = "<div class=\"jsPanel-hdr\">\n                                <div class=\"jsPanel-headerbar\">\n                                    <div class=\"jsPanel-headerlogo\"></div>\n                                    <div class=\"jsPanel-titlebar\">\n                                        <span class=\"jsPanel-title\"></span>\n                                    </div>\n                                    <div class=\"jsPanel-controlbar\">\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-smallify\"  aria-label=\"Smallify\">".concat(this.icons.smallify, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-minimize\"  aria-label=\"Minimize\">").concat(this.icons.minimize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-normalize\" aria-label=\"Normalize\">").concat(this.icons.normalize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-maximize\"  aria-label=\"Maximize\">").concat(this.icons.maximize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-close\"     aria-label=\"Close\">").concat(this.icons.close, "</button>\n                                    </div>\n                                </div>\n                                <div class=\"jsPanel-hdr-toolbar\"></div>\n                            </div>\n                            <div class=\"jsPanel-autoclose-progressbar\">\n                                <div class=\"jsPanel-autoclose-progressbar-slider\"></div>\n                            </div>\n                            <div class=\"jsPanel-content\"></div>\n                            <div class=\"jsPanel-minimized-box\"></div>\n                            <div class=\"jsPanel-ftr\"></div>");
+    panel.innerHTML = "<div class=\"jsPanel-hdr\">\n                                <div class=\"jsPanel-headerbar\">\n                                    <div class=\"jsPanel-headerlogo\"></div>\n                                    <div class=\"jsPanel-titlebar\">\n                                        <div class=\"jsPanel-title\"></div>\n                                    </div>\n                                    <div class=\"jsPanel-controlbar\">\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-smallify\"  aria-label=\"Smallify\">".concat(this.icons.smallify, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-minimize\"  aria-label=\"Minimize\">").concat(this.icons.minimize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-normalize\" aria-label=\"Normalize\">").concat(this.icons.normalize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-maximize\"  aria-label=\"Maximize\">").concat(this.icons.maximize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-close\"     aria-label=\"Close\">").concat(this.icons.close, "</button>\n                                    </div>\n                                </div>\n                                <div class=\"jsPanel-hdr-toolbar\"></div>\n                            </div>\n                            <div class=\"jsPanel-autoclose-progressbar\">\n                                <div class=\"jsPanel-autoclose-progressbar-slider\"></div>\n                            </div>\n                            <div class=\"jsPanel-content\"></div>\n                            <div class=\"jsPanel-minimized-box\"></div>\n                            <div class=\"jsPanel-ftr\"></div>");
     return panel;
   },
   createMinimizedTemplate: function createMinimizedTemplate() {
     var panel = document.createElement('div');
     panel.className = 'jsPanel-replacement';
-    panel.innerHTML = "<div class=\"jsPanel-hdr\">\n                                <div class=\"jsPanel-headerbar\">\n                                    <div class=\"jsPanel-headerlogo\"></div>\n                                    <div class=\"jsPanel-titlebar\">\n                                        <span class=\"jsPanel-title\"></span>\n                                    </div>\n                                    <div class=\"jsPanel-controlbar\">\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-normalize\" aria-label=\"Normalize\">".concat(this.icons.normalize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-maximize\"  aria-label=\"Maximize\">").concat(this.icons.maximize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-close\"     aria-label=\"Close\">").concat(this.icons.close, "</button>\n                                    </div>\n                                </div>\n                            </div>");
+    panel.innerHTML = "<div class=\"jsPanel-hdr\">\n                                <div class=\"jsPanel-headerbar\">\n                                    <div class=\"jsPanel-headerlogo\"></div>\n                                    <div class=\"jsPanel-titlebar\">\n                                        <div class=\"jsPanel-title\"></div>\n                                    </div>\n                                    <div class=\"jsPanel-controlbar\">\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-normalize\" aria-label=\"Normalize\">".concat(this.icons.normalize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-maximize\"  aria-label=\"Maximize\">").concat(this.icons.maximize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-close\"     aria-label=\"Close\">").concat(this.icons.close, "</button>\n                                    </div>\n                                </div>\n                            </div>");
     return panel;
   },
   createSnapArea: function createSnapArea(panel, pos, snapsens) {
@@ -2233,14 +2225,16 @@ var jsPanel = {
             } // opts.drop
 
 
-            if (elmt.droppableTo && elmt.droppableTo !== elmt.parentElement) {
-              var sourceContainer = elmt.parentElement;
-              elmt.move(elmt.droppableTo);
+            if (elmt.droppableTo && elmt.droppableTo
+            /* !== elmt.parentElement*/
+            ) {
+                var sourceContainer = elmt.parentElement;
+                elmt.move(elmt.droppableTo);
 
-              if (opts.drop.callback) {
-                opts.drop.callback.call(elmt, elmt, elmt.droppableTo, sourceContainer);
+                if (opts.drop.callback) {
+                  opts.drop.callback.call(elmt, elmt, elmt.droppableTo, sourceContainer);
+                }
               }
-            }
 
             document.dispatchEvent(jspaneldragstop);
 
@@ -2293,7 +2287,7 @@ var jsPanel = {
     }
   },
   fetch: function (_fetch) {
-    function fetch(_x) {
+    function fetch(_x, _x2) {
       return _fetch.apply(this, arguments);
     }
 
@@ -2302,87 +2296,54 @@ var jsPanel = {
     };
 
     return fetch;
-  }(function (obj) {
-    var confDefaults = {
+  }(function (fetchConfig, panel) {
+    var config;
+    var configDefaults = {
       bodyMethod: 'text',
-      evalscripttags: true,
       autoresize: true,
       autoreposition: true,
-      done: function done(obj, response) {
-        obj.content.innerHTML = response;
+      done: function done(response, panel) {
+        if (panel) {
+          var res = jsPanel.strToHtml(response);
+          panel.contentRemove();
+          panel.content.append(res);
+        }
       }
-    },
-        conf = typeof obj.options.contentFetch === 'string' ? Object.assign({
-      resource: obj.options.contentFetch
-    }, confDefaults) : Object.assign(confDefaults, obj.options.contentFetch);
-    var fetchInit = conf.fetchInit || {};
+    };
 
-    if (!conf.resource) {
+    if (panel && typeof fetchConfig === 'string') {
+      config = Object.assign({}, configDefaults, {
+        resource: encodeURI(fetchConfig)
+      });
+    } else if (_typeof(fetchConfig) === 'object' && fetchConfig.resource) {
+      config = Object.assign({}, configDefaults, fetchConfig);
+      config.resource = encodeURI(fetchConfig.resource);
+    } else {
       if (this.errorReporting) {
-        var err = 'A Fetch request seems to miss the <mark>resource</mark> parameter';
+        var err = 'Fetch Request seems to miss the <mark>resource</mark> parameter!';
         jsPanel.errorpanel(err);
       }
 
-      return obj;
+      return;
     }
 
-    if (conf.beforeSend) {
-      conf.beforeSend.call(obj, obj);
+    var fetchInit = config.fetchInit || {};
+
+    if (config.beforeSend) {
+      panel ? config.beforeSend.call(fetchConfig, fetchConfig, panel) : config.beforeSend.call(fetchConfig, fetchConfig);
     }
 
-    fetch(conf.resource, fetchInit).then(function (response) {
+    fetch(config.resource, fetchInit).then(function (response) {
       if (response.ok) {
-        return response[conf.bodyMethod]();
+        return response[config.bodyMethod]();
       }
     }).then(function (response) {
-      conf.done.call(obj, obj, response); // extract and eval content of script tags if "evalscripttags"
+      panel ? config.done.call(response, response, panel) : config.done.call(response, response);
 
-      if (conf.evalscripttags) {
-        // get all script tags within responseText
-        var scripttags = response.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gi);
-
-        if (scripttags) {
-          scripttags.forEach(function (tag) {
-            // remove tags from string and trim it
-            var js = tag.replace(/<script\b[^>]*>/i, '').replace(/<\/script>/i, '').trim(); // execute javascript
-
-            eval(js);
-          });
-        }
-      } // resize and reposition panel if either width or height is set to 'auto'
-
-
-      var oContentSize = obj.options.contentSize;
-
-      if (conf.autoresize || conf.autoreposition) {
-        if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
-          var parts = oContentSize.split(' '),
-              sizes = Object.assign({}, {
-            width: parts[0],
-            height: parts[1]
-          });
-
-          if (conf.autoresize) {
-            obj.resize(sizes);
-          }
-
-          if (!obj.classList.contains('jsPanel-contextmenu')) {
-            if (conf.autoreposition) {
-              obj.reposition();
-            }
-          }
-        } else if (_typeof(oContentSize) === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
-          var _sizes2 = Object.assign({}, oContentSize);
-
-          if (conf.autoresize) {
-            obj.resize(_sizes2);
-          }
-
-          if (!obj.classList.contains('jsPanel-contextmenu')) {
-            if (conf.autoreposition) {
-              obj.reposition();
-            }
-          }
+      if (panel) {
+        // resize and/or reposition panel if either width or height is set to 'auto'
+        if (config.autoresize || config.autoreposition) {
+          jsPanel.ajaxAutoresizeAutoreposition(panel, config);
         }
       }
     });
@@ -2646,8 +2607,9 @@ var jsPanel = {
       jsPanel.pointerdown.forEach(function (event) {
         handle.addEventListener(event, function (e) {
           // prevent window scroll while resizing elmt
-          //e.preventDefault();
-          // disable resizing for all mouse buttons but left
+          e.preventDefault();
+          e.stopPropagation(); // disable resizing for all mouse buttons but left
+
           if (e.button && e.button > 0) {
             return false;
           } // factor is needed only for the modifier key Shift feature
@@ -3438,6 +3400,14 @@ var jsPanel = {
     return this.setStyles.call(elmt, elmt, stylesobject);
   },
   // alias for setStyles()
+  strToHtml: function strToHtml(str) {
+    // TODO: add param to strip script tags from returned DocumentFragment
+
+    /* str has to be an HTMLString
+     * returns a DocumentFragment - https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment
+     * after inserting executes inline script and script tags */
+    return document.createRange().createContextualFragment(str);
+  },
   errorpanel: function errorpanel(e) {
     this.create({
       paneltype: 'error',
@@ -3548,7 +3518,7 @@ var jsPanel = {
 
     self.headerbar = self.header.querySelector('.jsPanel-headerbar'); // log, title and controls
 
-    self.titlebar = self.header.querySelector('.jsPanel-titlebar'); // div surrounding title h3
+    self.titlebar = self.header.querySelector('.jsPanel-titlebar'); // div surrounding title div
 
     self.headerlogo = self.headerbar.querySelector('.jsPanel-headerlogo'); // logo only
 
@@ -3629,7 +3599,7 @@ var jsPanel = {
       cancelable: true
     }); // make panel available as event object property 'panel'
 
-    [jspanelloaded, jspanelstatuschange, jspanelbeforenormalize, jspanelnormalized, jspanelbeforemaximize, jspanelmaximized, jspanelbeforeminimize, jspanelminimized, jspanelbeforesmallify, jspanelsmallified, jspanelsmallifiedmax, jspanelbeforeunsmallify, jspanelfronted, jspanelbeforeclose, jspanelclosed, jspanelcloseduser].forEach(function (evt) {
+    [jspanelloaded, jspanelstatuschange, jspanelbeforenormalize, jspanelnormalized, jspanelbeforemaximize, jspanelmaximized, jspanelbeforeminimize, jspanelminimized, jspanelbeforesmallify, jspanelsmallified, jspanelsmallifiedmax, jspanelbeforeunsmallify, jspanelfronted, jspanelbeforeclose].forEach(function (evt) {
       evt.panel = self;
     }); // controls buttons
 
@@ -3637,16 +3607,7 @@ var jsPanel = {
         maxBtn = self.querySelector('.jsPanel-btn-maximize'),
         normBtn = self.querySelector('.jsPanel-btn-normalize'),
         smallBtn = self.querySelector('.jsPanel-btn-smallify'),
-        minBtn = self.querySelector('.jsPanel-btn-minimize'); // needed only to fix an issue with pointer events in Firefox
-
-    if ('onpointerdown' in window) {
-      self.controlbar.querySelectorAll('.jsPanel-btn').forEach(function (btn) {
-        btn.addEventListener('pointerdown', function (e) {
-          e.preventDefault();
-        }, true);
-      });
-    } // ----------------------------------------------------------
-
+        minBtn = self.querySelector('.jsPanel-btn-minimize');
 
     if (closeBtn) {
       jsPanel.pointerup.forEach(function (item) {
@@ -4551,20 +4512,17 @@ var jsPanel = {
         }
       }); // set iconfont
 
-      self.setIconfont(font, tpl); // needed only to fix an issue with pointer events in Firefox
-
-      if ('onpointerdown' in window) {
-        tpl.querySelectorAll('.jsPanel-btn').forEach(function (btn) {
-          btn.addEventListener('pointerdown', function (e) {
-            e.preventDefault();
-          }, true);
-        });
-      } // ----------------------------------------------------------
-
+      self.setIconfont(font, tpl);
 
       if (self.dataset.btnnormalize === 'enabled') {
         jsPanel.pointerup.forEach(function (evt) {
-          tpl.querySelector('.jsPanel-btn-normalize').addEventListener(evt, function () {
+          tpl.querySelector('.jsPanel-btn-normalize').addEventListener(evt, function (e) {
+            e.preventDefault();
+
+            if (e.button && e.button > 0) {
+              return false;
+            }
+
             self.normalize();
           });
         });
@@ -4574,7 +4532,13 @@ var jsPanel = {
 
       if (self.dataset.btnmaximize === 'enabled') {
         jsPanel.pointerup.forEach(function (evt) {
-          tpl.querySelector('.jsPanel-btn-maximize').addEventListener(evt, function () {
+          tpl.querySelector('.jsPanel-btn-maximize').addEventListener(evt, function (e) {
+            e.preventDefault();
+
+            if (e.button && e.button > 0) {
+              return false;
+            }
+
             self.maximize();
           });
         });
@@ -4584,7 +4548,13 @@ var jsPanel = {
 
       if (self.dataset.btnclose === 'enabled') {
         jsPanel.pointerup.forEach(function (evt) {
-          tpl.querySelector('.jsPanel-btn-close').addEventListener(evt, function () {
+          tpl.querySelector('.jsPanel-btn-close').addEventListener(evt, function (e) {
+            e.preventDefault();
+
+            if (e.button && e.button > 0) {
+              return false;
+            }
+
             self.close(null, true);
           });
         });
@@ -5446,12 +5416,12 @@ var jsPanel = {
 
 
     if (options.contentAjax) {
-      this.ajax(self, options.contentAjax);
+      this.ajax(options.contentAjax, self);
     } // option.contentFetch
 
 
     if (options.contentFetch) {
-      this.fetch(self);
+      this.fetch(options.contentFetch, self);
     } // option.contentOverflow
 
 
