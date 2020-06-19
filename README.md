@@ -1,4 +1,4 @@
-<img alt="NPM license"   src="https://img.shields.io/npm/l/jspanel4"> <img alt="npm version"   src="https://img.shields.io/npm/v/jspanel4?color=0677b8"> <img alt="npm downloads" src="https://img.shields.io/npm/dm/jspanel4?color=0677b8"> <img alt="Gitter chat"   src="https://img.shields.io/gitter/room/flyer53/jspanel">
+<img alt="NPM license"   src="https://img.shields.io/npm/l/jspanel4"> <img alt="npm version"   src="https://img.shields.io/npm/v/jspanel4?color=0677b8"> <img alt="npm downloads" src="https://img.shields.io/npm/dm/jspanel4?color=0677b8">
 
 
 ## [jsPanel 4.11.0-beta released 2020-06-16](#)
