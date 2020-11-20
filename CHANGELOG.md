@@ -1,11 +1,20 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
-### <span style='color:#563D7C;'>Version 4.11.0-beta *2020-06-16*</span>
+### <span style='color:#563D7C;'>Version 4.11.0 *2020-11-20*</span>
+
++ **renamed** panel property `autocloseProgressbar` to `progressbar`. The old property name remains usable for compatibility.
++ **bugfix** in option `onwindowresize`
++ various internal improvements in js and css
+
+**See also the changelog of _v4.11.0-beta_ for a list of changes compared with _v4.10.2_**
+
+### <span style='color:#563D7C;'>Version 4.11.0-beta *2020-09-06*</span>
 
 + **added** method `jsPanel.strToHtml(str)` converting a DOMString to a `DocumentFragment`.
 + **added** option `opacity`
 + **bugfix** in _modal_ extension concerning the use of `onclosed` callback.
 + **bugfix** in `autoposition` parameter of option `position`.
++ **bugfix** in option `onwindowresize`.
 + **updated** `jsPanel.ajax()` in order to improve its usability as general purpose AJAX tool.<br>**This update might require a change in your code if you use `jsPanel.ajax()` and/or option `contentAjax`.**
 + **updated** `jsPanel.fetch()` in order to improve its usability as general purpose Fetch tool.<br>**This update might require a change in your code if you use `jsPanel.fetch()` and/or option `contentFetch`.**
 + **updated** option `contentAjax` optionally loads only a page fragment.

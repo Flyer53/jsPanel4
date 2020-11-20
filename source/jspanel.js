@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-redeclare
 let jsPanel = {
-    version: '4.11.0-beta',
-    date: '2020-06-16 13:35',
+    version: '4.11.0',
+    date: '2020-11-20 12:05',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -59,11 +59,11 @@ let jsPanel = {
     extensions: {},
     globalCallbacks: false,
     icons: {
-        close: `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M13.7,11l6.1-6.1c0.4-0.4,0.4-0.9,0-1.3l-1.4-1.4c-0.4-0.4-0.9-0.4-1.3,0L11,8.3L4.9,2.3C4.6,1.9,4,1.9,3.7,2.3L2.3,3.7 C1.9,4,1.9,4.6,2.3,4.9L8.3,11l-6.1,6.1c-0.4,0.4-0.4,0.9,0,1.3l1.4,1.4c0.4,0.4,0.9,0.4,1.3,0l6.1-6.1l6.1,6.1 c0.4,0.4,0.9,0.4,1.3,0l1.4-1.4c0.4-0.4,0.4-0.9,0-1.3L13.7,11z"/></svg>`,
-        maximize: `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M18.3,2H3.7C2.8,2,2,2.9,2,3.9v14.1C2,19.1,2.8,20,3.7,20h14.6c0.9,0,1.7-0.9,1.7-1.9V3.9C20,2.9,19.2,2,18.3,2z M18.3,17.8 c0,0.1-0.1,0.2-0.2,0.2H3.9c-0.1,0-0.2-0.1-0.2-0.2V8.4h14.6V17.8z"/></svg>`,
-        normalize: `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M18.3,2H7.1C6.1,2,5.4,2.8,5.4,3.7v1.7H3.7C2.8,5.4,2,6.1,2,7.1v11.3C2,19.2,2.8,20,3.7,20h11.3c0.9,0,1.7-0.8,1.7-1.7v-1.7 h1.7c0.9,0,1.7-0.8,1.7-1.7V3.7C20,2.8,19.2,2,18.3,2z M14.9,18.3H3.7V11h11.3V18.3z M18.3,14.9h-1.7V7.1c0-0.9-0.8-1.7-1.7-1.7H7.1 V3.7h11.3V14.9z"/></svg>`,
-        minimize: `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M18.9,19.8H3.1c-0.6,0-1.1-0.5-1.1-1.1s0.5-1.1,1.1-1.1h15.8c0.6,0,1.1,0.5,1.1,1.1S19.5,19.8,18.9,19.8z"/></svg>`,
-        smallify: `<svg focusable="false" class="jsPanel-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M2.1,15.2L2.9,16c0.2,0.2,0.5,0.2,0.7,0L11,8.7l7.4,7.3c0.2,0.2,0.5,0.2,0.7,0l0.8-0.8c0.2-0.2,0.2-0.5,0-0.7L11.3,6 c-0.2-0.2-0.5-0.2-0.7,0l-8.5,8.5C2,14.7,2,15,2.1,15.2z"/></svg>`,
+        close: `<svg focusable="false" class="jsPanel-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M13.7,11l6.1-6.1c0.4-0.4,0.4-0.9,0-1.3l-1.4-1.4c-0.4-0.4-0.9-0.4-1.3,0L11,8.3L4.9,2.3C4.6,1.9,4,1.9,3.7,2.3L2.3,3.7 C1.9,4,1.9,4.6,2.3,4.9L8.3,11l-6.1,6.1c-0.4,0.4-0.4,0.9,0,1.3l1.4,1.4c0.4,0.4,0.9,0.4,1.3,0l6.1-6.1l6.1,6.1 c0.4,0.4,0.9,0.4,1.3,0l1.4-1.4c0.4-0.4,0.4-0.9,0-1.3L13.7,11z"/></svg>`,
+        maximize: `<svg focusable="false" class="jsPanel-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M18.3,2H3.7C2.8,2,2,2.9,2,3.9v14.1C2,19.1,2.8,20,3.7,20h14.6c0.9,0,1.7-0.9,1.7-1.9V3.9C20,2.9,19.2,2,18.3,2z M18.3,17.8 c0,0.1-0.1,0.2-0.2,0.2H3.9c-0.1,0-0.2-0.1-0.2-0.2V8.4h14.6V17.8z"/></svg>`,
+        normalize: `<svg focusable="false" class="jsPanel-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M18.3,2H7.1C6.1,2,5.4,2.8,5.4,3.7v1.7H3.7C2.8,5.4,2,6.1,2,7.1v11.3C2,19.2,2.8,20,3.7,20h11.3c0.9,0,1.7-0.8,1.7-1.7v-1.7 h1.7c0.9,0,1.7-0.8,1.7-1.7V3.7C20,2.8,19.2,2,18.3,2z M14.9,18.3H3.7V11h11.3V18.3z M18.3,14.9h-1.7V7.1c0-0.9-0.8-1.7-1.7-1.7H7.1 V3.7h11.3V14.9z"/></svg>`,
+        minimize: `<svg focusable="false" class="jsPanel-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M18.9,19.8H3.1c-0.6,0-1.1-0.5-1.1-1.1s0.5-1.1,1.1-1.1h15.8c0.6,0,1.1,0.5,1.1,1.1S19.5,19.8,18.9,19.8z"/></svg>`,
+        smallify: `<svg focusable="false" class="jsPanel-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><path fill="currentColor" d="M2.1,15.2L2.9,16c0.2,0.2,0.5,0.2,0.7,0L11,8.7l7.4,7.3c0.2,0.2,0.5,0.2,0.7,0l0.8-0.8c0.2-0.2,0.2-0.5,0-0.7L11.3,6 c-0.2-0.2-0.5-0.2-0.7,0l-8.5,8.5C2,14.7,2,15,2.1,15.2z"/></svg>`,
     },
     idCounter: 0,
     isIE: (() => {
@@ -134,7 +134,9 @@ let jsPanel = {
         })([Element.prototype, Document.prototype, DocumentFragment.prototype]);
         // Element.closest() polyfill - https://developer.mozilla.org/en-US/docs/Web/API/Element/closest
         if (window.Element && !Element.prototype.closest) {
+            // noinspection JSValidateTypes
             Element.prototype.closest = function (s) {
+                // noinspection JSUnresolvedVariable
                 let matches = (this.document || this.ownerDocument).querySelectorAll(s),
                     i,
                     el = this;
@@ -159,7 +161,9 @@ let jsPanel = {
                 evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
                 return evt;
             }
+            // noinspection JSValidateTypes
             CustomEvent.prototype = window.Event.prototype;
+            // noinspection JSValidateTypes
             window.CustomEvent = CustomEvent;
         })();
         // String.prototype.endsWith() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
@@ -947,6 +951,7 @@ let jsPanel = {
             if (offsets[1]) {
                 result.offsetY = offsets[1].match(/^[+-]?\d*\.?\d+$/i) ? `${offsets[1]}px` : offsets[1];
             } else {
+                // noinspection JSSuspiciousNameCombination
                 result.offsetY = result.offsetX;
             }
             pos.splice(pos.indexOf(offsets[0]), 1);
@@ -1284,7 +1289,7 @@ let jsPanel = {
             //console.log('pos after applying modify():', pos);
         }
 
-        typeof panel.options.opacity === 'number' ? panel.style.opacity = panel.options.opacity : panel.style.opacity = 1;
+        typeof panel.options.opacity === 'number' ? (panel.style.opacity = panel.options.opacity) : (panel.style.opacity = 1);
 
         return panel;
     },
@@ -1469,7 +1474,8 @@ let jsPanel = {
     },
 
     ajax(ajaxConfig, panel) {
-        let config, urlParts,
+        let config,
+            urlParts,
             xhr = new XMLHttpRequest();
         const configDefaults = {
             method: 'GET',
@@ -1617,8 +1623,8 @@ let jsPanel = {
                                 </div>
                                 <div class="jsPanel-hdr-toolbar"></div>
                             </div>
-                            <div class="jsPanel-autoclose-progressbar">
-                                <div class="jsPanel-autoclose-progressbar-slider"></div>
+                            <div class="jsPanel-progressbar">
+                                <div class="jsPanel-progressbar-slider"></div>
                             </div>
                             <div class="jsPanel-content"></div>
                             <div class="jsPanel-minimized-box"></div>
@@ -1663,582 +1669,6 @@ let jsPanel = {
         }
     },
 
-    dragit(elmt, options = {}) {
-        let dragstarted, dragElmt, opts;
-        const jspaneldragstart = new CustomEvent('jspaneldragstart', {
-                detail: elmt.id,
-            }),
-            jspaneldrag = new CustomEvent('jspaneldrag', { detail: elmt.id }),
-            jspaneldragstop = new CustomEvent('jspaneldragstop', {
-                detail: elmt.id,
-            });
-        // make panel available as event object property 'panel'
-        [jspaneldragstart, jspaneldrag, jspaneldragstop].forEach((evt) => {
-            evt.panel = elmt;
-        });
-
-        const camelcase = (string) => {
-            // 'left-top' converted to 'snapLeftTop'
-            let str = string.split('-');
-            str.forEach((word, index) => {
-                str[index] = word.charAt(0).toUpperCase() + word.slice(1);
-            });
-            return 'snap' + str.join('');
-        };
-
-        function windowListener(e) {
-            if (e.relatedTarget === null) {
-                jsPanel.pointermove.forEach((evt) => {
-                    document.removeEventListener(evt, dragElmt, false);
-                    elmt.style.opacity = 1;
-                });
-            }
-        }
-
-        // attach handler to each drag handle
-        let handles = options.handles || this.defaults.dragit.handles;
-        let cursor = options.cursor || this.defaults.dragit.cursor;
-        elmt.querySelectorAll(handles).forEach((handle) => {
-            handle.style.touchAction = 'none';
-            handle.style.cursor = cursor;
-
-            jsPanel.pointerdown.forEach((evt) => {
-                handle.addEventListener(evt, (e) => {
-                    // disable dragging for all mouse buttons but left
-                    if (e.button && e.button > 0) {
-                        return false;
-                    }
-
-                    // setup and normalize dragit options
-                    opts = Object.assign({}, jsPanel.defaults.dragit, options);
-                    if (opts.disableOnMaximized && elmt.status === 'maximized') {
-                        return false;
-                    }
-                    if (opts.containment || opts.containment === 0) {
-                        opts.containment = jsPanel.pOcontainment(opts.containment);
-                    }
-                    if (opts.grid) {
-                        if (Array.isArray(opts.grid)) {
-                            if (opts.grid.length === 1) {
-                                opts.grid[1] = opts.grid[0];
-                            }
-                        }
-                    }
-                    if (opts.snap) {
-                        if (typeof opts.snap === 'object') {
-                            opts.snap = Object.assign({}, jsPanel.defaultSnapConfig, opts.snap);
-                        } else {
-                            opts.snap = jsPanel.defaultSnapConfig;
-                        }
-                    }
-
-                    // footer elmts with the class "jsPanel-ftr-btn" don't drag a panel
-                    // do not compare e.target with e.currentTarget because there might be footer elmts supposed to drag the panel
-                    // noinspection JSUnresolvedFunction
-                    if (e.target.closest('.jsPanel-ftr-btn')) {
-                        return;
-                    }
-
-                    elmt.controlbar.style.pointerEvents = 'none';
-                    elmt.content.style.pointerEvents = 'none'; // without this code handler might not be unbound when content has iframe or object tag
-                    // prevents iframes in other panel from interfering with drag action of dragged panel
-                    document.querySelectorAll('iframe').forEach((frame) => {
-                        frame.style.pointerEvents = 'none';
-                    });
-
-                    let startStyles = window.getComputedStyle(elmt),
-                        startLeft = parseFloat(startStyles.left),
-                        startTop = parseFloat(startStyles.top),
-                        startWidth = parseFloat(startStyles.width),
-                        startHeight = parseFloat(startStyles.height),
-                        psx = e.touches ? e.touches[0].clientX : e.clientX, // pointer x on mousedown (don't use pageX, doesn't work on FF for Android)
-                        psy = e.touches ? e.touches[0].clientY : e.clientY, // same as above
-                        parent = elmt.parentElement,
-                        parentRect = parent.getBoundingClientRect(),
-                        parentStyles = window.getComputedStyle(parent),
-                        scaleFactor = elmt.getScaleFactor(),
-                        startLeftCorrection = 0;
-
-                    // function actually dragging the elmt
-                    dragElmt = (e) => {
-                        e.preventDefault();
-
-                        if (!dragstarted) {
-                            document.dispatchEvent(jspaneldragstart);
-                            elmt.style.opacity = opts.opacity;
-                            // if configured restore panel size to values before snap and reposition reasonable before drag actually starts
-                            if (elmt.snapped && opts.snap.resizeToPreSnap && elmt.currentData.beforeSnap) {
-                                elmt.resize(elmt.currentData.beforeSnap.width + ' ' + elmt.currentData.beforeSnap.height);
-                                elmt.setControls(['.jsPanel-btn-normalize']);
-                                let intermediateStyles = elmt.getBoundingClientRect(),
-                                    delta = psx - (intermediateStyles.left + intermediateStyles.width),
-                                    wHalf = intermediateStyles.width / 2;
-                                if (delta > -wHalf) {
-                                    startLeftCorrection = delta + wHalf;
-                                }
-                            }
-
-                            elmt.front();
-                            elmt.snapped = false;
-
-                            // panel is maximized on dragstart
-                            if (elmt.status === 'maximized') {
-                                elmt.setControls(['.jsPanel-btn-normalize']);
-                                elmt.status = 'normalized';
-                            }
-
-                            // opts.drop
-                            if (opts.drop && opts.drop.dropZones) {
-                                //opts.drop.dropZones = opts.drop.dropZones.map(zone => jsPanel.pOcontainer(zone));
-                                let dropzones = opts.drop.dropZones.map((zone) => jsPanel.pOcontainer(zone)); // -> array where each item is a NodeList
-                                let dropzonelist = [];
-                                dropzones.forEach(function (nodelist) {
-                                    if (nodelist.length) {
-                                        // an element node does not have a length property
-                                        nodelist.forEach(function (node) {
-                                            dropzonelist.push(node);
-                                        });
-                                    } else {
-                                        dropzonelist.push(nodelist);
-                                    }
-                                });
-                                // filter list to have only unique values
-                                dropzonelist = dropzonelist.filter(function (value, index, self) {
-                                    return self.indexOf(value) === index;
-                                });
-                                opts.drop.dropZones = dropzonelist;
-                            }
-
-                            // dragstart callback
-                            if (opts.start.length) {
-                                jsPanel.processCallbacks(
-                                    elmt,
-                                    opts.start,
-                                    false,
-                                    {
-                                        left: startLeft,
-                                        top: startTop,
-                                        width: startWidth,
-                                        height: startHeight,
-                                    },
-                                    e
-                                );
-                            }
-                        }
-                        dragstarted = 1;
-                        let elmtL, elmtL2, elmtT, elmtT2, elmtR, elmtR2, elmtB, elmtB2, right, bottom;
-                        let pmx = e.touches ? e.touches[0].clientX : e.clientX, // current pointer x while pointer moves (don't use pageX, doesn't work on FF for Android)
-                            pmy = e.touches ? e.touches[0].clientY : e.clientY, // current pointer y while pointer moves (don't use pageY, doesn't work on FF for Android)
-                            dragStyles = window.getComputedStyle(elmt), // get current styles while dragging
-                            overlaps;
-
-                        // EDGE reports "auto" instead of pixel value using getComputedStyle(), so some values need to be calculated different
-                        // this whole block of code could be removed if EDGE not based on Chromium doesn't need to be supported
-                        if (parent === document.body) {
-                            let elmtRect = elmt.getBoundingClientRect();
-                            right =
-                                window.innerWidth -
-                                parseInt(parentStyles.borderLeftWidth, 10) -
-                                parseInt(parentStyles.borderRightWidth, 10) -
-                                (elmtRect.left + elmtRect.width);
-                            bottom =
-                                window.innerHeight -
-                                parseInt(parentStyles.borderTopWidth, 10) -
-                                parseInt(parentStyles.borderBottomWidth, 10) -
-                                (elmtRect.top + elmtRect.height);
-                        } else {
-                            right =
-                                parseInt(parentStyles.width, 10) -
-                                parseInt(parentStyles.borderLeftWidth, 10) -
-                                parseInt(parentStyles.borderRightWidth, 10) -
-                                (parseInt(dragStyles.left, 10) + parseInt(dragStyles.width, 10));
-                            bottom =
-                                parseInt(parentStyles.height, 10) -
-                                parseInt(parentStyles.borderTopWidth, 10) -
-                                parseInt(parentStyles.borderBottomWidth, 10) -
-                                (parseInt(dragStyles.top, 10) + parseInt(dragStyles.height, 10));
-                        }
-                        // -- -- --
-
-                        elmtL = parseFloat(dragStyles.left);
-                        elmtT = parseFloat(dragStyles.top);
-                        elmtR = right; // replace line with parseFloat(dragStyles.right); if EDGE code block above is removed
-                        elmtB = bottom; // replace line with parseFloat(dragStyles.bottom); if EDGE code block above is removed
-
-                        if (opts.snap) {
-                            if (opts.snap.trigger === 'panel') {
-                                elmtL2 = elmtL ** 2;
-                                elmtT2 = elmtT ** 2;
-                                elmtR2 = elmtR ** 2;
-                                elmtB2 = elmtB ** 2;
-                            } else if (opts.snap.trigger === 'pointer') {
-                                if (elmt.options.container === 'window') {
-                                    elmtL = pmx;
-                                    elmtT = pmy;
-                                    elmtR = window.innerWidth - pmx;
-                                    elmtB = window.innerHeight - pmy;
-                                    elmtL2 = pmx ** 2;
-                                    elmtT2 = elmtT ** 2;
-                                    elmtR2 = elmtR ** 2;
-                                    elmtB2 = elmtB ** 2;
-                                } else {
-                                    overlaps = elmt.overlaps(parent, 'paddingbox', e);
-                                    elmtL = overlaps.pointer.left;
-                                    elmtT = overlaps.pointer.top;
-                                    elmtR = overlaps.pointer.right;
-                                    elmtB = overlaps.pointer.bottom;
-                                    elmtL2 = overlaps.pointer.left ** 2;
-                                    elmtT2 = overlaps.pointer.top ** 2;
-                                    elmtR2 = overlaps.pointer.right ** 2;
-                                    elmtB2 = overlaps.pointer.bottom ** 2;
-                                }
-                            }
-                        }
-
-                        let lefttopVectorDrag = Math.sqrt(elmtL2 + elmtT2),
-                            leftbottomVectorDrag = Math.sqrt(elmtL2 + elmtB2),
-                            righttopVectorDrag = Math.sqrt(elmtR2 + elmtT2),
-                            rightbottomVectorDrag = Math.sqrt(elmtR2 + elmtB2),
-                            horizontalDeltaDrag = Math.abs(elmtL - elmtR) / 2,
-                            verticalDeltaDrag = Math.abs(elmtT - elmtB) / 2,
-                            leftVectorDrag = Math.sqrt(elmtL2 + verticalDeltaDrag ** 2),
-                            topVectorDrag = Math.sqrt(elmtT2 + horizontalDeltaDrag ** 2),
-                            rightVectorDrag = Math.sqrt(elmtR2 + verticalDeltaDrag ** 2),
-                            bottomVectorDrag = Math.sqrt(elmtB2 + horizontalDeltaDrag ** 2);
-
-                        // prevent selections while dragging
-                        window.getSelection().removeAllRanges();
-
-                        // trigger drag permanently while dragging
-                        document.dispatchEvent(jspaneldrag);
-
-                        // move elmt and apply axis option
-                        if (!opts.axis || opts.axis === 'x') {
-                            elmt.style.left = startLeft + (pmx - psx) / scaleFactor.x + startLeftCorrection + 'px'; // set new css left of elmt depending on opts.axis
-                        }
-                        if (!opts.axis || opts.axis === 'y') {
-                            elmt.style.top = startTop + (pmy - psy) / scaleFactor.y + 'px'; // set new css top of elmt depending on opts.axis
-                        }
-
-                        // apply grid option
-                        if (opts.grid) {
-                            let grid = opts.grid,
-                                axis = opts.axis;
-                            // formula rounds to nearest multiple of grid
-                            // https://www.webveteran.com/blog/web-coding/javascript-round-to-any-multiple-of-a-specific-number/
-                            let x = grid[0] * Math.round((startLeft + (pmx - psx)) / grid[0]),
-                                y = grid[1] * Math.round((startTop + (pmy - psy)) / grid[1]);
-                            if (!axis || axis === 'x') {
-                                elmt.style.left = `${x}px`;
-                            }
-                            if (!axis || axis === 'y') {
-                                elmt.style.top = `${y}px`;
-                            }
-                        }
-
-                        // apply containment option
-                        if (opts.containment || opts.containment === 0) {
-                            let containment = opts.containment;
-                            let maxLeft, maxTop;
-
-                            // calc maxLeft and maxTop (minLeft and MinTop is equal to containment setting)
-                            if (elmt.options.container === document.body) {
-                                maxLeft = window.innerWidth - parseFloat(dragStyles.width) - containment[1];
-                                maxTop = window.innerHeight - parseFloat(dragStyles.height) - containment[2];
-                            } else {
-                                let xCorr = parseFloat(parentStyles.borderLeftWidth) + parseFloat(parentStyles.borderRightWidth),
-                                    yCorr = parseFloat(parentStyles.borderTopWidth) + parseFloat(parentStyles.borderBottomWidth);
-                                maxLeft = parentRect.width / scaleFactor.x - parseFloat(dragStyles.width) - containment[1] - xCorr;
-                                maxTop = parentRect.height / scaleFactor.y - parseFloat(dragStyles.height) - containment[2] - yCorr;
-                            }
-
-                            if (parseFloat(elmt.style.left) <= containment[3]) {
-                                elmt.style.left = containment[3] + 'px';
-                            }
-                            if (parseFloat(elmt.style.top) <= containment[0]) {
-                                elmt.style.top = containment[0] + 'px';
-                            }
-                            if (parseFloat(elmt.style.left) >= maxLeft) {
-                                elmt.style.left = maxLeft + 'px';
-                            }
-                            if (parseFloat(elmt.style.top) >= maxTop) {
-                                elmt.style.top = maxTop + 'px';
-                            }
-                        }
-
-                        // callback while dragging
-                        if (opts.drag.length) {
-                            let paneldata = {
-                                left: elmtL,
-                                top: elmtT,
-                                right: elmtR,
-                                bottom: elmtB,
-                                width: parseFloat(dragStyles.width),
-                                height: parseFloat(dragStyles.height),
-                            };
-                            jsPanel.processCallbacks(elmt, opts.drag, false, paneldata, e);
-                        }
-
-                        // apply snap options
-                        if (opts.snap) {
-                            let snapSens = opts.snap.sensitivity,
-                                topSensAreaLength = parent === document.body ? window.innerWidth / 8 : parentRect.width / 8,
-                                sideSensAreaLength = parent === document.body ? window.innerHeight / 8 : parentRect.height / 8;
-                            elmt.snappableTo = false;
-                            jsPanel.removeSnapAreas();
-
-                            if (lefttopVectorDrag < snapSens) {
-                                if (opts.snap.snapLeftTop !== false) {
-                                    if (!opts.snap.active || opts.snap.active === 'both') {
-                                        elmt.snappableTo = 'left-top';
-                                        jsPanel.createSnapArea(elmt, 'lt', snapSens);
-                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
-                                        if (overlaps.pointer.left > 0 && overlaps.pointer.top > 0) {
-                                            elmt.snappableTo = 'left-top';
-                                            jsPanel.createSnapArea(elmt, 'lt', snapSens);
-                                        } else {
-                                            elmt.snappableTo = false;
-                                            jsPanel.removeSnapAreas();
-                                        }
-                                    }
-                                }
-                            } else if (leftbottomVectorDrag < snapSens) {
-                                if (opts.snap.snapLeftBottom !== false) {
-                                    if (!opts.snap.active || opts.snap.active === 'both') {
-                                        elmt.snappableTo = 'left-bottom';
-                                        jsPanel.createSnapArea(elmt, 'lb', snapSens);
-                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
-                                        if (overlaps.pointer.left > 0 && overlaps.pointer.bottom > 0) {
-                                            elmt.snappableTo = 'left-bottom';
-                                            jsPanel.createSnapArea(elmt, 'lb', snapSens);
-                                        } else {
-                                            elmt.snappableTo = false;
-                                            jsPanel.removeSnapAreas();
-                                        }
-                                    }
-                                }
-                            } else if (righttopVectorDrag < snapSens) {
-                                if (opts.snap.snapRightTop !== false) {
-                                    if (!opts.snap.active || opts.snap.active === 'both') {
-                                        elmt.snappableTo = 'right-top';
-                                        jsPanel.createSnapArea(elmt, 'rt', snapSens);
-                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
-                                        if (overlaps.pointer.right > 0 && overlaps.pointer.top > 0) {
-                                            elmt.snappableTo = 'right-top';
-                                            jsPanel.createSnapArea(elmt, 'rt', snapSens);
-                                        } else {
-                                            elmt.snappableTo = false;
-                                            jsPanel.removeSnapAreas();
-                                        }
-                                    }
-                                }
-                            } else if (rightbottomVectorDrag < snapSens) {
-                                if (opts.snap.snapRightBottom !== false) {
-                                    if (!opts.snap.active || opts.snap.active === 'both') {
-                                        elmt.snappableTo = 'right-bottom';
-                                        jsPanel.createSnapArea(elmt, 'rb', snapSens);
-                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
-                                        if (overlaps.pointer.right > 0 && overlaps.pointer.bottom > 0) {
-                                            elmt.snappableTo = 'right-bottom';
-                                            jsPanel.createSnapArea(elmt, 'rb', snapSens);
-                                        } else {
-                                            elmt.snappableTo = false;
-                                            jsPanel.removeSnapAreas();
-                                        }
-                                    }
-                                }
-                            } else if (elmtT < snapSens && topVectorDrag < topSensAreaLength) {
-                                if (opts.snap.snapCenterTop !== false) {
-                                    if (!opts.snap.active || opts.snap.active === 'both') {
-                                        elmt.snappableTo = 'center-top';
-                                        jsPanel.createSnapArea(elmt, 'ct', snapSens);
-                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
-                                        if (overlaps.pointer.top > 0) {
-                                            elmt.snappableTo = 'center-top';
-                                            jsPanel.createSnapArea(elmt, 'ct', snapSens);
-                                        } else {
-                                            elmt.snappableTo = false;
-                                            jsPanel.removeSnapAreas();
-                                        }
-                                    }
-                                }
-                            } else if (elmtL < snapSens && leftVectorDrag < sideSensAreaLength) {
-                                if (opts.snap.snapLeftCenter !== false) {
-                                    if (!opts.snap.active || opts.snap.active === 'both') {
-                                        elmt.snappableTo = 'left-center';
-                                        jsPanel.createSnapArea(elmt, 'lc', snapSens);
-                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
-                                        if (overlaps.pointer.left > 0) {
-                                            elmt.snappableTo = 'left-center';
-                                            jsPanel.createSnapArea(elmt, 'lc', snapSens);
-                                        } else {
-                                            elmt.snappableTo = false;
-                                            jsPanel.removeSnapAreas();
-                                        }
-                                    }
-                                }
-                            } else if (elmtR < snapSens && rightVectorDrag < sideSensAreaLength) {
-                                if (opts.snap.snapRightCenter !== false) {
-                                    if (!opts.snap.active || opts.snap.active === 'both') {
-                                        elmt.snappableTo = 'right-center';
-                                        jsPanel.createSnapArea(elmt, 'rc', snapSens);
-                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
-                                        if (overlaps.pointer.right > 0) {
-                                            elmt.snappableTo = 'right-center';
-                                            jsPanel.createSnapArea(elmt, 'rc', snapSens);
-                                        } else {
-                                            elmt.snappableTo = false;
-                                            jsPanel.removeSnapAreas();
-                                        }
-                                    }
-                                }
-                            } else if (elmtB < snapSens && bottomVectorDrag < topSensAreaLength) {
-                                if (opts.snap.snapCenterBottom !== false) {
-                                    if (!opts.snap.active || opts.snap.active === 'both') {
-                                        elmt.snappableTo = 'center-bottom';
-                                        jsPanel.createSnapArea(elmt, 'cb', snapSens);
-                                    } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
-                                        if (overlaps.pointer.bottom > 0) {
-                                            elmt.snappableTo = 'center-bottom';
-                                            jsPanel.createSnapArea(elmt, 'cb', snapSens);
-                                        } else {
-                                            elmt.snappableTo = false;
-                                            jsPanel.removeSnapAreas();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        // opts.drop
-                        if (opts.drop && opts.drop.dropZones) {
-                            // IE doesn't offer document.elementsFromPoint() but document.msElementsFromPoint()
-                            let elementsFromPoint = jsPanel.isIE ? 'msElementsFromPoint' : 'elementsFromPoint';
-                            let elementsFrom = document[elementsFromPoint](e.clientX, e.clientY);
-                            // document.msElementsFromPoint() returns a nodeList -> convert to array
-                            if (!Array.isArray(elementsFrom)) {
-                                elementsFrom = Array.prototype.slice.call(elementsFrom);
-                            }
-                            opts.drop.dropZones.forEach((zone) => {
-                                // Array.prototype.includes() needs polyfill in IE
-                                if (elementsFrom.includes(zone)) {
-                                    elmt.droppableTo = zone;
-                                }
-                            });
-                            // do not include following if statement in this.options.dragit.drop.dropZones.forEach !!!!
-                            if (!elementsFrom.includes(elmt.droppableTo)) {
-                                elmt.droppableTo = false;
-                            }
-                        }
-                    };
-
-                    jsPanel.pointermove.forEach((e) => {
-                        document.addEventListener(e, dragElmt);
-                    });
-
-                    // remove drag handler when mouse leaves browser window (mouseleave doesn't work)
-                    window.addEventListener('mouseout', windowListener, false);
-                });
-            });
-
-            jsPanel.pointerup.forEach((event) => {
-                document.addEventListener(event, (e) => {
-                    jsPanel.pointermove.forEach((e) => {
-                        document.removeEventListener(e, dragElmt);
-                    });
-
-                    //document.body.style.overflow = 'inherit';
-                    jsPanel.removeSnapAreas();
-
-                    if (dragstarted) {
-                        elmt.style.opacity = 1;
-                        dragstarted = undefined;
-
-                        if (opts.snap) {
-                            switch (elmt.snappableTo) {
-                                case 'left-top':
-                                    elmt.snap(opts.snap.snapLeftTop);
-                                    break;
-                                case 'center-top':
-                                    elmt.snap(opts.snap.snapCenterTop);
-                                    break;
-                                case 'right-top':
-                                    elmt.snap(opts.snap.snapRightTop);
-                                    break;
-                                case 'right-center':
-                                    elmt.snap(opts.snap.snapRightCenter);
-                                    break;
-                                case 'right-bottom':
-                                    elmt.snap(opts.snap.snapRightBottom);
-                                    break;
-                                case 'center-bottom':
-                                    elmt.snap(opts.snap.snapCenterBottom);
-                                    break;
-                                case 'left-bottom':
-                                    elmt.snap(opts.snap.snapLeftBottom);
-                                    break;
-                                case 'left-center':
-                                    elmt.snap(opts.snap.snapLeftCenter);
-                                    break;
-                            }
-
-                            if (opts.snap.callback && elmt.snappableTo && typeof opts.snap.callback === 'function') {
-                                opts.snap.callback.call(elmt, elmt);
-                                if (opts.snap.repositionOnSnap && opts.snap[camelcase(elmt.snappableTo)] !== false) {
-                                    elmt.repositionOnSnap(elmt.snappableTo);
-                                }
-                            }
-
-                            if (elmt.snappableTo && opts.snap.repositionOnSnap && opts.snap[camelcase(elmt.snappableTo)]) {
-                                elmt.repositionOnSnap(elmt.snappableTo);
-                            }
-                        }
-
-                        // opts.drop
-                        if (elmt.droppableTo && elmt.droppableTo/* !== elmt.parentElement*/) {
-                            let sourceContainer = elmt.parentElement;
-                            elmt.move(elmt.droppableTo);
-                            if (opts.drop.callback) {
-                                opts.drop.callback.call(elmt, elmt, elmt.droppableTo, sourceContainer);
-                            }
-                        }
-
-                        document.dispatchEvent(jspaneldragstop);
-
-                        if (opts.stop.length) {
-                            let stopStyles = window.getComputedStyle(elmt),
-                                paneldata = {
-                                    left: parseFloat(stopStyles.left),
-                                    top: parseFloat(stopStyles.top),
-                                    width: parseFloat(stopStyles.width),
-                                    height: parseFloat(stopStyles.height),
-                                };
-                            jsPanel.processCallbacks(elmt, opts.stop, false, paneldata, e);
-                        }
-
-                        elmt.saveCurrentPosition();
-                        elmt.calcSizeFactors(); // important for options onwindowresize/onparentresize
-                    }
-
-                    elmt.controlbar.style.pointerEvents = 'inherit';
-                    elmt.content.style.pointerEvents = 'inherit';
-                    // restore other panel's css pointer-events
-                    document.querySelectorAll('iframe').forEach((frame) => {
-                        frame.style.pointerEvents = 'auto';
-                    });
-                });
-                window.removeEventListener('mouseout', windowListener);
-            });
-
-            // dragit is initialized - now disable if set
-            if (options.disable) {
-                handle.style.pointerEvents = 'none';
-            }
-        });
-
-        return elmt;
-    },
-
     emptyNode(node) {
         while (node.firstChild) {
             node.removeChild(node.firstChild);
@@ -2265,15 +1695,15 @@ let jsPanel = {
             autoreposition: true,
             done: function (response, panel) {
                 if (panel) {
-                    var res = jsPanel.strToHtml(response);
+                    let res = jsPanel.strToHtml(response);
                     panel.contentRemove();
                     panel.content.append(res);
                 }
-            }
+            },
         };
         if (panel && typeof fetchConfig === 'string') {
             config = Object.assign({}, configDefaults, {
-                resource: encodeURI(fetchConfig)
+                resource: encodeURI(fetchConfig),
             });
         } else if (typeof fetchConfig === 'object' && fetchConfig.resource) {
             config = Object.assign({}, configDefaults, fetchConfig);
@@ -2514,746 +1944,6 @@ let jsPanel = {
             });
     },
 
-    resizeit(elmt, options = {}) {
-        const jspanelresizestart = new CustomEvent('jspanelresizestart', {
-                detail: elmt.id,
-            }),
-            jspanelresize = new CustomEvent('jspanelresize', {
-                detail: elmt.id,
-            }),
-            jspanelresizestop = new CustomEvent('jspanelresizestop', {
-                detail: elmt.id,
-            });
-        // make panel available as event object property 'panel'
-        [jspanelresizestart, jspanelresize, jspanelresizestop].forEach((evt) => {
-            evt.panel = elmt;
-        });
-        let opts = {},
-            resizePanel,
-            resizestarted,
-            w,
-            h,
-            startWidth,
-            startHeight;
-
-        opts.handles = options.handles || jsPanel.defaults.resizeit.handles;
-        opts.handles.split(',').forEach((item) => {
-            const node = document.createElement('DIV');
-            node.className = `jsPanel-resizeit-handle jsPanel-resizeit-${item.trim()}`;
-            //node.style.zIndex = 90;
-            elmt.append(node);
-        });
-        // cache option aspectRatio of original resizeit configuration (is restored on pointerup)
-        let cachedOptionAspectRatio = options.aspectRatio ? options.aspectRatio : false;
-
-        function windowListener(e) {
-            if (e.relatedTarget === null) {
-                jsPanel.pointermove.forEach((evt) => {
-                    document.removeEventListener(evt, resizePanel, false);
-                });
-            }
-        }
-
-        elmt.querySelectorAll('.jsPanel-resizeit-handle').forEach((handle) => {
-            handle.style.touchAction = 'none';
-
-            jsPanel.pointerdown.forEach((event) => {
-                handle.addEventListener(event, (e) => {
-                    // prevent window scroll while resizing elmt
-                    e.preventDefault();
-                    e.stopPropagation();
-                    // disable resizing for all mouse buttons but left
-                    if (e.button && e.button > 0) {
-                        return false;
-                    }
-                    // factor is needed only for the modifier key Shift feature
-                    let factor = 1;
-                    // setup and normalize resizeit options
-                    opts = Object.assign({}, jsPanel.defaults.resizeit, options);
-                    if (opts.containment || opts.containment === 0) {
-                        opts.containment = jsPanel.pOcontainment(opts.containment);
-                    }
-                    // legacy line: aspectRatio should be either 'panel' or 'content', not just true
-                    if (opts.aspectRatio && opts.aspectRatio === true) {
-                        opts.aspectRatio = 'panel';
-                    }
-                    // set aspectRatio according to modifier key
-                    if (jsPanel.modifier) {
-                        let modifier = jsPanel.modifier;
-                        if (modifier.altKey) {
-                            opts.aspectRatio = 'content';
-                        } else if (modifier.ctrlKey) {
-                            opts.aspectRatio = 'panel';
-                        } else if (modifier.shiftKey) {
-                            opts.aspectRatio = false;
-                            factor = 2; // does work only with 2 as value
-                        }
-                    }
-
-                    let maxWidth = typeof opts.maxWidth === 'function' ? opts.maxWidth() : opts.maxWidth || 10000,
-                        maxHeight = typeof opts.maxHeight === 'function' ? opts.maxHeight() : opts.maxHeight || 10000,
-                        minWidth = typeof opts.minWidth === 'function' ? opts.minWidth() : opts.minWidth,
-                        minHeight = typeof opts.minHeight === 'function' ? opts.minHeight() : opts.minHeight;
-
-                    elmt.content.style.pointerEvents = 'none';
-                    // prevents iframes in other panel from interfering with resize action of dragged panel
-                    document.querySelectorAll('iframe').forEach((frame) => {
-                        frame.style.pointerEvents = 'none';
-                    });
-
-                    // noinspection JSUnresolvedVariable
-                    const elmtParent = elmt.parentElement,
-                        elmtParentTagName = elmtParent.tagName.toLowerCase(),
-                        elmtRect = elmt.getBoundingClientRect(),
-                        elmtParentRect = elmtParent.getBoundingClientRect(),
-                        elmtParentStyles = window.getComputedStyle(elmtParent, null),
-                        elmtParentBLW = parseInt(elmtParentStyles.borderLeftWidth, 10),
-                        elmtParentBTW = parseInt(elmtParentStyles.borderTopWidth, 10),
-                        elmtParentPosition = elmtParentStyles.getPropertyValue('position'),
-                        startX = e.clientX || e.touches[0].clientX,
-                        startY = e.clientY || e.touches[0].clientY,
-                        startRatio = startX / startY,
-                        resizeHandleClassList = e.target.classList,
-                        scaleFactor = elmt.getScaleFactor(),
-                        aspectRatio = elmtRect.width / elmtRect.height,
-                        elmtContentRect = elmt.content.getBoundingClientRect(),
-                        aspectRatioContent = elmtContentRect.width / elmtContentRect.height,
-                        hdrHeight = elmt.header.getBoundingClientRect().height, // needed in aspectRatio
-                        ftrHeight = elmt.footer.getBoundingClientRect().height || 0; // needed in aspectRatio
-                    let startLeft = elmtRect.left,
-                        startTop = elmtRect.top,
-                        maxWidthEast = 10000,
-                        maxWidthWest = 10000,
-                        maxHeightSouth = 10000,
-                        maxHeightNorth = 10000;
-
-                    startWidth = elmtRect.width;
-                    startHeight = elmtRect.height;
-
-                    if (elmtParentTagName !== 'body') {
-                        startLeft = elmtRect.left - elmtParentRect.left + elmtParent.scrollLeft;
-                        startTop = elmtRect.top - elmtParentRect.top + elmtParent.scrollTop;
-                    }
-
-                    // calc min/max left/top values if containment is set - code from jsDraggable
-                    if (elmtParentTagName === 'body' && opts.containment) {
-                        maxWidthEast = document.documentElement.clientWidth - elmtRect.left;
-                        maxHeightSouth = document.documentElement.clientHeight - elmtRect.top;
-                        maxWidthWest = elmtRect.width + elmtRect.left;
-                        maxHeightNorth = elmtRect.height + elmtRect.top;
-                    } else {
-                        // if panel is NOT in body
-                        if (opts.containment) {
-                            if (elmtParentPosition === 'static') {
-                                maxWidthEast = elmtParentRect.width - elmtRect.left + elmtParentBLW;
-                                maxHeightSouth = elmtParentRect.height + elmtParentRect.top - elmtRect.top + elmtParentBTW;
-                                maxWidthWest = elmtRect.width + (elmtRect.left - elmtParentRect.left) - elmtParentBLW;
-                                maxHeightNorth = elmtRect.height + (elmtRect.top - elmtParentRect.top) - elmtParentBTW;
-                            } else {
-                                maxWidthEast = elmtParent.clientWidth - (elmtRect.left - elmtParentRect.left) / scaleFactor.x + elmtParentBLW;
-                                maxHeightSouth = elmtParent.clientHeight - (elmtRect.top - elmtParentRect.top) / scaleFactor.y + elmtParentBTW;
-                                maxWidthWest = (elmtRect.width + elmtRect.left - elmtParentRect.left) / scaleFactor.x - elmtParentBLW;
-                                maxHeightNorth = elmt.clientHeight + (elmtRect.top - elmtParentRect.top) / scaleFactor.y - elmtParentBTW;
-                            }
-                        }
-                    }
-                    // if original opts.containment is array
-                    if (opts.containment) {
-                        maxWidthWest -= opts.containment[3];
-                        maxHeightNorth -= opts.containment[0];
-                        maxWidthEast -= opts.containment[1];
-                        maxHeightSouth -= opts.containment[2];
-                    }
-
-                    // calculate corrections for rotated panels
-                    const computedStyle = window.getComputedStyle(elmt),
-                        wDif = parseFloat(computedStyle.width) - elmtRect.width,
-                        hDif = parseFloat(computedStyle.height) - elmtRect.height;
-                    let xDif = parseFloat(computedStyle.left) - elmtRect.left,
-                        yDif = parseFloat(computedStyle.top) - elmtRect.top;
-                    if (elmtParent !== document.body) {
-                        xDif += elmtParentRect.left;
-                        yDif += elmtParentRect.top;
-                    }
-                    // used in aspectRatio code
-                    let borderTopWidth = parseInt(computedStyle.borderTopWidth, 10),
-                        borderRightWidth = parseInt(computedStyle.borderRightWidth, 10),
-                        borderBottomWidth = parseInt(computedStyle.borderBottomWidth, 10),
-                        borderLeftWidth = parseInt(computedStyle.borderLeftWidth, 10);
-
-                    resizePanel = (evt) => {
-                        evt.preventDefault();
-                        // trigger resizestarted only once per resize
-                        if (!resizestarted) {
-                            document.dispatchEvent(jspanelresizestart);
-                            if (opts.start.length) {
-                                jsPanel.processCallbacks(
-                                    elmt,
-                                    opts.start,
-                                    false,
-                                    {
-                                        width: startWidth,
-                                        height: startHeight,
-                                        left: startLeft,
-                                        top: startTop,
-                                    },
-                                    evt
-                                );
-                            }
-                            elmt.front();
-                            if (elmtRect.height > startHeight + 5) {
-                                elmt.status = 'normalized';
-                                elmt.setControls(['.jsPanel-btn-normalize']);
-                            }
-                        }
-                        resizestarted = 1;
-                        // trigger resize permanently while resizing
-                        document.dispatchEvent(jspanelresize);
-
-                        // possibly updated while resizing
-                        let eventX = evt.touches ? evt.touches[0].clientX : evt.clientX,
-                            eventY = evt.touches ? evt.touches[0].clientY : evt.clientY,
-                            overlaps;
-
-                        if (resizeHandleClassList.contains('jsPanel-resizeit-e')) {
-                            //w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
-                            w = startWidth + ((eventX - startX) * factor) / scaleFactor.x + wDif; // needs left adjust, for width and height adjust factor may be either 1 (no adjust) or 2
-                            if (w >= maxWidthEast) {
-                                w = maxWidthEast;
-                            }
-                            if (w >= maxWidth) {
-                                w = maxWidth;
-                            }
-                            if (w <= minWidth) {
-                                w = minWidth;
-                            }
-                            elmt.style.width = w + 'px';
-                            if (factor === 2) {
-                                // factor works only with value of 2 when adjusting left or top
-                                elmt.style.left = startLeft - (eventX - startX) + 'px';
-                            }
-                            if (opts.aspectRatio === 'content') {
-                                // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
-                                elmt.style.height =
-                                    (w - borderRightWidth - borderLeftWidth) / aspectRatioContent +
-                                    hdrHeight +
-                                    ftrHeight +
-                                    borderTopWidth +
-                                    borderBottomWidth +
-                                    'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.bottom <= opts.containment[2]) {
-                                        elmt.style.height = maxHeightSouth + 'px';
-                                        elmt.style.width = maxHeightSouth * aspectRatioContent + 'px';
-                                    }
-                                }
-                            } else if (opts.aspectRatio === 'panel') {
-                                // otherwise the complete panel maintains its aspect ratio
-                                elmt.style.height = w / aspectRatio + 'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.bottom <= opts.containment[2]) {
-                                        elmt.style.height = maxHeightSouth + 'px';
-                                        elmt.style.width = maxHeightSouth * aspectRatio + 'px';
-                                    }
-                                }
-                            }
-                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-s')) {
-                            //h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
-                            h = startHeight + ((eventY - startY) * factor) / scaleFactor.y + hDif; // needs top adjust
-                            if (h >= maxHeightSouth) {
-                                h = maxHeightSouth;
-                            }
-                            if (h >= maxHeight) {
-                                h = maxHeight;
-                            }
-                            if (h <= minHeight) {
-                                h = minHeight;
-                            }
-                            elmt.style.height = h + 'px';
-                            if (factor === 2) {
-                                elmt.style.top = startTop - (eventY - startY) + 'px';
-                            }
-                            if (opts.aspectRatio === 'content') {
-                                // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
-                                elmt.style.width =
-                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
-                                    borderTopWidth +
-                                    borderBottomWidth +
-                                    'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.right <= opts.containment[1]) {
-                                        elmt.style.width = maxWidthEast + 'px';
-                                        elmt.style.height = maxWidthEast / aspectRatioContent + 'px';
-                                    }
-                                }
-                            } else if (opts.aspectRatio === 'panel') {
-                                // otherwise the complete panel maintains its aspect ratio
-                                elmt.style.width = h * aspectRatio + 'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.right <= opts.containment[1]) {
-                                        elmt.style.width = maxWidthEast + 'px';
-                                        elmt.style.height = maxWidthEast / aspectRatio + 'px';
-                                    }
-                                }
-                            }
-                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-w')) {
-                            //w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
-                            w = startWidth + ((startX - eventX) * factor) / scaleFactor.x + wDif; // doesn't need left adjust
-                            if (w <= maxWidth && w >= minWidth && w <= maxWidthWest) {
-                                elmt.style.left = startLeft + (eventX - startX) / scaleFactor.x + xDif + 'px';
-                            }
-                            if (w >= maxWidthWest) {
-                                w = maxWidthWest;
-                            }
-                            if (w >= maxWidth) {
-                                w = maxWidth;
-                            }
-                            if (w <= minWidth) {
-                                w = minWidth;
-                            }
-                            elmt.style.width = w + 'px';
-                            if (opts.aspectRatio === 'content') {
-                                // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
-                                elmt.style.height =
-                                    (w - borderRightWidth - borderLeftWidth) / aspectRatioContent +
-                                    hdrHeight +
-                                    ftrHeight +
-                                    borderTopWidth +
-                                    borderBottomWidth +
-                                    'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.bottom <= opts.containment[2]) {
-                                        elmt.style.height = maxHeightSouth + 'px';
-                                        elmt.style.width = maxHeightSouth * aspectRatioContent + 'px';
-                                    }
-                                }
-                            } else if (opts.aspectRatio === 'panel') {
-                                // otherwise the complete panel maintains its aspect ratio
-                                elmt.style.height = w / aspectRatio + 'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.bottom <= opts.containment[2]) {
-                                        elmt.style.height = maxHeightSouth + 'px';
-                                        elmt.style.width = maxHeightSouth * aspectRatio + 'px';
-                                    }
-                                }
-                            }
-                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-n')) {
-                            //h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
-                            h = startHeight + ((startY - eventY) * factor) / scaleFactor.y + hDif; // doesn't need top adjust
-                            if (h <= maxHeight && h >= minHeight && h <= maxHeightNorth) {
-                                elmt.style.top = startTop + (eventY - startY) / scaleFactor.y + yDif + 'px';
-                            }
-                            if (h >= maxHeightNorth) {
-                                h = maxHeightNorth;
-                            }
-                            if (h >= maxHeight) {
-                                h = maxHeight;
-                            }
-                            if (h <= minHeight) {
-                                h = minHeight;
-                            }
-                            elmt.style.height = h + 'px';
-                            if (opts.aspectRatio === 'content') {
-                                // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
-                                elmt.style.width =
-                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
-                                    borderTopWidth +
-                                    borderBottomWidth +
-                                    'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.right <= opts.containment[1]) {
-                                        elmt.style.width = maxWidthEast + 'px';
-                                        elmt.style.height = maxWidthEast / aspectRatioContent + 'px';
-                                    }
-                                }
-                            } else if (opts.aspectRatio === 'panel') {
-                                // otherwise the complete panel maintains its aspect ratio
-                                elmt.style.width = h * aspectRatio + 'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.right <= opts.containment[1]) {
-                                        elmt.style.width = maxWidthEast + 'px';
-                                        elmt.style.height = maxWidthEast / aspectRatio + 'px';
-                                    }
-                                }
-                            }
-                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-se')) {
-                            //w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
-                            w = startWidth + ((eventX - startX) * factor) / scaleFactor.x + wDif; // needs left adjust
-                            if (w >= maxWidthEast) {
-                                w = maxWidthEast;
-                            }
-                            if (w >= maxWidth) {
-                                w = maxWidth;
-                            }
-                            if (w <= minWidth) {
-                                w = minWidth;
-                            }
-                            elmt.style.width = w + 'px';
-                            if (factor === 2) {
-                                elmt.style.left = startLeft - (eventX - startX) + 'px';
-                            }
-                            if (opts.aspectRatio) {
-                                elmt.style.height = w / aspectRatio + 'px';
-                            }
-
-                            //h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
-                            h = startHeight + ((eventY - startY) * factor) / scaleFactor.y + hDif; // needs top adjust
-                            if (h >= maxHeightSouth) {
-                                h = maxHeightSouth;
-                            }
-                            if (h >= maxHeight) {
-                                h = maxHeight;
-                            }
-                            if (h <= minHeight) {
-                                h = minHeight;
-                            }
-                            elmt.style.height = h + 'px';
-                            if (factor === 2) {
-                                elmt.style.top = startTop - (eventY - startY) + 'px';
-                            }
-                            if (opts.aspectRatio === 'content') {
-                                // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
-                                elmt.style.width =
-                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
-                                    borderTopWidth +
-                                    borderBottomWidth +
-                                    'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.right <= opts.containment[1]) {
-                                        elmt.style.width = maxWidthEast + 'px';
-                                        elmt.style.height = maxWidthEast / aspectRatioContent + 'px';
-                                    }
-                                }
-                            } else if (opts.aspectRatio === 'panel') {
-                                // otherwise the complete panel maintains its aspect ratio
-                                elmt.style.width = h * aspectRatio + 'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.right <= opts.containment[1]) {
-                                        elmt.style.width = maxWidthEast + 'px';
-                                        elmt.style.height = maxWidthEast / aspectRatio + 'px';
-                                    }
-                                }
-                            }
-                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-sw')) {
-                            //h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
-                            h = startHeight + ((eventY - startY) * factor) / scaleFactor.y + hDif; // needs top adjust
-                            if (h >= maxHeightSouth) {
-                                h = maxHeightSouth;
-                            }
-                            if (h >= maxHeight) {
-                                h = maxHeight;
-                            }
-                            if (h <= minHeight) {
-                                h = minHeight;
-                            }
-                            elmt.style.height = h + 'px';
-                            if (factor === 2) {
-                                elmt.style.top = startTop - (eventY - startY) + 'px';
-                            }
-                            if (opts.aspectRatio) {
-                                elmt.style.width = h * aspectRatio + 'px';
-                            }
-
-                            //w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
-                            w = startWidth + ((startX - eventX) * factor) / scaleFactor.x + wDif; // doesn't need left adjust
-                            if (w <= maxWidth && w >= minWidth && w <= maxWidthWest) {
-                                elmt.style.left = startLeft + (eventX - startX) / scaleFactor.x + xDif + 'px';
-                            }
-                            if (w >= maxWidthWest) {
-                                w = maxWidthWest;
-                            }
-                            if (w >= maxWidth) {
-                                w = maxWidth;
-                            }
-                            if (w <= minWidth) {
-                                w = minWidth;
-                            }
-                            elmt.style.width = w + 'px';
-                            if (opts.aspectRatio === 'content') {
-                                // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
-                                elmt.style.height =
-                                    (w - borderRightWidth - borderLeftWidth) / aspectRatioContent +
-                                    hdrHeight +
-                                    ftrHeight +
-                                    borderTopWidth +
-                                    borderBottomWidth +
-                                    'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.bottom <= opts.containment[2]) {
-                                        elmt.style.height = maxHeightSouth + 'px';
-                                        elmt.style.width = maxHeightSouth * aspectRatioContent + 'px';
-                                    }
-                                }
-                            } else if (opts.aspectRatio === 'panel') {
-                                // otherwise the complete panel maintains its aspect ratio
-                                elmt.style.height = w / aspectRatio + 'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.bottom <= opts.containment[2]) {
-                                        elmt.style.height = maxHeightSouth + 'px';
-                                        elmt.style.width = maxHeightSouth * aspectRatio + 'px';
-                                    }
-                                }
-                            }
-                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-ne')) {
-                            //w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
-                            w = startWidth + ((eventX - startX) * factor) / scaleFactor.x + wDif; // needs left adjust
-                            if (w >= maxWidthEast) {
-                                w = maxWidthEast;
-                            }
-                            if (w >= maxWidth) {
-                                w = maxWidth;
-                            }
-                            if (w <= minWidth) {
-                                w = minWidth;
-                            }
-                            elmt.style.width = w + 'px';
-                            if (factor === 2) {
-                                elmt.style.left = startLeft - (eventX - startX) + 'px';
-                            }
-                            if (opts.aspectRatio) {
-                                elmt.style.height = w / aspectRatio + 'px';
-                            }
-
-                            //h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
-                            h = startHeight + ((startY - eventY) * factor) / scaleFactor.y + hDif; // doesn't need top adjust
-                            if (h <= maxHeight && h >= minHeight && h <= maxHeightNorth) {
-                                elmt.style.top = startTop + (eventY - startY) / scaleFactor.y + yDif + 'px';
-                            }
-                            if (h >= maxHeightNorth) {
-                                h = maxHeightNorth;
-                            }
-                            if (h >= maxHeight) {
-                                h = maxHeight;
-                            }
-                            if (h <= minHeight) {
-                                h = minHeight;
-                            }
-                            elmt.style.height = h + 'px';
-                            if (opts.aspectRatio === 'content') {
-                                // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
-                                elmt.style.width =
-                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
-                                    borderTopWidth +
-                                    borderBottomWidth +
-                                    'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.right <= opts.containment[1]) {
-                                        elmt.style.width = maxWidthEast + 'px';
-                                        elmt.style.height = maxWidthEast / aspectRatioContent + 'px';
-                                    }
-                                }
-                            } else if (opts.aspectRatio === 'panel') {
-                                // otherwise the complete panel maintains its aspect ratio
-                                elmt.style.width = h * aspectRatio + 'px';
-                                if (opts.containment) {
-                                    overlaps = elmt.overlaps(elmtParent);
-                                    if (overlaps.right <= opts.containment[1]) {
-                                        elmt.style.width = maxWidthEast + 'px';
-                                        elmt.style.height = maxWidthEast / aspectRatio + 'px';
-                                    }
-                                }
-                            }
-                        } else if (resizeHandleClassList.contains('jsPanel-resizeit-nw')) {
-                            if (opts.aspectRatio && resizeHandleClassList.contains('jsPanel-resizeit-nw')) {
-                                eventX = eventY * startRatio;
-                                eventY = eventX / startRatio;
-                            }
-                            //w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
-                            w = startWidth + ((startX - eventX) * factor) / scaleFactor.x + wDif; // doesn't need left adjust
-                            if (w <= maxWidth && w >= minWidth && w <= maxWidthWest) {
-                                elmt.style.left = startLeft + (eventX - startX) / scaleFactor.x + xDif + 'px';
-                            }
-                            if (w >= maxWidthWest) {
-                                w = maxWidthWest;
-                            }
-                            if (w >= maxWidth) {
-                                w = maxWidth;
-                            }
-                            if (w <= minWidth) {
-                                w = minWidth;
-                            }
-                            elmt.style.width = w + 'px';
-                            if (opts.aspectRatio) {
-                                elmt.style.height = w / aspectRatio + 'px';
-                            }
-
-                            //h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
-                            h = startHeight + ((startY - eventY) * factor) / scaleFactor.y + hDif; // doesn't need top adjust
-                            if (h <= maxHeight && h >= minHeight && h <= maxHeightNorth) {
-                                elmt.style.top = startTop + (eventY - startY) / scaleFactor.y + yDif + 'px';
-                            }
-                            if (h >= maxHeightNorth) {
-                                h = maxHeightNorth;
-                            }
-                            if (h >= maxHeight) {
-                                h = maxHeight;
-                            }
-                            if (h <= minHeight) {
-                                h = minHeight;
-                            }
-                            elmt.style.height = h + 'px';
-                            if (opts.aspectRatio === 'content') {
-                                // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
-                                elmt.style.width =
-                                    (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
-                                    borderTopWidth +
-                                    borderBottomWidth +
-                                    'px';
-                            } else if (opts.aspectRatio === 'panel') {
-                                // otherwise the complete panel maintains its aspect ratio
-                                elmt.style.width = h * aspectRatio + 'px';
-                            }
-                        }
-
-                        window.getSelection().removeAllRanges();
-
-                        // get current position and size values while resizing
-                        const styles = window.getComputedStyle(elmt),
-                            values = {
-                                left: parseFloat(styles.left),
-                                top: parseFloat(styles.top),
-                                right: parseFloat(styles.right),
-                                bottom: parseFloat(styles.bottom),
-                                width: parseFloat(styles.width),
-                                height: parseFloat(styles.height),
-                            };
-
-                        // callback while resizing
-                        if (opts.resize.length) {
-                            jsPanel.processCallbacks(elmt, opts.resize, false, values, evt);
-                        }
-                    };
-
-                    jsPanel.pointermove.forEach((event) => {
-                        document.addEventListener(event, resizePanel, false);
-                    });
-
-                    // remove resize handler when mouse leaves browser window (mouseleave doesn't work)
-                    window.addEventListener('mouseout', windowListener, false);
-                });
-            });
-
-            jsPanel.pointerup.forEach(function (event) {
-                document.addEventListener(
-                    event,
-                    (e) => {
-                        jsPanel.pointermove.forEach((evt) => {
-                            document.removeEventListener(evt, resizePanel, false);
-                        });
-
-                        if (e.target.classList && e.target.classList.contains('jsPanel-resizeit-handle')) {
-                            let isLeftChange,
-                                isTopChange,
-                                cl = e.target.className;
-                            if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-w|jsPanel-resizeit-sw/i)) {
-                                isLeftChange = true;
-                            }
-                            if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-n|jsPanel-resizeit-ne/i)) {
-                                isTopChange = true;
-                            }
-
-                            // snap panel to grid (doesn't work that well if inside function resizePanel)
-                            if (opts.grid && Array.isArray(opts.grid)) {
-                                if (opts.grid.length === 1) {
-                                    opts.grid[1] = opts.grid[0];
-                                }
-                                const cw = parseFloat(elmt.style.width),
-                                    ch = parseFloat(elmt.style.height),
-                                    modW = cw % opts.grid[0],
-                                    modH = ch % opts.grid[1],
-                                    cx = parseFloat(elmt.style.left),
-                                    cy = parseFloat(elmt.style.top),
-                                    modX = cx % opts.grid[0],
-                                    modY = cy % opts.grid[1];
-
-                                if (modW < opts.grid[0] / 2) {
-                                    elmt.style.width = cw - modW + 'px';
-                                } else {
-                                    elmt.style.width = cw + (opts.grid[0] - modW) + 'px';
-                                }
-                                if (modH < opts.grid[1] / 2) {
-                                    elmt.style.height = ch - modH + 'px';
-                                } else {
-                                    elmt.style.height = ch + (opts.grid[1] - modH) + 'px';
-                                }
-
-                                if (isLeftChange) {
-                                    if (modX < opts.grid[0] / 2) {
-                                        elmt.style.left = cx - modX + 'px';
-                                    } else {
-                                        elmt.style.left = cx + (opts.grid[0] - modX) + 'px';
-                                    }
-                                }
-                                if (isTopChange) {
-                                    if (modY < opts.grid[1] / 2) {
-                                        elmt.style.top = cy - modY + 'px';
-                                    } else {
-                                        elmt.style.top = cy + (opts.grid[1] - modY) + 'px';
-                                    }
-                                }
-                            }
-                        }
-
-                        if (resizestarted) {
-                            elmt.content.style.pointerEvents = 'inherit';
-                            resizestarted = undefined;
-                            elmt.saveCurrentDimensions();
-                            elmt.saveCurrentPosition();
-                            elmt.calcSizeFactors();
-                            let smallifyBtn = elmt.controlbar.querySelector('.jsPanel-btn-smallify');
-                            let elmtRect = elmt.getBoundingClientRect();
-                            if (smallifyBtn && elmtRect.height > startHeight + 5) {
-                                smallifyBtn.style.transform = 'rotate(0deg)';
-                            }
-                            document.dispatchEvent(jspanelresizestop);
-
-                            if (opts.stop.length) {
-                                let stopStyles = window.getComputedStyle(elmt),
-                                    paneldata = {
-                                        left: parseFloat(stopStyles.left),
-                                        top: parseFloat(stopStyles.top),
-                                        width: parseFloat(stopStyles.width),
-                                        height: parseFloat(stopStyles.height),
-                                    };
-                                jsPanel.processCallbacks(elmt, opts.stop, false, paneldata, e);
-                            }
-                        }
-
-                        elmt.content.style.pointerEvents = 'inherit';
-                        // restore other panel's css pointer-events
-                        document.querySelectorAll('iframe').forEach((frame) => {
-                            frame.style.pointerEvents = 'auto';
-                        });
-                        // restore option aspectRatio to original configuration
-                        opts.aspectRatio = cachedOptionAspectRatio;
-                    },
-                    false
-                );
-                window.removeEventListener('mouseout', windowListener);
-            });
-
-            // resizeit is initialized - now disable if set
-            if (options.disable) {
-                handle.style.pointerEvents = 'none';
-            }
-        });
-
-        return elmt;
-    },
-
     setClass(elmt, classnames) {
         classnames
             .trim()
@@ -3282,9 +1972,11 @@ let jsPanel = {
         // code taken from https://blissfuljs.com/docs.html#fn-style
         for (let prop in stylesobject) {
             if (prop in elmt.style) {
+                // noinspection JSUnfilteredForInLoop,JSUnfilteredForInLoop
                 elmt.style[prop] = stylesobject[prop];
             } else {
                 // This way we can set CSS Variables too and use normal prop names
+                // noinspection JSUnfilteredForInLoop
                 elmt.style.setProperty(prop, stylesobject[prop]);
             }
         }
@@ -3421,7 +2113,7 @@ let jsPanel = {
         self.snappableTo = false;
         self.snapped = false;
         self.droppableTo = false;
-        self.autocloseProgressbar = self.querySelector('.jsPanel-autoclose-progressbar');
+        self.progressbar = self.autocloseProgressbar = self.querySelector('.jsPanel-progressbar'); // self.autocloseProgressbar kept for compatibility
 
         // Events
         const jspanelloaded = new CustomEvent('jspanelloaded', {
@@ -3503,7 +2195,7 @@ let jsPanel = {
             jspanelsmallifiedmax,
             jspanelbeforeunsmallify,
             jspanelfronted,
-            jspanelbeforeclose
+            jspanelbeforeclose,
         ].forEach((evt) => {
             evt.panel = self;
         });
@@ -3868,8 +2560,8 @@ let jsPanel = {
             }
             return self;
         };
-        // self.remove() is just a helper func used in self.close()
         self.remove = (id, closedBy, cb) => {
+            // self.remove() is just a helper func used in self.close()
             self.parentElement.removeChild(self);
             if (!document.getElementById(id)) {
                 self.removeMinimizedReplacement();
@@ -3889,6 +2581,8 @@ let jsPanel = {
                     cb.call(self, id, self);
                 }
             }
+            window.removeEventListener('resize', self.windowResizeHandler);
+            document.removeEventListener('jspanelresize',self.parentResizeHandler);
         };
         self.close = (cb, closedByUser) => {
             if (self.closetimer) {
@@ -4350,7 +3044,9 @@ let jsPanel = {
                 jsPanel.pointerup.forEach((evt) => {
                     tpl.querySelector('.jsPanel-btn-normalize').addEventListener(evt, (e) => {
                         e.preventDefault();
-                        if (e.button && e.button > 0) { return false; }
+                        if (e.button && e.button > 0) {
+                            return false;
+                        }
                         self.normalize();
                     });
                 });
@@ -4361,7 +3057,9 @@ let jsPanel = {
                 jsPanel.pointerup.forEach((evt) => {
                     tpl.querySelector('.jsPanel-btn-maximize').addEventListener(evt, (e) => {
                         e.preventDefault();
-                        if (e.button && e.button > 0) { return false; }
+                        if (e.button && e.button > 0) {
+                            return false;
+                        }
                         self.maximize();
                     });
                 });
@@ -4372,7 +3070,9 @@ let jsPanel = {
                 jsPanel.pointerup.forEach((evt) => {
                     tpl.querySelector('.jsPanel-btn-close').addEventListener(evt, (e) => {
                         e.preventDefault();
-                        if (e.button && e.button > 0) { return false; }
+                        if (e.button && e.button > 0) {
+                            return false;
+                        }
                         self.close(null, true);
                     });
                 });
@@ -4388,6 +3088,579 @@ let jsPanel = {
                 elmt.parentElement.removeChild(elmt);
             }
         };
+
+        self.drag = (options = {}) => {
+            let dragstarted, dragElmt, opts;
+            const jspaneldragstart = new CustomEvent('jspaneldragstart', { detail: self.id }),
+                jspaneldrag = new CustomEvent('jspaneldrag', { detail: self.id }),
+                jspaneldragstop = new CustomEvent('jspaneldragstop', { detail: self.id });
+
+            // make panel available as event object property 'panel'
+            [jspaneldragstart, jspaneldrag, jspaneldragstop].forEach((evt) => {
+                evt.panel = self;
+            });
+
+            const camelcase = (string) => {
+                // 'left-top' converted to 'snapLeftTop'
+                let str = string.split('-');
+                str.forEach((word, index) => {
+                    str[index] = word.charAt(0).toUpperCase() + word.slice(1);
+                });
+                return 'snap' + str.join('');
+            };
+            function windowListener(e) {
+                if (e.relatedTarget === null) {
+                    jsPanel.pointermove.forEach((evt) => {
+                        document.removeEventListener(evt, dragElmt, false);
+                        self.style.opacity = 1;
+                    });
+                }
+            }
+            // attach handler to each drag handle
+            let handles = options.handles || jsPanel.defaults.dragit.handles;
+            let cursor = options.cursor || jsPanel.defaults.dragit.cursor;
+
+            self.querySelectorAll(handles).forEach((handle) => {
+                handle.style.touchAction = 'none';
+                handle.style.cursor = cursor;
+
+                jsPanel.pointerdown.forEach((evt) => {
+                    handle.addEventListener(evt, (e) => {
+                        // disable dragging for all mouse buttons but left
+                        if (e.button && e.button > 0) {
+                            return false;
+                        }
+
+                        // setup and normalize dragit options
+                        opts = Object.assign({}, jsPanel.defaults.dragit, options);
+
+                        if (opts.disableOnMaximized && self.status === 'maximized') {
+                            return false;
+                        }
+
+                        if (opts.containment || opts.containment === 0) {
+                            opts.containment = jsPanel.pOcontainment(opts.containment);
+                        }
+
+                        if (opts.grid) {
+                            if (Array.isArray(opts.grid)) {
+                                if (opts.grid.length === 1) {
+                                    opts.grid[1] = opts.grid[0];
+                                }
+                            }
+                        }
+
+                        if (opts.snap) {
+                            if (typeof opts.snap === 'object') {
+                                opts.snap = Object.assign({}, jsPanel.defaultSnapConfig, opts.snap);
+                            } else {
+                                opts.snap = jsPanel.defaultSnapConfig;
+                            }
+                        }
+
+                        // footer elmts with the class "jsPanel-ftr-btn" don't drag a panel
+                        // do not compare e.target with e.currentTarget because there might be footer elmts supposed to drag the panel
+                        // noinspection JSUnresolvedFunction
+                        if (e.target.closest('.jsPanel-ftr-btn')) {
+                            return;
+                        }
+
+                        self.controlbar.style.pointerEvents = 'none';
+                        self.content.style.pointerEvents = 'none'; // without this code handler might not be unbound when content has iframe or object tag
+                        // prevents iframes in other panel from interfering with drag action of dragged panel
+                        document.querySelectorAll('iframe').forEach((frame) => {
+                            frame.style.pointerEvents = 'none';
+                        });
+
+                        let startStyles = window.getComputedStyle(self),
+                            startLeft = parseFloat(startStyles.left),
+                            startTop = parseFloat(startStyles.top),
+                            startWidth = parseFloat(startStyles.width),
+                            startHeight = parseFloat(startStyles.height),
+                            psx = e.touches ? e.touches[0].clientX : e.clientX, // pointer x on mousedown (don't use pageX, doesn't work on FF for Android)
+                            psy = e.touches ? e.touches[0].clientY : e.clientY, // same as above
+                            parent = self.parentElement,
+                            parentRect = parent.getBoundingClientRect(),
+                            parentStyles = window.getComputedStyle(parent),
+                            scaleFactor = self.getScaleFactor(),
+                            startLeftCorrection = 0;
+
+                        // function actually dragging the elmt
+                        dragElmt = (e) => {
+                            e.preventDefault();
+
+                            if (!dragstarted) {
+                                document.dispatchEvent(jspaneldragstart);
+                                self.style.opacity = opts.opacity;
+                                // if configured restore panel size to values before snap and reposition reasonable before drag actually starts
+                                if (self.snapped && opts.snap.resizeToPreSnap && self.currentData.beforeSnap) {
+                                    self.resize(self.currentData.beforeSnap.width + ' ' + self.currentData.beforeSnap.height);
+                                    self.setControls(['.jsPanel-btn-normalize']);
+                                    let intermediateStyles = self.getBoundingClientRect(),
+                                        delta = psx - (intermediateStyles.left + intermediateStyles.width),
+                                        wHalf = intermediateStyles.width / 2;
+                                    if (delta > -wHalf) {
+                                        startLeftCorrection = delta + wHalf;
+                                    }
+                                }
+
+                                self.front();
+                                self.snapped = false;
+
+                                // panel is maximized on dragstart
+                                if (self.status === 'maximized') {
+                                    self.setControls(['.jsPanel-btn-normalize']);
+                                    self.status = 'normalized';
+                                }
+
+                                // opts.drop
+                                if (opts.drop && opts.drop.dropZones) {
+                                    //opts.drop.dropZones = opts.drop.dropZones.map(zone => jsPanel.pOcontainer(zone));
+                                    let dropzones = opts.drop.dropZones.map((zone) => jsPanel.pOcontainer(zone)); // -> array where each item is a NodeList
+                                    let dropzonelist = [];
+                                    dropzones.forEach(function (nodelist) {
+                                        if (nodelist.length) {
+                                            // an element node does not have a length property
+                                            nodelist.forEach(function (node) {
+                                                dropzonelist.push(node);
+                                            });
+                                        } else {
+                                            dropzonelist.push(nodelist);
+                                        }
+                                    });
+                                    // filter list to have only unique values
+                                    dropzonelist = dropzonelist.filter(function (value, index, self) {
+                                        return self.indexOf(value) === index;
+                                    });
+                                    opts.drop.dropZones = dropzonelist;
+                                }
+
+                                // dragstart callback
+                                if (opts.start.length) {
+                                    jsPanel.processCallbacks(
+                                        self,
+                                        opts.start,
+                                        false,
+                                        {
+                                            left: startLeft,
+                                            top: startTop,
+                                            width: startWidth,
+                                            height: startHeight,
+                                        },
+                                        e
+                                    );
+                                }
+                            }
+                            dragstarted = 1;
+                            let elmtL, elmtL2, elmtT, elmtT2, elmtR, elmtR2, elmtB, elmtB2, right, bottom;
+                            let pmx = e.touches ? e.touches[0].clientX : e.clientX, // current pointer x while pointer moves (don't use pageX, doesn't work on FF for Android)
+                                pmy = e.touches ? e.touches[0].clientY : e.clientY, // current pointer y while pointer moves (don't use pageY, doesn't work on FF for Android)
+                                dragStyles = window.getComputedStyle(self), // get current styles while dragging
+                                overlaps;
+
+                            // EDGE reports "auto" instead of pixel value using getComputedStyle(), so some values need to be calculated different
+                            // this whole block of code could be removed if EDGE not based on Chromium doesn't need to be supported
+                            if (parent === document.body) {
+                                let elmtRect = self.getBoundingClientRect();
+                                right =
+                                    window.innerWidth -
+                                    parseInt(parentStyles.borderLeftWidth, 10) -
+                                    parseInt(parentStyles.borderRightWidth, 10) -
+                                    (elmtRect.left + elmtRect.width);
+                                bottom =
+                                    window.innerHeight -
+                                    parseInt(parentStyles.borderTopWidth, 10) -
+                                    parseInt(parentStyles.borderBottomWidth, 10) -
+                                    (elmtRect.top + elmtRect.height);
+                            } else {
+                                right =
+                                    parseInt(parentStyles.width, 10) -
+                                    parseInt(parentStyles.borderLeftWidth, 10) -
+                                    parseInt(parentStyles.borderRightWidth, 10) -
+                                    (parseInt(dragStyles.left, 10) + parseInt(dragStyles.width, 10));
+                                bottom =
+                                    parseInt(parentStyles.height, 10) -
+                                    parseInt(parentStyles.borderTopWidth, 10) -
+                                    parseInt(parentStyles.borderBottomWidth, 10) -
+                                    (parseInt(dragStyles.top, 10) + parseInt(dragStyles.height, 10));
+                            }
+                            // -- -- --
+
+                            elmtL = parseFloat(dragStyles.left);
+                            elmtT = parseFloat(dragStyles.top);
+                            elmtR = right; // replace line with parseFloat(dragStyles.right); if EDGE code block above is removed
+                            elmtB = bottom; // replace line with parseFloat(dragStyles.bottom); if EDGE code block above is removed
+
+                            if (opts.snap) {
+                                if (opts.snap.trigger === 'panel') {
+                                    elmtL2 = elmtL ** 2;
+                                    elmtT2 = elmtT ** 2;
+                                    elmtR2 = elmtR ** 2;
+                                    elmtB2 = elmtB ** 2;
+                                } else if (opts.snap.trigger === 'pointer') {
+                                    if (self.options.container === 'window') {
+                                        elmtL = pmx;
+                                        elmtT = pmy;
+                                        elmtR = window.innerWidth - pmx;
+                                        elmtB = window.innerHeight - pmy;
+                                        elmtL2 = pmx ** 2;
+                                        elmtT2 = elmtT ** 2;
+                                        elmtR2 = elmtR ** 2;
+                                        elmtB2 = elmtB ** 2;
+                                    } else {
+                                        overlaps = self.overlaps(parent, 'paddingbox', e);
+                                        elmtL = overlaps.pointer.left;
+                                        elmtT = overlaps.pointer.top;
+                                        elmtR = overlaps.pointer.right;
+                                        elmtB = overlaps.pointer.bottom;
+                                        elmtL2 = overlaps.pointer.left ** 2;
+                                        elmtT2 = overlaps.pointer.top ** 2;
+                                        elmtR2 = overlaps.pointer.right ** 2;
+                                        elmtB2 = overlaps.pointer.bottom ** 2;
+                                    }
+                                }
+                            }
+
+                            let lefttopVectorDrag = Math.sqrt(elmtL2 + elmtT2),
+                                leftbottomVectorDrag = Math.sqrt(elmtL2 + elmtB2),
+                                righttopVectorDrag = Math.sqrt(elmtR2 + elmtT2),
+                                rightbottomVectorDrag = Math.sqrt(elmtR2 + elmtB2),
+                                horizontalDeltaDrag = Math.abs(elmtL - elmtR) / 2,
+                                verticalDeltaDrag = Math.abs(elmtT - elmtB) / 2,
+                                leftVectorDrag = Math.sqrt(elmtL2 + verticalDeltaDrag ** 2),
+                                topVectorDrag = Math.sqrt(elmtT2 + horizontalDeltaDrag ** 2),
+                                rightVectorDrag = Math.sqrt(elmtR2 + verticalDeltaDrag ** 2),
+                                bottomVectorDrag = Math.sqrt(elmtB2 + horizontalDeltaDrag ** 2);
+
+                            // prevent selections while dragging
+                            window.getSelection().removeAllRanges();
+
+                            // trigger drag permanently while dragging
+                            document.dispatchEvent(jspaneldrag);
+
+                            // move elmt and apply axis option
+                            if (!opts.axis || opts.axis === 'x') {
+                                self.style.left = startLeft + (pmx - psx) / scaleFactor.x + startLeftCorrection + 'px'; // set new css left of elmt depending on opts.axis
+                            }
+                            if (!opts.axis || opts.axis === 'y') {
+                                self.style.top = startTop + (pmy - psy) / scaleFactor.y + 'px'; // set new css top of elmt depending on opts.axis
+                            }
+
+                            // apply grid option
+                            if (opts.grid) {
+                                let grid = opts.grid,
+                                    axis = opts.axis;
+                                // formula rounds to nearest multiple of grid
+                                // https://www.webveteran.com/blog/web-coding/javascript-round-to-any-multiple-of-a-specific-number/
+                                let x = grid[0] * Math.round((startLeft + (pmx - psx)) / grid[0]),
+                                    y = grid[1] * Math.round((startTop + (pmy - psy)) / grid[1]);
+                                if (!axis || axis === 'x') {
+                                    self.style.left = `${x}px`;
+                                }
+                                if (!axis || axis === 'y') {
+                                    self.style.top = `${y}px`;
+                                }
+                            }
+
+                            // apply containment option
+                            if (opts.containment || opts.containment === 0) {
+                                let containment = opts.containment;
+                                let maxLeft, maxTop;
+                                // calc maxLeft and maxTop (minLeft and MinTop is equal to containment setting)
+                                if (self.options.container === document.body) {
+                                    maxLeft = window.innerWidth - parseFloat(dragStyles.width) - containment[1];
+                                    maxTop = window.innerHeight - parseFloat(dragStyles.height) - containment[2];
+                                } else {
+                                    let xCorr = parseFloat(parentStyles.borderLeftWidth) + parseFloat(parentStyles.borderRightWidth),
+                                        yCorr = parseFloat(parentStyles.borderTopWidth) + parseFloat(parentStyles.borderBottomWidth);
+                                    maxLeft = parentRect.width / scaleFactor.x - parseFloat(dragStyles.width) - containment[1] - xCorr;
+                                    maxTop = parentRect.height / scaleFactor.y - parseFloat(dragStyles.height) - containment[2] - yCorr;
+                                }
+
+                                if (parseFloat(self.style.left) <= containment[3]) {
+                                    self.style.left = containment[3] + 'px';
+                                }
+                                if (parseFloat(self.style.top) <= containment[0]) {
+                                    self.style.top = containment[0] + 'px';
+                                }
+                                if (parseFloat(self.style.left) >= maxLeft) {
+                                    self.style.left = maxLeft + 'px';
+                                }
+                                if (parseFloat(self.style.top) >= maxTop) {
+                                    self.style.top = maxTop + 'px';
+                                }
+                            }
+
+                            // callback while dragging
+                            if (opts.drag.length) {
+                                let paneldata = {
+                                    left: elmtL,
+                                    top: elmtT,
+                                    right: elmtR,
+                                    bottom: elmtB,
+                                    width: parseFloat(dragStyles.width),
+                                    height: parseFloat(dragStyles.height),
+                                };
+                                jsPanel.processCallbacks(self, opts.drag, false, paneldata, e);
+                            }
+
+                            // apply snap options
+                            if (opts.snap) {
+                                let snapSens = opts.snap.sensitivity,
+                                    topSensAreaLength = parent === document.body ? window.innerWidth / 8 : parentRect.width / 8,
+                                    sideSensAreaLength = parent === document.body ? window.innerHeight / 8 : parentRect.height / 8;
+                                self.snappableTo = false;
+                                jsPanel.removeSnapAreas();
+
+                                if (lefttopVectorDrag < snapSens) {
+                                    if (opts.snap.snapLeftTop !== false) {
+                                        if (!opts.snap.active || opts.snap.active === 'both') {
+                                            self.snappableTo = 'left-top';
+                                            jsPanel.createSnapArea(self, 'lt', snapSens);
+                                        } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                                            if (overlaps.pointer.left > 0 && overlaps.pointer.top > 0) {
+                                                self.snappableTo = 'left-top';
+                                                jsPanel.createSnapArea(self, 'lt', snapSens);
+                                            } else {
+                                                self.snappableTo = false;
+                                                jsPanel.removeSnapAreas();
+                                            }
+                                        }
+                                    }
+                                } else if (leftbottomVectorDrag < snapSens) {
+                                    if (opts.snap.snapLeftBottom !== false) {
+                                        if (!opts.snap.active || opts.snap.active === 'both') {
+                                            self.snappableTo = 'left-bottom';
+                                            jsPanel.createSnapArea(self, 'lb', snapSens);
+                                        } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                                            if (overlaps.pointer.left > 0 && overlaps.pointer.bottom > 0) {
+                                                self.snappableTo = 'left-bottom';
+                                                jsPanel.createSnapArea(self, 'lb', snapSens);
+                                            } else {
+                                                self.snappableTo = false;
+                                                jsPanel.removeSnapAreas();
+                                            }
+                                        }
+                                    }
+                                } else if (righttopVectorDrag < snapSens) {
+                                    if (opts.snap.snapRightTop !== false) {
+                                        if (!opts.snap.active || opts.snap.active === 'both') {
+                                            self.snappableTo = 'right-top';
+                                            jsPanel.createSnapArea(self, 'rt', snapSens);
+                                        } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                                            if (overlaps.pointer.right > 0 && overlaps.pointer.top > 0) {
+                                                self.snappableTo = 'right-top';
+                                                jsPanel.createSnapArea(self, 'rt', snapSens);
+                                            } else {
+                                                self.snappableTo = false;
+                                                jsPanel.removeSnapAreas();
+                                            }
+                                        }
+                                    }
+                                } else if (rightbottomVectorDrag < snapSens) {
+                                    if (opts.snap.snapRightBottom !== false) {
+                                        if (!opts.snap.active || opts.snap.active === 'both') {
+                                            self.snappableTo = 'right-bottom';
+                                            jsPanel.createSnapArea(self, 'rb', snapSens);
+                                        } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                                            if (overlaps.pointer.right > 0 && overlaps.pointer.bottom > 0) {
+                                                self.snappableTo = 'right-bottom';
+                                                jsPanel.createSnapArea(self, 'rb', snapSens);
+                                            } else {
+                                                self.snappableTo = false;
+                                                jsPanel.removeSnapAreas();
+                                            }
+                                        }
+                                    }
+                                } else if (elmtT < snapSens && topVectorDrag < topSensAreaLength) {
+                                    if (opts.snap.snapCenterTop !== false) {
+                                        if (!opts.snap.active || opts.snap.active === 'both') {
+                                            self.snappableTo = 'center-top';
+                                            jsPanel.createSnapArea(self, 'ct', snapSens);
+                                        } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                                            if (overlaps.pointer.top > 0) {
+                                                self.snappableTo = 'center-top';
+                                                jsPanel.createSnapArea(self, 'ct', snapSens);
+                                            } else {
+                                                self.snappableTo = false;
+                                                jsPanel.removeSnapAreas();
+                                            }
+                                        }
+                                    }
+                                } else if (elmtL < snapSens && leftVectorDrag < sideSensAreaLength) {
+                                    if (opts.snap.snapLeftCenter !== false) {
+                                        if (!opts.snap.active || opts.snap.active === 'both') {
+                                            self.snappableTo = 'left-center';
+                                            jsPanel.createSnapArea(self, 'lc', snapSens);
+                                        } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                                            if (overlaps.pointer.left > 0) {
+                                                self.snappableTo = 'left-center';
+                                                jsPanel.createSnapArea(self, 'lc', snapSens);
+                                            } else {
+                                                self.snappableTo = false;
+                                                jsPanel.removeSnapAreas();
+                                            }
+                                        }
+                                    }
+                                } else if (elmtR < snapSens && rightVectorDrag < sideSensAreaLength) {
+                                    if (opts.snap.snapRightCenter !== false) {
+                                        if (!opts.snap.active || opts.snap.active === 'both') {
+                                            self.snappableTo = 'right-center';
+                                            jsPanel.createSnapArea(self, 'rc', snapSens);
+                                        } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                                            if (overlaps.pointer.right > 0) {
+                                                self.snappableTo = 'right-center';
+                                                jsPanel.createSnapArea(self, 'rc', snapSens);
+                                            } else {
+                                                self.snappableTo = false;
+                                                jsPanel.removeSnapAreas();
+                                            }
+                                        }
+                                    }
+                                } else if (elmtB < snapSens && bottomVectorDrag < topSensAreaLength) {
+                                    if (opts.snap.snapCenterBottom !== false) {
+                                        if (!opts.snap.active || opts.snap.active === 'both') {
+                                            self.snappableTo = 'center-bottom';
+                                            jsPanel.createSnapArea(self, 'cb', snapSens);
+                                        } else if (opts.snap.trigger === 'pointer' && opts.snap.active && opts.snap.active === 'inside') {
+                                            if (overlaps.pointer.bottom > 0) {
+                                                self.snappableTo = 'center-bottom';
+                                                jsPanel.createSnapArea(self, 'cb', snapSens);
+                                            } else {
+                                                self.snappableTo = false;
+                                                jsPanel.removeSnapAreas();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            // opts.drop
+                            if (opts.drop && opts.drop.dropZones) {
+                                // IE doesn't offer document.elementsFromPoint() but document.msElementsFromPoint()
+                                let elementsFromPoint = jsPanel.isIE ? 'msElementsFromPoint' : 'elementsFromPoint';
+                                let elementsFrom = document[elementsFromPoint](e.clientX, e.clientY);
+                                // document.msElementsFromPoint() returns a nodeList -> convert to array
+                                if (!Array.isArray(elementsFrom)) {
+                                    elementsFrom = Array.prototype.slice.call(elementsFrom);
+                                }
+                                opts.drop.dropZones.forEach((zone) => {
+                                    // Array.prototype.includes() needs polyfill in IE
+                                    if (elementsFrom.includes(zone)) {
+                                        self.droppableTo = zone;
+                                    }
+                                });
+                                // do not include following if statement in this.options.dragit.drop.dropZones.forEach !!!!
+                                if (!elementsFrom.includes(self.droppableTo)) {
+                                    self.droppableTo = false;
+                                }
+                            }
+                        };
+
+                        jsPanel.pointermove.forEach((e) => {
+                            document.addEventListener(e, dragElmt);
+                        });
+
+                        // remove drag handler when mouse leaves browser window (mouseleave doesn't work)
+                        window.addEventListener('mouseout', windowListener, false);
+                    });
+                });
+
+                jsPanel.pointerup.forEach((event) => {
+                    document.addEventListener(event, (e) => {
+                        jsPanel.pointermove.forEach((e) => {
+                            document.removeEventListener(e, dragElmt);
+                        });
+                        //document.body.style.overflow = 'inherit';
+                        jsPanel.removeSnapAreas();
+
+                        if (dragstarted) {
+                            self.style.opacity = 1;
+                            dragstarted = undefined;
+
+                            if (opts.snap) {
+                                switch (self.snappableTo) {
+                                    case 'left-top':
+                                        self.snap(opts.snap.snapLeftTop);
+                                        break;
+                                    case 'center-top':
+                                        self.snap(opts.snap.snapCenterTop);
+                                        break;
+                                    case 'right-top':
+                                        self.snap(opts.snap.snapRightTop);
+                                        break;
+                                    case 'right-center':
+                                        self.snap(opts.snap.snapRightCenter);
+                                        break;
+                                    case 'right-bottom':
+                                        self.snap(opts.snap.snapRightBottom);
+                                        break;
+                                    case 'center-bottom':
+                                        self.snap(opts.snap.snapCenterBottom);
+                                        break;
+                                    case 'left-bottom':
+                                        self.snap(opts.snap.snapLeftBottom);
+                                        break;
+                                    case 'left-center':
+                                        self.snap(opts.snap.snapLeftCenter);
+                                        break;
+                                }
+
+                                if (opts.snap.callback && self.snappableTo && typeof opts.snap.callback === 'function') {
+                                    opts.snap.callback.call(self, self);
+                                    if (opts.snap.repositionOnSnap && opts.snap[camelcase(self.snappableTo)] !== false) {
+                                        self.repositionOnSnap(self.snappableTo);
+                                    }
+                                }
+                                if (self.snappableTo && opts.snap.repositionOnSnap && opts.snap[camelcase(self.snappableTo)]) {
+                                    self.repositionOnSnap(self.snappableTo);
+                                }
+                            }
+
+                            // opts.drop
+                            if (self.droppableTo && self.droppableTo /* !== elmt.parentElement*/) {
+                                let sourceContainer = self.parentElement;
+                                self.move(self.droppableTo);
+                                if (opts.drop.callback) {
+                                    opts.drop.callback.call(self, self, self.droppableTo, sourceContainer);
+                                }
+                            }
+
+                            document.dispatchEvent(jspaneldragstop);
+
+                            if (opts.stop.length) {
+                                let stopStyles = window.getComputedStyle(self),
+                                    paneldata = {
+                                        left: parseFloat(stopStyles.left),
+                                        top: parseFloat(stopStyles.top),
+                                        width: parseFloat(stopStyles.width),
+                                        height: parseFloat(stopStyles.height),
+                                    };
+                                jsPanel.processCallbacks(self, opts.stop, false, paneldata, e);
+                            }
+
+                            self.saveCurrentPosition();
+                            self.calcSizeFactors(); // important for options onwindowresize/onparentresize
+                        }
+
+                        self.controlbar.style.pointerEvents = 'inherit';
+                        self.content.style.pointerEvents = 'inherit';
+                        // restore other panel's css pointer-events
+                        document.querySelectorAll('iframe').forEach((frame) => {
+                            frame.style.pointerEvents = 'auto';
+                        });
+                    });
+                    window.removeEventListener('mouseout', windowListener);
+                });
+
+                // dragit is initialized - now disable if set
+                if (options.disable) {
+                    handle.style.pointerEvents = 'none';
+                }
+            });
+
+            return self;
+        };
         self.dragit = (string) => {
             const dragitOptions = Object.assign({}, jsPanel.defaults.dragit, options.dragit),
                 handles = self.querySelectorAll(dragitOptions.handles);
@@ -4400,6 +3673,741 @@ let jsPanel = {
                     handle.style.pointerEvents = 'auto';
                 });
             }
+            return self;
+        };
+
+        self.sizeit = (options = {}) => {
+            const jspanelresizestart = new CustomEvent('jspanelresizestart', { detail: self.id }),
+                jspanelresize = new CustomEvent('jspanelresize', { detail: self.id }),
+                jspanelresizestop = new CustomEvent('jspanelresizestop', { detail: self.id });
+            // make panel available as event object property 'panel'
+            [jspanelresizestart, jspanelresize, jspanelresizestop].forEach((evt) => {
+                evt.panel = self;
+            });
+            let opts = {},
+                resizePanel,
+                resizestarted,
+                w,
+                h,
+                startWidth,
+                startHeight;
+
+            opts.handles = options.handles || jsPanel.defaults.resizeit.handles;
+            opts.handles.split(',').forEach((item) => {
+                const node = document.createElement('DIV');
+                node.className = `jsPanel-resizeit-handle jsPanel-resizeit-${item.trim()}`;
+                //node.style.zIndex = 90;
+                self.append(node);
+            });
+            // cache option aspectRatio of original resizeit configuration (is restored on pointerup)
+            let cachedOptionAspectRatio = options.aspectRatio ? options.aspectRatio : false;
+
+            function windowListener(e) {
+                if (e.relatedTarget === null) {
+                    jsPanel.pointermove.forEach((evt) => {
+                        document.removeEventListener(evt, resizePanel, false);
+                    });
+                }
+            }
+
+            self.querySelectorAll('.jsPanel-resizeit-handle').forEach((handle) => {
+                handle.style.touchAction = 'none';
+
+                jsPanel.pointerdown.forEach((event) => {
+                    handle.addEventListener(event, (e) => {
+                        // prevent window scroll while resizing elmt
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // disable resizing for all mouse buttons but left
+                        if (e.button && e.button > 0) {
+                            return false;
+                        }
+                        // factor is needed only for the modifier key Shift feature
+                        let factor = 1;
+                        // setup and normalize resizeit options
+                        opts = Object.assign({}, jsPanel.defaults.resizeit, options);
+                        if (opts.containment || opts.containment === 0) {
+                            opts.containment = jsPanel.pOcontainment(opts.containment);
+                        }
+                        // legacy line: aspectRatio should be either 'panel' or 'content', not just true
+                        if (opts.aspectRatio && opts.aspectRatio === true) {
+                            opts.aspectRatio = 'panel';
+                        }
+                        // set aspectRatio according to modifier key
+                        if (jsPanel.modifier) {
+                            let modifier = jsPanel.modifier;
+                            if (modifier.altKey) {
+                                opts.aspectRatio = 'content';
+                            } else if (modifier.ctrlKey) {
+                                opts.aspectRatio = 'panel';
+                            } else if (modifier.shiftKey) {
+                                opts.aspectRatio = false;
+                                factor = 2; // does work only with 2 as value
+                            }
+                        }
+
+                        // noinspection JSUnresolvedFunction
+                        let maxWidth = typeof opts.maxWidth === 'function' ? opts.maxWidth() : opts.maxWidth || 10000,
+                            maxHeight = typeof opts.maxHeight === 'function' ? opts.maxHeight() : opts.maxHeight || 10000,
+                            minWidth = typeof opts.minWidth === 'function' ? opts.minWidth() : opts.minWidth,
+                            minHeight = typeof opts.minHeight === 'function' ? opts.minHeight() : opts.minHeight;
+
+                        self.content.style.pointerEvents = 'none';
+                        // prevents iframes in other panel from interfering with resize action of dragged panel
+                        document.querySelectorAll('iframe').forEach((frame) => {
+                            frame.style.pointerEvents = 'none';
+                        });
+
+                        // noinspection JSUnresolvedVariable
+                        const elmtParent = self.parentElement,
+                            elmtParentTagName = elmtParent.tagName.toLowerCase(),
+                            elmtRect = self.getBoundingClientRect(),
+                            elmtParentRect = elmtParent.getBoundingClientRect(),
+                            elmtParentStyles = window.getComputedStyle(elmtParent, null),
+                            elmtParentBLW = parseInt(elmtParentStyles.borderLeftWidth, 10),
+                            elmtParentBTW = parseInt(elmtParentStyles.borderTopWidth, 10),
+                            elmtParentPosition = elmtParentStyles.getPropertyValue('position'),
+                            startX = e.clientX || e.touches[0].clientX,
+                            startY = e.clientY || e.touches[0].clientY,
+                            startRatio = startX / startY,
+                            resizeHandleClassList = e.target.classList,
+                            scaleFactor = self.getScaleFactor(),
+                            aspectRatio = elmtRect.width / elmtRect.height,
+                            elmtContentRect = self.content.getBoundingClientRect(),
+                            aspectRatioContent = elmtContentRect.width / elmtContentRect.height,
+                            hdrHeight = self.header.getBoundingClientRect().height, // needed in aspectRatio
+                            ftrHeight = self.footer.getBoundingClientRect().height || 0; // needed in aspectRatio
+                        let startLeft = elmtRect.left,
+                            startTop = elmtRect.top,
+                            maxWidthEast = 10000,
+                            maxWidthWest = 10000,
+                            maxHeightSouth = 10000,
+                            maxHeightNorth = 10000;
+
+                        startWidth = elmtRect.width;
+                        startHeight = elmtRect.height;
+
+                        if (elmtParentTagName !== 'body') {
+                            startLeft = elmtRect.left - elmtParentRect.left + elmtParent.scrollLeft;
+                            startTop = elmtRect.top - elmtParentRect.top + elmtParent.scrollTop;
+                        }
+
+                        // calc min/max left/top values if containment is set - code from jsDraggable
+                        if (elmtParentTagName === 'body' && opts.containment) {
+                            maxWidthEast = document.documentElement.clientWidth - elmtRect.left;
+                            maxHeightSouth = document.documentElement.clientHeight - elmtRect.top;
+                            maxWidthWest = elmtRect.width + elmtRect.left;
+                            maxHeightNorth = elmtRect.height + elmtRect.top;
+                        } else {
+                            // if panel is NOT in body
+                            if (opts.containment) {
+                                if (elmtParentPosition === 'static') {
+                                    maxWidthEast = elmtParentRect.width - elmtRect.left + elmtParentBLW;
+                                    maxHeightSouth = elmtParentRect.height + elmtParentRect.top - elmtRect.top + elmtParentBTW;
+                                    maxWidthWest = elmtRect.width + (elmtRect.left - elmtParentRect.left) - elmtParentBLW;
+                                    maxHeightNorth = elmtRect.height + (elmtRect.top - elmtParentRect.top) - elmtParentBTW;
+                                } else {
+                                    maxWidthEast = elmtParent.clientWidth - (elmtRect.left - elmtParentRect.left) / scaleFactor.x + elmtParentBLW;
+                                    maxHeightSouth = elmtParent.clientHeight - (elmtRect.top - elmtParentRect.top) / scaleFactor.y + elmtParentBTW;
+                                    maxWidthWest = (elmtRect.width + elmtRect.left - elmtParentRect.left) / scaleFactor.x - elmtParentBLW;
+                                    maxHeightNorth = self.clientHeight + (elmtRect.top - elmtParentRect.top) / scaleFactor.y - elmtParentBTW;
+                                }
+                            }
+                        }
+                        // if original opts.containment is array
+                        if (opts.containment) {
+                            maxWidthWest -= opts.containment[3];
+                            maxHeightNorth -= opts.containment[0];
+                            maxWidthEast -= opts.containment[1];
+                            maxHeightSouth -= opts.containment[2];
+                        }
+
+                        // calculate corrections for rotated panels
+                        const computedStyle = window.getComputedStyle(self),
+                            wDif = parseFloat(computedStyle.width) - elmtRect.width,
+                            hDif = parseFloat(computedStyle.height) - elmtRect.height;
+                        let xDif = parseFloat(computedStyle.left) - elmtRect.left,
+                            yDif = parseFloat(computedStyle.top) - elmtRect.top;
+                        if (elmtParent !== document.body) {
+                            xDif += elmtParentRect.left;
+                            yDif += elmtParentRect.top;
+                        }
+                        // used in aspectRatio code
+                        let borderTopWidth = parseInt(computedStyle.borderTopWidth, 10),
+                            borderRightWidth = parseInt(computedStyle.borderRightWidth, 10),
+                            borderBottomWidth = parseInt(computedStyle.borderBottomWidth, 10),
+                            borderLeftWidth = parseInt(computedStyle.borderLeftWidth, 10);
+
+                        resizePanel = (evt) => {
+                            evt.preventDefault();
+                            // trigger resizestarted only once per resize
+                            if (!resizestarted) {
+                                document.dispatchEvent(jspanelresizestart);
+                                if (opts.start.length) {
+                                    jsPanel.processCallbacks(
+                                        self,
+                                        opts.start,
+                                        false,
+                                        {
+                                            width: startWidth,
+                                            height: startHeight,
+                                            left: startLeft,
+                                            top: startTop,
+                                        },
+                                        evt
+                                    );
+                                }
+                                self.front();
+                                if (elmtRect.height > startHeight + 5) {
+                                    self.status = 'normalized';
+                                    self.setControls(['.jsPanel-btn-normalize']);
+                                }
+                            }
+                            resizestarted = 1;
+                            // trigger resize permanently while resizing
+                            document.dispatchEvent(jspanelresize);
+
+                            // possibly updated while resizing
+                            let eventX = evt.touches ? evt.touches[0].clientX : evt.clientX,
+                                eventY = evt.touches ? evt.touches[0].clientY : evt.clientY,
+                                overlaps;
+
+                            if (resizeHandleClassList.contains('jsPanel-resizeit-e')) {
+                                //w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
+                                w = startWidth + ((eventX - startX) * factor) / scaleFactor.x + wDif; // needs left adjust, for width and height adjust factor may be either 1 (no adjust) or 2
+                                if (w >= maxWidthEast) {
+                                    w = maxWidthEast;
+                                }
+                                if (w >= maxWidth) {
+                                    w = maxWidth;
+                                }
+                                if (w <= minWidth) {
+                                    w = minWidth;
+                                }
+                                self.style.width = w + 'px';
+                                if (factor === 2) {
+                                    // factor works only with value of 2 when adjusting left or top
+                                    self.style.left = startLeft - (eventX - startX) + 'px';
+                                }
+                                if (opts.aspectRatio === 'content') {
+                                    // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
+                                    self.style.height =
+                                        (w - borderRightWidth - borderLeftWidth) / aspectRatioContent +
+                                        hdrHeight +
+                                        ftrHeight +
+                                        borderTopWidth +
+                                        borderBottomWidth +
+                                        'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.bottom <= opts.containment[2]) {
+                                            self.style.height = maxHeightSouth + 'px';
+                                            self.style.width = maxHeightSouth * aspectRatioContent + 'px';
+                                        }
+                                    }
+                                } else if (opts.aspectRatio === 'panel') {
+                                    // otherwise the complete panel maintains its aspect ratio
+                                    self.style.height = w / aspectRatio + 'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.bottom <= opts.containment[2]) {
+                                            self.style.height = maxHeightSouth + 'px';
+                                            self.style.width = maxHeightSouth * aspectRatio + 'px';
+                                        }
+                                    }
+                                }
+                            } else if (resizeHandleClassList.contains('jsPanel-resizeit-s')) {
+                                //h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
+                                h = startHeight + ((eventY - startY) * factor) / scaleFactor.y + hDif; // needs top adjust
+                                if (h >= maxHeightSouth) {
+                                    h = maxHeightSouth;
+                                }
+                                if (h >= maxHeight) {
+                                    h = maxHeight;
+                                }
+                                if (h <= minHeight) {
+                                    h = minHeight;
+                                }
+                                self.style.height = h + 'px';
+                                if (factor === 2) {
+                                    self.style.top = startTop - (eventY - startY) + 'px';
+                                }
+                                if (opts.aspectRatio === 'content') {
+                                    // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
+                                    self.style.width =
+                                        (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
+                                        borderTopWidth +
+                                        borderBottomWidth +
+                                        'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.right <= opts.containment[1]) {
+                                            self.style.width = maxWidthEast + 'px';
+                                            self.style.height = maxWidthEast / aspectRatioContent + 'px';
+                                        }
+                                    }
+                                } else if (opts.aspectRatio === 'panel') {
+                                    // otherwise the complete panel maintains its aspect ratio
+                                    self.style.width = h * aspectRatio + 'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.right <= opts.containment[1]) {
+                                            self.style.width = maxWidthEast + 'px';
+                                            self.style.height = maxWidthEast / aspectRatio + 'px';
+                                        }
+                                    }
+                                }
+                            } else if (resizeHandleClassList.contains('jsPanel-resizeit-w')) {
+                                //w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
+                                w = startWidth + ((startX - eventX) * factor) / scaleFactor.x + wDif; // doesn't need left adjust
+                                if (w <= maxWidth && w >= minWidth && w <= maxWidthWest) {
+                                    self.style.left = startLeft + (eventX - startX) / scaleFactor.x + xDif + 'px';
+                                }
+                                if (w >= maxWidthWest) {
+                                    w = maxWidthWest;
+                                }
+                                if (w >= maxWidth) {
+                                    w = maxWidth;
+                                }
+                                if (w <= minWidth) {
+                                    w = minWidth;
+                                }
+                                self.style.width = w + 'px';
+                                if (opts.aspectRatio === 'content') {
+                                    // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
+                                    self.style.height =
+                                        (w - borderRightWidth - borderLeftWidth) / aspectRatioContent +
+                                        hdrHeight +
+                                        ftrHeight +
+                                        borderTopWidth +
+                                        borderBottomWidth +
+                                        'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.bottom <= opts.containment[2]) {
+                                            self.style.height = maxHeightSouth + 'px';
+                                            self.style.width = maxHeightSouth * aspectRatioContent + 'px';
+                                        }
+                                    }
+                                } else if (opts.aspectRatio === 'panel') {
+                                    // otherwise the complete panel maintains its aspect ratio
+                                    self.style.height = w / aspectRatio + 'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.bottom <= opts.containment[2]) {
+                                            self.style.height = maxHeightSouth + 'px';
+                                            self.style.width = maxHeightSouth * aspectRatio + 'px';
+                                        }
+                                    }
+                                }
+                            } else if (resizeHandleClassList.contains('jsPanel-resizeit-n')) {
+                                //h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
+                                h = startHeight + ((startY - eventY) * factor) / scaleFactor.y + hDif; // doesn't need top adjust
+                                if (h <= maxHeight && h >= minHeight && h <= maxHeightNorth) {
+                                    self.style.top = startTop + (eventY - startY) / scaleFactor.y + yDif + 'px';
+                                }
+                                if (h >= maxHeightNorth) {
+                                    h = maxHeightNorth;
+                                }
+                                if (h >= maxHeight) {
+                                    h = maxHeight;
+                                }
+                                if (h <= minHeight) {
+                                    h = minHeight;
+                                }
+                                self.style.height = h + 'px';
+                                if (opts.aspectRatio === 'content') {
+                                    // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
+                                    self.style.width =
+                                        (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
+                                        borderTopWidth +
+                                        borderBottomWidth +
+                                        'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.right <= opts.containment[1]) {
+                                            self.style.width = maxWidthEast + 'px';
+                                            self.style.height = maxWidthEast / aspectRatioContent + 'px';
+                                        }
+                                    }
+                                } else if (opts.aspectRatio === 'panel') {
+                                    // otherwise the complete panel maintains its aspect ratio
+                                    self.style.width = h * aspectRatio + 'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.right <= opts.containment[1]) {
+                                            self.style.width = maxWidthEast + 'px';
+                                            self.style.height = maxWidthEast / aspectRatio + 'px';
+                                        }
+                                    }
+                                }
+                            } else if (resizeHandleClassList.contains('jsPanel-resizeit-se')) {
+                                //w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
+                                w = startWidth + ((eventX - startX) * factor) / scaleFactor.x + wDif; // needs left adjust
+                                if (w >= maxWidthEast) {
+                                    w = maxWidthEast;
+                                }
+                                if (w >= maxWidth) {
+                                    w = maxWidth;
+                                }
+                                if (w <= minWidth) {
+                                    w = minWidth;
+                                }
+                                self.style.width = w + 'px';
+                                if (factor === 2) {
+                                    self.style.left = startLeft - (eventX - startX) + 'px';
+                                }
+                                if (opts.aspectRatio) {
+                                    self.style.height = w / aspectRatio + 'px';
+                                }
+
+                                //h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
+                                h = startHeight + ((eventY - startY) * factor) / scaleFactor.y + hDif; // needs top adjust
+                                if (h >= maxHeightSouth) {
+                                    h = maxHeightSouth;
+                                }
+                                if (h >= maxHeight) {
+                                    h = maxHeight;
+                                }
+                                if (h <= minHeight) {
+                                    h = minHeight;
+                                }
+                                self.style.height = h + 'px';
+                                if (factor === 2) {
+                                    self.style.top = startTop - (eventY - startY) + 'px';
+                                }
+                                if (opts.aspectRatio === 'content') {
+                                    // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
+                                    self.style.width =
+                                        (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
+                                        borderTopWidth +
+                                        borderBottomWidth +
+                                        'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.right <= opts.containment[1]) {
+                                            self.style.width = maxWidthEast + 'px';
+                                            self.style.height = maxWidthEast / aspectRatioContent + 'px';
+                                        }
+                                    }
+                                } else if (opts.aspectRatio === 'panel') {
+                                    // otherwise the complete panel maintains its aspect ratio
+                                    self.style.width = h * aspectRatio + 'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.right <= opts.containment[1]) {
+                                            self.style.width = maxWidthEast + 'px';
+                                            self.style.height = maxWidthEast / aspectRatio + 'px';
+                                        }
+                                    }
+                                }
+                            } else if (resizeHandleClassList.contains('jsPanel-resizeit-sw')) {
+                                //h = startHeight + (eventY - startY) / scaleFactor.y + hDif;
+                                h = startHeight + ((eventY - startY) * factor) / scaleFactor.y + hDif; // needs top adjust
+                                if (h >= maxHeightSouth) {
+                                    h = maxHeightSouth;
+                                }
+                                if (h >= maxHeight) {
+                                    h = maxHeight;
+                                }
+                                if (h <= minHeight) {
+                                    h = minHeight;
+                                }
+                                self.style.height = h + 'px';
+                                if (factor === 2) {
+                                    self.style.top = startTop - (eventY - startY) + 'px';
+                                }
+                                if (opts.aspectRatio) {
+                                    self.style.width = h * aspectRatio + 'px';
+                                }
+
+                                //w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
+                                w = startWidth + ((startX - eventX) * factor) / scaleFactor.x + wDif; // doesn't need left adjust
+                                if (w <= maxWidth && w >= minWidth && w <= maxWidthWest) {
+                                    self.style.left = startLeft + (eventX - startX) / scaleFactor.x + xDif + 'px';
+                                }
+                                if (w >= maxWidthWest) {
+                                    w = maxWidthWest;
+                                }
+                                if (w >= maxWidth) {
+                                    w = maxWidth;
+                                }
+                                if (w <= minWidth) {
+                                    w = minWidth;
+                                }
+                                self.style.width = w + 'px';
+                                if (opts.aspectRatio === 'content') {
+                                    // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
+                                    self.style.height =
+                                        (w - borderRightWidth - borderLeftWidth) / aspectRatioContent +
+                                        hdrHeight +
+                                        ftrHeight +
+                                        borderTopWidth +
+                                        borderBottomWidth +
+                                        'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.bottom <= opts.containment[2]) {
+                                            self.style.height = maxHeightSouth + 'px';
+                                            self.style.width = maxHeightSouth * aspectRatioContent + 'px';
+                                        }
+                                    }
+                                } else if (opts.aspectRatio === 'panel') {
+                                    // otherwise the complete panel maintains its aspect ratio
+                                    self.style.height = w / aspectRatio + 'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.bottom <= opts.containment[2]) {
+                                            self.style.height = maxHeightSouth + 'px';
+                                            self.style.width = maxHeightSouth * aspectRatio + 'px';
+                                        }
+                                    }
+                                }
+                            } else if (resizeHandleClassList.contains('jsPanel-resizeit-ne')) {
+                                //w = startWidth + (eventX - startX) / scaleFactor.x + wDif;
+                                w = startWidth + ((eventX - startX) * factor) / scaleFactor.x + wDif; // needs left adjust
+                                if (w >= maxWidthEast) {
+                                    w = maxWidthEast;
+                                }
+                                if (w >= maxWidth) {
+                                    w = maxWidth;
+                                }
+                                if (w <= minWidth) {
+                                    w = minWidth;
+                                }
+                                self.style.width = w + 'px';
+                                if (factor === 2) {
+                                    self.style.left = startLeft - (eventX - startX) + 'px';
+                                }
+                                if (opts.aspectRatio) {
+                                    self.style.height = w / aspectRatio + 'px';
+                                }
+
+                                //h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
+                                h = startHeight + ((startY - eventY) * factor) / scaleFactor.y + hDif; // doesn't need top adjust
+                                if (h <= maxHeight && h >= minHeight && h <= maxHeightNorth) {
+                                    self.style.top = startTop + (eventY - startY) / scaleFactor.y + yDif + 'px';
+                                }
+                                if (h >= maxHeightNorth) {
+                                    h = maxHeightNorth;
+                                }
+                                if (h >= maxHeight) {
+                                    h = maxHeight;
+                                }
+                                if (h <= minHeight) {
+                                    h = minHeight;
+                                }
+                                self.style.height = h + 'px';
+                                if (opts.aspectRatio === 'content') {
+                                    // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
+                                    self.style.width =
+                                        (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
+                                        borderTopWidth +
+                                        borderBottomWidth +
+                                        'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.right <= opts.containment[1]) {
+                                            self.style.width = maxWidthEast + 'px';
+                                            self.style.height = maxWidthEast / aspectRatioContent + 'px';
+                                        }
+                                    }
+                                } else if (opts.aspectRatio === 'panel') {
+                                    // otherwise the complete panel maintains its aspect ratio
+                                    self.style.width = h * aspectRatio + 'px';
+                                    if (opts.containment) {
+                                        overlaps = self.overlaps(elmtParent);
+                                        if (overlaps.right <= opts.containment[1]) {
+                                            self.style.width = maxWidthEast + 'px';
+                                            self.style.height = maxWidthEast / aspectRatio + 'px';
+                                        }
+                                    }
+                                }
+                            } else if (resizeHandleClassList.contains('jsPanel-resizeit-nw')) {
+                                if (opts.aspectRatio && resizeHandleClassList.contains('jsPanel-resizeit-nw')) {
+                                    eventX = eventY * startRatio;
+                                    eventY = eventX / startRatio;
+                                }
+                                //w = startWidth + (startX - eventX) / scaleFactor.x + wDif;
+                                w = startWidth + ((startX - eventX) * factor) / scaleFactor.x + wDif; // doesn't need left adjust
+                                if (w <= maxWidth && w >= minWidth && w <= maxWidthWest) {
+                                    self.style.left = startLeft + (eventX - startX) / scaleFactor.x + xDif + 'px';
+                                }
+                                if (w >= maxWidthWest) {
+                                    w = maxWidthWest;
+                                }
+                                if (w >= maxWidth) {
+                                    w = maxWidth;
+                                }
+                                if (w <= minWidth) {
+                                    w = minWidth;
+                                }
+                                self.style.width = w + 'px';
+                                if (opts.aspectRatio) {
+                                    self.style.height = w / aspectRatio + 'px';
+                                }
+
+                                //h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
+                                h = startHeight + ((startY - eventY) * factor) / scaleFactor.y + hDif; // doesn't need top adjust
+                                if (h <= maxHeight && h >= minHeight && h <= maxHeightNorth) {
+                                    self.style.top = startTop + (eventY - startY) / scaleFactor.y + yDif + 'px';
+                                }
+                                if (h >= maxHeightNorth) {
+                                    h = maxHeightNorth;
+                                }
+                                if (h >= maxHeight) {
+                                    h = maxHeight;
+                                }
+                                if (h <= minHeight) {
+                                    h = minHeight;
+                                }
+                                self.style.height = h + 'px';
+                                if (opts.aspectRatio === 'content') {
+                                    // if aspectRatio is true and set to 'content' the panels content section maintains its aspect ratio
+                                    self.style.width =
+                                        (h - hdrHeight - ftrHeight - borderTopWidth - borderBottomWidth) * aspectRatioContent +
+                                        borderTopWidth +
+                                        borderBottomWidth +
+                                        'px';
+                                } else if (opts.aspectRatio === 'panel') {
+                                    // otherwise the complete panel maintains its aspect ratio
+                                    self.style.width = h * aspectRatio + 'px';
+                                }
+                            }
+
+                            window.getSelection().removeAllRanges();
+
+                            // get current position and size values while resizing
+                            const styles = window.getComputedStyle(self),
+                                values = {
+                                    left: parseFloat(styles.left),
+                                    top: parseFloat(styles.top),
+                                    right: parseFloat(styles.right),
+                                    bottom: parseFloat(styles.bottom),
+                                    width: parseFloat(styles.width),
+                                    height: parseFloat(styles.height),
+                                };
+
+                            // callback while resizing
+                            if (opts.resize.length) {
+                                jsPanel.processCallbacks(self, opts.resize, false, values, evt);
+                            }
+                        };
+
+                        jsPanel.pointermove.forEach((event) => {
+                            document.addEventListener(event, resizePanel, false);
+                        });
+
+                        // remove resize handler when mouse leaves browser window (mouseleave doesn't work)
+                        window.addEventListener('mouseout', windowListener, false);
+                    });
+                });
+
+                jsPanel.pointerup.forEach(function (event) {
+                    document.addEventListener(
+                        event,
+                        (e) => {
+                            jsPanel.pointermove.forEach((evt) => {
+                                document.removeEventListener(evt, resizePanel, false);
+                            });
+
+                            if (e.target.classList && e.target.classList.contains('jsPanel-resizeit-handle')) {
+                                let isLeftChange,
+                                    isTopChange,
+                                    cl = e.target.className;
+                                if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-w|jsPanel-resizeit-sw/i)) {
+                                    isLeftChange = true;
+                                }
+                                if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-n|jsPanel-resizeit-ne/i)) {
+                                    isTopChange = true;
+                                }
+
+                                // snap panel to grid (doesn't work that well if inside function resizePanel)
+                                if (opts.grid && Array.isArray(opts.grid)) {
+                                    if (opts.grid.length === 1) {
+                                        opts.grid[1] = opts.grid[0];
+                                    }
+                                    const cw = parseFloat(self.style.width),
+                                        ch = parseFloat(self.style.height),
+                                        modW = cw % opts.grid[0],
+                                        modH = ch % opts.grid[1],
+                                        cx = parseFloat(self.style.left),
+                                        cy = parseFloat(self.style.top),
+                                        modX = cx % opts.grid[0],
+                                        modY = cy % opts.grid[1];
+
+                                    if (modW < opts.grid[0] / 2) {
+                                        self.style.width = cw - modW + 'px';
+                                    } else {
+                                        self.style.width = cw + (opts.grid[0] - modW) + 'px';
+                                    }
+                                    if (modH < opts.grid[1] / 2) {
+                                        self.style.height = ch - modH + 'px';
+                                    } else {
+                                        self.style.height = ch + (opts.grid[1] - modH) + 'px';
+                                    }
+
+                                    if (isLeftChange) {
+                                        if (modX < opts.grid[0] / 2) {
+                                            self.style.left = cx - modX + 'px';
+                                        } else {
+                                            self.style.left = cx + (opts.grid[0] - modX) + 'px';
+                                        }
+                                    }
+                                    if (isTopChange) {
+                                        if (modY < opts.grid[1] / 2) {
+                                            self.style.top = cy - modY + 'px';
+                                        } else {
+                                            self.style.top = cy + (opts.grid[1] - modY) + 'px';
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (resizestarted) {
+                                self.content.style.pointerEvents = 'inherit';
+                                resizestarted = undefined;
+                                self.saveCurrentDimensions();
+                                self.saveCurrentPosition();
+                                self.calcSizeFactors();
+                                let smallifyBtn = self.controlbar.querySelector('.jsPanel-btn-smallify');
+                                let elmtRect = self.getBoundingClientRect();
+                                if (smallifyBtn && elmtRect.height > startHeight + 5) {
+                                    smallifyBtn.style.transform = 'rotate(0deg)';
+                                }
+                                document.dispatchEvent(jspanelresizestop);
+
+                                if (opts.stop.length) {
+                                    let stopStyles = window.getComputedStyle(self),
+                                        paneldata = {
+                                            left: parseFloat(stopStyles.left),
+                                            top: parseFloat(stopStyles.top),
+                                            width: parseFloat(stopStyles.width),
+                                            height: parseFloat(stopStyles.height),
+                                        };
+                                    jsPanel.processCallbacks(self, opts.stop, false, paneldata, e);
+                                }
+                            }
+
+                            self.content.style.pointerEvents = 'inherit';
+                            // restore other panel's css pointer-events
+                            document.querySelectorAll('iframe').forEach((frame) => {
+                                frame.style.pointerEvents = 'auto';
+                            });
+                            // restore option aspectRatio to original configuration
+                            opts.aspectRatio = cachedOptionAspectRatio;
+                        },
+                        false
+                    );
+                    window.removeEventListener('mouseout', windowListener);
+                });
+
+                // resizeit is initialized - now disable if set
+                if (options.disable) {
+                    handle.style.pointerEvents = 'none';
+                }
+            });
+
             return self;
         };
         self.resizeit = (string) => {
@@ -4638,6 +4646,31 @@ let jsPanel = {
             }
             self.calcSizeFactors();
             return self;
+        };
+        self.windowResizeHandler = (e) => {
+            if (e.target === window) {
+                // see https://bugs.jqueryui.com/ticket/7514
+                let status = self.status,
+                    onWindowResize = options.onwindowresize,
+                    left,
+                    top;
+                if (status === 'maximized' && onWindowResize) {
+                    self.maximize(false, true);
+                } else if (self.snapped && status !== 'minimized') {
+                    self.snap(self.snapped, true);
+                } else if (status === 'normalized' || status === 'smallified' || status === 'maximized') {
+                    if (typeof onWindowResize === 'function') {
+                        onWindowResize.call(self, e, self);
+                    } else {
+                        left = (window.innerWidth - self.offsetWidth) * self.hf;
+                        self.style.left = left <= 0 ? 0 : left + 'px';
+                        top = (window.innerHeight - self.offsetHeight) * self.vf;
+                        self.style.top = top <= 0 ? 0 : top + 'px';
+                    }
+                } else if (status === 'smallifiedmax' && onWindowResize) {
+                    self.maximize(false, true).smallify();
+                }
+            }
         };
 
         self.setControls = (sel, cb) => {
@@ -5000,7 +5033,6 @@ let jsPanel = {
             }
             return self;
         };
-
         self.setRtl = () => {
             [self.header, self.content, self.footer].forEach((item) => {
                 item.dir = 'rtl';
@@ -5009,6 +5041,7 @@ let jsPanel = {
                 }
             });
         };
+
         // option.id
         self.id = options.id;
         // option.paneltype classname
@@ -5157,24 +5190,24 @@ let jsPanel = {
             if (autoclose.time && typeof autoclose.time === 'number') {
                 autoclose.time += 'ms';
             }
-            let slider = self.autocloseProgressbar.querySelector('div');
+            let slider = self.progressbar.querySelector('div');
             slider.addEventListener('animationend', (e) => {
                 e.stopPropagation();
-                self.autocloseProgressbar.classList.remove('active');
+                self.progressbar.classList.remove('active');
                 self.close();
             });
             if (autoclose.progressbar) {
-                self.autocloseProgressbar.classList.add('active');
+                self.progressbar.classList.add('active');
                 if (autoclose.background) {
                     if (jsPanel.themes.indexOf(autoclose.background) > -1) {
-                        self.autocloseProgressbar.classList.add(autoclose.background + '-bg');
+                        self.progressbar.classList.add(autoclose.background + '-bg');
                     } else if (jsPanel.colorNames[autoclose.background]) {
-                        self.autocloseProgressbar.style.background = '#' + jsPanel.colorNames[autoclose.background];
+                        self.progressbar.style.background = '#' + jsPanel.colorNames[autoclose.background];
                     } else {
-                        self.autocloseProgressbar.style.background = autoclose.background;
+                        self.progressbar.style.background = autoclose.background;
                     }
                 } else {
-                    self.autocloseProgressbar.classList.add('success-bg'); // default background for progressbar
+                    self.progressbar.classList.add('success-bg'); // default background for progressbar
                 }
             }
             slider.style.animation = `${autoclose.time} progressbar`;
@@ -5236,7 +5269,7 @@ let jsPanel = {
                     options.dragit[item] = [];
                 }
             });
-            this.dragit(self, options.dragit);
+            self.drag(options.dragit);
             // do not use self.options.dragit.stop.push() !!!
             self.addEventListener(
                 'jspaneldragstop',
@@ -5262,7 +5295,7 @@ let jsPanel = {
                     options.resizeit[item] = [];
                 }
             });
-            this.resizeit(self, options.resizeit);
+            self.sizeit(options.resizeit);
             let startstatus = void 0;
             // do not use self.options.resizeit.start.push() !!!
             self.addEventListener(
@@ -5329,35 +5362,11 @@ let jsPanel = {
 
         // option onwindowresize
         if (options.onwindowresize) {
-            let onResize = options.onwindowresize;
             // if container is 'window'
             if (self.options.container === 'window') {
                 window.addEventListener(
                     'resize',
-                    (e) => {
-                        if (e.target === window) {
-                            // see https://bugs.jqueryui.com/ticket/7514
-                            let status = self.status,
-                                left,
-                                top;
-                            if (status === 'maximized' && onResize) {
-                                self.maximize(false, true);
-                            } else if (self.snapped && status !== 'minimized') {
-                                self.snap(self.snapped, true);
-                            } else if (status === 'normalized' || status === 'smallified' || status === 'maximized') {
-                                if (typeof onResize === 'function') {
-                                    onResize.call(self, e, self);
-                                } else {
-                                    left = (window.innerWidth - self.offsetWidth) * self.hf;
-                                    self.style.left = left <= 0 ? 0 : left + 'px';
-                                    top = (window.innerHeight - self.offsetHeight) * self.vf;
-                                    self.style.top = top <= 0 ? 0 : top + 'px';
-                                }
-                            } else if (status === 'smallifiedmax' && onResize) {
-                                self.maximize(false, true).smallify();
-                            }
-                        }
-                    },
+                    self.windowResizeHandler,
                     false
                 );
             }
@@ -5370,38 +5379,39 @@ let jsPanel = {
             if (parentPanel) {
                 const parentContainer = parentPanel.content;
                 let parentContainerSize = [];
+                self.parentResizeHandler = (e) => {
+                    // if resized panel is the parent panel of the one whose option onContentResize is set to true
+                    if (e.panel === parentPanel) {
+                        // get dimensions of parent panel's content section
+                        parentContainerSize[0] = parentContainer.offsetWidth;
+                        parentContainerSize[1] = parentContainer.offsetHeight;
+                        let status = self.status,
+                            left,
+                            top;
+                        if (status === 'maximized' && onResize) {
+                            self.maximize();
+                        } else if (self.snapped && status !== 'minimized') {
+                            self.snap(self.snapped, true);
+                        } else if (status === 'normalized' || status === 'smallified' || status === 'maximized') {
+                            if (typeof onResize === 'function') {
+                                onResize.call(self, self, {
+                                    width: parentContainerSize[0],
+                                    height: parentContainerSize[1],
+                                });
+                            } else {
+                                left = (parentContainerSize[0] - self.offsetWidth) * self.hf;
+                                self.style.left = left <= 0 ? 0 : left + 'px';
+                                top = (parentContainerSize[1] - self.offsetHeight) * self.vf;
+                                self.style.top = top <= 0 ? 0 : top + 'px';
+                            }
+                        } else if (status === 'smallifiedmax' && onResize) {
+                            self.maximize().smallify();
+                        }
+                    }
+                };
                 document.addEventListener(
                     'jspanelresize',
-                    (e) => {
-                        // if resized panel is the parent panel of the one whose option onContentResize is set to true
-                        if (e.panel === parentPanel) {
-                            // get dimensions of parent panel's content section
-                            parentContainerSize[0] = parentContainer.offsetWidth;
-                            parentContainerSize[1] = parentContainer.offsetHeight;
-                            let status = self.status,
-                                left,
-                                top;
-                            if (status === 'maximized' && onResize) {
-                                self.maximize();
-                            } else if (self.snapped && status !== 'minimized') {
-                                self.snap(self.snapped, true);
-                            } else if (status === 'normalized' || status === 'smallified' || status === 'maximized') {
-                                if (typeof onResize === 'function') {
-                                    onResize.call(self, self, {
-                                        width: parentContainerSize[0],
-                                        height: parentContainerSize[1],
-                                    });
-                                } else {
-                                    left = (parentContainerSize[0] - self.offsetWidth) * self.hf;
-                                    self.style.left = left <= 0 ? 0 : left + 'px';
-                                    top = (parentContainerSize[1] - self.offsetHeight) * self.vf;
-                                    self.style.top = top <= 0 ? 0 : top + 'px';
-                                }
-                            } else if (status === 'smallifiedmax' && onResize) {
-                                self.maximize().smallify();
-                            }
-                        }
-                    },
+                    self.parentResizeHandler,
                     false
                 );
             }

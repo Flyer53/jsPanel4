@@ -1,6 +1,6 @@
 {
     "name": "jspanel4",
-    "version": "4.11.0-beta",
+    "version": "4.11.0",
     "description": "A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu",
     "keywords": [
         "jsPanel",
@@ -39,15 +39,15 @@
         "email": "info@jspanel.de"
     },
     "devDependencies": {
-        "@babel/cli": "^7.10.1",
-        "@babel/core": "^7.10.2",
-        "@babel/preset-env": "^7.10.2",
-        "eslint": "^7.2.0",
-        "eslint-config-standard": "^14.1.1",
-        "eslint-plugin-import": "^2.21.1",
+        "@babel/cli": "^7.12.1",
+        "@babel/core": "^7.12.3",
+        "@babel/preset-env": "^7.12.1",
+        "eslint": "^7.13.0",
+        "eslint-config-standard": "^16.0.2",
+        "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-promise": "^4.2.1",
-        "eslint-plugin-standard": "^4.0.1",
+        "eslint-plugin-standard": "^4.1.0",
         "gulp": "^4.0.2",
         "gulp-babel": "^8.0.0",
         "gulp-babel-minify": "^0.5.1",
@@ -57,9 +57,9 @@
         "gulp-minify": "^3.1.0",
         "gulp-rename": "^2.0.0",
         "gulp-sass": "^4.1.0",
-        "node-sass": "^4.14.1",
-        "npm": "^6.14.5",
-        "prettier": "^2.0.5"
+        "node-sass": "4.14.1",
+        "npm": "^6.14.8",
+        "prettier": "^2.2.0"
     },
     "prettier": {
         "printWidth": 150,

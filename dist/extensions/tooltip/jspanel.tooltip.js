@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.10.1
+ * @version v4.11.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -15,8 +15,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   try {
     new MouseEvent('test');
     return false; // No need to polyfill
-  } catch (e) {} // Need to polyfill - fall through
-  // Polyfills DOM4 MouseEvent
+  } catch (e) {// Need to polyfill - fall through
+  } // Polyfills DOM4 MouseEvent
 
 
   var MouseEvent = function MouseEvent(eventType, params) {

@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.10.1
+ * @version v4.11.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -110,10 +110,11 @@
   display: flex;
   align-items: center;
   font-size: 1rem;
-  flex: 1 1 0px;
+  flex: 1 1 0;
   cursor: move;
   height: 100%;
-  overflow: hidden; }
+  overflow: hidden;
+  user-select: none; }
   .jsPanel-titlebar .jsPanel-title {
     white-space: nowrap;
     overflow: hidden;
@@ -623,19 +624,19 @@
   right: unset;
   left: 0; }
 
-.jsPanel-autoclose-progressbar {
+.jsPanel-progressbar {
   position: relative;
   width: 100%;
   height: 0;
   overflow: hidden; }
-  .jsPanel-autoclose-progressbar .jsPanel-autoclose-progressbar-slider {
+  .jsPanel-progressbar .jsPanel-progressbar-slider {
     position: absolute;
     width: 0;
     height: 3px;
     background: lightgray;
     right: 0; }
 
-.jsPanel-autoclose-progressbar.active {
+.jsPanel-progressbar.active {
   height: 3px; }
 
 @keyframes progressbar {
