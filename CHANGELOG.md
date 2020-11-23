@@ -1,5 +1,9 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.11.1 *2020-11-23*</span>
+
++ **bugfix** in the `maximize()` method
+
 ### <span style='color:#563D7C;'>Version 4.11.0 *2020-11-20*</span>
 
 + **renamed** panel property `autocloseProgressbar` to `progressbar`. The old property name remains usable for compatibility.

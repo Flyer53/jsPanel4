@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.11.0
+ * @version v4.11.1
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -24,8 +24,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 // eslint-disable-next-line no-redeclare
 var jsPanel = {
-  version: '4.11.0',
-  date: '2020-11-20 12:05',
+  version: '4.11.1',
+  date: '2020-11-23 09:37',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
@@ -1307,6 +1307,7 @@ var jsPanel = {
 
 
     if (_position.modify) {
+      // eslint-disable-next-line no-unused-vars
       pos = this.applyPositionModify(panel, pos, _position); //console.log('pos after applying modify():', pos);
     }
 
@@ -2693,8 +2694,7 @@ var jsPanel = {
 
     self.maximize = function (cb, donotfront) {
       // Note: do not disable maximize method for already maximized panels -> onContainerResize wouldn't work
-      self.statusBefore = self.status; // ensure smallify/unsmallify transition is turned off when resizing begins
-      //self.style.transition = 'unset';
+      self.statusBefore = self.status;
 
       if (options.onbeforemaximize && options.onbeforemaximize.length > 0 && !jsPanel.processCallbacks(self, options.onbeforemaximize, 'some', self.statusBefore)) {
         return self;
@@ -2706,15 +2706,17 @@ var jsPanel = {
 
       if (parent === document.body) {
         // maximize within window
+
+        /*
+           When clientHeight is used on the root element (the <html> element), (or on <body> if the document is in quirks mode),
+           the viewport's height (excluding any scrollbar) is returned. This is a special case of clientHeight.
+           See https://developer.mozilla.org/en-US/docs/Web/API/Element/clientHeight
+           document.documentElement in the code below returns the <html> element
+        */
         self.style.width = document.documentElement.clientWidth - margins[1] - margins[3] + 'px';
         self.style.height = document.documentElement.clientHeight - margins[0] - margins[2] + 'px';
         self.style.left = margins[3] + 'px';
         self.style.top = margins[0] + 'px';
-
-        if (!options.position.fixed) {
-          self.style.left = window.pageXOffset + margins[3] + 'px';
-          self.style.top = window.pageYOffset + margins[0] + 'px';
-        }
       } else {
         // maximize within parentElement
         self.style.width = parent.clientWidth - margins[1] - margins[3] + 'px';
