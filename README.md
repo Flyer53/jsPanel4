@@ -3,7 +3,7 @@
 
 ## [jsPanel 4.11.1 released 2020-11-23](#)
 
-> The v4.11.0-beta release includes updated methods `jsPanel.ajax()` and `jsPanel.fetch()` which also affect options `contentAjax` and `contentFetch`. These updates might break existing code. So please check the docs for this beta release on https://beta.jspanel.de/
+> As of v4.11.0-beta methods `jsPanel.ajax()` and `jsPanel.fetch()` are updated. That also affects options `contentAjax` and `contentFetch`. These updates might break existing code. So please check the docs for this beta release on https://jspanel.de/
 
 <img src="https://res.cloudinary.com/stefanstraesser-eu/image/upload/v1558601426/jsPanel4.7.0-sample-panels-1920_yzobd9.jpg">
 
