@@ -1,5 +1,9 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.11.2 *2020-12-09*</span>
+
++ **bugfix** in the code for the `dragit` interaction reducing memory leaks. [See GitHub issue](https://github.com/Flyer53/jsPanel4/issues/121)
+
 ### <span style='color:#563D7C;'>Version 4.11.1 *2020-11-23*</span>
 
 + **bugfix** in the `maximize()` method
