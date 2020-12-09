@@ -14,7 +14,6 @@
 ---
 
 ### jsPanel 4 homepage: [https://jspanel.de](https://jspanel.de/)
-### API and examples: [https://jspanel.de/api.html](https://jspanel.de/api.html)
 
 ### [Dependencies]()
 Just a modern mobile or desktop browser like FF, Chrome, EDGE, Brave, Opera, Vivaldi.
