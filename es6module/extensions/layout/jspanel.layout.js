@@ -11,8 +11,8 @@ import {jsPanel} from '../../jspanel.js';
 
 if (!jsPanel.layout) {
     jsPanel.layout = {
-        version: '1.4.0',
-        date: '2020-03-09 13:54',
+        version: '1.4.1',
+        date: '2021-01-19 10:50',
         storage: localStorage,
 
         save(saveConfig = {}) {
@@ -116,7 +116,7 @@ if (!jsPanel.layout) {
                 };
                 let useConfig = Object.assign({}, config, savedConfig);
 
-                jsPanel.create(useConfig, panel => {
+                return jsPanel.create(useConfig, panel => {
                     panel.style.zIndex = savedConfig.zIndex;
                     panel.saveCurrentDimensions();
                     panel.saveCurrentPosition();

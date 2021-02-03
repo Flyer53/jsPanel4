@@ -11,8 +11,8 @@ import {jsPanel} from '../../jspanel.js';
 
 if (!jsPanel.contextmenu) {
     jsPanel.contextmenu = {
-        version: '1.1.3',
-        date: '2020-04-26 08:07',
+        version: '1.2.0',
+        date: '2021-01-13 10:40',
 
         defaults: {
             //position: is set in jsPanel.contextmenu.create()
@@ -20,7 +20,8 @@ if (!jsPanel.contextmenu) {
             dragit: false,
             resizeit: false,
             header: false,
-            headerControls: 'none'
+            headerControls: 'none',
+            closeOnMouseleave: true
         },
 
         cmOverflow(elmt) {
@@ -106,13 +107,15 @@ if (!jsPanel.contextmenu) {
                         // update left/top values if menu overflows browser viewport
                         jsPanel.contextmenu.cmOverflow(cm);
 
-                        cm.addEventListener(
-                            'mouseleave',
-                            () => {
-                                cm.close();
-                            },
-                            false
-                        );
+                        if (opts.closeOnMouseleave) {
+                            cm.addEventListener(
+                                'mouseleave',
+                                () => {
+                                    cm.close();
+                                },
+                                false
+                            );
+                        }
                         // don't close contextmenu on mousedown in contextmenu
                         jsPanel.pointerdown.forEach(function(evt) {
                             cm.addEventListener(evt, function(e) {

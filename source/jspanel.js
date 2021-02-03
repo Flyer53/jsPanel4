@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-redeclare
 let jsPanel = {
-    version: '4.11.2',
-    date: '2020-12-09 10:10',
+    version: '4.11.3',
+    date: '2021-02-03 16:21',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -3119,7 +3119,7 @@ let jsPanel = {
             let handles = options.handles || jsPanel.defaults.dragit.handles;
             let cursor = options.cursor || jsPanel.defaults.dragit.cursor;
 
-            function pointerUpHandler(e, event) {
+            function pointerUpHandlerDragit(e) {
                 jsPanel.pointermove.forEach((e) => {
                     document.removeEventListener(e, dragElmt);
                 });
@@ -3193,7 +3193,7 @@ let jsPanel = {
                 document.querySelectorAll('iframe').forEach((frame) => {
                     frame.style.pointerEvents = 'auto';
                 });
-                document.removeEventListener(event, pointerUpHandler);
+                document.removeEventListener(e, pointerUpHandlerDragit);
             }
 
             self.querySelectorAll(handles).forEach((handle) => {
@@ -3643,7 +3643,7 @@ let jsPanel = {
                 });
 
                 jsPanel.pointerup.forEach((event) => {
-                    document.addEventListener(event, pointerUpHandler);
+                    document.addEventListener(event, pointerUpHandlerDragit);
                     window.removeEventListener('mouseout', windowListener);
                 });
 
@@ -3702,6 +3702,96 @@ let jsPanel = {
                         document.removeEventListener(evt, resizePanel, false);
                     });
                 }
+            }
+
+            function pointerUpHandlerResizeit(e) {
+                jsPanel.pointermove.forEach((evt) => {
+                    document.removeEventListener(evt, resizePanel, false);
+                });
+                if (e.target.classList && e.target.classList.contains('jsPanel-resizeit-handle')) {
+                    let isLeftChange,
+                        isTopChange,
+                        cl = e.target.className;
+                    if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-w|jsPanel-resizeit-sw/i)) {
+                        isLeftChange = true;
+                    }
+                    if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-n|jsPanel-resizeit-ne/i)) {
+                        isTopChange = true;
+                    }
+
+                    // snap panel to grid (doesn't work that well if inside function resizePanel)
+                    if (opts.grid && Array.isArray(opts.grid)) {
+                        if (opts.grid.length === 1) {
+                            opts.grid[1] = opts.grid[0];
+                        }
+                        const cw = parseFloat(self.style.width),
+                            ch = parseFloat(self.style.height),
+                            modW = cw % opts.grid[0],
+                            modH = ch % opts.grid[1],
+                            cx = parseFloat(self.style.left),
+                            cy = parseFloat(self.style.top),
+                            modX = cx % opts.grid[0],
+                            modY = cy % opts.grid[1];
+
+                        if (modW < opts.grid[0] / 2) {
+                            self.style.width = cw - modW + 'px';
+                        } else {
+                            self.style.width = cw + (opts.grid[0] - modW) + 'px';
+                        }
+                        if (modH < opts.grid[1] / 2) {
+                            self.style.height = ch - modH + 'px';
+                        } else {
+                            self.style.height = ch + (opts.grid[1] - modH) + 'px';
+                        }
+
+                        if (isLeftChange) {
+                            if (modX < opts.grid[0] / 2) {
+                                self.style.left = cx - modX + 'px';
+                            } else {
+                                self.style.left = cx + (opts.grid[0] - modX) + 'px';
+                            }
+                        }
+                        if (isTopChange) {
+                            if (modY < opts.grid[1] / 2) {
+                                self.style.top = cy - modY + 'px';
+                            } else {
+                                self.style.top = cy + (opts.grid[1] - modY) + 'px';
+                            }
+                        }
+                    }
+                }
+                if (resizestarted) {
+                    self.content.style.pointerEvents = 'inherit';
+                    resizestarted = undefined;
+                    self.saveCurrentDimensions();
+                    self.saveCurrentPosition();
+                    self.calcSizeFactors();
+                    let smallifyBtn = self.controlbar.querySelector('.jsPanel-btn-smallify');
+                    let elmtRect = self.getBoundingClientRect();
+                    if (smallifyBtn && elmtRect.height > startHeight + 5) {
+                        smallifyBtn.style.transform = 'rotate(0deg)';
+                    }
+                    document.dispatchEvent(jspanelresizestop);
+
+                    if (opts.stop.length) {
+                        let stopStyles = window.getComputedStyle(self),
+                            paneldata = {
+                                left: parseFloat(stopStyles.left),
+                                top: parseFloat(stopStyles.top),
+                                width: parseFloat(stopStyles.width),
+                                height: parseFloat(stopStyles.height),
+                            };
+                        jsPanel.processCallbacks(self, opts.stop, false, paneldata, e);
+                    }
+                }
+                self.content.style.pointerEvents = 'inherit';
+                // restore other panel's css pointer-events
+                document.querySelectorAll('iframe').forEach((frame) => {
+                    frame.style.pointerEvents = 'auto';
+                });
+                // restore option aspectRatio to original configuration
+                opts.aspectRatio = cachedOptionAspectRatio;
+                document.removeEventListener(e, pointerUpHandlerResizeit);
             }
 
             self.querySelectorAll('.jsPanel-resizeit-handle').forEach((handle) => {
@@ -4298,101 +4388,7 @@ let jsPanel = {
                 });
 
                 jsPanel.pointerup.forEach(function (event) {
-                    document.addEventListener(
-                        event,
-                        (e) => {
-                            jsPanel.pointermove.forEach((evt) => {
-                                document.removeEventListener(evt, resizePanel, false);
-                            });
-
-                            if (e.target.classList && e.target.classList.contains('jsPanel-resizeit-handle')) {
-                                let isLeftChange,
-                                    isTopChange,
-                                    cl = e.target.className;
-                                if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-w|jsPanel-resizeit-sw/i)) {
-                                    isLeftChange = true;
-                                }
-                                if (cl.match(/jsPanel-resizeit-nw|jsPanel-resizeit-n|jsPanel-resizeit-ne/i)) {
-                                    isTopChange = true;
-                                }
-
-                                // snap panel to grid (doesn't work that well if inside function resizePanel)
-                                if (opts.grid && Array.isArray(opts.grid)) {
-                                    if (opts.grid.length === 1) {
-                                        opts.grid[1] = opts.grid[0];
-                                    }
-                                    const cw = parseFloat(self.style.width),
-                                        ch = parseFloat(self.style.height),
-                                        modW = cw % opts.grid[0],
-                                        modH = ch % opts.grid[1],
-                                        cx = parseFloat(self.style.left),
-                                        cy = parseFloat(self.style.top),
-                                        modX = cx % opts.grid[0],
-                                        modY = cy % opts.grid[1];
-
-                                    if (modW < opts.grid[0] / 2) {
-                                        self.style.width = cw - modW + 'px';
-                                    } else {
-                                        self.style.width = cw + (opts.grid[0] - modW) + 'px';
-                                    }
-                                    if (modH < opts.grid[1] / 2) {
-                                        self.style.height = ch - modH + 'px';
-                                    } else {
-                                        self.style.height = ch + (opts.grid[1] - modH) + 'px';
-                                    }
-
-                                    if (isLeftChange) {
-                                        if (modX < opts.grid[0] / 2) {
-                                            self.style.left = cx - modX + 'px';
-                                        } else {
-                                            self.style.left = cx + (opts.grid[0] - modX) + 'px';
-                                        }
-                                    }
-                                    if (isTopChange) {
-                                        if (modY < opts.grid[1] / 2) {
-                                            self.style.top = cy - modY + 'px';
-                                        } else {
-                                            self.style.top = cy + (opts.grid[1] - modY) + 'px';
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (resizestarted) {
-                                self.content.style.pointerEvents = 'inherit';
-                                resizestarted = undefined;
-                                self.saveCurrentDimensions();
-                                self.saveCurrentPosition();
-                                self.calcSizeFactors();
-                                let smallifyBtn = self.controlbar.querySelector('.jsPanel-btn-smallify');
-                                let elmtRect = self.getBoundingClientRect();
-                                if (smallifyBtn && elmtRect.height > startHeight + 5) {
-                                    smallifyBtn.style.transform = 'rotate(0deg)';
-                                }
-                                document.dispatchEvent(jspanelresizestop);
-
-                                if (opts.stop.length) {
-                                    let stopStyles = window.getComputedStyle(self),
-                                        paneldata = {
-                                            left: parseFloat(stopStyles.left),
-                                            top: parseFloat(stopStyles.top),
-                                            width: parseFloat(stopStyles.width),
-                                            height: parseFloat(stopStyles.height),
-                                        };
-                                    jsPanel.processCallbacks(self, opts.stop, false, paneldata, e);
-                                }
-                            }
-
-                            self.content.style.pointerEvents = 'inherit';
-                            // restore other panel's css pointer-events
-                            document.querySelectorAll('iframe').forEach((frame) => {
-                                frame.style.pointerEvents = 'auto';
-                            });
-                            // restore option aspectRatio to original configuration
-                            opts.aspectRatio = cachedOptionAspectRatio;
-                        },
-                        false
-                    );
+                    document.addEventListener(event, pointerUpHandlerResizeit);
                     window.removeEventListener('mouseout', windowListener);
                 });
 
@@ -4468,6 +4464,14 @@ let jsPanel = {
             });
 
             jsPanel.position(self, pos);
+
+            // check whether self has docked panels -> reposition docked panels as well
+            if (self.slaves && self.slaves.size > 0) {
+                self.slaves.forEach((slave) => {
+                    slave.reposition();
+                });
+            }
+
             if (updateCache) {
                 self.saveCurrentPosition();
             }
@@ -4627,6 +4631,14 @@ let jsPanel = {
             let values = jsPanel.pOsize(self, size);
             self.style.width = values.width;
             self.style.height = values.height;
+
+            // check whether self has docked panels -> reposition docked panels
+            if (self.slaves && self.slaves.size > 0) {
+                self.slaves.forEach((slave) => {
+                    slave.reposition();
+                });
+            }
+
             if (updateCache) {
                 self.saveCurrentDimensions();
             }
@@ -4664,6 +4676,14 @@ let jsPanel = {
                 } else if (status === 'smallifiedmax' && onWindowResize) {
                     self.maximize(false, true).smallify();
                 }
+
+                // check whether self has docked panels -> reposition docked panels as well
+                if (self.slaves && self.slaves.size > 0) {
+                    self.slaves.forEach((slave) => {
+                        slave.reposition();
+                    });
+                }
+
             }
         };
 

@@ -1,5 +1,15 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.11.3 *2021-02-03*</span>
+
++ **bugfix** in the code for the `resizeit` interaction reducing memory leaks. [See GitHub issue](https://github.com/Flyer53/jsPanel4/issues/121)
++ **bugfix** when using the **dock** extension a _docked_ panel:
+  + did not reposition when the _master_ panel was repositioned programmatically
+  + did not reposition when the _master_ panel was resized programmatically
+  + did not reposition when **option** `onwindowresize` is activated and the window is resized
++ **bugfix** `layout` extension: `jsPanel.layout.restoreId` now returns the restored panel
++ **added** parameter `closeOnMouseleave` in `contextmenu` extension
+
 ### <span style='color:#563D7C;'>Version 4.11.2 *2020-12-09*</span>
 
 + **bugfix** in the code for the `dragit` interaction reducing memory leaks. [See GitHub issue](https://github.com/Flyer53/jsPanel4/issues/121)
