@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.11.2
+ * @version v4.11.4
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -23,9 +23,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 // eslint-disable-next-line no-redeclare
+// noinspection JSVoidFunctionReturnValueUsed
+// eslint-disable-next-line no-redeclare
 var jsPanel = {
-  version: '4.11.3',
-  date: '2021-02-03 16:21',
+  version: '4.11.4',
+  date: '2021-04-10 09:23',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
@@ -1147,8 +1149,11 @@ var jsPanel = {
       } else {
         positionOfRect = _position.of.getBoundingClientRect();
       }
-    } // calc css left for @panel in regard of @position.my and @position.at
+    } // check for scrollbar width values
 
+
+    var scrollbarwidthsWindow = this.getScrollbarWidth(document.body),
+        scrollbarwidthsContainer = this.getScrollbarWidth(panel.parentElement); // calc css left for @panel in regard of @position.my and @position.at
 
     var left = '0px';
 
@@ -1210,6 +1215,11 @@ var jsPanel = {
           left = positionOfRect.left - containerRect.left - parseFloat(containerStyle.borderLeftWidth) + positionOfRect.width - panelRect.width + 'px';
         } else {
           left = containerRect.width - panelRect.width + 'px';
+        } // correction for vertical scrollbar only needed for panels using my: 'right-*' together with at: 'right-*'
+
+
+        if (container !== 'window') {
+          left = parseFloat(left) - scrollbarwidthsContainer.y + 'px';
         }
       }
     } // calc css top for @panel in regard of @position.my and @position.at
@@ -1275,6 +1285,13 @@ var jsPanel = {
           top = positionOfRect.top - containerRect.top - parseFloat(containerStyle.borderTopWidth) - panelRect.height + positionOfRect.height + 'px';
         } else {
           top = containerRect.height - panelRect.height + 'px';
+        } // correction for horizontal scrollbar only needed for panels using my: '*-bottom' together with at: '*-bottom'
+
+
+        if (container !== 'window') {
+          top = parseFloat(top) - scrollbarwidthsContainer.x + 'px';
+        } else {
+          top = parseFloat(top) - scrollbarwidthsWindow.x + 'px';
         }
       }
     }
@@ -1992,11 +2009,21 @@ var jsPanel = {
       panel.style.zIndex = jsPanel.zi.next();
     });
   },
-  setClass: function setClass(elmt, classnames) {
-    classnames.trim().split(/\s+/).forEach(function (item) {
-      return elmt.classList.add(item);
-    });
-    return elmt;
+  getScrollbarWidth: function getScrollbarWidth() {
+    var elmt = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document.body;
+
+    if (elmt === document.body) {
+      return {
+        y: window.innerWidth - document.documentElement.clientWidth,
+        x: window.innerHeight - document.documentElement.clientHeight
+      };
+    } else {
+      var styles = getComputedStyle(elmt);
+      return {
+        y: elmt.offsetWidth - elmt.clientWidth - parseFloat(styles.borderRightWidth) - parseFloat(styles.borderLeftWidth),
+        x: elmt.offsetHeight - elmt.clientHeight - parseFloat(styles.borderBottomWidth) - parseFloat(styles.borderTopWidth)
+      };
+    }
   },
   remClass: function remClass(elmt, classnames) {
     classnames.trim().split(/\s+/).forEach(function (item) {
@@ -2004,10 +2031,9 @@ var jsPanel = {
     });
     return elmt;
   },
-  toggleClass: function toggleClass(elmt, classnames) {
-    // IE11 doesn't support https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList/toggle
-    classnames.trim().split(/\s+/).forEach(function (classname) {
-      elmt.classList.contains(classname) ? elmt.classList.remove(classname) : elmt.classList.add(classname);
+  setClass: function setClass(elmt, classnames) {
+    classnames.trim().split(/\s+/).forEach(function (item) {
+      return elmt.classList.add(item);
     });
     return elmt;
   },
@@ -2037,6 +2063,13 @@ var jsPanel = {
      * returns a DocumentFragment - https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment
      * after inserting executes inline script and script tags */
     return document.createRange().createContextualFragment(str);
+  },
+  toggleClass: function toggleClass(elmt, classnames) {
+    // IE11 doesn't support https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList/toggle
+    classnames.trim().split(/\s+/).forEach(function (classname) {
+      elmt.classList.contains(classname) ? elmt.classList.remove(classname) : elmt.classList.add(classname);
+    });
+    return elmt;
   },
   errorpanel: function errorpanel(e) {
     this.create({
@@ -3405,7 +3438,8 @@ var jsPanel = {
                 parentRect = parent.getBoundingClientRect(),
                 parentStyles = window.getComputedStyle(parent),
                 scaleFactor = self.getScaleFactor(),
-                startLeftCorrection = 0; // function actually dragging the elmt
+                startLeftCorrection = 0,
+                scrollbarwidths = jsPanel.getScrollbarWidth(parent); // function actually dragging the elmt
 
             dragElmt = function dragElmt(e) {
               e.preventDefault();
@@ -3573,14 +3607,14 @@ var jsPanel = {
                 var containment = opts.containment;
                 var maxLeft, maxTop; // calc maxLeft and maxTop (minLeft and MinTop is equal to containment setting)
 
-                if (self.options.container === document.body) {
-                  maxLeft = window.innerWidth - parseFloat(dragStyles.width) - containment[1];
-                  maxTop = window.innerHeight - parseFloat(dragStyles.height) - containment[2];
+                if (self.options.container === 'window') {
+                  maxLeft = window.innerWidth - parseFloat(dragStyles.width) - containment[1] - scrollbarwidths.y;
+                  maxTop = window.innerHeight - parseFloat(dragStyles.height) - containment[2] - scrollbarwidths.x;
                 } else {
                   var xCorr = parseFloat(parentStyles.borderLeftWidth) + parseFloat(parentStyles.borderRightWidth),
                       yCorr = parseFloat(parentStyles.borderTopWidth) + parseFloat(parentStyles.borderBottomWidth);
-                  maxLeft = parentRect.width / scaleFactor.x - parseFloat(dragStyles.width) - containment[1] - xCorr;
-                  maxTop = parentRect.height / scaleFactor.y - parseFloat(dragStyles.height) - containment[2] - yCorr;
+                  maxLeft = parentRect.width / scaleFactor.x - parseFloat(dragStyles.width) - containment[1] - xCorr - scrollbarwidths.y;
+                  maxTop = parentRect.height / scaleFactor.y - parseFloat(dragStyles.height) - containment[2] - yCorr - scrollbarwidths.x;
                 }
 
                 if (parseFloat(self.style.left) <= containment[3]) {

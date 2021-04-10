@@ -1,5 +1,11 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.11.4 *2021-04-10*</span>
+
++ **bugfix** in `dragit` interaction
++ **improved** panel positioning, dragit and snap features in order to allow for scrollbars
++ **added** option `parentPanelFront` to the tooltip configuration options (tooltip extension updated to v1.4.0)
+
 ### <span style='color:#563D7C;'>Version 4.11.3 *2021-02-03*</span>
 
 + **bugfix** in the code for the `resizeit` interaction reducing memory leaks. [See GitHub issue](https://github.com/Flyer53/jsPanel4/issues/121)
