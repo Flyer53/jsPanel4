@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.11.4
+ * @version v4.12.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -249,31 +249,32 @@
   position: fixed;
   width: auto;
   z-index: 9998; }
-  #jsPanel-replacement-container .jsPanel-replacement, .jsPanel-minimized-box .jsPanel-replacement, .jsPanel-minimized-container .jsPanel-replacement {
-    font-family: Roboto,"Open Sans",Lato,"Helvetica Neue",Arial,sans-serif;
-    display: flex;
-    align-items: center;
-    width: 200px;
+
+.jsPanel-replacement {
+  font-family: Roboto,"Open Sans",Lato,"Helvetica Neue",Arial,sans-serif;
+  display: flex;
+  align-items: center;
+  width: 200px;
+  height: 34px;
+  margin: 1px 1px 0 0;
+  z-index: 9999; }
+  .jsPanel-replacement .jsPanel-hdr {
+    flex-grow: 1;
+    min-width: 0;
+    padding: 0;
     height: 34px;
-    margin: 1px 1px 0 0;
-    z-index: 9999; }
-    #jsPanel-replacement-container .jsPanel-replacement .jsPanel-hdr, .jsPanel-minimized-box .jsPanel-replacement .jsPanel-hdr, .jsPanel-minimized-container .jsPanel-replacement .jsPanel-hdr {
-      flex-grow: 1;
-      min-width: 0;
-      padding: 0;
-      height: 34px;
+    overflow: hidden; }
+    .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo {
+      max-width: 50%;
       overflow: hidden; }
-      #jsPanel-replacement-container .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo, .jsPanel-minimized-box .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo, .jsPanel-minimized-container .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo {
-        max-width: 50%;
-        overflow: hidden; }
-        #jsPanel-replacement-container .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo img, .jsPanel-minimized-box .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo img, .jsPanel-minimized-container .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo img {
-          max-width: 100px;
-          max-height: 34px; }
-    #jsPanel-replacement-container .jsPanel-replacement .jsPanel-titlebar, .jsPanel-minimized-box .jsPanel-replacement .jsPanel-titlebar, .jsPanel-minimized-container .jsPanel-replacement .jsPanel-titlebar {
-      cursor: default;
-      min-width: 0; }
-    #jsPanel-replacement-container .jsPanel-replacement .jsPanel-btn.jsPanel-btn-normalize, .jsPanel-minimized-box .jsPanel-replacement .jsPanel-btn.jsPanel-btn-normalize, .jsPanel-minimized-container .jsPanel-replacement .jsPanel-btn.jsPanel-btn-normalize {
-      display: block; }
+      .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo img {
+        max-width: 100px;
+        max-height: 34px; }
+  .jsPanel-replacement .jsPanel-titlebar {
+    cursor: default;
+    min-width: 0; }
+  .jsPanel-replacement .jsPanel-btn.jsPanel-btn-normalize {
+    display: block; }
 
 .jsPanel-minimized-box, .jsPanel-minimized-container {
   position: absolute;
@@ -540,7 +541,7 @@
 
 /* IE11 CSS styles go here */
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-  #jsPanel-replacement-container .jsPanel-replacement .jsPanel-titlebar {
+  .jsPanel-replacement .jsPanel-titlebar {
     max-width: 105px; } }
 
 /* XXXXXXXXXXXXXXXXXXXXXXX */

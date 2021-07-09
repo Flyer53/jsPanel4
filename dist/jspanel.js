@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.11.4
+ * @version v4.12.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -14,7 +14,7 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
@@ -26,19 +26,23 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 // noinspection JSVoidFunctionReturnValueUsed
 // eslint-disable-next-line no-redeclare
 var jsPanel = {
-  version: '4.11.4',
-  date: '2021-04-10 09:23',
+  version: '4.12.0',
+  date: '2021-07-09 09:15',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' || e.code === 'Escape' || e.key === 'Esc') {
-        jsPanel.getPanels(function () {
-          return this.classList.contains('jsPanel');
+        jsPanel.getPanels(function (panel) {
+          return panel.classList.contains('jsPanel'); // Array is sorted by z-index (highest first)
         }).some(function (item) {
           if (item.options.closeOnEscape) {
-            item.close(null, true);
-            return true;
+            if (typeof item.options.closeOnEscape === 'function') {
+              return item.options.closeOnEscape.call(item, item); // if return value is falsy next panel in sequence will close, otherwise processing of Array.prototype.some() stops
+            } else {
+              item.close(null, true);
+              return true;
+            }
           }
 
           return false;
@@ -2673,6 +2677,7 @@ var jsPanel = {
 
       if (!document.getElementById(id)) {
         self.removeMinimizedReplacement();
+        self.status = 'closed';
 
         if (closedBy) {
           document.dispatchEvent(jspanelcloseduser);
@@ -2705,6 +2710,7 @@ var jsPanel = {
       }
 
       document.dispatchEvent(jspanelbeforeclose);
+      self.statusBefore = self.status;
 
       if (self.options.onbeforeclose && self.options.onbeforeclose.length > 0 && !jsPanel.processCallbacks(self, self.options.onbeforeclose, 'some', self.status, closedByUser)) {
         return self;
@@ -4036,8 +4042,8 @@ var jsPanel = {
                 elmtParentBLW = parseInt(elmtParentStyles.borderLeftWidth, 10),
                 elmtParentBTW = parseInt(elmtParentStyles.borderTopWidth, 10),
                 elmtParentPosition = elmtParentStyles.getPropertyValue('position'),
-                startX = e.clientX || e.touches[0].clientX,
-                startY = e.clientY || e.touches[0].clientY,
+                startX = e.clientX || e.clientX === 0 || e.touches[0].clientX,
+                startY = e.clientY || e.clientY === 0 || e.touches[0].clientY,
                 startRatio = startX / startY,
                 resizeHandleClassList = e.target.classList,
                 scaleFactor = self.getScaleFactor(),

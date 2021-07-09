@@ -265,36 +265,36 @@
   width: auto
   z-index: 9998
 
-  .jsPanel-replacement
-    font-family: Roboto,"Open Sans",Lato,"Helvetica Neue",Arial,sans-serif
-    display: flex
-    align-items: center
-    width: 200px
-    height: 34px
-    margin: 1px 1px 0 0
-    z-index: 9999
+.jsPanel-replacement
+  font-family: Roboto,"Open Sans",Lato,"Helvetica Neue",Arial,sans-serif
+  display: flex
+  align-items: center
+  width: 200px
+  height: 34px
+  margin: 1px 1px 0 0
+  z-index: 9999
 
-    .jsPanel-hdr
-      flex-grow: 1
-      min-width: 0
-      padding: 0
-      height: 34px
+  .jsPanel-hdr
+    flex-grow: 1
+    min-width: 0
+    padding: 0
+    height: 34px
+    overflow: hidden
+
+    .jsPanel-headerlogo
+      max-width: 50%
       overflow: hidden
 
-      .jsPanel-headerlogo
-        max-width: 50%
-        overflow: hidden
+      img
+        max-width: 100px
+        max-height: 34px
 
-        img
-          max-width: 100px
-          max-height: 34px
+  .jsPanel-titlebar
+    cursor: default
+    min-width: 0
 
-    .jsPanel-titlebar
-      cursor: default
-      min-width: 0
-
-    .jsPanel-btn.jsPanel-btn-normalize
-      display: block
+  .jsPanel-btn.jsPanel-btn-normalize
+    display: block
 
 .jsPanel-minimized-box, .jsPanel-minimized-container
   position: absolute
@@ -569,7 +569,7 @@
 
 /* IE11 CSS styles go here */
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active)
-  #jsPanel-replacement-container .jsPanel-replacement .jsPanel-titlebar
+  .jsPanel-replacement .jsPanel-titlebar
     max-width: 105px
 /* XXXXXXXXXXXXXXXXXXXXXXX */
 

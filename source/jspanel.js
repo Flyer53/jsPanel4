@@ -2,8 +2,8 @@
 // noinspection JSVoidFunctionReturnValueUsed
 // eslint-disable-next-line no-redeclare
 let jsPanel = {
-    version: '4.11.4',
-    date: '2021-04-10 09:23',
+    version: '4.12.0',
+    date: '2021-07-09 09:15',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -12,13 +12,18 @@ let jsPanel = {
             (e) => {
                 if (e.key === 'Escape' || e.code === 'Escape' || e.key === 'Esc') {
                     jsPanel
-                        .getPanels(function () {
-                            return this.classList.contains('jsPanel');
+                        .getPanels((panel) => {
+                            return panel.classList.contains('jsPanel'); // Array is sorted by z-index (highest first)
                         })
                         .some((item) => {
                             if (item.options.closeOnEscape) {
-                                item.close(null, true);
-                                return true;
+                                if (typeof item.options.closeOnEscape === 'function') {
+                                    return item.options.closeOnEscape.call(item, item);
+                                    // if return value is falsy next panel in sequence will close, otherwise processing of Array.prototype.some() stops
+                                } else {
+                                    item.close(null, true);
+                                    return true;
+                                }
                             }
                             return false;
                         });
@@ -2596,6 +2601,7 @@ let jsPanel = {
             self.parentElement.removeChild(self);
             if (!document.getElementById(id)) {
                 self.removeMinimizedReplacement();
+                self.status = 'closed';
                 if (closedBy) {
                     document.dispatchEvent(jspanelcloseduser);
                 }
@@ -2620,6 +2626,9 @@ let jsPanel = {
                 window.clearInterval(self.closetimer);
             }
             document.dispatchEvent(jspanelbeforeclose);
+
+            self.statusBefore = self.status;
+
             if (
                 self.options.onbeforeclose &&
                 self.options.onbeforeclose.length > 0 &&
@@ -3888,8 +3897,8 @@ let jsPanel = {
                             elmtParentBLW = parseInt(elmtParentStyles.borderLeftWidth, 10),
                             elmtParentBTW = parseInt(elmtParentStyles.borderTopWidth, 10),
                             elmtParentPosition = elmtParentStyles.getPropertyValue('position'),
-                            startX = e.clientX || e.touches[0].clientX,
-                            startY = e.clientY || e.touches[0].clientY,
+                            startX = (e.clientX || e.clientX === 0) || e.touches[0].clientX,
+                            startY = (e.clientY || e.clientY === 0) || e.touches[0].clientY,
                             startRatio = startX / startY,
                             resizeHandleClassList = e.target.classList,
                             scaleFactor = self.getScaleFactor(),

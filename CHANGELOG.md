@@ -1,5 +1,12 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.12.0 *2021-07-09*</span>
+
++ updated CSS files to **bugfix** a minor issue in `option.minimizeTo`
++ **bugfix** in `resizeit` interaction 
++ **added** string value `'closed'` to panel property `status`. Since a closed panel is removed from the DOM this value is only available when a panel reference is saved.
++ **added** option to use a custom callback function as setting for `option.closeOnEscape` instead of just boolean true/false
+
 ### <span style='color:#563D7C;'>Version 4.11.4 *2021-04-10*</span>
 
 + **bugfix** in `dragit` interaction
