@@ -1,5 +1,10 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.13.0 *2021-11-24*</span>
+
++ enabled default use of the PointerEvent API
++ **added** method `jsPanel.usePointerEvents()` to disable/enable use of PointerEvent API
+
 ### <span style='color:#563D7C;'>Version 4.12.0 *2021-07-09*</span>
 
 + updated CSS files to **bugfix** a minor issue in `option.minimizeTo`

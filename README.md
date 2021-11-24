@@ -1,9 +1,9 @@
 <img alt="NPM license"   src="https://img.shields.io/npm/l/jspanel4"> <img alt="npm version"   src="https://img.shields.io/npm/v/jspanel4?color=0677b8"> <img alt="npm downloads" src="https://img.shields.io/npm/dm/jspanel4?color=0677b8">
 
 
-## [jsPanel 4.12.0 released 2021-07-09](#)
+## [jsPanel 4.13.0 released 2021-11-24](#)
 
-> As of v4.11.0-beta methods `jsPanel.ajax()` and `jsPanel.fetch()` are updated. That also affects options `contentAjax` and `contentFetch`. These updates might break existing code. So please check the docs for this beta release on https://jspanel.de/
+> As of v4.11.0-beta methods `jsPanel.ajax()` and `jsPanel.fetch()` are updated. That also affects options `contentAjax` and `contentFetch`. These updates might break existing code. So please check the docs on https://jspanel.de/
 
 <img src="https://res.cloudinary.com/stefanstraesser-eu/image/upload/v1558601426/jsPanel4.7.0-sample-panels-1920_yzobd9.jpg">
 

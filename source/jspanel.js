@@ -2,8 +2,8 @@
 // noinspection JSVoidFunctionReturnValueUsed
 // eslint-disable-next-line no-redeclare
 let jsPanel = {
-    version: '4.12.0',
-    date: '2021-07-09 09:15',
+    version: '4.13.0',
+    date: '2021-11-24 11:58',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -76,12 +76,9 @@ let jsPanel = {
     isIE: (() => {
         return navigator.appVersion.match(/Trident/);
     })(),
-    // pointerdown: 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
-    // pointermove: 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
-    // pointerup: 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
-    pointerdown: 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
-    pointermove: 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
-    pointerup: 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
+    pointerdown: 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
+    pointermove: 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
+    pointerup: 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
     polyfills: (() => {
         // Polyfills for IE11 only
         // Object.assign polyfill - https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
@@ -693,6 +690,18 @@ let jsPanel = {
             jsPanel.modifier = false;
         });
     })(),
+
+    usePointerEvents(use = true) {
+        if (!use) {
+            this.pointerdown = 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'];
+            this.pointermove = 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'];
+            this.pointerup = 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'];
+        } else {
+            this.pointerdown = 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'];
+            this.pointermove = 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'];
+            this.pointerup = 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'];
+        }
+    },
 
     // color methods ---------------
     color(val) {

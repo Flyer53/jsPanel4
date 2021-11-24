@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.12.0
+ * @version v4.13.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -26,8 +26,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 // noinspection JSVoidFunctionReturnValueUsed
 // eslint-disable-next-line no-redeclare
 var jsPanel = {
-  version: '4.12.0',
-  date: '2021-07-09 09:15',
+  version: '4.13.0',
+  date: '2021-11-24 11:58',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
@@ -109,12 +109,9 @@ var jsPanel = {
   isIE: function () {
     return navigator.appVersion.match(/Trident/);
   }(),
-  // pointerdown: 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
-  // pointermove: 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
-  // pointerup: 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
-  pointerdown: 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
-  pointermove: 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
-  pointerup: 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
+  pointerdown: 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
+  pointermove: 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
+  pointerup: 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'],
   polyfills: function () {
     // Polyfills for IE11 only
     // Object.assign polyfill - https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
@@ -751,6 +748,19 @@ var jsPanel = {
       jsPanel.modifier = false;
     });
   }(),
+  usePointerEvents: function usePointerEvents() {
+    var use = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+    if (!use) {
+      this.pointerdown = 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'];
+      this.pointermove = 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'];
+      this.pointerup = 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'];
+    } else {
+      this.pointerdown = 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'];
+      this.pointermove = 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'];
+      this.pointerup = 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'];
+    }
+  },
   // color methods ---------------
   color: function color(val) {
     var color = val.toLowerCase(),
@@ -809,52 +819,52 @@ var jsPanel = {
       result.rgb.css = "rgb(".concat(result.rgb.r, ",").concat(result.rgb.g, ",").concat(result.rgb.b, ")");
     } // check val for rgb/rgba color
     else if (color.match(RGBAPattern)) {
-        match = RGBAPattern.exec(color);
-        result.rgb = {
-          css: color,
-          r: match[1],
-          g: match[2],
-          b: match[3]
-        };
-        result.hex = this.rgbToHex(match[1], match[2], match[3]);
-        hsl = this.rgbToHsl(match[1], match[2], match[3]);
-        result.hsl = hsl;
-      } // check val for hsl/hsla color
-      else if (color.match(HSLAPattern)) {
-          match = HSLAPattern.exec(color);
-          h = match[1] / 360;
-          s = match[2].substr(0, match[2].length - 1) / 100;
-          l = match[3].substr(0, match[3].length - 1) / 100;
-          channels = this.hslToRgb(h, s, l);
-          result.rgb = {
-            css: "rgb(".concat(channels[0], ",").concat(channels[1], ",").concat(channels[2], ")"),
-            r: channels[0],
-            g: channels[1],
-            b: channels[2]
-          };
-          result.hex = this.rgbToHex(result.rgb.r, result.rgb.g, result.rgb.b);
-          result.hsl = {
-            css: "hsl(".concat(match[1], ",").concat(match[2], ",").concat(match[3], ")"),
-            h: match[1],
-            s: match[2],
-            l: match[3]
-          };
-        } // or return #f5f5f5
-        else {
-            result.hex = '#f5f5f5';
-            result.rgb = {
-              css: 'rgb(245,245,245)',
-              r: 245,
-              g: 245,
-              b: 245
-            };
-            result.hsl = {
-              css: 'hsl(0,0%,96%)',
-              h: 0,
-              s: '0%',
-              l: '96%'
-            };
-          }
+      match = RGBAPattern.exec(color);
+      result.rgb = {
+        css: color,
+        r: match[1],
+        g: match[2],
+        b: match[3]
+      };
+      result.hex = this.rgbToHex(match[1], match[2], match[3]);
+      hsl = this.rgbToHsl(match[1], match[2], match[3]);
+      result.hsl = hsl;
+    } // check val for hsl/hsla color
+    else if (color.match(HSLAPattern)) {
+      match = HSLAPattern.exec(color);
+      h = match[1] / 360;
+      s = match[2].substr(0, match[2].length - 1) / 100;
+      l = match[3].substr(0, match[3].length - 1) / 100;
+      channels = this.hslToRgb(h, s, l);
+      result.rgb = {
+        css: "rgb(".concat(channels[0], ",").concat(channels[1], ",").concat(channels[2], ")"),
+        r: channels[0],
+        g: channels[1],
+        b: channels[2]
+      };
+      result.hex = this.rgbToHex(result.rgb.r, result.rgb.g, result.rgb.b);
+      result.hsl = {
+        css: "hsl(".concat(match[1], ",").concat(match[2], ",").concat(match[3], ")"),
+        h: match[1],
+        s: match[2],
+        l: match[3]
+      };
+    } // or return #f5f5f5
+    else {
+      result.hex = '#f5f5f5';
+      result.rgb = {
+        css: 'rgb(245,245,245)',
+        r: 245,
+        g: 245,
+        b: 245
+      };
+      result.hsl = {
+        css: 'hsl(0,0%,96%)',
+        h: 0,
+        s: '0%',
+        l: '96%'
+      };
+    }
 
     return result;
   },
