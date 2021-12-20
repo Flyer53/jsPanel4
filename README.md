@@ -9,11 +9,18 @@
 
 **A dependency free javascript tool to create highly configurable multifunctional floating panels.**
 
-**jsPanels** can be used as floating, **draggable and resizable panels**, **modals**, **tooltips**, **hints/alerts/notifiers** or **contextmenus**.
++ a **huge amount of options** allows to configure appearance and behavior of a jsPanel
++ optionally add **extra toolbars** to header or/and footer sections
++ support for Boostrap (3 and 4) **themes** and Material-Design-for-Bootstrap themes is built-in
++ customize the panel controls with built-in support for **icon fonts** Font-Awesome, Material-Icons and Glyphicon
++ built-in support for **RTL text** direction
++ use it as standard panel, **modal**, **tooltip**, **hint/notifier** or **contextmenu**
++ jsPanels are **draggable** and **resizable**, can be **maximized**, **minimized** and **smallified**
++ and much more ...
 
 ---
 
-### jsPanel 4 homepage: [https://jspanel.de](https://jspanel.de/)
+### jsPanel 4 homepage and documentation: [https://jspanel.de](https://jspanel.de/)
 
 ### [Dependencies]()
 Just a modern mobile or desktop browser like FF, Chrome, EDGE, Brave, Opera, Vivaldi.
