@@ -1,5 +1,10 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version proposal ???</span>
+
++ **bugfix** in `pOsize` function. The size parameter was modified by the function
++ **updated** when modal toggle "minimized", remove the backdrop
+
 ### <span style='color:#563D7C;'>Version 4.13.0 *2021-11-24*</span>
 
 + enabled default use of the PointerEvent API
@@ -8,7 +13,7 @@
 ### <span style='color:#563D7C;'>Version 4.12.0 *2021-07-09*</span>
 
 + updated CSS files to **bugfix** a minor issue in `option.minimizeTo`
-+ **bugfix** in `resizeit` interaction 
++ **bugfix** in `resizeit` interaction
 + **added** string value `'closed'` to panel property `status`. Since a closed panel is removed from the DOM this value is only available when a panel reference is saved.
 + **added** option to use a custom callback function as setting for `option.closeOnEscape` instead of just boolean true/false
 
@@ -152,7 +157,7 @@ panel (might be handy if the header section is removed)
 + **added** tooltip method `remove()` in order to remove a handler triggering a specific tooltip
 + **added** polyfill `Number.isInteger()` to support IE11
 + **updated** option `headerControls` in order to add custom controls
-+ **option theme:** when `theme: "none"` or the method `setTheme()` is used 
++ **option theme:** when `theme: "none"` or the method `setTheme()` is used
 properties assigned via options `border` and/or `borderRadius` remain untouched
 + reworked SVG icons for the controls
 + **updated** methods `setBorder()` and `setBorderRadius()` are now available to
