@@ -1831,7 +1831,7 @@ let jsPanel = {
         return value; // assumed to be array with 4 values
     },
     pOsize(panel, size) {
-        let values = size || this.defaults.contentSize;
+        let values = Object.assign({}, size || this.defaults.contentSize);
         const parent = panel.parentElement;
         if (typeof values === 'string') {
             const nums = values.trim().split(' ');
