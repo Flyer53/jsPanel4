@@ -1831,7 +1831,7 @@ let jsPanel = {
         return value; // assumed to be array with 4 values
     },
     pOsize(panel, size) {
-        let values = Object.assign({}, size || this.defaults.contentSize);
+        let values = size || this.defaults.contentSize;
         const parent = panel.parentElement;
         if (typeof values === 'string') {
             const nums = values.trim().split(' ');
@@ -1839,6 +1839,7 @@ let jsPanel = {
             values.width = nums[0];
             nums.length === 2 ? (values.height = nums[1]) : (values.height = nums[0]);
         } else {
+            values = Object.assign({}, values);
             if (values.width && !values.height) {
                 // noinspection JSSuspiciousNameCombination
                 values.height = values.width;
