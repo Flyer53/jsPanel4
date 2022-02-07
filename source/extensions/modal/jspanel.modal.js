@@ -107,19 +107,19 @@ if (!jsPanel.modal) {
                 }
                 // remove modal backdrop when modal is closed
                 // callback should be the first item in the onclosed array
-                modal.options.onclosed.unshift(function removeModalBackdrop() {
+                modal.options.onclosed.unshift(function() {
                     jsPanel.modal.removeBackdrop(opts.id);
                     // must return true in order to have the next callbacks (added via modal config) in the array execute as well
                     return true;
                 });
 
-                modal.options.onminimized.unshift(function removeModalBackdrop() {
+                modal.options.onminimized.unshift(function() {
                     jsPanel.modal.removeBackdrop(opts.id);
                     // must return true in order to have the next callbacks (added via modal config) in the array execute as well
                     return true;
                 });
 
-                modal.options.onnormalized.unshift(function removeModalBackdrop() {
+                modal.options.onnormalized.unshift(function() {
                     backdrop = jsPanel.modal.getBackdrop(opts.id);
                     if(!!backdrop) {
                       return;
