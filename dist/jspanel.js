@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.13.0
+ * @version v4.14.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -20,21 +20,21 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 // eslint-disable-next-line no-redeclare
 // noinspection JSVoidFunctionReturnValueUsed
 // eslint-disable-next-line no-redeclare
 var jsPanel = {
-  version: '4.13.0',
-  date: '2021-11-24 11:58',
+  version: '4.14.0',
+  date: '2022-04-20 15:57',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' || e.code === 'Escape' || e.key === 'Esc') {
         jsPanel.getPanels(function (panel) {
-          return panel.classList.contains('jsPanel'); // Array is sorted by z-index (highest first)
+          return panel.classList.contains('jsPanel'); // Array is sorted by z-index (the highest first)
         }).some(function (item) {
           if (item.options.closeOnEscape) {
             if (typeof item.options.closeOnEscape === 'function') {
@@ -57,7 +57,7 @@ var jsPanel = {
       width: '400px',
       height: '200px'
     },
-    // must be object
+    // must be an object
     dragit: {
       cursor: 'move',
       handles: '.jsPanel-headerlogo, .jsPanel-titlebar, .jsPanel-ftr',
@@ -70,7 +70,7 @@ var jsPanel = {
     headerControls: {
       size: 'md'
     },
-    // must be object
+    // must be an object
     iconfont: undefined,
     maximizedMargin: 0,
     minimizeTo: 'default',
@@ -1834,7 +1834,7 @@ var jsPanel = {
 
     return false;
   },
-  // normalizes values for option.maximizedMargin and containment of dragit/resizeit
+  // normalizes the values for option.maximizedMargin and containment of dragit/resizeit
   pOcontainment: function pOcontainment(arg) {
     var value = arg;
 
@@ -1921,7 +1921,7 @@ var jsPanel = {
       }
     }
 
-    return values; // return value must be object {width: xxx, height: xxx}
+    return values; // return value must be an object {width: xxx, height: xxx}
   },
   pOborder: function pOborder(border) {
     border = border.trim();
@@ -2173,7 +2173,7 @@ var jsPanel = {
 
       return false;
     } // normalize on... callbacks
-    // callbacks must be array of function(s) in order to be able to dynamically add/remove callbacks (for example in extensions)
+    // these callbacks must be an array of function(s) in order to be able to dynamically add/remove callbacks (for example in extensions)
 
 
     ['onbeforeclose', 'onbeforemaximize', 'onbeforeminimize', 'onbeforenormalize', 'onbeforesmallify', 'onbeforeunsmallify', 'onclosed', 'onfronted', 'onmaximized', 'onminimized', 'onnormalized', 'onsmallified', 'onstatuschange', 'onunsmallified'].forEach(function (item) {
@@ -2715,6 +2715,11 @@ var jsPanel = {
     };
 
     self.close = function (cb, closedByUser) {
+      // if panel does not exist return
+      if (!self.parentElement) {
+        return;
+      }
+
       if (self.closetimer) {
         window.clearInterval(self.closetimer);
       }
@@ -4972,13 +4977,26 @@ var jsPanel = {
         } else if (self.snapped && status !== 'minimized') {
           self.snap(self.snapped, true);
         } else if (status === 'normalized' || status === 'smallified' || status === 'maximized') {
-          if (typeof onWindowResize === 'function') {
-            onWindowResize.call(self, e, self);
-          } else {
+          var settingType = _typeof(onWindowResize);
+
+          if (settingType === 'boolean') {
             left = (window.innerWidth - self.offsetWidth) * self.hf;
             self.style.left = left <= 0 ? 0 : left + 'px';
             top = (window.innerHeight - self.offsetHeight) * self.vf;
             self.style.top = top <= 0 ? 0 : top + 'px';
+          } else if (settingType === 'function') {
+            onWindowResize.call(self, e, self);
+          } else if (settingType === 'object') {
+            // { preset: boolean, callback: function(event, panel){} }
+            if (onWindowResize.preset === true) {
+              left = (window.innerWidth - self.offsetWidth) * self.hf;
+              self.style.left = left <= 0 ? 0 : left + 'px';
+              top = (window.innerHeight - self.offsetHeight) * self.vf;
+              self.style.top = top <= 0 ? 0 : top + 'px';
+              onWindowResize.callback.call(self, e, self);
+            } else {
+              onWindowResize.callback.call(self, e, self);
+            }
           }
         } else if (status === 'smallifiedmax' && onWindowResize) {
           self.maximize(false, true).smallify();
@@ -5738,6 +5756,7 @@ var jsPanel = {
 
     if (options.onparentresize) {
       var onResize = options.onparentresize,
+          settingType = _typeof(onResize),
           parentPanel = self.isChildpanel();
 
       if (parentPanel) {
@@ -5759,12 +5778,21 @@ var jsPanel = {
             } else if (self.snapped && status !== 'minimized') {
               self.snap(self.snapped, true);
             } else if (status === 'normalized' || status === 'smallified' || status === 'maximized') {
-              if (typeof onResize === 'function') {
+              if (settingType === 'function') {
                 onResize.call(self, self, {
                   width: parentContainerSize[0],
                   height: parentContainerSize[1]
                 });
-              } else {
+              } else if (settingType === 'object' && onResize.preset === true) {
+                left = (parentContainerSize[0] - self.offsetWidth) * self.hf;
+                self.style.left = left <= 0 ? 0 : left + 'px';
+                top = (parentContainerSize[1] - self.offsetHeight) * self.vf;
+                self.style.top = top <= 0 ? 0 : top + 'px';
+                onResize.callback.call(self, self, {
+                  width: parentContainerSize[0],
+                  height: parentContainerSize[1]
+                });
+              } else if (settingType === 'boolean') {
                 left = (parentContainerSize[0] - self.offsetWidth) * self.hf;
                 self.style.left = left <= 0 ? 0 : left + 'px';
                 top = (parentContainerSize[1] - self.offsetHeight) * self.vf;

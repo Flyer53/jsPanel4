@@ -1,5 +1,13 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.14.0 *2022-04-20*</span>
+
++ **bugfix** in `close()` method (calling `close()` on an already closed panel caused an error)
++ **updated** option `onwindowresize`
++ **updated** option `onparentresize`
+
+So far the two options `onwindowresize` and `onparentresize` could be set with either boolean `true` to start a preset behaviour or with a `function` to start a custom behaviour on the corresponding resize events. Now you can also set options `onwindowresize` and `onparentresize` with an object optionally allowing the use of both the preset behaviour AND an additional custom behaviour.
+
 ### <span style='color:#563D7C;'>Version 4.13.0 *2021-11-24*</span>
 
 + enabled default use of the PointerEvent API
