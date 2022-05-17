@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.14.0
+ * @version v4.14.1
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -26,8 +26,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 // noinspection JSVoidFunctionReturnValueUsed
 // eslint-disable-next-line no-redeclare
 var jsPanel = {
-  version: '4.14.0',
-  date: '2022-04-20 15:57',
+  version: '4.14.1',
+  date: '2022-05-17 15:53',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
@@ -4147,7 +4147,19 @@ var jsPanel = {
                   }, evt);
                 }
 
-                self.front();
+                self.front(); // if panel is maximized on resize start set status to normalized and swap maximize/normalize buttons
+
+                if (self.status === 'maximized') {
+                  self.status = 'normalized';
+
+                  if (self.controlbar.querySelector('.jsPanel-btn-maximize')) {
+                    self.setControlStatus('maximize', 'show');
+                  }
+
+                  if (self.controlbar.querySelector('.jsPanel-btn-normalize')) {
+                    self.setControlStatus('normalize', 'hide');
+                  }
+                }
 
                 if (elmtRect.height > startHeight + 5) {
                   self.status = 'normalized';

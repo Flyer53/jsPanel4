@@ -1,5 +1,9 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.14.1 *2022-05-17*</span>
+
++ **fix** for maximized panels: on `resizestart` of a maximized panel its status is now reset to `'normalized'`, the _**normalize**_ control is hidden and the _**maximize**_ control is shown again.
+
 ### <span style='color:#563D7C;'>Version 4.14.0 *2022-04-20*</span>
 
 + **bugfix** in `close()` method (calling `close()` on an already closed panel caused an error)
