@@ -1,5 +1,10 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.15.0 *2022-05-30*</span>
+
++ **added** option `css` to add custom css classes to the panel's html template, includes updated css files `jspanel.css`/`jspanel.min.css`
++ some internal code improvements
+
 ### <span style='color:#563D7C;'>Version 4.14.1 *2022-05-17*</span>
 
 + **fix** for maximized panels: on `resizestart` of a maximized panel its status is now reset to `'normalized'`, the _**normalize**_ control is hidden and the _**maximize**_ control is shown again.

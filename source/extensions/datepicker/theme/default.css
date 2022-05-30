@@ -1,12 +1,3 @@
-/**
- * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.15.0
- * @homepage https://jspanel.de/
- * @license MIT
- * @author Stefan Sträßer - info@jspanel.de
- * @author of dialog extension: Michael Daumling - michael@terrapinlogo.com
- * @github https://github.com/Flyer53/jsPanel4.git
- */
 .jsPanel-cal-wrapper {
   display: grid;
   grid-template-areas: "clear back month month month month forward reset" "blank3 day-name-0 day-name-1 day-name-2 day-name-3 day-name-4 day-name-5 day-name-6" "week-0 day-1 day-2 day-3 day-4 day-5 day-6 day-7" "week-1 day-8 day-9 day-10 day-11 day-12 day-13 day-14" "week-2 day-15 day-16 day-17 day-18 day-19 day-20 day-21" "week-3 day-22 day-23 day-24 day-25 day-26 day-27 day-28" "week-4 day-29 day-30 day-31 day-32 day-33 day-34 day-35" "week-5 day-36 day-37 day-38 day-39 day-40 day-41 day-42";

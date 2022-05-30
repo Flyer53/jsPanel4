@@ -1,9 +1,10 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.14.1
+ * @version v4.15.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
+ * @author of dialog extension: Michael Daumling - michael@terrapinlogo.com
  * @github https://github.com/Flyer53/jsPanel4.git
  */
 

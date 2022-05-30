@@ -1,9 +1,10 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.14.1
+ * @version v4.15.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
+ * @author of dialog extension: Michael Daumling - michael@terrapinlogo.com
  * @github https://github.com/Flyer53/jsPanel4.git
  */
 
@@ -11,8 +12,8 @@ export // eslint-disable-next-line no-redeclare
 // noinspection JSVoidFunctionReturnValueUsed
 // eslint-disable-next-line no-redeclare
 let jsPanel = {
-    version: '4.14.1',
-    date: '2022-05-17 15:53',
+    version: '4.15.0',
+    date: '2022-05-30 17:11',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
@@ -64,7 +65,7 @@ let jsPanel = {
             minWidth: 128,
             minHeight: 38,
         },
-        theme: 'default',
+        theme: 'default'
     },
     defaultAutocloseConfig: { time: '8s', progressbar: true },
     defaultSnapConfig: {
@@ -83,7 +84,8 @@ let jsPanel = {
     },
     idCounter: 0,
     isIE: (() => {
-        return navigator.appVersion.match(/Trident/);
+        //return navigator.appVersion.match(/Trident/);
+        return document.documentMode || false;
     })(),
     pointerdown: 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
     pointermove: 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'],
@@ -119,6 +121,18 @@ let jsPanel = {
                     return to;
                 },
             });
+        }
+        // Object.entries() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
+        if (!Object.entries) {
+            Object.entries = function( obj ){
+                var ownProps = Object.keys( obj ),
+                    i = ownProps.length,
+                    resArray = new Array(i); // preallocate the Array
+                while (i--)
+                    resArray[i] = [ownProps[i], obj[ownProps[i]]];
+
+                return resArray;
+            };
         }
         // NodeList.prototype.forEach() polyfill - https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach
         if (window.NodeList && !NodeList.prototype.forEach) {
@@ -181,34 +195,63 @@ let jsPanel = {
         })();
         // String.prototype.endsWith() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
         if (!String.prototype.endsWith) {
-            String.prototype.endsWith = function (searchStr, Position) {
-                // This works much better than >= because
-                // it compensates for NaN:
-                if (!(Position < this.length)) Position = this.length;
-                else Position |= 0; // round position
-                return this.substr(Position - searchStr.length, searchStr.length) === searchStr;
+            String.prototype.endsWith = function(search, this_len) {
+                if (this_len === undefined || this_len > this.length) {
+                    this_len = this.length;
+                }
+                return this.substring(this_len - search.length, this_len) === search;
             };
         }
         // String.prototype.startsWith() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
         if (!String.prototype.startsWith) {
-            String.prototype.startsWith = function (searchString, position) {
-                return this.substr(position || 0, searchString.length) === searchString;
-            };
+            Object.defineProperty(String.prototype, 'startsWith', {
+                value: function(search, rawPos) {
+                    var pos = rawPos > 0 ? rawPos|0 : 0;
+                    return this.substring(pos, pos + search.length) === search;
+                }
+            });
         }
-        // String.prototype.includes() - https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/String/includes
+        // String.prototype.includes() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
         if (!String.prototype.includes) {
-            String.prototype.includes = function (search, start) {
-                if (typeof start !== 'number') {
-                    start = 0;
+            String.prototype.includes = function(search, start) {
+                'use strict';
+                if (search instanceof RegExp) {
+                    throw TypeError('first argument must not be a RegExp');
                 }
-                if (start + search.length > this.length) {
-                    return false;
-                } else {
-                    return this.indexOf(search, start) !== -1;
-                }
+                if (start === undefined) { start = 0; }
+                return this.indexOf(search, start) !== -1;
             };
         }
-        // Number.isInteger() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isInteger
+        // String.prototype repeat() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat
+        if (!String.prototype.repeat) {
+            String.prototype.repeat = function(count) {
+                'use strict';
+                if (this == null)
+                    throw new TypeError('can\'t convert ' + this + ' to object');
+                var str = '' + this;
+                count = +count;
+                if (count != count)
+                    count = 0;
+                if (count < 0)
+                    throw new RangeError('repeat count must be non-negative');
+                if (count == Infinity)
+                    throw new RangeError('repeat count must be less than infinity');
+                count = Math.floor(count);
+                if (str.length == 0 || count == 0)
+                    return '';
+                if (str.length * count >= 1 << 28)
+                    throw new RangeError('repeat count must not overflow maximum string size');
+                var maxCount = str.length * count;
+                count = Math.floor(Math.log(count) / Math.log(2));
+                while (count) {
+                    str += str;
+                    count--;
+                }
+                str += str.substring(0, maxCount - str.length);
+                return str;
+            };
+        }
+        // Number.isInteger() -
         Number.isInteger =
             Number.isInteger ||
             function (value) {
@@ -742,12 +785,12 @@ let jsPanel = {
             // color has either 3 or 6 characters
             if (color.length % 2 === 1) {
                 // color has 3 char -> convert to 6 char
-                // r = color.substr(0,1).repeat(2);
-                // g = color.substr(1,1).repeat(2); // String.prototype.repeat() doesn't work in IE11
-                // b = color.substr(2,1).repeat(2);
-                r = String(color.substr(0, 1)) + color.substr(0, 1);
-                g = String(color.substr(1, 1)) + color.substr(1, 1);
-                b = String(color.substr(2, 1)) + color.substr(2, 1);
+                //r = color.substr(0,1).repeat(2);
+                //g = color.substr(1,1).repeat(2);
+                //b = color.substr(2,1).repeat(2);
+                r = color.slice(0,1).repeat(2);
+                g = color.slice(1,2).repeat(2);
+                b = color.slice(2,3).repeat(2);
 
                 result.rgb = {
                     r: parseInt(r, 16),
@@ -759,9 +802,12 @@ let jsPanel = {
             } else {
                 // color has 6 char
                 result.rgb = {
-                    r: parseInt(color.substr(0, 2), 16),
-                    g: parseInt(color.substr(2, 2), 16),
-                    b: parseInt(color.substr(4, 2), 16),
+                    //r: parseInt(color.substr(0, 2), 16),
+                    //g: parseInt(color.substr(2, 2), 16),
+                    //b: parseInt(color.substr(4, 2), 16),
+                    r: parseInt(color.slice(0, 2), 16),
+                    g: parseInt(color.slice(2, 4), 16),
+                    b: parseInt(color.slice(4, 6), 16)
                 };
 
                 result.hex = `#${color}`;
@@ -784,8 +830,10 @@ let jsPanel = {
             match = HSLAPattern.exec(color);
 
             h = match[1] / 360;
-            s = match[2].substr(0, match[2].length - 1) / 100;
-            l = match[3].substr(0, match[3].length - 1) / 100;
+            //s = match[2].substr(0, match[2].length - 1) / 100;
+            //l = match[3].substr(0, match[3].length - 1) / 100;
+            s = match[2].slice(0, match[2].length - 1) / 100;
+            l = match[3].slice(0, match[3].length - 1) / 100;
 
             channels = this.hslToRgb(h, s, l);
 
@@ -1292,7 +1340,7 @@ let jsPanel = {
         }
         panel.style.left = scaleFactor.x === 1 ? left : parseFloat(left) / scaleFactor.x + 'px';
         panel.style.top = scaleFactor.y === 1 ? top : parseFloat(top) / scaleFactor.y + 'px';
-        // at this point panels are correctly positioned according to the my/at values
+        // at this point panels are correctly positioned according to my/at values
 
         let panelStyle = getComputedStyle(panel);
         // eslint-disable-next-line no-unused-vars
@@ -1828,7 +1876,7 @@ let jsPanel = {
                 value[3] = value[1];
             }
         }
-        return value; // assumed to be array with 4 values
+        return value; // assumed to be an array with 4 values
     },
     pOsize(panel, size) {
         let values = size || this.defaults.contentSize;
@@ -2147,7 +2195,7 @@ let jsPanel = {
             }
         });
 
-        const self = options.template ? options.template : this.createPanelTemplate();
+        const self = options.template || this.createPanelTemplate();
 
         // Properties
         self.options = options;
@@ -3326,7 +3374,7 @@ let jsPanel = {
                             if (!dragstarted) {
                                 document.dispatchEvent(jspaneldragstart);
                                 self.style.opacity = opts.opacity;
-                                // if configured restore panel size to values before snap and reposition reasonable before drag actually starts
+                                // if configured restore panel size to a value before snap and reposition reasonable before drag actually starts
                                 if (self.snapped && opts.snap.resizeToPreSnap && self.currentData.beforeSnap) {
                                     self.resize(self.currentData.beforeSnap.width + ' ' + self.currentData.beforeSnap.height);
                                     self.setControls(['.jsPanel-btn-normalize']);
@@ -3484,7 +3532,7 @@ let jsPanel = {
                             if (opts.grid) {
                                 let grid = opts.grid,
                                     axis = opts.axis;
-                                // formula rounds to nearest multiple of grid
+                                // formula rounds to the nearest multiple of grid
                                 // https://www.webveteran.com/blog/web-coding/javascript-round-to-any-multiple-of-a-specific-number/
                                 let x = grid[0] * Math.round((startLeft + (pmx - psx)) / grid[0]),
                                     y = grid[1] * Math.round((startTop + (pmy - psy)) / grid[1]);
@@ -3962,7 +4010,7 @@ let jsPanel = {
                                 }
                             }
                         }
-                        // if original opts.containment is array
+                        // if original opts.containment is an array
                         if (opts.containment) {
                             maxWidthWest -= opts.containment[3];
                             maxHeightNorth -= opts.containment[0];
@@ -4907,7 +4955,7 @@ let jsPanel = {
             }
 
             if (typeof logo === 'string') {
-                if (logo.substr(0, 1) !== '<') {
+                if (!logo.startsWith('<')) {
                     // is assumed to be an img url
                     logos.forEach((item) => {
                         jsPanel.emptyNode(item);
@@ -5247,6 +5295,24 @@ let jsPanel = {
             self.setBorderRadius(options.borderRadius);
         }
 
+        // option.css - add custom css classes to the panel html
+        if (options.css) {
+            for (const [selector, classname] of Object.entries(options.css)) {
+                // option is a string used to build the desired class selector like `.jsPanel-${option}` except for the outermost DIV where option must be simply 'panel'
+                // value is a string with either a single class name or a space separated list of class names like 'classA classB classC'
+                if (selector === 'panel') {
+                    // handles the special case outermost DIV of the panel
+                    self.className += ` ${classname}`; // don't remove space at the beginning of template string
+                } else {
+                    // handles all other elements within the panel template
+                    let elmt = self.querySelector(`.jsPanel-${selector}`);
+                    if (elmt) {
+                        elmt.className += ` ${classname}`; // don't remove space at the beginning of template string
+                    }
+                }
+            }
+        }
+
         // option.content
         if (options.content) {
             if (typeof options.content === 'function') {
@@ -5359,7 +5425,7 @@ let jsPanel = {
         }
 
         if (options.dragit) {
-            // callbacks must be array of function(s) in order to be able to dynamically add/remove callbacks (for example in extensions)
+            // callbacks must be an array of function(s) in order to be able to dynamically add/remove callbacks (for example in extensions)
             ['start', 'drag', 'stop'].forEach((item) => {
                 if (options.dragit[item]) {
                     if (typeof options.dragit[item] === 'function') {
@@ -5385,7 +5451,7 @@ let jsPanel = {
         }
 
         if (options.resizeit) {
-            // callbacks must be array of function(s) in order to be able to dynamically add/remove callbacks (for example in extensions)
+            // callbacks must be an array of function(s) in order to be able to dynamically add/remove callbacks (for example in extensions)
             ['start', 'resize', 'stop'].forEach((item) => {
                 if (options.resizeit[item]) {
                     if (typeof options.resizeit[item] === 'function') {
@@ -5442,8 +5508,8 @@ let jsPanel = {
             } else if (options.setStatus === 'smallified') {
                 self.smallify();
             } else {
-                // remove the char 'd' from end of string to get function name to call
-                self[options.setStatus.substr(0, options.setStatus.length - 1)]();
+                // remove last char ('d') from end of string to get function name to call
+                self[options.setStatus.slice(0, -1)]();
             }
         }
 

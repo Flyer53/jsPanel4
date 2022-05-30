@@ -1,137 +1,175 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.14.1
+ * @version v4.15.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
+ * @author of dialog extension: Michael Daumling - michael@terrapinlogo.com
  * @github https://github.com/Flyer53/jsPanel4.git
  */
 .jsPanel-cal-wrapper {
   display: grid;
   grid-template-areas: "clear back month month month month forward reset" "blank3 day-name-0 day-name-1 day-name-2 day-name-3 day-name-4 day-name-5 day-name-6" "week-0 day-1 day-2 day-3 day-4 day-5 day-6 day-7" "week-1 day-8 day-9 day-10 day-11 day-12 day-13 day-14" "week-2 day-15 day-16 day-17 day-18 day-19 day-20 day-21" "week-3 day-22 day-23 day-24 day-25 day-26 day-27 day-28" "week-4 day-29 day-30 day-31 day-32 day-33 day-34 day-35" "week-5 day-36 day-37 day-38 day-39 day-40 day-41 day-42";
   grid-template-rows: 1.33fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-columns: .5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-row-gap: .2rem;
+  grid-template-columns: 0.5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-row-gap: 0.2rem;
   width: 100%;
   height: 100%;
-  font-size: .875rem;
-  padding: 0 10px 10px; }
+  font-size: 0.875rem;
+  padding: 0 10px 10px;
+}
 
 .jsPanel-cal-sub {
   display: flex;
   align-items: center;
-  justify-content: center; }
+  justify-content: center;
+}
 
 .jsPanel-cal-sub.day {
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 .jsPanel-cal-sub.day.today {
   background-color: #f0f0f0;
   border-radius: 5px;
-  border: 1px solid #c5e1a5; }
+  border: 1px solid #c5e1a5;
+}
 
 .jsPanel-cal-sub.week {
   color: gray;
-  font-size: .66rem; }
+  font-size: 0.66rem;
+}
 
 .jsPanel-cal-sub.day.notInMonth {
-  color: lightgray; }
+  color: lightgray;
+}
 
 .jsPanel-cal-sub.day-name, .jsPanel-cal-blank3 {
-  background: gainsboro; }
+  background: gainsboro;
+}
 
 .jsPanel-cal-sub.day-name.day-name-6 {
   border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px; }
+  border-bottom-right-radius: 5px;
+}
 
 .jsPanel-cal-sub.day-name.weekend {
-  color: crimson; }
+  color: crimson;
+}
 
 .jsPanel-cal-sub.day.selected {
   background-color: #81d4fa;
   border-radius: 5px;
-  color: #fff; }
+  color: #fff;
+}
 
 .jsPanel-cal-sub.day.selected.range {
   background-color: #ce93d8;
-  color: #fff; }
+  color: #fff;
+}
 
 .jsPanel-cal-sub.day:hover {
   background-color: #c5e1a5;
   border-radius: 5px;
-  color: #fff; }
+  color: #fff;
+}
 
 .jsPanel-cal-sub.jsPanel-cal-back {
   grid-area: back;
-  cursor: pointer; }
-  .jsPanel-cal-sub.jsPanel-cal-back svg {
-    width: 50%; }
+  cursor: pointer;
+}
+.jsPanel-cal-sub.jsPanel-cal-back svg {
+  width: 50%;
+}
 
 .jsPanel-cal-sub.jsPanel-cal-forward {
   grid-area: forward;
-  cursor: pointer; }
-  .jsPanel-cal-sub.jsPanel-cal-forward svg {
-    width: 50%; }
+  cursor: pointer;
+}
+.jsPanel-cal-sub.jsPanel-cal-forward svg {
+  width: 50%;
+}
 
 .jsPanel-cal-sub.jsPanel-cal-month {
   grid-area: month;
-  font-variant: small-caps; }
+  font-variant: small-caps;
+}
 
 .jsPanel-cal-sub.jsPanel-cal-clear {
   grid-area: clear;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 .jsPanel-cal-sub.jsPanel-cal-reset {
   grid-area: reset;
-  cursor: pointer; }
-  .jsPanel-cal-sub.jsPanel-cal-reset svg {
-    width: 50%; }
+  cursor: pointer;
+}
+.jsPanel-cal-sub.jsPanel-cal-reset svg {
+  width: 50%;
+}
 
 .jsPanel-cal-sub.jsPanel-cal-blank3 {
   grid-area: blank3;
   border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px; }
+  border-bottom-left-radius: 5px;
+}
 
 .jsPanel-cal-sub.day-name-0 {
-  grid-area: day-name-0; }
+  grid-area: day-name-0;
+}
 
 .jsPanel-cal-sub.day-name-1 {
-  grid-area: day-name-1; }
+  grid-area: day-name-1;
+}
 
 .jsPanel-cal-sub.day-name-2 {
-  grid-area: day-name-2; }
+  grid-area: day-name-2;
+}
 
 .jsPanel-cal-sub.day-name-3 {
-  grid-area: day-name-3; }
+  grid-area: day-name-3;
+}
 
 .jsPanel-cal-sub.day-name-4 {
-  grid-area: day-name-4; }
+  grid-area: day-name-4;
+}
 
 .jsPanel-cal-sub.day-name-5 {
-  grid-area: day-name-5; }
+  grid-area: day-name-5;
+}
 
 .jsPanel-cal-sub.day-name-6 {
-  grid-area: day-name-6; }
+  grid-area: day-name-6;
+}
 
 .jsPanel-cal-sub.week-1 {
-  grid-area: week-1; }
+  grid-area: week-1;
+}
 
 .jsPanel-cal-sub.week-2 {
-  grid-area: week-2; }
+  grid-area: week-2;
+}
 
 .jsPanel-cal-sub.week-3 {
-  grid-area: week-3; }
+  grid-area: week-3;
+}
 
 .jsPanel-cal-sub.week-4 {
-  grid-area: week-4; }
+  grid-area: week-4;
+}
 
 .jsPanel-cal-sub.week-5 {
-  grid-area: week-5; }
+  grid-area: week-5;
+}
 
 .jsPanel-cal-sub.day.selected.range.remove-border-radius-left {
   border-top-left-radius: 0;
-  border-bottom-left-radius: 0; }
+  border-bottom-left-radius: 0;
+}
 
 .jsPanel-cal-sub.day.selected.range.remove-border-radius-right {
   border-top-right-radius: 0;
-  border-bottom-right-radius: 0; }
+  border-bottom-right-radius: 0;
+}
+
+/*# sourceMappingURL=default.css.map */

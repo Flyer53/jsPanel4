@@ -48,45 +48,45 @@
   /* top: 0  do not remove, otherwise panel is at the very bottom of the page -> results in vertical scrollbars -> positioning at right incorrect */
   z-index: 100
 
-  .jsPanel-hdr
-    +basic-mixin
-    display: flex
-    flex-direction: column
-    flex-shrink: 0
-    line-height: normal
+.jsPanel-hdr
+  +basic-mixin
+  display: flex
+  flex-direction: column
+  flex-shrink: 0
+  line-height: normal
 
-  .jsPanel-content
-    +basic-mixin
-    background: #ffffff
-    color: #000000
-    font-size: 1rem
-    position: relative
-    overflow-x: hidden
-    overflow-y: auto
-    flex-grow: 1
+.jsPanel-content
+  +basic-mixin
+  background: #ffffff
+  color: #000000
+  font-size: 1rem
+  position: relative
+  overflow-x: hidden
+  overflow-y: auto
+  flex-grow: 1
 
-    pre
-      color: inherit /* this is just to override the bootstrap setting */
+  pre
+    color: inherit /* this is just to override the bootstrap setting */
 
-  .jsPanel-ftr
-    flex-direction: row
-    justify-content: flex-end
-    flex-wrap: nowrap
-    align-items: center
-    display: none
-    box-sizing: border-box
-    font-size: 1rem
-    height: auto
-    background: #f5f5f5
-    font-weight: normal
-    color: black
-    overflow: hidden
+.jsPanel-ftr
+  flex-direction: row
+  justify-content: flex-end
+  flex-wrap: nowrap
+  align-items: center
+  display: none
+  box-sizing: border-box
+  font-size: 1rem
+  height: auto
+  background: #f5f5f5
+  font-weight: normal
+  color: black
+  overflow: hidden
 
-  .jsPanel-ftr.active
-    display: flex
-    flex-shrink: 0
-    margin: 0
-    padding: 3px 8px
+.jsPanel-ftr.active
+  display: flex
+  flex-shrink: 0
+  margin: 0
+  padding: 3px 8px
 
 .jsPanel-hdr.jsPanel-hdr-dark .jsPanel-btn:hover
   background-color: rgba(255,255,255,0.4)
