@@ -1,0 +1,114 @@
+$modal-top-offset: 50px
+
+/* Dialog adaptation: a simple white box */
+.jsPanel-dialog
+    min-width: 400px
+    margin-top: $modal-top-offset
+    max-height: calc(90vh - #{$modal-top-offset})
+
+    .jsPanel-content
+        display: flex
+        flex-direction: column
+        overflow: hidden
+        /* Add some padding to the dialog content */ 
+        padding: 1rem
+
+    .buttonbar
+        margin-top: 10px
+        padding-top: 10px
+        border-top: 1px solid #ccc
+        width: 100%
+        display: flex
+        justify-content: right
+  
+        button
+            margin-left: 0.5rem
+
+
+/* Modals in the background are partly transparent */
+.jsPanel-modal.background
+    opacity: 0.3 !important
+
+/* Dialog sizes */
+.dialog-sm, .dialog-md, .dialog-lg, .dialog-xl
+    max-height: calc(90vh - #{$modal-top-offset})
+    overflow: hidden auto
+    margin: 0 auto
+
+.dialog-sm
+    width: 400px !important
+  
+.dialog-md
+    width: 600px !important
+  
+.dialog-lg
+    width: 800px !important
+  
+.dialog-xl
+    width: 1000px !important
+  
+
+@media (max-width: 767px)
+  .dialog-md, .dialog-lg, .dialog-xl
+    width: 90vw !important
+  
+  
+@media (max-width: 991px)
+  .dialog-lg, .dialog-xl
+    width: 90vw !important
+  
+  
+@media (max-width: 1199px)
+  .dialog-xl
+    width: 90vw !important
+
+/* A few button colors */
+button.blue, button.info
+    color: #fff !important
+    background-color: #039be5 !important
+    border-color: #039be5 !important
+  
+button.gray, button.default, button.secondary
+    color: #fff
+    background-color: #b0bec5 !important
+    border-color: #b0bec5 !important
+  
+button.white
+    color: #333 !important
+    background-color: #fff !important
+  
+button.primary
+    color: #fff !important
+    background-color: #01579b !important
+    border-color: #01579b !important
+  
+button.yellow, button.warning
+    color: #000 !important
+    background-color: #f57f17 !important
+    border-color: #f57f17 !important
+  
+button.red, button.danger
+    color: #fff !important
+    background-color: #dd2c00 !important
+    border-color: #dd2c00 !important
+  
+button.green, button.success
+    color: #fff !important
+    background-color: #2e7d32 !important
+    border-color: #2e7d32 !important
+  
+input:disabled, input[readonly]
+    cursor: not-allowed !important
+    background-color: #eee !important
+
+/* Radio buttons and checkboxes, followed by a span */
+input[type="checkbox"], input[type="radio"]
+    vertical-align: middle
+    margin: 0 0.5rem 0 0
+  
+input[type="radio"]
+    margin-bottom: 2px
+  
+input:disabled+span
+    opacity: 0.4
+    cursor: not-allowed

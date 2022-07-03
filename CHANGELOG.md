@@ -1,5 +1,13 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.16.0 *2022-07-03*</span>
+
++ **added** Dialog extension. This extension adds an easy-to-use interface for dialog elements to virtually any jsPanel. It also offers a `modal()` function to create modal dialogs as well as `alert()`, `confirm()` and `prompt()` functions. `jsPanel.dialog` is a Third Party Extension developed and maintained by Michael Daumling.
++ **added** The object used to set a custom theme with `option.theme` now accepts the properties `bgFooter`, `colorFooter` and `borderRadius` as well
++ **added** method `jsPanel.getCssVariableValue()` to process css variables in options `theme`, `border`, `borderRadius` and methods `.setTheme()`, `.setBorder()`, `setBorderRadius()`
++ **updated** internal methods `.getThemeDetails()`, `.applyCustomTheme()` and `.pOborder()` to support the use of css variables in `option.theme`, `option.border`, `option.borderRadius` and the methods `.setTheme()`, `.setBorder()`, `setBorderRadius()`
++ **reorganized** code in the whole script
+
 ### <span style='color:#563D7C;'>Version 4.15.0 *2022-05-30*</span>
 
 + **added** option `css` to add custom css classes to the panel's html template, includes updated css files `jspanel.css`/`jspanel.min.css`

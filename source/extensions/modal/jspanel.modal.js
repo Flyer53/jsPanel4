@@ -43,7 +43,9 @@ if (!jsPanel.modal) {
         },
 
         create(options = {}) {
+
             options.paneltype = 'modal';
+
             if (!options.id) {
                 options.id = `jsPanel-${jsPanel.idCounter += 1}`;
             } else if (typeof options.id === 'function') {

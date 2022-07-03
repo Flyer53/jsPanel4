@@ -1,7 +1,7 @@
 <img alt="NPM license"   src="https://img.shields.io/npm/l/jspanel4"> <img alt="npm version"   src="https://img.shields.io/npm/v/jspanel4?color=0677b8"> <img alt="npm downloads" src="https://img.shields.io/npm/dm/jspanel4?color=0677b8">
 
 
-## [jsPanel 4.15.0 released 2022-05-30](#)
+## [jsPanel 4.16.0 released 2022-07-03](#)
 
 > As of v4.11.0-beta methods `jsPanel.ajax()` and `jsPanel.fetch()` are updated. That also affects options `contentAjax` and `contentFetch`. These updates might break existing code. So please check the docs on https://jspanel.de/
 
@@ -14,7 +14,7 @@
 + support for Boostrap (3 and 4) **themes** and Material-Design-for-Bootstrap themes is built-in
 + customize the panel controls with built-in support for **icon fonts** Font-Awesome, Material-Icons and Glyphicon
 + built-in support for **RTL text** direction
-+ use it as standard panel, **modal**, **tooltip**, **hint/notifier** or **contextmenu**
++ via extensions you can use it alose as **modal**, **tooltip**, **hint/notifier**, **contextmenu** or **dialog**
 + jsPanels are **draggable** and **resizable**, can be **maximized**, **minimized** and **smallified**
 + and much more ...
 

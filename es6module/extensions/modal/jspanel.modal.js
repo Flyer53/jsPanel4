@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.15.0
+ * @version v4.16.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -55,7 +55,9 @@ if (!jsPanel.modal) {
         },
 
         create(options = {}) {
+
             options.paneltype = 'modal';
+
             if (!options.id) {
                 options.id = `jsPanel-${jsPanel.idCounter += 1}`;
             } else if (typeof options.id === 'function') {

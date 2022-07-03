@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.15.0
+ * @version v4.16.0
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -9,25 +9,25 @@
  */
 
 'use strict';
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -35,16 +35,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 // noinspection JSVoidFunctionReturnValueUsed
 // eslint-disable-next-line no-redeclare
 var jsPanel = {
-  version: '4.15.0',
-  date: '2022-05-30 17:11',
+  version: '4.16.0',
+  date: '2022-07-03 19:05',
   ajaxAlwaysCallbacks: [],
   autopositionSpacing: 4,
   closeOnEscape: function () {
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' || e.code === 'Escape' || e.key === 'Esc') {
         jsPanel.getPanels(function (panel) {
-          return panel.classList.contains('jsPanel'); // Array is sorted by z-index (the highest first)
-        }).some(function (item) {
+          return panel.classList.contains('jsPanel');
+        }) // Array is sorted by z-index (the highest first)
+        .some(function (item) {
           if (item.options.closeOnEscape) {
             if (typeof item.options.closeOnEscape === 'function') {
               return item.options.closeOnEscape.call(item, item); // if return value is falsy next panel in sequence will close, otherwise processing of Array.prototype.some() stops
@@ -116,7 +117,6 @@ var jsPanel = {
   },
   idCounter: 0,
   isIE: function () {
-    //return navigator.appVersion.match(/Trident/);
     return document.documentMode || false;
   }(),
   pointerdown: 'onpointerdown' in window ? ['pointerdown'] : 'ontouchend' in window ? ['touchstart', 'mousedown'] : ['mousedown'],
@@ -372,14 +372,14 @@ var jsPanel = {
     // https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#Color_keywords
     aliceblue: 'f0f8ff',
     antiquewhite: 'faebd7',
-    aqua: '0ff',
+    aqua: '00ffff',
     aquamarine: '7fffd4',
     azure: 'f0ffff',
     beige: 'f5f5dc',
     bisque: 'ffe4c4',
-    black: '000',
+    black: '000000',
     blanchedalmond: 'ffebcd',
-    blue: '00f',
+    blue: '0000ff',
     blueviolet: '8a2be2',
     brown: 'a52a2a',
     burlywood: 'deb887',
@@ -390,7 +390,7 @@ var jsPanel = {
     cornflowerblue: '6495ed',
     cornsilk: 'fff8dc',
     crimson: 'dc143c',
-    cyan: '0ff',
+    cyan: '00ffff',
     darkblue: '00008b',
     darkcyan: '008b8b',
     darkgoldenrod: 'b8860b',
@@ -418,7 +418,7 @@ var jsPanel = {
     firebrick: 'b22222',
     floralwhite: 'fffaf0',
     forestgreen: '228b22',
-    fuchsia: 'f0f',
+    fuchsia: 'ff00ff',
     gainsboro: 'dcdcdc',
     ghostwhite: 'f8f8ff',
     gold: 'ffd700',
@@ -448,14 +448,14 @@ var jsPanel = {
     lightsalmon: 'ffa07a',
     lightseagreen: '20b2aa',
     lightskyblue: '87cefa',
-    lightslategray: '789',
-    lightslategrey: '789',
+    lightslategray: '778899',
+    lightslategrey: '778899',
     lightsteelblue: 'b0c4de',
     lightyellow: 'ffffe0',
-    lime: '0f0',
+    lime: '00ff00',
     limegreen: '32cd32',
     linen: 'faf0e6',
-    magenta: 'f0f',
+    magenta: 'ff00ff',
     maroon: '800000',
     mediumaquamarine: '66cdaa',
     mediumblue: '0000cd',
@@ -489,8 +489,8 @@ var jsPanel = {
     plum: 'dda0dd',
     powderblue: 'b0e0e6',
     purple: '800080',
-    rebeccapurple: '639',
-    red: 'f00',
+    rebeccapurple: '663399',
+    red: 'ff0000',
     rosybrown: 'bc8f8f',
     royalblue: '4169e1',
     saddlebrown: '8b4513',
@@ -514,15 +514,15 @@ var jsPanel = {
     turquoise: '40e0d0',
     violet: 'ee82ee',
     wheat: 'f5deb3',
-    white: 'fff',
+    white: 'ffffff',
     whitesmoke: 'f5f5f5',
-    yellow: 'ff0',
+    yellow: 'ffff00',
     yellowgreen: '9acd32',
 
     /* Material Design Colors https://material.io/design/color/the-color-system.html#tools-for-picking-colors */
     grey50: 'fafafa',
     grey100: 'f5f5f5',
-    grey200: 'eee',
+    grey200: 'eeeeee',
     grey300: 'e0e0e0',
     grey400: 'bdbdbd',
     grey500: '9e9e9e',
@@ -532,7 +532,7 @@ var jsPanel = {
     grey900: '212121',
     gray50: 'fafafa',
     gray100: 'f5f5f5',
-    gray200: 'eee',
+    gray200: 'eeeeee',
     gray300: 'e0e0e0',
     gray400: 'bdbdbd',
     gray500: '9e9e9e',
@@ -799,10 +799,10 @@ var jsPanel = {
   modifier: false,
   helper: function () {
     document.addEventListener('keydown', function (e) {
-      jsPanel.modifier = e;
+      return jsPanel.modifier = e;
     });
     document.addEventListener('keyup', function () {
-      jsPanel.modifier = false;
+      return jsPanel.modifier = false;
     });
   }(),
   usePointerEvents: function usePointerEvents() {
@@ -817,6 +817,237 @@ var jsPanel = {
       this.pointermove = 'onpointermove' in window ? ['pointermove'] : 'ontouchend' in window ? ['touchmove', 'mousemove'] : ['mousemove'];
       this.pointerup = 'onpointerup' in window ? ['pointerup'] : 'ontouchend' in window ? ['touchend', 'mouseup'] : ['mouseup'];
     }
+  },
+  // normalize some values passed via panel's options object
+  pOcontainer: function pOcontainer(container) {
+    if (container === 'window') {
+      return document.body;
+    } else if (typeof container === 'string') {
+      var list = document.querySelectorAll(container); // a returned list is a NodeList
+
+      return list.length && list.length > 0 ? list : false;
+    } else if (container.nodeType === 1) {
+      return container;
+    } else if (container.length) {
+      return container[0];
+    }
+
+    return false;
+  },
+  pOcontainment: function pOcontainment(arg) {
+    var value = arg;
+
+    if (typeof arg === 'function') {
+      value = arg();
+    }
+
+    if (typeof value === 'number') {
+      // value: 20 => value: [20, 20, 20, 20]
+      return [value, value, value, value];
+    } else if (Array.isArray(value)) {
+      if (value.length === 1) {
+        // value: [20] => value: [20, 20, 20, 20]
+        return [value[0], value[0], value[0], value[0]];
+      } else if (value.length === 2) {
+        // value: [20, 40] => value: [20, 40, 20, 40]
+        return value.concat(value);
+      } else if (value.length === 3) {
+        value[3] = value[1];
+      }
+    }
+
+    return value; // assumed to be an array with 4 values
+  },
+  pOsize: function pOsize(panel, size) {
+    var values = size || this.defaults.contentSize;
+    var parent = panel.parentElement;
+
+    if (typeof values === 'string') {
+      var nums = values.trim().split(' ');
+      values = {};
+      values.width = nums[0];
+      nums.length === 2 ? values.height = nums[1] : values.height = nums[0];
+    } else {
+      if (values.width && !values.height) {
+        // noinspection JSSuspiciousNameCombination
+        values.height = values.width;
+      } else if (values.height && !values.width) {
+        // noinspection JSSuspiciousNameCombination
+        values.width = values.height;
+      }
+    }
+
+    if (String(values.width).match(/^[0-9.]+$/gi)) {
+      // if number only
+      values.width += 'px';
+    } else if (typeof values.width === 'string' && values.width.endsWith('%')) {
+      if (parent === document.body) {
+        values.width = window.innerWidth * (parseFloat(values.width) / 100) + 'px';
+      } else {
+        var prtStyles = window.getComputedStyle(parent),
+            border = parseFloat(prtStyles.borderLeftWidth) + parseFloat(prtStyles.borderRightWidth);
+        values.width = (parseFloat(prtStyles.width) - border) * (parseFloat(values.width) / 100) + 'px';
+      }
+    } else if (typeof values.width === 'function') {
+      values.width = values.width.call(panel, panel);
+
+      if (typeof values.width === 'number') {
+        values.width += 'px';
+      } else if (typeof values.width === 'string' && values.width.match(/^[0-9.]+$/gi)) {
+        values.width += 'px';
+      }
+    }
+
+    if (String(values.height).match(/^[0-9.]+$/gi)) {
+      // if number only
+      values.height += 'px';
+    } else if (typeof values.height === 'string' && values.height.endsWith('%')) {
+      if (parent === document.body) {
+        values.height = window.innerHeight * (parseFloat(values.height) / 100) + 'px';
+      } else {
+        var _prtStyles = window.getComputedStyle(parent),
+            _border = parseFloat(_prtStyles.borderTopWidth) + parseFloat(_prtStyles.borderBottomWidth);
+
+        values.height = (parseFloat(_prtStyles.height) - _border) * (parseFloat(values.height) / 100) + 'px';
+      }
+    } else if (typeof values.height === 'function') {
+      values.height = values.height.call(panel, panel);
+
+      if (typeof values.height === 'number') {
+        values.height += 'px';
+      } else if (typeof values.height === 'string' && values.height.match(/^[0-9.]+$/gi)) {
+        values.height += 'px';
+      }
+    }
+
+    return values; // return value must be an object {width: xxx, height: xxx}
+  },
+  pOborder: function pOborder(str) {
+    var result = []; // remove all unnecessary whitepsace
+
+    var border = str.trim().replace(/\s*\(\s*/g, '(') // remove whitespace around opening brackets
+    .replace(/\s*\)/g, ')') // remove whitespace around closing brackets
+    .replace(/\s+/g, ' ') // replace all other whitespace(s) with a single whitespace
+    .split(' '); // replace css custom props/variables with values
+
+    border.forEach(function (val, index) {
+      if (val.startsWith('--') || val.startsWith('var')) {
+        border[index] = jsPanel.getCssVariableValue(val);
+      }
+    }); // border is now an array like ['5px', 'solid', 'red']
+    // check values for type (border width, style or color) and add to result array
+
+    border.forEach(function (val) {
+      if (jsPanel.colorNames[val]) {
+        result[2] = '#' + jsPanel.colorNames[val];
+      } else if (val.match(/(none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset)/)) {
+        result[1] = val;
+      } else if (val.match(/(thin|medium|thick)|(\d*\.?\d*(cap|ch|em|ex|ic|lh|rem|rlh|vh|vw|vmax|vmin|vb|vi|px|cm|mm|Q|in|pc|pt))/)) {
+        result[0] = val;
+      } else {
+        result[2] = val;
+      }
+    }); // set default values if needed
+
+    if (!result[0]) {
+      result[0] = 'medium';
+    }
+
+    if (!result[1]) {
+      result[1] = 'solid';
+    }
+
+    if (!result[2]) {
+      result[2] = '';
+    }
+
+    return result;
+  },
+  pOheaderControls: function pOheaderControls(oHdrCtrls) {
+    if (typeof oHdrCtrls === 'string') {
+      var setting = {},
+          str = oHdrCtrls.toLowerCase(),
+          sizeMatch = str.match(/xl|lg|md|sm|xs/),
+          ctrlMatch = str.match(/closeonly|none/);
+
+      if (sizeMatch) {
+        setting.size = sizeMatch[0];
+      }
+
+      if (ctrlMatch) {
+        setting = Object.assign({}, setting, {
+          maximize: 'remove',
+          normalize: 'remove',
+          minimize: 'remove',
+          smallify: 'remove'
+        });
+
+        if (ctrlMatch[0] === 'none') {
+          setting.close = 'remove';
+        }
+      }
+
+      return Object.assign({}, this.defaults.headerControls, setting);
+    } else {
+      return Object.assign({}, this.defaults.headerControls, oHdrCtrls);
+    }
+  },
+  pOtheme: function pOtheme(optionTheme) {
+    optionTheme = optionTheme.trim();
+    var color,
+        filling = '';
+
+    if (optionTheme.match(/^(rgb|hsl|var)/)) {
+      // for themes starting with rgb , hsl or var
+      var devide = optionTheme.indexOf(')');
+      color = optionTheme.slice(0, devide + 1).replace(/\s+/g, '');
+
+      if (color.startsWith('var')) {
+        color = jsPanel.getCssVariableValue(color);
+      }
+
+      filling = optionTheme.slice(devide + 1, optionTheme.length).trim();
+    } else if (optionTheme.match(/^(#|\w|--)/)) {
+      // for themes starting with #, [A-Za-z0-9_] or --
+      var _devide = optionTheme.indexOf(' ');
+
+      if (_devide > 0) {
+        color = optionTheme.slice(0, _devide + 1).replace(/\s+/g, '');
+        filling = optionTheme.slice(_devide + 1, optionTheme.length).trim();
+      } else {
+        color = optionTheme;
+      }
+
+      if (color.startsWith('--')) {
+        color = jsPanel.getCssVariableValue(color);
+      }
+    }
+
+    if (color.match(/^([0-9a-f]{3}|[0-9a-f]{6})$/gi)) {
+      color = '#' + color;
+    }
+
+    if (filling.startsWith('fillcolor')) {
+      var _devide2 = filling.indexOf(' ');
+
+      filling = filling.slice(_devide2 + 1, filling.length).trim().replace(/\s+/g, '');
+
+      if (filling.match(/^([0-9a-f]{3}|[0-9a-f]{6})$/gi)) {
+        filling = '#' + filling;
+      } else if (jsPanel.colorNames[filling]) {
+        filling = '#' + jsPanel.colorNames[filling];
+      } else if (filling.match(/^(--|var)/)) {
+        filling = jsPanel.getCssVariableValue(filling);
+      } else {
+        filling = '#fff';
+      }
+    }
+
+    return {
+      color: color,
+      colors: false,
+      filling: filling
+    };
   },
   // color methods ---------------
   color: function color(val) {
@@ -849,9 +1080,6 @@ var jsPanel = {
 
       if (color.length % 2 === 1) {
         // color has 3 char -> convert to 6 char
-        //r = color.substr(0,1).repeat(2);
-        //g = color.substr(1,1).repeat(2);
-        //b = color.substr(2,1).repeat(2);
         r = color.slice(0, 1).repeat(2);
         g = color.slice(1, 2).repeat(2);
         b = color.slice(2, 3).repeat(2);
@@ -864,9 +1092,6 @@ var jsPanel = {
       } else {
         // color has 6 char
         result.rgb = {
-          //r: parseInt(color.substr(0, 2), 16),
-          //g: parseInt(color.substr(2, 2), 16),
-          //b: parseInt(color.substr(4, 2), 16),
           r: parseInt(color.slice(0, 2), 16),
           g: parseInt(color.slice(2, 4), 16),
           b: parseInt(color.slice(4, 6), 16)
@@ -892,9 +1117,7 @@ var jsPanel = {
     } // check val for hsl/hsla color
     else if (color.match(HSLAPattern)) {
       match = HSLAPattern.exec(color);
-      h = match[1] / 360; //s = match[2].substr(0, match[2].length - 1) / 100;
-      //l = match[3].substr(0, match[3].length - 1) / 100;
-
+      h = match[1] / 360;
       s = match[2].slice(0, match[2].length - 1) / 100;
       l = match[3].slice(0, match[3].length - 1) / 100;
       channels = this.hslToRgb(h, s, l);
@@ -1373,7 +1596,7 @@ var jsPanel = {
     }
 
     panel.style.left = scaleFactor.x === 1 ? left : parseFloat(left) / scaleFactor.x + 'px';
-    panel.style.top = scaleFactor.y === 1 ? top : parseFloat(top) / scaleFactor.y + 'px'; // at this point panels are correctly positioned according to my/at values
+    panel.style.top = scaleFactor.y === 1 ? top : parseFloat(top) / scaleFactor.y + 'px'; // at this point panels are correctly positioned according to the my/at values
 
     var panelStyle = getComputedStyle(panel); // eslint-disable-next-line no-unused-vars
 
@@ -1585,25 +1808,316 @@ var jsPanel = {
     if (autoPos) {
       var box = parent === 'window' ? document.body : typeof parent === 'string' ? document.querySelector(parent) : parent;
       box.querySelectorAll(".".concat(autoPos)).forEach(function (item) {
-        item.reposition();
+        return item.reposition();
       });
     }
   },
-  // ---------------------------------------------------
+  // theming methods -------------------------
+  getThemeDetails: function getThemeDetails(th) {
+    var theme = this.pOtheme(th),
+        builtIn = this.themes.some(function (item) {
+      return item === theme.color.split(/\s/i)[0];
+    });
+
+    if (builtIn) {
+      var baseTheme = theme.color.split(/\s/i)[0],
+          btn = document.createElement('button');
+      btn.className = baseTheme + '-bg';
+      document.body.appendChild(btn);
+      theme.color = getComputedStyle(btn).backgroundColor.replace(/\s+/gi, '');
+      document.body.removeChild(btn); // noinspection JSUnusedAssignment
+
+      btn = undefined;
+    } else if (theme.color.startsWith('bootstrap-')) {
+      // works with bootstrap 3 and 4
+      var index = theme.color.indexOf('-'),
+          _btn = document.createElement('button');
+
+      _btn.className = 'btn btn' + theme.color.slice(index);
+      document.body.appendChild(_btn);
+      theme.color = getComputedStyle(_btn).backgroundColor.replace(/\s+/gi, '');
+      document.body.removeChild(_btn); // noinspection JSUnusedAssignment
+
+      _btn = undefined;
+    } else if (theme.color.startsWith('mdb-')) {
+      // material design for bootstrap theme
+      var _index = theme.color.indexOf('-') + 1,
+          span = document.createElement('span'),
+          testClass;
+
+      if (theme.color.endsWith('-dark')) {
+        testClass = theme.color.slice(_index);
+        testClass = testClass.replace('-dark', '-color-dark');
+      } else {
+        testClass = theme.color.slice(_index) + '-color';
+      }
+
+      span.className = testClass;
+      document.body.appendChild(span);
+      theme.color = getComputedStyle(span).backgroundColor.replace(/\s+/gi, '');
+      document.body.removeChild(span); // noinspection JSUnusedAssignment
+
+      span = undefined;
+    }
+
+    theme.colors = this.calcColors(theme.color);
+    return theme;
+  },
+  clearTheme: function clearTheme(panel, cb) {
+    this.themes.forEach(function (value) {
+      ['panel', "jsPanel-theme-".concat(value), "panel-".concat(value), "".concat(value, "-color")].forEach(function (item) {
+        return panel.classList.remove(item);
+      });
+      panel.header.classList.remove("jsPanel-theme-".concat(value));
+    });
+    panel.content.classList.remove('jsPanel-content-filled', 'jsPanel-content-filledlight');
+    panel.header.classList.remove('jsPanel-hdr-light');
+    panel.header.classList.remove('jsPanel-hdr-dark');
+    panel.style.backgroundColor = '';
+    this.setStyles(panel.headertoolbar, {
+      boxShadow: '',
+      width: '',
+      marginLeft: '',
+      borderTopColor: 'transparent'
+    });
+    this.setStyles(panel.content, {
+      background: '',
+      borderTopColor: 'transparent'
+    });
+    panel.header.style.background = '';
+    Array.prototype.slice.call(panel.controlbar.querySelectorAll('.jsPanel-icon')).concat([panel.headerlogo, panel.headertitle, panel.headertoolbar, panel.content]).forEach(function (item) {
+      return item.style.color = '';
+    });
+
+    if (cb) {
+      cb.call(panel, panel);
+    }
+
+    return panel;
+  },
+  applyColorTheme: function applyColorTheme(panel, themeDetails) {
+    panel.style.backgroundColor = themeDetails.colors[0];
+    panel.header.style.backgroundColor = themeDetails.colors[0];
+    panel.header.style.color = themeDetails.colors[3];
+    ['.jsPanel-headerlogo', '.jsPanel-title', '.jsPanel-hdr-toolbar'].forEach(function (item) {
+      return panel.querySelector(item).style.color = themeDetails.colors[3];
+    });
+    panel.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach(function (item) {
+      return item.style.color = themeDetails.colors[3];
+    }); // apply border to content only themes 'filled'
+
+    if (typeof panel.options.theme === 'string' && themeDetails.filling === 'filled') {
+      panel.content.style.borderTop = themeDetails.colors[3] === '#000000' ? '1px solid rgba(0,0,0,0.15)' : '1px solid rgba(255,255,255,0.15)';
+    }
+
+    if (themeDetails.colors[3] === '#000000') {
+      panel.header.classList.add('jsPanel-hdr-light');
+    } else {
+      panel.header.classList.add('jsPanel-hdr-dark');
+    }
+
+    if (themeDetails.filling) {
+      switch (themeDetails.filling) {
+        case 'filled':
+          this.setStyles(panel.content, {
+            backgroundColor: themeDetails.colors[2],
+            color: themeDetails.colors[3]
+          });
+          break;
+
+        case 'filledlight':
+          panel.content.style.backgroundColor = themeDetails.colors[1];
+          break;
+
+        case 'filleddark':
+          this.setStyles(panel.content, {
+            backgroundColor: themeDetails.colors[6],
+            color: themeDetails.colors[7]
+          });
+          break;
+
+        default:
+          panel.content.style.backgroundColor = themeDetails.filling;
+          panel.content.style.color = this.perceivedBrightness(themeDetails.filling) <= this.colorBrightnessThreshold ? '#fff' : '#000';
+      }
+    }
+
+    return panel;
+  },
+  applyCustomTheme: function applyCustomTheme(panel, theme) {
+    var _this = this;
+
+    var defaults = {
+      bgPanel: '#ffffff',
+      bgContent: '#fffffff',
+      bgFooter: '#f5f5f5',
+      colorHeader: '#000000',
+      colorContent: '#000000',
+      colorFooter: '#000000',
+      border: undefined,
+      borderRadius: undefined
+    },
+        passedTheme = _typeof(theme) === 'object' ? Object.assign(defaults, theme) : defaults;
+    var bgPanel = passedTheme.bgPanel,
+        bgContent = passedTheme.bgContent,
+        colorHeader = passedTheme.colorHeader,
+        colorContent = passedTheme.colorContent,
+        bgFooter = passedTheme.bgFooter,
+        colorFooter = passedTheme.colorFooter; // set background panel/header
+
+    if (this.colorNames[bgPanel]) {
+      panel.style.background = '#' + this.colorNames[bgPanel];
+    } else {
+      panel.style.background = this.getCssVariableValue(bgPanel); // getCssVariableValue(bgPanel) returns bgPanel unchanged if value does not start with either '--' or 'var'
+    } // set font color header
+
+
+    if (this.colorNames[colorHeader]) {
+      colorHeader = '#' + this.colorNames[colorHeader];
+    }
+
+    ['.jsPanel-headerlogo', '.jsPanel-title', '.jsPanel-hdr-toolbar'].forEach(function (item) {
+      return panel.querySelector(item).style.color = _this.getCssVariableValue(colorHeader);
+    });
+    panel.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach(function (item) {
+      return item.style.color = _this.getCssVariableValue(colorHeader);
+    }); // set content background
+
+    if (this.colorNames[bgContent]) {
+      panel.content.style.background = '#' + this.colorNames[bgContent];
+    } else {
+      panel.content.style.background = this.getCssVariableValue(bgContent); // getCssVariableValue(bgContent) returns bgContent unchanged if value does not start with either '--' or 'var'
+    } // set content font color
+
+
+    this.colorNames[colorContent] ? panel.content.style.color = '#' + this.colorNames[colorContent] : panel.content.style.color = this.getCssVariableValue(colorContent); // getCssVariableValue(val) returns val unchanged if val does not start with either '--' or 'var'
+    // set border-top for header toolbar and add header class
+
+    var pbPanel = this.perceivedBrightness(colorHeader);
+
+    if (pbPanel > this.colorBrightnessThreshold) {
+      panel.header.classList.add('jsPanel-hdr-dark');
+    } else {
+      panel.header.classList.add('jsPanel-hdr-light');
+    } // set border-top for content
+
+
+    var pbContent = this.perceivedBrightness(colorContent);
+    pbContent > this.colorBrightnessThreshold ? panel.content.style.borderTop = '1px solid rgba(255,255,255,0.15)' : panel.content.style.borderTop = '1px solid rgba(0,0,0,0.15)'; // set footer background
+
+    if (this.colorNames[bgFooter]) {
+      panel.footer.style.background = '#' + this.colorNames[bgFooter];
+    } else {
+      panel.footer.style.background = this.getCssVariableValue(bgFooter); // getCssVariableValue(bgFooter) returns bgFooter unchanged if value does not start with either '--' or 'var'
+    } // set footer font color
+
+
+    this.colorNames[colorFooter] ? panel.footer.style.color = '#' + this.colorNames[colorFooter] : panel.footer.style.color = this.getCssVariableValue(colorFooter); // set panel border (option.border does not work for themes using an object)
+
+    if (passedTheme.border) {
+      panel.setBorder(passedTheme.border);
+    }
+
+    if (passedTheme.borderRadius) {
+      panel.options.borderRadius = undefined;
+      panel.setBorderRadius(passedTheme.borderRadius);
+    }
+
+    return panel;
+  },
+  // methods dealing with css and html -------
+  getCssVariableValue: function getCssVariableValue(str) {
+    // str may be something like '--my-color' or 'var(--my-color)'
+    // if str does not start with '--' or 'var' str is returned unchanged
+    // str = str.replace(/\s+/g, ''); do not uncomment this line !!
+    if (str.startsWith('--')) {
+      return getComputedStyle(document.documentElement).getPropertyValue(str).replace(/\s+/g, '');
+    } else if (str.startsWith('var')) {
+      var v = str.slice(str.indexOf('(') + 1, str.indexOf(')'));
+      return getComputedStyle(document.documentElement).getPropertyValue(v).replace(/\s+/g, '');
+    }
+
+    return str;
+  },
+  getScrollbarWidth: function getScrollbarWidth() {
+    var elmt = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document.body;
+
+    if (elmt === document.body) {
+      return {
+        y: window.innerWidth - document.documentElement.clientWidth,
+        x: window.innerHeight - document.documentElement.clientHeight
+      };
+    } else {
+      var styles = getComputedStyle(elmt);
+      return {
+        y: elmt.offsetWidth - elmt.clientWidth - parseFloat(styles.borderRightWidth) - parseFloat(styles.borderLeftWidth),
+        x: elmt.offsetHeight - elmt.clientHeight - parseFloat(styles.borderBottomWidth) - parseFloat(styles.borderTopWidth)
+      };
+    }
+  },
+  remClass: function remClass(elmt, classnames) {
+    classnames.trim().split(/\s+/).forEach(function (item) {
+      return elmt.classList.remove(item);
+    });
+    return elmt;
+  },
+  setClass: function setClass(elmt, classnames) {
+    classnames.trim().split(/\s+/).forEach(function (item) {
+      return elmt.classList.add(item);
+    });
+    return elmt;
+  },
+  setStyles: function setStyles(elmt, stylesobject) {
+    for (var _i = 0, _Object$entries = Object.entries(stylesobject); _i < _Object$entries.length; _i++) {
+      var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+          prop = _Object$entries$_i[0],
+          value = _Object$entries$_i[1];
+
+      //elmt.style[prop] = jsPanel.getCssVariableValue(value);
+      elmt.style[prop] = typeof value === 'string' ? jsPanel.getCssVariableValue(value) : value;
+    }
+
+    return elmt;
+  },
+  setStyle: function setStyle(elmt, stylesobject) {
+    return this.setStyles.call(elmt, elmt, stylesobject);
+  },
+  // alias for setStyles()
+  strToHtml: function strToHtml(str) {
+    // TODO: add param to strip script tags from returned DocumentFragment
+
+    /* str has to be an HTMLString
+     * returns a DocumentFragment - https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment
+     * after inserting executes inline script and script tags */
+    return document.createRange().createContextualFragment(str);
+  },
+  toggleClass: function toggleClass(elmt, classnames) {
+    // IE11 doesn't support https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList/toggle
+    classnames.trim().split(/\s+/).forEach(function (classname) {
+      return elmt.classList.contains(classname) ? elmt.classList.remove(classname) : elmt.classList.add(classname);
+    });
+    return elmt;
+  },
+  emptyNode: function emptyNode(node) {
+    while (node.firstChild) {
+      node.removeChild(node.firstChild);
+    }
+
+    return node;
+  },
   addScript: function addScript(path) {
     var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'application/javascript';
     var cb = arguments.length > 2 ? arguments[2] : undefined;
 
     if (!document.querySelector("script[src=\"".concat(path, "\"]"))) {
       var script = document.createElement('script');
+      script.src = path;
+      script.type = type;
+      document.head.appendChild(script);
 
       if (cb) {
         script.onload = cb;
       }
-
-      script.src = path;
-      script.type = type;
-      document.head.appendChild(script);
     }
   },
   ajax: function ajax(ajaxConfig, panel) {
@@ -1715,100 +2229,6 @@ var jsPanel = {
 
     config.data ? xhr.send(config.data) : xhr.send(null);
   },
-  ajaxAutoresizeAutoreposition: function ajaxAutoresizeAutoreposition(panel, ajaxOrFetchConfig) {
-    var oContentSize = panel.options.contentSize;
-
-    if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
-      var parts = oContentSize.split(' '),
-          sizes = Object.assign({}, {
-        width: parts[0],
-        height: parts[1]
-      });
-
-      if (ajaxOrFetchConfig.autoresize) {
-        panel.resize(sizes);
-      }
-
-      if (!panel.classList.contains('jsPanel-contextmenu')) {
-        if (ajaxOrFetchConfig.autoreposition) {
-          panel.reposition();
-        }
-      }
-    } else if (_typeof(oContentSize) === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
-      var _sizes = Object.assign({}, oContentSize);
-
-      if (ajaxOrFetchConfig.autoresize) {
-        panel.resize(_sizes);
-      }
-
-      if (!panel.classList.contains('jsPanel-contextmenu')) {
-        if (ajaxOrFetchConfig.autoreposition) {
-          panel.reposition();
-        }
-      }
-    }
-  },
-  createPanelTemplate: function createPanelTemplate() {
-    var dataAttr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-    var panel = document.createElement('div');
-    panel.className = 'jsPanel';
-    panel.style.left = '0';
-    panel.style.top = '0';
-
-    if (dataAttr) {
-      ['close', 'maximize', 'normalize', 'minimize', 'smallify'].forEach(function (item) {
-        panel.setAttribute("data-btn".concat(item), 'enabled');
-      });
-    }
-
-    panel.innerHTML = "<div class=\"jsPanel-hdr\">\n                                <div class=\"jsPanel-headerbar\">\n                                    <div class=\"jsPanel-headerlogo\"></div>\n                                    <div class=\"jsPanel-titlebar\">\n                                        <div class=\"jsPanel-title\"></div>\n                                    </div>\n                                    <div class=\"jsPanel-controlbar\">\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-smallify\"  aria-label=\"Smallify\">".concat(this.icons.smallify, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-minimize\"  aria-label=\"Minimize\">").concat(this.icons.minimize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-normalize\" aria-label=\"Normalize\">").concat(this.icons.normalize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-maximize\"  aria-label=\"Maximize\">").concat(this.icons.maximize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-close\"     aria-label=\"Close\">").concat(this.icons.close, "</button>\n                                    </div>\n                                </div>\n                                <div class=\"jsPanel-hdr-toolbar\"></div>\n                            </div>\n                            <div class=\"jsPanel-progressbar\">\n                                <div class=\"jsPanel-progressbar-slider\"></div>\n                            </div>\n                            <div class=\"jsPanel-content\"></div>\n                            <div class=\"jsPanel-minimized-box\"></div>\n                            <div class=\"jsPanel-ftr\"></div>");
-    return panel;
-  },
-  createMinimizedTemplate: function createMinimizedTemplate() {
-    var panel = document.createElement('div');
-    panel.className = 'jsPanel-replacement';
-    panel.innerHTML = "<div class=\"jsPanel-hdr\">\n                                <div class=\"jsPanel-headerbar\">\n                                    <div class=\"jsPanel-headerlogo\"></div>\n                                    <div class=\"jsPanel-titlebar\">\n                                        <div class=\"jsPanel-title\"></div>\n                                    </div>\n                                    <div class=\"jsPanel-controlbar\">\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-normalize\" aria-label=\"Normalize\">".concat(this.icons.normalize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-maximize\"  aria-label=\"Maximize\">").concat(this.icons.maximize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-close\"     aria-label=\"Close\">").concat(this.icons.close, "</button>\n                                    </div>\n                                </div>\n                            </div>");
-    return panel;
-  },
-  createSnapArea: function createSnapArea(panel, pos, snapsens) {
-    var el = document.createElement('div'),
-        parent = panel.parentElement;
-    el.className = "jsPanel-snap-area jsPanel-snap-area-".concat(pos);
-
-    if (pos === 'lt' || pos === 'rt' || pos === 'rb' || pos === 'lb') {
-      el.style.width = snapsens + 'px';
-      el.style.height = snapsens + 'px';
-    } else if (pos === 'ct' || pos === 'cb') {
-      el.style.height = snapsens + 'px';
-    } else if (pos === 'lc' || pos === 'rc') {
-      el.style.width = snapsens + 'px';
-    }
-
-    if (parent !== document.body) {
-      el.style.position = 'absolute';
-    }
-
-    if (!document.querySelector(".jsPanel-snap-area.jsPanel-snap-area-".concat(pos))) {
-      panel.parentElement.appendChild(el);
-    }
-  },
-  emptyNode: function emptyNode(node) {
-    while (node.firstChild) {
-      node.removeChild(node.firstChild);
-    }
-
-    return node;
-  },
-  extend: function extend(obj) {
-    // obj needs to be a plain object (to extend the individual panel, not the global object)
-    if (Object.prototype.toString.call(obj) === '[object Object]') {
-      for (var ext in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, ext)) {
-          this.extensions[ext] = obj[ext];
-        }
-      }
-    }
-  },
   fetch: function (_fetch) {
     function fetch(_x, _x2) {
       return _fetch.apply(this, arguments);
@@ -1871,6 +2291,100 @@ var jsPanel = {
       }
     });
   }),
+  ajaxAutoresizeAutoreposition: function ajaxAutoresizeAutoreposition(panel, ajaxOrFetchConfig) {
+    var oContentSize = panel.options.contentSize;
+
+    if (typeof oContentSize === 'string' && oContentSize.match(/auto/i)) {
+      var parts = oContentSize.split(' '),
+          sizes = Object.assign({}, {
+        width: parts[0],
+        height: parts[1]
+      });
+
+      if (ajaxOrFetchConfig.autoresize) {
+        panel.resize(sizes);
+      }
+
+      if (!panel.classList.contains('jsPanel-contextmenu')) {
+        if (ajaxOrFetchConfig.autoreposition) {
+          panel.reposition();
+        }
+      }
+    } else if (_typeof(oContentSize) === 'object' && (oContentSize.width === 'auto' || oContentSize.height === 'auto')) {
+      var _sizes = Object.assign({}, oContentSize);
+
+      if (ajaxOrFetchConfig.autoresize) {
+        panel.resize(_sizes);
+      }
+
+      if (!panel.classList.contains('jsPanel-contextmenu')) {
+        if (ajaxOrFetchConfig.autoreposition) {
+          panel.reposition();
+        }
+      }
+    }
+  },
+  // templates and other elements ----------
+  createPanelTemplate: function createPanelTemplate() {
+    var dataAttr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+    var panel = document.createElement('div');
+    panel.className = 'jsPanel';
+    panel.style.left = '0';
+    panel.style.top = '0';
+
+    if (dataAttr) {
+      ['close', 'maximize', 'normalize', 'minimize', 'smallify'].forEach(function (item) {
+        panel.setAttribute("data-btn".concat(item), 'enabled');
+      });
+    }
+
+    panel.innerHTML = "<div class=\"jsPanel-hdr\">\n                                <div class=\"jsPanel-headerbar\">\n                                    <div class=\"jsPanel-headerlogo\"></div>\n                                    <div class=\"jsPanel-titlebar\">\n                                        <div class=\"jsPanel-title\"></div>\n                                    </div>\n                                    <div class=\"jsPanel-controlbar\">\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-smallify\" aria-label=\"Smallify\">".concat(this.icons.smallify, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-minimize\" aria-label=\"Minimize\">").concat(this.icons.minimize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-normalize\" aria-label=\"Normalize\">").concat(this.icons.normalize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-maximize\" aria-label=\"Maximize\">").concat(this.icons.maximize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-close\" aria-label=\"Close\">").concat(this.icons.close, "</button>\n                                    </div>\n                                </div>\n                                <div class=\"jsPanel-hdr-toolbar\"></div>\n                            </div>\n                            <div class=\"jsPanel-progressbar\">\n                                <div class=\"jsPanel-progressbar-slider\"></div>\n                            </div>\n                            <div class=\"jsPanel-content\"></div>\n                            <div class=\"jsPanel-minimized-box\"></div>\n                            <div class=\"jsPanel-ftr\"></div>");
+    return panel;
+  },
+  createMinimizedTemplate: function createMinimizedTemplate() {
+    var panel = document.createElement('div');
+    panel.className = 'jsPanel-replacement';
+    panel.innerHTML = "<div class=\"jsPanel-hdr\">\n                                <div class=\"jsPanel-headerbar\">\n                                    <div class=\"jsPanel-headerlogo\"></div>\n                                    <div class=\"jsPanel-titlebar\">\n                                        <div class=\"jsPanel-title\"></div>\n                                    </div>\n                                    <div class=\"jsPanel-controlbar\">\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-normalize\" aria-label=\"Normalize\">".concat(this.icons.normalize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-maximize\" aria-label=\"Maximize\">").concat(this.icons.maximize, "</button>\n                                        <button type=\"button\" class=\"jsPanel-btn jsPanel-btn-sm jsPanel-btn-close\" aria-label=\"Close\">").concat(this.icons.close, "</button>\n                                    </div>\n                                </div>\n                            </div>");
+    return panel;
+  },
+  createSnapArea: function createSnapArea(panel, pos, snapsens) {
+    var el = document.createElement('div'),
+        parent = panel.parentElement;
+    el.className = "jsPanel-snap-area jsPanel-snap-area-".concat(pos);
+
+    if (pos === 'lt' || pos === 'rt' || pos === 'rb' || pos === 'lb') {
+      el.style.width = snapsens + 'px';
+      el.style.height = snapsens + 'px';
+    } else if (pos === 'ct' || pos === 'cb') {
+      el.style.height = snapsens + 'px';
+    } else if (pos === 'lc' || pos === 'rc') {
+      el.style.width = snapsens + 'px';
+    }
+
+    if (parent !== document.body) {
+      el.style.position = 'absolute';
+    }
+
+    if (!document.querySelector(".jsPanel-snap-area.jsPanel-snap-area-".concat(pos))) {
+      panel.parentElement.appendChild(el);
+    }
+  },
+  removeSnapAreas: function removeSnapAreas() {
+    document.querySelectorAll('.jsPanel-snap-area').forEach(function (el) {
+      return el.parentElement.removeChild(el);
+    });
+  },
+  // various helpers -------
+  extend: function extend(obj) {
+    // obj needs to be a plain object (to extend the individual panel, not the global object)
+    if (Object.prototype.toString.call(obj) === '[object Object]') {
+      for (var ext in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, ext)) {
+          this.extensions[ext] = obj[ext];
+        }
+      }
+    }
+  },
   getPanels: function getPanels() {
     var condition = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {
       return this.classList.contains('jsPanel-standard');
@@ -1880,164 +2394,6 @@ var jsPanel = {
     }).sort(function (a, b) {
       return b.style.zIndex - a.style.zIndex;
     });
-  },
-  pOcontainer: function pOcontainer(container) {
-    if (container === 'window') {
-      return document.body;
-    } else if (typeof container === 'string') {
-      var list = document.querySelectorAll(container); // a returned list is a NodeList
-
-      return list.length && list.length > 0 ? list : false;
-    } else if (container.nodeType === 1) {
-      return container;
-    } else if (container.length) {
-      return container[0];
-    }
-
-    return false;
-  },
-  // normalizes the values for option.maximizedMargin and containment of dragit/resizeit
-  pOcontainment: function pOcontainment(arg) {
-    var value = arg;
-
-    if (typeof arg === 'function') {
-      value = arg();
-    }
-
-    if (typeof value === 'number') {
-      // value: 20 => value: [20, 20, 20, 20]
-      return [value, value, value, value];
-    } else if (Array.isArray(value)) {
-      if (value.length === 1) {
-        // value: [20] => value: [20, 20, 20, 20]
-        return [value[0], value[0], value[0], value[0]];
-      } else if (value.length === 2) {
-        // value: [20, 40] => value: [20, 40, 20, 40]
-        return value.concat(value);
-      } else if (value.length === 3) {
-        value[3] = value[1];
-      }
-    }
-
-    return value; // assumed to be an array with 4 values
-  },
-  pOsize: function pOsize(panel, size) {
-    var values = size || this.defaults.contentSize;
-    var parent = panel.parentElement;
-
-    if (typeof values === 'string') {
-      var nums = values.trim().split(' ');
-      values = {};
-      values.width = nums[0];
-      nums.length === 2 ? values.height = nums[1] : values.height = nums[0];
-    } else {
-      if (values.width && !values.height) {
-        // noinspection JSSuspiciousNameCombination
-        values.height = values.width;
-      } else if (values.height && !values.width) {
-        // noinspection JSSuspiciousNameCombination
-        values.width = values.height;
-      }
-    }
-
-    if (String(values.width).match(/^[0-9.]+$/gi)) {
-      // if number only
-      values.width += 'px';
-    } else if (typeof values.width === 'string' && values.width.endsWith('%')) {
-      if (parent === document.body) {
-        values.width = window.innerWidth * (parseFloat(values.width) / 100) + 'px';
-      } else {
-        var prtStyles = window.getComputedStyle(parent),
-            border = parseFloat(prtStyles.borderLeftWidth) + parseFloat(prtStyles.borderRightWidth);
-        values.width = (parseFloat(prtStyles.width) - border) * (parseFloat(values.width) / 100) + 'px';
-      }
-    } else if (typeof values.width === 'function') {
-      values.width = values.width.call(panel, panel);
-
-      if (typeof values.width === 'number') {
-        values.width += 'px';
-      } else if (typeof values.width === 'string' && values.width.match(/^[0-9.]+$/gi)) {
-        values.width += 'px';
-      }
-    }
-
-    if (String(values.height).match(/^[0-9.]+$/gi)) {
-      // if number only
-      values.height += 'px';
-    } else if (typeof values.height === 'string' && values.height.endsWith('%')) {
-      if (parent === document.body) {
-        values.height = window.innerHeight * (parseFloat(values.height) / 100) + 'px';
-      } else {
-        var _prtStyles = window.getComputedStyle(parent),
-            _border = parseFloat(_prtStyles.borderTopWidth) + parseFloat(_prtStyles.borderBottomWidth);
-
-        values.height = (parseFloat(_prtStyles.height) - _border) * (parseFloat(values.height) / 100) + 'px';
-      }
-    } else if (typeof values.height === 'function') {
-      values.height = values.height.call(panel, panel);
-
-      if (typeof values.height === 'number') {
-        values.height += 'px';
-      } else if (typeof values.height === 'string' && values.height.match(/^[0-9.]+$/gi)) {
-        values.height += 'px';
-      }
-    }
-
-    return values; // return value must be an object {width: xxx, height: xxx}
-  },
-  pOborder: function pOborder(border) {
-    border = border.trim();
-    var values = new Array(3),
-        regexStyle = /\s*(none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset)\s*/gi,
-        regexWidth = /\s*(thin|medium|thick)|(\d*\.?\d+[a-zA-Z]{2,4})\s*/gi,
-        borderStyle = border.match(regexStyle),
-        borderWidth = border.match(regexWidth);
-
-    if (borderStyle) {
-      values[1] = borderStyle[0].trim();
-      border = border.replace(values[1], '');
-    } else {
-      values[1] = 'solid';
-    }
-
-    if (borderWidth) {
-      values[0] = borderWidth[0].trim();
-      border = border.replace(values[0], '');
-    } else {
-      values[0] = 'medium';
-    }
-
-    values[2] = border.trim();
-    return values;
-  },
-  pOheaderControls: function pOheaderControls(oHdrCtrls) {
-    if (typeof oHdrCtrls === 'string') {
-      var setting = {},
-          str = oHdrCtrls.toLowerCase(),
-          sizeMatch = str.match(/xl|lg|md|sm|xs/),
-          ctrlMatch = str.match(/closeonly|none/);
-
-      if (sizeMatch) {
-        setting.size = sizeMatch[0];
-      }
-
-      if (ctrlMatch) {
-        setting = Object.assign({}, setting, {
-          maximize: 'remove',
-          normalize: 'remove',
-          minimize: 'remove',
-          smallify: 'remove'
-        });
-
-        if (ctrlMatch[0] === 'none') {
-          setting.close = 'remove';
-        }
-      }
-
-      return Object.assign({}, this.defaults.headerControls, setting);
-    } else {
-      return Object.assign({}, this.defaults.headerControls, oHdrCtrls);
-    }
   },
   processCallbacks: function processCallbacks(panel, arg) {
     var someOrEvery = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'some';
@@ -2059,14 +2415,9 @@ var jsPanel = {
       });
     } else {
       arg.forEach(function (cb) {
-        cb.call(panel, panel, param, param2);
+        return cb.call(panel, panel, param, param2);
       });
     }
-  },
-  removeSnapAreas: function removeSnapAreas() {
-    document.querySelectorAll('.jsPanel-snap-area').forEach(function (el) {
-      el.parentElement.removeChild(el);
-    });
   },
   resetZi: function resetZi() {
     this.zi = function () {
@@ -2082,70 +2433,8 @@ var jsPanel = {
     Array.prototype.slice.call(document.querySelectorAll('.jsPanel-standard')).sort(function (a, b) {
       return a.style.zIndex - b.style.zIndex;
     }).forEach(function (panel) {
-      panel.style.zIndex = jsPanel.zi.next();
+      return panel.style.zIndex = jsPanel.zi.next();
     });
-  },
-  getScrollbarWidth: function getScrollbarWidth() {
-    var elmt = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document.body;
-
-    if (elmt === document.body) {
-      return {
-        y: window.innerWidth - document.documentElement.clientWidth,
-        x: window.innerHeight - document.documentElement.clientHeight
-      };
-    } else {
-      var styles = getComputedStyle(elmt);
-      return {
-        y: elmt.offsetWidth - elmt.clientWidth - parseFloat(styles.borderRightWidth) - parseFloat(styles.borderLeftWidth),
-        x: elmt.offsetHeight - elmt.clientHeight - parseFloat(styles.borderBottomWidth) - parseFloat(styles.borderTopWidth)
-      };
-    }
-  },
-  remClass: function remClass(elmt, classnames) {
-    classnames.trim().split(/\s+/).forEach(function (item) {
-      return elmt.classList.remove(item);
-    });
-    return elmt;
-  },
-  setClass: function setClass(elmt, classnames) {
-    classnames.trim().split(/\s+/).forEach(function (item) {
-      return elmt.classList.add(item);
-    });
-    return elmt;
-  },
-  setStyles: function setStyles(elmt, stylesobject) {
-    // code taken from https://blissfuljs.com/docs.html#fn-style
-    for (var prop in stylesobject) {
-      if (prop in elmt.style) {
-        // noinspection JSUnfilteredForInLoop,JSUnfilteredForInLoop
-        elmt.style[prop] = stylesobject[prop];
-      } else {
-        // This way we can set CSS Variables too and use normal prop names
-        // noinspection JSUnfilteredForInLoop
-        elmt.style.setProperty(prop, stylesobject[prop]);
-      }
-    }
-
-    return elmt;
-  },
-  setStyle: function setStyle(elmt, stylesobject) {
-    return this.setStyles.call(elmt, elmt, stylesobject);
-  },
-  // alias for setStyles()
-  strToHtml: function strToHtml(str) {
-    // TODO: add param to strip script tags from returned DocumentFragment
-
-    /* str has to be an HTMLString
-     * returns a DocumentFragment - https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment
-     * after inserting executes inline script and script tags */
-    return document.createRange().createContextualFragment(str);
-  },
-  toggleClass: function toggleClass(elmt, classnames) {
-    // IE11 doesn't support https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList/toggle
-    classnames.trim().split(/\s+/).forEach(function (classname) {
-      elmt.classList.contains(classname) ? elmt.classList.remove(classname) : elmt.classList.add(classname);
-    });
-    return elmt;
   },
   errorpanel: function errorpanel(e) {
     this.create({
@@ -2156,7 +2445,7 @@ var jsPanel = {
         bgPanel: 'white',
         bgContent: 'white',
         colorHeader: 'rebeccapurple',
-        colorContent: '#333',
+        colorContent: '#333333',
         border: '2px solid rebeccapurple'
       },
       borderRadius: '.33rem',
@@ -2173,7 +2462,7 @@ var jsPanel = {
   },
   // METHOD CREATING THE PANEL ---------------------------------------------
   create: function create() {
-    var _this = this;
+    var _this2 = this;
 
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var cb = arguments.length > 1 ? arguments[1] : undefined;
@@ -2340,7 +2629,7 @@ var jsPanel = {
     }); // make panel available as event object property 'panel'
 
     [jspanelloaded, jspanelstatuschange, jspanelbeforenormalize, jspanelnormalized, jspanelbeforemaximize, jspanelmaximized, jspanelbeforeminimize, jspanelminimized, jspanelbeforesmallify, jspanelsmallified, jspanelsmallifiedmax, jspanelbeforeunsmallify, jspanelfronted, jspanelbeforeclose].forEach(function (evt) {
-      evt.panel = self;
+      return evt.panel = self;
     }); // controls buttons
 
     var closeBtn = self.querySelector('.jsPanel-btn-close'),
@@ -2430,245 +2719,14 @@ var jsPanel = {
       if (Object.prototype.hasOwnProperty.call(extensions, ext)) {
         self[ext] = extensions[ext];
       }
-    } // Methods
+    } // panel methods
 
-
-    self.clearTheme = function (cb) {
-      jsPanel.themes.forEach(function (value) {
-        ['panel', "jsPanel-theme-".concat(value), "panel-".concat(value), "".concat(value, "-color")].forEach(function (item) {
-          self.classList.remove(item);
-        });
-        self.header.classList.remove("jsPanel-theme-".concat(value));
-      });
-      self.content.classList.remove('jsPanel-content-filled', 'jsPanel-content-filledlight');
-      self.header.classList.remove('jsPanel-hdr-light');
-      self.header.classList.remove('jsPanel-hdr-dark');
-      self.style.backgroundColor = '';
-      jsPanel.setStyle(self.headertoolbar, {
-        boxShadow: '',
-        width: '',
-        marginLeft: '',
-        borderTopColor: 'transparent'
-      });
-      jsPanel.setStyle(self.content, {
-        background: '',
-        borderTopColor: 'transparent'
-      });
-      self.header.style.background = '';
-      Array.prototype.slice.call(self.controlbar.querySelectorAll('.jsPanel-icon')).concat([self.headerlogo, self.headertitle, self.headertoolbar, self.content]).forEach(function (item) {
-        item.style.color = '';
-      });
-
-      if (cb) {
-        cb.call(self, self);
-      }
-
-      return self;
-    };
-
-    self.getThemeDetails = function (th) {
-      var passedTheme = th.toLowerCase(),
-          theme = {
-        color: false,
-        colors: false,
-        filling: false
-      },
-          step1 = passedTheme.split('fill');
-      theme.color = step1[0].trim().replace(/\s*/g, '');
-
-      if (step1.length === 2) {
-        if (step1[1].startsWith('edlight')) {
-          theme.filling = 'filledlight';
-        } else if (step1[1].startsWith('eddark')) {
-          theme.filling = 'filleddark';
-        } else if (step1[1].startsWith('ed')) {
-          theme.filling = 'filled';
-        } else if (step1[1].startsWith('color')) {
-          var step2 = step1[1].split('color'),
-              fillcolor = step2[step2.length - 1].trim().replace(/\s*/g, '');
-
-          if (jsPanel.colorNames[fillcolor]) {
-            fillcolor = jsPanel.colorNames[fillcolor];
-          }
-
-          if (fillcolor.match(/^([0-9a-f]{3}|[0-9a-f]{6})$/gi)) {
-            fillcolor = '#' + fillcolor;
-          }
-
-          theme.filling = fillcolor;
-        }
-      }
-
-      var builtIn = jsPanel.themes.some(function (item) {
-        return item === theme.color.split(/\s/i)[0];
-      });
-
-      if (builtIn) {
-        var baseTheme = theme.color.split(/\s/i)[0],
-            btn = document.createElement('button');
-        btn.className = baseTheme + '-bg';
-        document.body.appendChild(btn);
-        theme.color = getComputedStyle(btn).backgroundColor.replace(/\s+/gi, '');
-        document.body.removeChild(btn); // noinspection JSUnusedAssignment
-
-        btn = undefined;
-      } else if (theme.color.startsWith('bootstrap-')) {
-        // works with bootstrap 3 and 4
-        var index = theme.color.indexOf('-'),
-            _btn = document.createElement('button');
-
-        _btn.className = 'btn btn' + theme.color.slice(index);
-        document.body.appendChild(_btn);
-        theme.color = getComputedStyle(_btn).backgroundColor.replace(/\s+/gi, '');
-        document.body.removeChild(_btn); // noinspection JSUnusedAssignment
-
-        _btn = undefined;
-      } else if (theme.color.startsWith('mdb-')) {
-        // material design for bootstrap theme
-        var _index = theme.color.indexOf('-') + 1,
-            span = document.createElement('span'),
-            testClass;
-
-        if (theme.color.endsWith('-dark')) {
-          testClass = theme.color.slice(_index);
-          testClass = testClass.replace('-dark', '-color-dark');
-        } else {
-          testClass = theme.color.slice(_index) + '-color';
-        }
-
-        span.className = testClass;
-        document.body.appendChild(span);
-        theme.color = getComputedStyle(span).backgroundColor.replace(/\s+/gi, '');
-        document.body.removeChild(span); // noinspection JSUnusedAssignment
-
-        span = undefined;
-      }
-
-      theme.colors = jsPanel.calcColors(theme.color);
-      return theme;
-    };
-
-    self.applyColorTheme = function (themeDetails) {
-      self.style.backgroundColor = themeDetails.colors[0];
-      self.header.style.backgroundColor = themeDetails.colors[0];
-      self.header.style.color = themeDetails.colors[3];
-      ['.jsPanel-headerlogo', '.jsPanel-title', '.jsPanel-hdr-toolbar'].forEach(function (item) {
-        self.querySelector(item).style.color = themeDetails.colors[3];
-      });
-      self.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach(function (item) {
-        item.style.color = themeDetails.colors[3];
-      }); // apply border to content only themes 'filled'
-
-      if (typeof self.options.theme === 'string' && themeDetails.filling === 'filled') {
-        self.content.style.borderTop = themeDetails.colors[3] === '#000000' ? '1px solid rgba(0,0,0,0.15)' : '1px solid rgba(255,255,255,0.15)';
-      }
-
-      if (themeDetails.colors[3] === '#000000') {
-        self.header.classList.add('jsPanel-hdr-light');
-      } else {
-        self.header.classList.add('jsPanel-hdr-dark');
-      }
-
-      if (themeDetails.filling) {
-        switch (themeDetails.filling) {
-          case 'filled':
-            jsPanel.setStyle(self.content, {
-              backgroundColor: themeDetails.colors[2],
-              color: themeDetails.colors[3]
-            });
-            break;
-
-          case 'filledlight':
-            self.content.style.backgroundColor = themeDetails.colors[1];
-            break;
-
-          case 'filleddark':
-            jsPanel.setStyle(self.content, {
-              backgroundColor: themeDetails.colors[6],
-              color: themeDetails.colors[7]
-            });
-            break;
-
-          default:
-            self.content.style.backgroundColor = themeDetails.filling;
-            self.content.style.color = jsPanel.perceivedBrightness(themeDetails.filling) <= jsPanel.colorBrightnessThreshold ? '#fff' : '#000';
-        }
-      }
-
-      return self;
-    };
-
-    self.applyCustomTheme = function (theme) {
-      var defaults = {
-        bgPanel: '#fff',
-        bgContent: '#fff',
-        colorHeader: '#000',
-        colorContent: '#000'
-      },
-          passedTheme;
-
-      if (_typeof(theme) === 'object') {
-        passedTheme = Object.assign(defaults, theme);
-      } else {
-        passedTheme = defaults;
-      }
-
-      var bgPanel = passedTheme.bgPanel,
-          bgContent = passedTheme.bgContent,
-          colorHeader = passedTheme.colorHeader,
-          colorContent = passedTheme.colorContent; // set background panel/header
-
-      jsPanel.colorNames[bgPanel] ? self.style.background = '#' + jsPanel.colorNames[bgPanel] : self.style.background = bgPanel; // set font color header
-
-      if (jsPanel.colorNames[colorHeader]) {
-        colorHeader = '#' + jsPanel.colorNames[colorHeader];
-      }
-
-      ['.jsPanel-headerlogo', '.jsPanel-title', '.jsPanel-hdr-toolbar'].forEach(function (item) {
-        self.querySelector(item).style.color = colorHeader;
-      });
-      self.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach(function (item) {
-        item.style.color = colorHeader;
-      }); // set content background
-
-      jsPanel.colorNames[bgContent] ? self.content.style.background = '#' + jsPanel.colorNames[bgContent] : self.content.style.background = bgContent; // set content font color
-
-      jsPanel.colorNames[colorContent] ? self.content.style.color = '#' + jsPanel.colorNames[colorContent] : self.content.style.color = colorContent; // set border-top for header toolbar and add header class
-
-      var pbPanel = jsPanel.perceivedBrightness(colorHeader);
-
-      if (pbPanel > jsPanel.colorBrightnessThreshold) {
-        self.header.classList.add('jsPanel-hdr-dark');
-      } else {
-        self.header.classList.add('jsPanel-hdr-light');
-      } // set border-top for content
-
-
-      var pbContent = jsPanel.perceivedBrightness(colorContent);
-      pbContent > jsPanel.colorBrightnessThreshold ? self.content.style.borderTop = '1px solid rgba(255,255,255,0.15)' : self.content.style.borderTop = '1px solid rgba(0,0,0,0.15)'; // set panel border (option.border does not work for themes using an object)
-
-      if (passedTheme.border) {
-        var border = passedTheme.border,
-            index = border.lastIndexOf(' '),
-            col = border.slice(++index);
-
-        if (jsPanel.colorNames[col]) {
-          border = border.replace(col, '#' + jsPanel.colorNames[col]);
-        }
-
-        self.style.border = border;
-      }
-
-      return self;
-    };
 
     self.setBorder = function (val) {
       var border = jsPanel.pOborder(val);
 
       if (!border[2].length) {
         border[2] = self.style.backgroundColor;
-      } else if (jsPanel.colorNames[border[2]]) {
-        border[2] = '#' + jsPanel.colorNames[border[2]];
       }
 
       border = border.join(' ');
@@ -2678,6 +2736,16 @@ var jsPanel = {
     };
 
     self.setBorderRadius = function (rad) {
+      if (typeof rad === 'string') {
+        if (rad.startsWith('--') || rad.startsWith('var')) {
+          rad = rad.replace(/\s*\(\s*/g, '(') // remove whitespace around opening brackets
+          .replace(/\s*\)/g, ')') // remove whitespace around closing brackets
+          .replace(/\s+/g, ' '); // replace all other whitespace(s) with a single whitespace
+
+          rad = jsPanel.getCssVariableValue(rad);
+        }
+      }
+
       if (typeof rad === 'number') {
         rad += 'px';
       }
@@ -2717,18 +2785,18 @@ var jsPanel = {
       } // first remove all theme related styles
 
 
-      self.clearTheme();
+      jsPanel.clearTheme(self);
 
       if (_typeof(theme) === 'object') {
         options.border = undefined;
-        self.applyCustomTheme(theme);
-      } else {
+        jsPanel.applyCustomTheme(self, theme);
+      } else if (typeof theme === 'string') {
         if (theme === 'none') {
           theme = 'white';
         }
 
-        var themeDetails = self.getThemeDetails(theme);
-        self.applyColorTheme(themeDetails);
+        var themeDetails = jsPanel.getThemeDetails(theme);
+        jsPanel.applyColorTheme(self, themeDetails);
       } // minimize again if panel was minimized prior theme change
 
 
@@ -3233,7 +3301,7 @@ var jsPanel = {
           controlbar = tpl.querySelector('.jsPanel-controlbar'); // if panel background is an image (that includes gradients) instead of a color value
 
       if (self.options.header !== 'auto-show-hide') {
-        jsPanel.setStyle(tpl, {
+        jsPanel.setStyles(tpl, {
           backgroundColor: selfStyles.backgroundColor,
           backgroundPositionX: selfStyles.backgroundPositionX,
           backgroundPositionY: selfStyles.backgroundPositionY,
@@ -3255,7 +3323,7 @@ var jsPanel = {
       tpl.querySelector('.jsPanel-title').style.color = color;
       controlbar.style.color = color;
       controlbar.querySelectorAll('button').forEach(function (btn) {
-        btn.style.color = color;
+        return btn.style.color = color;
       });
       ['jsPanel-hdr-dark', 'jsPanel-hdr-light'].forEach(function (item) {
         if (self.header.classList.contains(item)) {
@@ -3338,7 +3406,7 @@ var jsPanel = {
       }); // make panel available as event object property 'panel'
 
       [jspaneldragstart, jspaneldrag, jspaneldragstop].forEach(function (evt) {
-        evt.panel = self;
+        return evt.panel = self;
       });
 
       var camelcase = function camelcase(string) {
@@ -3365,7 +3433,7 @@ var jsPanel = {
 
       function pointerUpHandlerDragit(e) {
         jsPanel.pointermove.forEach(function (e) {
-          document.removeEventListener(e, dragElmt);
+          return document.removeEventListener(e, dragElmt);
         });
         jsPanel.removeSnapAreas();
 
@@ -3452,7 +3520,7 @@ var jsPanel = {
         self.content.style.pointerEvents = 'inherit'; // restore other panel's css pointer-events
 
         document.querySelectorAll('iframe').forEach(function (frame) {
-          frame.style.pointerEvents = 'auto';
+          return frame.style.pointerEvents = 'auto';
         });
         document.removeEventListener(e, pointerUpHandlerDragit);
       }
@@ -3506,7 +3574,7 @@ var jsPanel = {
             // prevents iframes in other panel from interfering with drag action of dragged panel
 
             document.querySelectorAll('iframe').forEach(function (frame) {
-              frame.style.pointerEvents = 'none';
+              return frame.style.pointerEvents = 'none';
             });
             var startStyles = window.getComputedStyle(self),
                 startLeft = parseFloat(startStyles.left),
@@ -3885,7 +3953,7 @@ var jsPanel = {
             };
 
             jsPanel.pointermove.forEach(function (e) {
-              document.addEventListener(e, dragElmt);
+              return document.addEventListener(e, dragElmt);
             }); // remove drag handler when mouse leaves browser window (mouseleave doesn't work)
 
             window.addEventListener('mouseout', windowListener, false);
@@ -3909,11 +3977,11 @@ var jsPanel = {
 
       if (string === 'disable') {
         handles.forEach(function (handle) {
-          handle.style.pointerEvents = 'none';
+          return handle.style.pointerEvents = 'none';
         });
       } else {
         handles.forEach(function (handle) {
-          handle.style.pointerEvents = 'auto';
+          return handle.style.pointerEvents = 'auto';
         });
       }
 
@@ -3933,7 +4001,7 @@ var jsPanel = {
       }); // make panel available as event object property 'panel'
 
       [jspanelresizestart, jspanelresize, jspanelresizestop].forEach(function (evt) {
-        evt.panel = self;
+        return evt.panel = self;
       });
       var opts = {},
           resizePanel,
@@ -3955,14 +4023,14 @@ var jsPanel = {
       function windowListener(e) {
         if (e.relatedTarget === null) {
           jsPanel.pointermove.forEach(function (evt) {
-            document.removeEventListener(evt, resizePanel, false);
+            return document.removeEventListener(evt, resizePanel, false);
           });
         }
       }
 
       function pointerUpHandlerResizeit(e) {
         jsPanel.pointermove.forEach(function (evt) {
-          document.removeEventListener(evt, resizePanel, false);
+          return document.removeEventListener(evt, resizePanel, false);
         });
 
         if (e.target.classList && e.target.classList.contains('jsPanel-resizeit-handle')) {
@@ -4053,7 +4121,7 @@ var jsPanel = {
         self.content.style.pointerEvents = 'inherit'; // restore other panel's css pointer-events
 
         document.querySelectorAll('iframe').forEach(function (frame) {
-          frame.style.pointerEvents = 'auto';
+          return frame.style.pointerEvents = 'auto';
         }); // restore option aspectRatio to original configuration
 
         opts.aspectRatio = cachedOptionAspectRatio;
@@ -4108,7 +4176,7 @@ var jsPanel = {
             self.content.style.pointerEvents = 'none'; // prevents iframes in other panel from interfering with resize action of dragged panel
 
             document.querySelectorAll('iframe').forEach(function (frame) {
-              frame.style.pointerEvents = 'none';
+              return frame.style.pointerEvents = 'none';
             }); // noinspection JSUnresolvedVariable
 
             var elmtParent = self.parentElement,
@@ -4594,8 +4662,7 @@ var jsPanel = {
 
                 if (opts.aspectRatio) {
                   self.style.height = w / aspectRatio + 'px';
-                } //h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
-
+                }
 
                 h = startHeight + (startY - eventY) * factor / scaleFactor.y + hDif; // doesn't need top adjust
 
@@ -4671,8 +4738,7 @@ var jsPanel = {
 
                 if (opts.aspectRatio) {
                   self.style.height = w / aspectRatio + 'px';
-                } //h = startHeight + (startY - eventY) / scaleFactor.y + hDif;
-
+                }
 
                 h = startHeight + (startY - eventY) * factor / scaleFactor.y + hDif; // doesn't need top adjust
 
@@ -4721,7 +4787,7 @@ var jsPanel = {
             };
 
             jsPanel.pointermove.forEach(function (event) {
-              document.addEventListener(event, resizePanel, false);
+              return document.addEventListener(event, resizePanel, false);
             }); // remove resize handler when mouse leaves browser window (mouseleave doesn't work)
 
             window.addEventListener('mouseout', windowListener, false);
@@ -4744,11 +4810,11 @@ var jsPanel = {
 
       if (string === 'disable') {
         handles.forEach(function (handle) {
-          handle.style.pointerEvents = 'none';
+          return handle.style.pointerEvents = 'none';
         });
       } else {
         handles.forEach(function (handle) {
-          handle.style.pointerEvents = 'auto';
+          return handle.style.pointerEvents = 'auto';
         });
       }
 
@@ -4820,7 +4886,7 @@ var jsPanel = {
 
       if (self.slaves && self.slaves.size > 0) {
         self.slaves.forEach(function (slave) {
-          slave.reposition();
+          return slave.reposition();
         });
       }
 
@@ -4890,7 +4956,7 @@ var jsPanel = {
 
 
       jsPanel.position(self, pos);
-      jsPanel.setStyle(self, {
+      jsPanel.setStyles(self, {
         left: "calc(".concat(self.style.left, " + ").concat(offsetX, "px)"),
         top: "calc(".concat(self.style.top, " + ").concat(offsetY, "px)")
       });
@@ -5015,7 +5081,7 @@ var jsPanel = {
 
       if (self.slaves && self.slaves.size > 0) {
         self.slaves.forEach(function (slave) {
-          slave.reposition();
+          return slave.reposition();
         });
       }
 
@@ -5079,7 +5145,7 @@ var jsPanel = {
 
         if (self.slaves && self.slaves.size > 0) {
           self.slaves.forEach(function (slave) {
-            slave.reposition();
+            return slave.reposition();
           });
         }
       }
@@ -5177,7 +5243,7 @@ var jsPanel = {
           icons = self.controlbar.querySelectorAll('.jsPanel-btn');
       icons.forEach(function (icon) {
         ['jsPanel-btn-xl', 'jsPanel-btn-lg', 'jsPanel-btn-md', 'jsPanel-btn-sm', 'jsPanel-btn-xs'].forEach(function (item) {
-          icon.classList.remove(item);
+          return icon.classList.remove(item);
         });
         icon.classList.add("jsPanel-btn-".concat(size));
       }); // adjust font-size of title
@@ -5206,7 +5272,7 @@ var jsPanel = {
         }
 
         customControls.forEach(function (ctrl) {
-          self.addControl(ctrl);
+          return self.addControl(ctrl);
         });
       } // get all control names including controls added with option.addControls
 
@@ -5256,7 +5322,7 @@ var jsPanel = {
           });
         } else {
           logos.forEach(function (item) {
-            item.innerHTML = logo;
+            return item.innerHTML = logo;
           });
         }
       } else {
@@ -5285,7 +5351,7 @@ var jsPanel = {
       self.removeChild(self.header);
       self.content.classList.add('jsPanel-content-noheader');
       ['close', 'maximize', 'normalize', 'minimize', 'smallify'].forEach(function (item) {
-        self.setAttribute("data-btn".concat(item), 'removed');
+        return self.setAttribute("data-btn".concat(item), 'removed');
       });
 
       if (cb) {
@@ -5305,7 +5371,7 @@ var jsPanel = {
 
       if (typeof hdrTitle === 'string') {
         titles.forEach(function (item) {
-          item.innerHTML = hdrTitle;
+          return item.innerHTML = hdrTitle;
         });
       } else if (typeof hdrTitle === 'function') {
         titles.forEach(function (item) {
@@ -5348,7 +5414,7 @@ var jsPanel = {
         }
 
         panel.querySelectorAll('.jsPanel-controlbar .jsPanel-btn').forEach(function (item) {
-          jsPanel.emptyNode(item).innerHTML = '<span></span>';
+          return jsPanel.emptyNode(item).innerHTML = '<span></span>';
         });
         Array.prototype.slice.call(panel.querySelectorAll('.jsPanel-controlbar .jsPanel-btn > span')).reverse().forEach(function (item, i) {
           item.className = classArray[i];
@@ -5430,7 +5496,7 @@ var jsPanel = {
 
       jsPanel.pointerdown.forEach(function (evt) {
         ctrl.addEventListener(evt, function (e) {
-          e.preventDefault();
+          return e.preventDefault();
         });
       });
       return self;
@@ -5613,10 +5679,10 @@ var jsPanel = {
 
 
     if (options.css) {
-      for (var _i = 0, _Object$entries = Object.entries(options.css); _i < _Object$entries.length; _i++) {
-        var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
-            selector = _Object$entries$_i[0],
-            classname = _Object$entries$_i[1];
+      for (var _i2 = 0, _Object$entries2 = Object.entries(options.css); _i2 < _Object$entries2.length; _i2++) {
+        var _Object$entries2$_i = _slicedToArray(_Object$entries2[_i2], 2),
+            selector = _Object$entries2$_i[0],
+            classname = _Object$entries2$_i[1];
 
         // option is a string used to build the desired class selector like `.jsPanel-${option}` except for the outermost DIV where option must be simply 'panel'
         // value is a string with either a single class name or a space separated list of class names like 'classA classB classC'
@@ -5733,7 +5799,7 @@ var jsPanel = {
     if (options.animateIn) {
       // remove class again on animationend, otherwise opacity doesn't change when panel is dragged
       self.addEventListener('animationend', function () {
-        _this.remClass(self, options.animateIn);
+        _this2.remClass(self, options.animateIn);
       });
       this.setClass(self, options.animateIn);
     } // option.dragit AND option.resizeit AND option.syncMargins
@@ -5909,7 +5975,7 @@ var jsPanel = {
     if (this.globalCallbacks) {
       if (Array.isArray(this.globalCallbacks)) {
         this.globalCallbacks.forEach(function (item) {
-          item.call(self, self);
+          return item.call(self, self);
         });
       } else {
         this.globalCallbacks.call(self, self);
@@ -5920,7 +5986,7 @@ var jsPanel = {
     if (options.callback) {
       if (Array.isArray(options.callback)) {
         options.callback.forEach(function (item) {
-          item.call(self, self);
+          return item.call(self, self);
         });
       } else {
         options.callback.call(self, self);
