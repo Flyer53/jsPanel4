@@ -1,5 +1,10 @@
 ## <span style='color:#563D7C;'>CHANGELOG</span>
 
+### <span style='color:#563D7C;'>Version 4.16.1 *2022-11-03*</span>
+
++ simplified internal code to process theme options and removed some obsolete code
++ fix in css file to prevent overflowing title in minimized panel replacement
+
 ### <span style='color:#563D7C;'>Version 4.16.0 *2022-07-03*</span>
 
 + **added** Dialog extension. This extension adds an easy-to-use interface for dialog elements to virtually any jsPanel. It also offers a `modal()` function to create modal dialogs as well as `alert()`, `confirm()` and `prompt()` functions. `jsPanel.dialog` is a Third Party Extension developed and maintained by Michael Daumling.

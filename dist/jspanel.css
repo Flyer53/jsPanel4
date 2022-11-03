@@ -1,44 +1,12 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.16.0
+ * @version v4.16.1
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
  * @author of dialog extension: Michael Daumling - michael@terrapinlogo.com
  * @github https://github.com/Flyer53/jsPanel4.git
  */
-.default-bg, .secondary-bg {
-  background-color: #b0bec5;
-}
-
-.primary-bg {
-  background-color: #01579b;
-}
-
-.info-bg {
-  background-color: #039be5;
-}
-
-.success-bg {
-  background-color: #2e7d32;
-}
-
-.warning-bg {
-  background-color: #f57f17;
-}
-
-.danger-bg {
-  background-color: #dd2c00;
-}
-
-.light-bg {
-  background-color: #e0e0e0;
-}
-
-.dark-bg {
-  background-color: #263238;
-}
-
 .jsPanel {
   border: 0;
   box-sizing: border-box;
@@ -62,7 +30,6 @@
   font-weight: normal;
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
   line-height: normal;
 }
 

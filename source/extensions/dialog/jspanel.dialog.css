@@ -4,33 +4,21 @@
   margin-top: 50px;
   max-height: calc(90vh - 50px);
 }
-
 .jsPanel-dialog .jsPanel-content {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   overflow: hidden;
-  /* Add some padding to the dialog content */
+  /* Add some padding to the dialog content */ 
   padding: 1rem;
 }
-
 .jsPanel-dialog .buttonbar {
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid #ccc;
   width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: right;
-      -ms-flex-pack: right;
-          justify-content: right;
+  justify-content: right;
 }
-
 .jsPanel-dialog .buttonbar button {
   margin-left: 0.5rem;
 }
@@ -68,19 +56,16 @@
     width: 90vw !important;
   }
 }
-
 @media (max-width: 991px) {
   .dialog-lg, .dialog-xl {
     width: 90vw !important;
   }
 }
-
 @media (max-width: 1199px) {
   .dialog-xl {
     width: 90vw !important;
   }
 }
-
 /* A few button colors */
 button.blue, button.info {
   color: #fff !important;
@@ -129,12 +114,12 @@ input:disabled, input[readonly] {
 }
 
 /* Radio buttons and checkboxes, followed by a span */
-input[type="checkbox"], input[type="radio"] {
+input[type=checkbox], input[type=radio] {
   vertical-align: middle;
   margin: 0 0.5rem 0 0;
 }
 
-input[type="radio"] {
+input[type=radio] {
   margin-bottom: 2px;
 }
 
@@ -142,4 +127,5 @@ input:disabled + span {
   opacity: 0.4;
   cursor: not-allowed;
 }
+
 /*# sourceMappingURL=jspanel.dialog.css.map */

@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.16.0
+ * @version v4.16.1
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -12,33 +12,29 @@ export // eslint-disable-next-line no-redeclare
 // noinspection JSVoidFunctionReturnValueUsed
 // eslint-disable-next-line no-redeclare
 let jsPanel = {
-    version: '4.16.0',
-    date: '2022-07-03 19:05',
+    version: '4.16.1',
+    date: '2022-11-03 09:18',
     ajaxAlwaysCallbacks: [],
     autopositionSpacing: 4,
     closeOnEscape: (() => {
-        document.addEventListener(
-            'keydown',
-            (e) => {
-                if (e.key === 'Escape' || e.code === 'Escape' || e.key === 'Esc') {
-                    jsPanel
-                        .getPanels(panel => panel.classList.contains('jsPanel')) // Array is sorted by z-index (the highest first)
-                        .some(item => {
-                            if (item.options.closeOnEscape) {
-                                if (typeof item.options.closeOnEscape === 'function') {
-                                    return item.options.closeOnEscape.call(item, item);
-                                    // if return value is falsy next panel in sequence will close, otherwise processing of Array.prototype.some() stops
-                                } else {
-                                    item.close(null, true);
-                                    return true;
-                                }
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' || e.code === 'Escape' || e.key === 'Esc') {
+                jsPanel
+                    .getPanels(panel => panel.classList.contains('jsPanel')) // Array is sorted by z-index (the highest first)
+                    .some(item => {
+                        if (item.options.closeOnEscape) {
+                            if (typeof item.options.closeOnEscape === 'function') {
+                                return item.options.closeOnEscape.call(item, item);
+                                // if return value is falsy next panel in sequence will close, otherwise processing of Array.prototype.some() stops
+                            } else {
+                                item.close(null, true);
+                                return true;
                             }
-                            return false;
-                        });
-                }
-            },
-            false
-        );
+                        }
+                        return false;
+                    });
+            }
+        }, false);
     })(),
     defaults: {
         boxShadow: 3,
@@ -52,12 +48,12 @@ let jsPanel = {
         },
         header: true,
         headerTitle: 'jsPanel',
-        headerControls: { size: 'md' }, // must be an object
+        headerControls: {size: 'md'}, // must be an object
         iconfont: undefined,
         maximizedMargin: 0,
         minimizeTo: 'default',
         paneltype: 'standard',
-        position: { my: 'center', at: 'center' }, // default position.of MUST NOT be set with new positioning engine
+        position: {my: 'center', at: 'center'}, // default position.of MUST NOT be set with new positioning engine
         resizeit: {
             handles: 'n, e, s, w, ne, se, sw, nw',
             minWidth: 128,
@@ -65,7 +61,7 @@ let jsPanel = {
         },
         theme: 'default'
     },
-    defaultAutocloseConfig: { time: '8s', progressbar: true },
+    defaultAutocloseConfig: {time: '8s', progressbar: true},
     defaultSnapConfig: {
         sensitivity: 70,
         trigger: 'panel',
@@ -120,6 +116,7 @@ let jsPanel = {
         // Object.entries() - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
         if (!Object.entries) {
             Object.entries = function( obj ){
+                // noinspection ES6ConvertVarToLetConst
                 var ownProps = Object.keys( obj ),
                     i = ownProps.length,
                     resArray = new Array(i); // preallocate the Array
@@ -180,6 +177,7 @@ let jsPanel = {
                     detail: undefined,
                 };
                 let evt = document.createEvent('CustomEvent');
+                // noinspection JSDeprecatedSymbols
                 evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
                 return evt;
             }
@@ -201,6 +199,7 @@ let jsPanel = {
         if (!String.prototype.startsWith) {
             Object.defineProperty(String.prototype, 'startsWith', {
                 value: function(search, rawPos) {
+                    // noinspection ES6ConvertVarToLetConst
                     var pos = rawPos > 0 ? rawPos|0 : 0;
                     return this.substring(pos, pos + search.length) === search;
                 }
@@ -223,6 +222,7 @@ let jsPanel = {
                 'use strict';
                 if (this == null)
                     throw new TypeError('can\'t convert ' + this + ' to object');
+                // noinspection ES6ConvertVarToLetConst
                 var str = '' + this;
                 count = +count;
                 if (count != count)
@@ -236,6 +236,7 @@ let jsPanel = {
                     return '';
                 if (str.length * count >= 1 << 28)
                     throw new RangeError('repeat count must not overflow maximum string size');
+                // noinspection ES6ConvertVarToLetConst
                 var maxCount = str.length * count;
                 count = Math.floor(Math.log(count) / Math.log(2));
                 while (count) {
@@ -295,13 +296,21 @@ let jsPanel = {
             });
         }
     })(),
-    themes: ['default', 'primary', 'secondary', 'info', 'success', 'warning', 'danger', 'light', 'dark'],
     ziBase: 100,
     colorFilledLight: 0.81,
     colorFilledDark: 0.08,
     colorFilled: 0,
     colorBrightnessThreshold: 0.55,
     colorNames: {
+        default: 'b0bec5',      // Material Design bluegray200
+        secondary: 'b0bec5',
+        primary: '01579b',      // Material Design lightblue900
+        info: '039be5',         // Material Design lightblue600
+        success: '2e7d32',      // Material Design green800
+        warning: 'f57f17',      // Material Design yellow900
+        danger: 'dd2c00',       // Material Design deeporangeA700
+        light: 'e0e0e0',        // Material Design gray300
+        dark: '263238',         // Material Design bluegray900
         // https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#Color_keywords
         aliceblue: 'f0f8ff',
         antiquewhite: 'faebd7',
@@ -726,6 +735,18 @@ let jsPanel = {
         brown700: '5D4037',
         brown800: '4E342E',
         brown900: '3E2723',
+        /* Material Design for Bootstrap v4 themes https://mdbootstrap.com/docs/b4/jquery/css/colors/#mdb-colors */
+        'mdb-default': '2BBBAD', 'mdb-default-dark': '00695c',
+        'mdb-primary': '4285F4', 'mdb-primary-dark': '0d47a1',
+        'mdb-secondary': 'aa66cc', 'mdb-secondary-dark': '9933CC',
+        'mdb-danger': 'ff4444', 'mdb-danger-dark': 'CC0000',
+        'mdb-warning': 'ffbb33', 'mdb-warning-dark': 'FF8800',
+        'mdb-success': '00C851', 'mdb-success-dark': '007E33',
+        'mdb-info': '33b5e5', 'mdb-info-dark': '0099CC',
+        'mdb-elegant': '2E2E2E', 'mdb-elegant-dark': '212121',
+        'mdb-stylish': '4B515D', 'mdb-stylish-dark': '3E4551',
+        'mdb-unique': '3F729B', 'mdb-unique-dark': '1C2331',
+        'mdb-special': '37474F', 'mdb-special-dark': '263238'
     },
     errorReporting: 1,
     modifier: false,
@@ -800,7 +821,7 @@ let jsPanel = {
             }
         }
 
-        if (String(values.width).match(/^[0-9.]+$/gi)) {
+        if (String(values.width).match(/^[\d.]+$/gi)) {
             // if number only
             values.width += 'px';
         } else if (typeof values.width === 'string' && values.width.endsWith('%')) {
@@ -815,12 +836,12 @@ let jsPanel = {
             values.width = values.width.call(panel, panel);
             if (typeof values.width === 'number') {
                 values.width += 'px';
-            } else if (typeof values.width === 'string' && values.width.match(/^[0-9.]+$/gi)) {
+            } else if (typeof values.width === 'string' && values.width.match(/^[\d.]+$/gi)) {
                 values.width += 'px';
             }
         }
 
-        if (String(values.height).match(/^[0-9.]+$/gi)) {
+        if (String(values.height).match(/^[\d.]+$/gi)) {
             // if number only
             values.height += 'px';
         } else if (typeof values.height === 'string' && values.height.endsWith('%')) {
@@ -835,7 +856,7 @@ let jsPanel = {
             values.height = values.height.call(panel, panel);
             if (typeof values.height === 'number') {
                 values.height += 'px';
-            } else if (typeof values.height === 'string' && values.height.match(/^[0-9.]+$/gi)) {
+            } else if (typeof values.height === 'string' && values.height.match(/^[\d.]+$/gi)) {
                 values.height += 'px';
             }
         }
@@ -850,13 +871,13 @@ let jsPanel = {
             .replace(/\s+/g, ' ')      // replace all other whitespace(s) with a single whitespace
             .split(' ');
         // replace css custom props/variables with values
-        border.forEach( (val, index) => {
+        border.forEach((val, index) => {
             if(val.startsWith('--') || val.startsWith('var')) {
                 border[index] = jsPanel.getCssVariableValue(val);
             }
         }); // border is now an array like ['5px', 'solid', 'red']
         // check values for type (border width, style or color) and add to result array
-        border.forEach( (val) => {
+        border.forEach(val => {
             if (jsPanel.colorNames[val]) {
                 result[2] = '#' + jsPanel.colorNames[val];
             } else if (val.match(/(none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset)/)) {
@@ -923,13 +944,13 @@ let jsPanel = {
                 color = jsPanel.getCssVariableValue(color);
             }
         }
-        if (color.match(/^([0-9a-f]{3}|[0-9a-f]{6})$/gi)) {
+        if (color.match(/^([\da-f]{3}|[\da-f]{6})$/gi)) {
             color = '#' + color;
         }
         if (filling.startsWith('fillcolor')) {
             let devide = filling.indexOf(' ');
             filling = filling.slice(devide + 1, filling.length).trim().replace(/\s+/g, '');
-            if (filling.match(/^([0-9a-f]{3}|[0-9a-f]{6})$/gi)) {
+            if (filling.match(/^([\da-f]{3}|[\da-f]{6})$/gi)) {
                 filling = '#' + filling;
             } else if (jsPanel.colorNames[filling]) {
                 filling = '#' + jsPanel.colorNames[filling];
@@ -955,9 +976,9 @@ let jsPanel = {
             channels,
             hsl,
             result = {};
-        const hexPattern = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/gi, // matches "#123" or "#f05a78" with or without "#"
-            RGBAPattern = /^rgba?\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3}),?(0|1|0\.[0-9]{1,2}|\.[0-9]{1,2})?\)$/gi, // matches rgb/rgba color values, whitespace allowed
-            HSLAPattern = /^hsla?\(([0-9]{1,3}),([0-9]{1,3}%),([0-9]{1,3}%),?(0|1|0\.[0-9]{1,2}|\.[0-9]{1,2})?\)$/gi,
+        const hexPattern = /^#?([\da-f]{3}|[\da-f]{6})$/gi, // matches "#123" or "#f05a78" with or without "#"
+            RGBAPattern = /^rgba?\((\d{1,3}),(\d{1,3}),(\d{1,3}),?(0|1|0\.\d{1,2}|\.\d{1,2})?\)$/gi, // matches rgb/rgba color values, whitespace allowed
+            HSLAPattern = /^hsla?\((\d{1,3}),(\d{1,3}%),(\d{1,3}%),?(0|1|0\.\d{1,2}|\.\d{1,2})?\)$/gi,
             namedColors = this.colorNames;
 
         // change named color to corresponding hex value
@@ -1177,9 +1198,7 @@ let jsPanel = {
         }
 
         // find my and at values and assign to result
-        let my_at = pos.filter((item) => {
-            return item.match(/^(left-|right-)(top|center|bottom)$|(^center-)(top|bottom)$|(^center$)/i);
-        });
+        let my_at = pos.filter(item => item.match(/^(left-|right-)(top|center|bottom)$|(^center-)(top|bottom)$|(^center$)/i));
         if (my_at.length) {
             result.my = my_at[0];
             result.at = my_at[1] || my_at[0];
@@ -1237,7 +1256,7 @@ let jsPanel = {
 
         // process parameter functions for 'my', 'at', 'of'
         // 'offsetX', 'offsetY', 'minLeft', 'maxLeft', 'minTop', 'maxTop' are processed when params are applied
-        ['my', 'at', 'of'].forEach((item) => {
+        ['my', 'at', 'of'].forEach(item => {
             if (typeof position[item] === 'function') {
                 position[item] = position[item].call(panel, panel);
             }
@@ -1284,7 +1303,7 @@ let jsPanel = {
         // window is never scaled --> scale factors default to 1
         const scaleFactor =
             container === 'window'
-                ? { x: 1, y: 1 }
+                ? {x: 1, y: 1}
                 : {
                       x: containerRect.width / container.offsetWidth,
                       y: containerRect.height / container.offsetHeight,
@@ -1515,7 +1534,7 @@ let jsPanel = {
         }
         panel.style.left = scaleFactor.x === 1 ? left : parseFloat(left) / scaleFactor.x + 'px';
         panel.style.top = scaleFactor.y === 1 ? top : parseFloat(top) / scaleFactor.y + 'px';
-        // at this point panels are correctly positioned according to the my/at values
+        // at this point panels are correctly positioned according to my/at values
 
         let panelStyle = getComputedStyle(panel);
         // eslint-disable-next-line no-unused-vars
@@ -1605,7 +1624,7 @@ let jsPanel = {
         return { left: pos.left, top: pos.top };
     },
     applyPositionOffset(panel, pos, position) {
-        ['offsetX', 'offsetY'].forEach((offset) => {
+        ['offsetX', 'offsetY'].forEach(offset => {
             if (position[offset]) {
                 if (typeof position[offset] === 'function') {
                     position[offset] = position[offset].call(pos, pos, position);
@@ -1624,7 +1643,7 @@ let jsPanel = {
         return { left: panelStyle.left, top: panelStyle.top };
     },
     applyPositionMinMax(panel, pos, position) {
-        ['minLeft', 'minTop', 'maxLeft', 'maxTop'].forEach((val) => {
+        ['minLeft', 'minTop', 'maxLeft', 'maxTop'].forEach(val => {
             if (position[val]) {
                 if (typeof position[val] === 'function') {
                     position[val] = position[val].call(pos, pos, position);
@@ -1723,18 +1742,8 @@ let jsPanel = {
 
     // theming methods -------------------------
     getThemeDetails(th) {
-        const theme = this.pOtheme(th),
-            builtIn = this.themes.some(item => item === theme.color.split(/\s/i)[0]);
-        if (builtIn) {
-            let baseTheme = theme.color.split(/\s/i)[0],
-                btn = document.createElement('button');
-            btn.className = baseTheme + '-bg';
-            document.body.appendChild(btn);
-            theme.color = getComputedStyle(btn).backgroundColor.replace(/\s+/gi, '');
-            document.body.removeChild(btn);
-            // noinspection JSUnusedAssignment
-            btn = undefined;
-        } else if (theme.color.startsWith('bootstrap-')) {
+        const theme = this.pOtheme(th);
+        if (theme.color.startsWith('bootstrap-')) {
             // works with bootstrap 3 and 4
             let index = theme.color.indexOf('-'),
                 btn = document.createElement('button');
@@ -1744,32 +1753,11 @@ let jsPanel = {
             document.body.removeChild(btn);
             // noinspection JSUnusedAssignment
             btn = undefined;
-        } else if (theme.color.startsWith('mdb-')) {
-            // material design for bootstrap theme
-            let index = theme.color.indexOf('-') + 1,
-                span = document.createElement('span'),
-                testClass;
-            if (theme.color.endsWith('-dark')) {
-                testClass = theme.color.slice(index);
-                testClass = testClass.replace('-dark', '-color-dark');
-            } else {
-                testClass = theme.color.slice(index) + '-color';
-            }
-            span.className = testClass;
-            document.body.appendChild(span);
-            theme.color = getComputedStyle(span).backgroundColor.replace(/\s+/gi, '');
-            document.body.removeChild(span);
-            // noinspection JSUnusedAssignment
-            span = undefined;
         }
         theme.colors = this.calcColors(theme.color);
         return theme;
     },
     clearTheme(panel, cb) {
-        this.themes.forEach(value => {
-            ['panel', `jsPanel-theme-${value}`, `panel-${value}`, `${value}-color`].forEach(item => panel.classList.remove(item));
-            panel.header.classList.remove(`jsPanel-theme-${value}`);
-        });
         panel.content.classList.remove('jsPanel-content-filled', 'jsPanel-content-filledlight');
         panel.header.classList.remove('jsPanel-hdr-light');
         panel.header.classList.remove('jsPanel-hdr-dark');
@@ -1838,7 +1826,7 @@ let jsPanel = {
     applyCustomTheme(panel, theme) {
         let defaults = {
                 bgPanel: '#ffffff',
-                bgContent: '#fffffff',
+                bgContent: '#ffffff',
                 bgFooter: '#f5f5f5',
                 colorHeader: '#000000',
                 colorContent: '#000000',
@@ -1954,7 +1942,6 @@ let jsPanel = {
     },
     setStyles(elmt, stylesobject) {
         for (const [prop, value] of Object.entries(stylesobject)) {
-            //elmt.style[prop] = jsPanel.getCssVariableValue(value);
             elmt.style[prop] = typeof value === 'string' ? jsPanel.getCssVariableValue(value) : value;
         }
         return elmt;
@@ -2073,7 +2060,7 @@ let jsPanel = {
 
                 // allows plugins to add callback functions to the ajax always callback
                 if (jsPanel.ajaxAlwaysCallbacks.length) {
-                    jsPanel.ajaxAlwaysCallbacks.forEach((item) => {
+                    jsPanel.ajaxAlwaysCallbacks.forEach(item => {
                         panel ? item.call(xhr, xhr, panel) : item.call(xhr, xhr);
                     });
                 }
@@ -2129,12 +2116,12 @@ let jsPanel = {
         }
 
         fetch(config.resource, fetchInit)
-            .then((response) => {
+            .then(response => {
                 if (response.ok) {
                     return response[config.bodyMethod]();
                 }
             })
-            .then((response) => {
+            .then(response => {
                 panel ? config.done.call(response, response, panel) : config.done.call(response, response);
                 if (panel) {
                     // resize and/or reposition panel if either width or height is set to 'auto'
@@ -2177,7 +2164,7 @@ let jsPanel = {
         panel.style.left = '0';
         panel.style.top = '0';
         if (dataAttr) {
-            ['close', 'maximize', 'normalize', 'minimize', 'smallify'].forEach((item) => {
+            ['close', 'maximize', 'normalize', 'minimize', 'smallify'].forEach(item => {
                 panel.setAttribute(`data-btn${item}`, 'enabled');
             });
         }
@@ -2687,7 +2674,7 @@ let jsPanel = {
                     jsPanel.remClass(self, self.options.animateIn);
                 }
                 jsPanel.setClass(self, self.options.animateOut);
-                self.addEventListener('animationend', (e) => {
+                self.addEventListener('animationend', e => {
                     e.stopPropagation();
                     self.remove(self.id, closedByUser, cb);
                 });
@@ -3700,7 +3687,7 @@ let jsPanel = {
                                 if (!Array.isArray(elementsFrom)) {
                                     elementsFrom = Array.prototype.slice.call(elementsFrom);
                                 }
-                                opts.drop.dropZones.forEach((zone) => {
+                                opts.drop.dropZones.forEach(zone => {
                                     // Array.prototype.includes() needs polyfill in IE
                                     if (elementsFrom.includes(zone)) {
                                         self.droppableTo = zone;
@@ -4501,15 +4488,10 @@ let jsPanel = {
                 }
             }
         };
-        self.saveCurrentDimensions = (setStyleHeight = false) => {
+        self.saveCurrentDimensions = () => {
             const normData = window.getComputedStyle(self);
             self.currentData.width = normData.width;
-            if (self.status === 'normalized') {
-                self.currentData.height = normData.height;
-            }
-            if (setStyleHeight) {
-                self.style.height = normData.height;
-            }
+            self.currentData.height = normData.height;
         };
         self.saveCurrentPosition = () => {
             const normData = window.getComputedStyle(self);
@@ -4860,7 +4842,7 @@ let jsPanel = {
             let controls = [],
                 ctrls = self.controlbar.querySelectorAll('.jsPanel-btn');
             ctrls.forEach(ctrl => {
-                let match = ctrl.className.match(/jsPanel-btn-[a-z0-9]{3,}/i),
+                let match = ctrl.className.match(/jsPanel-btn-[a-z\d]{3,}/i),
                     ctrlName = match[0].substring(12);
                 controls.push(ctrlName);
             });
@@ -5148,27 +5130,27 @@ let jsPanel = {
                 let bars = [self.headerbar, self.controlbar];
                 switch (self.options.headerControls.size) {
                     case 'md':
-                        bars.forEach((bar) => {
+                        bars.forEach(bar => {
                             bar.style.height = '34px';
                         });
                         break;
                     case 'xs':
-                        bars.forEach((bar) => {
+                        bars.forEach(bar => {
                             bar.style.height = '26px';
                         });
                         break;
                     case 'sm':
-                        bars.forEach((bar) => {
+                        bars.forEach(bar => {
                             bar.style.height = '30px';
                         });
                         break;
                     case 'lg':
-                        bars.forEach((bar) => {
+                        bars.forEach(bar => {
                             bar.style.height = '38px';
                         });
                         break;
                     case 'xl':
-                        bars.forEach((bar) => {
+                        bars.forEach(bar => {
                             bar.style.height = '42px';
                         });
                         break;
@@ -5288,9 +5270,7 @@ let jsPanel = {
             if (autoclose.progressbar) {
                 self.progressbar.classList.add('active');
                 if (autoclose.background) {
-                    if (jsPanel.themes.indexOf(autoclose.background) > -1) {
-                        self.progressbar.classList.add(autoclose.background + '-bg');
-                    } else if (jsPanel.colorNames[autoclose.background]) {
+                    if (jsPanel.colorNames[autoclose.background]) {
                         self.progressbar.style.background = '#' + jsPanel.colorNames[autoclose.background];
                     } else {
                         self.progressbar.style.background = autoclose.background;
@@ -5360,15 +5340,9 @@ let jsPanel = {
             });
             self.drag(options.dragit);
             // do not use self.options.dragit.stop.push() !!!
-            self.addEventListener(
-                'jspaneldragstop',
-                e => {
-                    if (e.panel === self) {
-                        self.calcSizeFactors();
-                    }
-                },
-                false
-            );
+            self.addEventListener('jspaneldragstop', e => {
+                if (e.panel === self) {self.calcSizeFactors();}
+            }, false);
         } else {
             self.titlebar.style.cursor = 'default';
         }
@@ -5387,15 +5361,9 @@ let jsPanel = {
             self.sizeit(options.resizeit);
             let startstatus = void 0;
             // do not use self.options.resizeit.start.push() !!!
-            self.addEventListener(
-                'jspanelresizestart',
-                e => {
-                    if (e.panel === self) {
-                        startstatus = self.status;
-                    }
-                },
-                false
-            );
+            self.addEventListener('jspanelresizestart', e => {
+                if (e.panel === self) {startstatus = self.status;}
+            }, false);
             // do not use self.options.resizeit.stop.push() !!!
             self.addEventListener(
                 'jspanelresizestop',
@@ -5421,7 +5389,8 @@ let jsPanel = {
         }
 
         // initialize self.currentData - must be after options position & size
-        self.saveCurrentDimensions(true);
+        //self.saveCurrentDimensions(true); // not clear why 'true' was added here or why this param is needed at all in the method
+        self.saveCurrentDimensions();
         self.saveCurrentPosition();
 
         // option.setStatus
@@ -5527,8 +5496,13 @@ let jsPanel = {
         }
 
         // constructor callback
+        // if (cb) {cb.call(self, self);}
         if (cb) {
-            cb.call(self, self);
+            if (Array.isArray(cb)) {
+                cb.forEach(item => item.call(self, self));
+            } else {
+                cb.call(self, self);
+            }
         }
 
         document.dispatchEvent(jspanelloaded);

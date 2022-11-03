@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.16.0
+ * @version v4.16.1
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -10,7 +10,6 @@
 
 'use strict';
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
 if (!jsPanel.layout) {
   jsPanel.layout = {
     version: '1.4.1',
@@ -40,7 +39,6 @@ if (!jsPanel.layout) {
     },
     getAll: function getAll() {
       var storagename = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'jspanels';
-
       if (this.storage[storagename]) {
         return JSON.parse(this.storage[storagename]);
       } else {
@@ -51,18 +49,15 @@ if (!jsPanel.layout) {
       var attr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'id';
       var storagename = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'jspanels';
       var findall = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-
       if (this.storage[storagename]) {
         var datasets = this.getAll(storagename),
-            set; // findall true will return an array with all matches or at least an empty array
-
+          set;
+        // findall true will return an array with all matches or at least an empty array
         if (findall) {
           set = [];
         }
-
         datasets.forEach(function (item) {
           var type = _typeof(item[attr]);
-
           if (type === 'string' || type === 'number') {
             if (item[attr] === value) {
               if (!set) {
@@ -100,7 +95,6 @@ if (!jsPanel.layout) {
     restoreId: function restoreId() {
       var restoreConfig = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var id, config, storageName;
-
       if (!restoreConfig.id || !restoreConfig.config) {
         // eslint-disable-next-line no-console
         console.error('Id or predefined panel configuration is missing!');
@@ -110,9 +104,7 @@ if (!jsPanel.layout) {
         config = restoreConfig.config;
         storageName = restoreConfig.storagename ? restoreConfig.storagename : 'jspanels';
       }
-
       var storedpanel = this.getDataset(id, 'id', storageName);
-
       if (storedpanel) {
         var savedConfig = {
           id: storedpanel.id,
@@ -128,8 +120,8 @@ if (!jsPanel.layout) {
           panel.style.zIndex = savedConfig.zIndex;
           panel.saveCurrentDimensions();
           panel.saveCurrentPosition();
-          panel.calcSizeFactors(); // don't put code below in savedConfig.setStatus
-
+          panel.calcSizeFactors();
+          // don't put code below in savedConfig.setStatus
           if (storedpanel.status !== 'normalized') {
             if (storedpanel.status === 'minimized') {
               panel.minimize();
@@ -147,7 +139,6 @@ if (!jsPanel.layout) {
     restore: function restore() {
       var restoreConfig = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var predefinedConfigs, storageName;
-
       if (!restoreConfig.configs) {
         // eslint-disable-next-line no-console
         console.error('Object with predefined panel configurations is missing!');
@@ -156,14 +147,13 @@ if (!jsPanel.layout) {
         predefinedConfigs = restoreConfig.configs;
         storageName = restoreConfig.storagename ? restoreConfig.storagename : 'jspanels';
       }
-
       if (this.storage[storageName]) {
-        var storedPanels = this.getAll(storageName); // loop over all panels in storageName
-
+        var storedPanels = this.getAll(storageName);
+        // loop over all panels in storageName
         storedPanels.forEach(function (item) {
-          var pId = item.id; // loop over predefined configs to find config with pId
+          var pId = item.id;
+          // loop over predefined configs to find config with pId
           // this makes it unnecessary that identifiers for a certain config is the same as id in config
-
           for (var conf in predefinedConfigs) {
             if (Object.prototype.hasOwnProperty.call(predefinedConfigs, conf)) {
               if (predefinedConfigs[conf].id === pId) {

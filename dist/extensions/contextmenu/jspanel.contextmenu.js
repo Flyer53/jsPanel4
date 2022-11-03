@@ -1,6 +1,6 @@
 /**
  * jsPanel - A JavaScript library to create highly configurable multifunctional floating panels that can also be used as modal, tooltip, hint or contextmenu
- * @version v4.16.0
+ * @version v4.16.1
  * @homepage https://jspanel.de/
  * @license MIT
  * @author Stefan Sträßer - info@jspanel.de
@@ -24,51 +24,43 @@ if (!jsPanel.contextmenu) {
     },
     cmOverflow: function cmOverflow(elmt) {
       var cltX = elmt.cmEvent.clientX,
-          cltY = elmt.cmEvent.clientY,
-          panelW = elmt.offsetWidth,
-          panelH = elmt.offsetHeight,
-          corrLeft = window.innerWidth - (cltX + panelW),
-          corrTop = window.innerHeight - (cltY + panelH);
-
+        cltY = elmt.cmEvent.clientY,
+        panelW = elmt.offsetWidth,
+        panelH = elmt.offsetHeight,
+        corrLeft = window.innerWidth - (cltX + panelW),
+        corrTop = window.innerHeight - (cltY + panelH);
       if (corrLeft < 0) {
         elmt.style.left = cltX + (window.scrollX || window.pageXOffset) - panelW + 'px';
       }
-
       if (corrTop < 0) {
         elmt.style.top = cltY + (window.scrollY || window.pageYOffset) - panelH + 'px';
       }
     },
     create: function create() {
       var _this = this;
-
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var evt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'contextmenu';
       options.paneltype = 'contextmenu';
       var target = options.target;
-
       if (!target) {
         return false;
       }
-
       if (typeof target === 'string') {
         target = document.querySelector(target);
       }
-
       target.addEventListener(evt, function (e) {
-        e.preventDefault(); // close all contextmenus first
-
+        e.preventDefault();
+        // close all contextmenus first
         document.querySelectorAll('.jsPanel-contextmenu').forEach(function (item) {
           item.close();
         });
         var l = (e.pageX || e.touches[0].pageX) + 'px',
-            t = (e.pageY || e.touches[0].pageY) + 'px',
-            opts = options;
-
+          t = (e.pageY || e.touches[0].pageY) + 'px',
+          opts = options;
         if (options.config) {
           opts = Object.assign({}, options.config, options);
           delete opts.config;
         }
-
         opts = Object.assign({}, _this.defaults, opts, {
           position: false,
           container: 'body'
@@ -78,34 +70,31 @@ if (!jsPanel.contextmenu) {
             position: 'absolute',
             left: l,
             top: t
-          }); // check whether contextmenu is triggered from within a modal panel or panel and if so update z-index
+          });
 
+          // check whether contextmenu is triggered from within a modal panel or panel and if so update z-index
           var closestModal = target.closest('.jsPanel-modal');
-
           if (closestModal) {
             cm.style.zIndex = closestModal.style.zIndex;
           } else {
             var closestPanel = target.closest('.jsPanel');
-
             if (closestPanel) {
               closestPanel.front();
             }
-
             cm.style.zIndex = jsPanel.zi.next();
-          } // save event object as property of cm outer div (needed in checkContextmenuOverflow())
+          }
 
+          // save event object as property of cm outer div (needed in checkContextmenuOverflow())
+          cm.cmEvent = e;
 
-          cm.cmEvent = e; // update left/top values if menu overflows browser viewport
-
+          // update left/top values if menu overflows browser viewport
           jsPanel.contextmenu.cmOverflow(cm);
-
           if (opts.closeOnMouseleave) {
             cm.addEventListener('mouseleave', function () {
               cm.close();
             }, false);
-          } // don't close contextmenu on mousedown in contextmenu
-
-
+          }
+          // don't close contextmenu on mousedown in contextmenu
           jsPanel.pointerdown.forEach(function (evt) {
             cm.addEventListener(evt, function (e) {
               e.stopPropagation();
@@ -114,14 +103,16 @@ if (!jsPanel.contextmenu) {
         });
       }, false);
     }
-  }; // add overflow check to jsPanel.contentAjax always callback
+  };
 
+  // add overflow check to jsPanel.contentAjax always callback
   jsPanel.ajaxAlwaysCallbacks.push(function (xhr, obj) {
     if (obj && obj.classList && obj.classList.contains('jsPanel-contextmenu')) {
       jsPanel.contextmenu.cmOverflow(obj);
     }
-  }); // close tooltips on pointerdown in document
+  });
 
+  // close tooltips on pointerdown in document
   jsPanel.pointerdown.forEach(function (evt) {
     document.addEventListener(evt, function (e) {
       document.querySelectorAll('.jsPanel-contextmenu').forEach(function (item) {
